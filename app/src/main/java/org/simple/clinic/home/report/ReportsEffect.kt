@@ -2,4 +2,4 @@ package org.simple.clinic.home.report
 
 sealed class ReportsEffect
 
-object LoadReports : ReportsEffect()
+data object LoadReports : ReportsEffect()

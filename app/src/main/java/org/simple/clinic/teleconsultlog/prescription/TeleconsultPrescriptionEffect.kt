@@ -6,9 +6,9 @@ sealed class TeleconsultPrescriptionEffect
 
 data class LoadPatientDetails(val patientUuid: UUID) : TeleconsultPrescriptionEffect()
 
-object GoBack : TeleconsultPrescriptionEffect()
+data object GoBack : TeleconsultPrescriptionEffect()
 
-object ShowSignatureRequiredError : TeleconsultPrescriptionEffect()
+data object ShowSignatureRequiredError : TeleconsultPrescriptionEffect()
 
 data class LoadDataForNextClick(
     val patientUuid: UUID,
@@ -35,4 +35,4 @@ data class UpdateTeleconsultRecordMedicalRegistrationId(
     val medicalRegistrationId: String
 ) : TeleconsultPrescriptionEffect()
 
-object ShowMedicinesRequiredError : TeleconsultPrescriptionEffect()
+data object ShowMedicinesRequiredError : TeleconsultPrescriptionEffect()

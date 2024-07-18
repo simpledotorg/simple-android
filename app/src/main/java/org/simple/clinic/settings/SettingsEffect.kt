@@ -2,24 +2,24 @@ package org.simple.clinic.settings
 
 sealed class SettingsEffect
 
-object LoadUserDetailsEffect : SettingsEffect()
+data object LoadUserDetailsEffect : SettingsEffect()
 
-object LoadCurrentLanguageEffect : SettingsEffect()
+data object LoadCurrentLanguageEffect : SettingsEffect()
 
-object LoadAppVersionEffect : SettingsEffect()
+data object LoadAppVersionEffect : SettingsEffect()
 
-object CheckAppUpdateAvailable : SettingsEffect()
+data object CheckAppUpdateAvailable : SettingsEffect()
 
-object LogoutUser : SettingsEffect()
+data object LogoutUser : SettingsEffect()
 
-object LoadDatabaseEncryptionStatus : SettingsEffect()
+data object LoadDatabaseEncryptionStatus : SettingsEffect()
 
 sealed class SettingsViewEffect : SettingsEffect()
 
-object OpenLanguageSelectionScreenEffect : SettingsViewEffect()
+data object OpenLanguageSelectionScreenEffect : SettingsViewEffect()
 
-object ShowConfirmLogoutDialog : SettingsViewEffect()
+data object ShowConfirmLogoutDialog : SettingsViewEffect()
 
-object RestartApp : SettingsViewEffect()
+data object RestartApp : SettingsViewEffect()
 
-object GoBack : SettingsViewEffect()
+data object GoBack : SettingsViewEffect()

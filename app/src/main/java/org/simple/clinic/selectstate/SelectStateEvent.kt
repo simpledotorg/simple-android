@@ -5,13 +5,13 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class SelectStateEvent : UiEvent
 
-object StateSaved : SelectStateEvent()
+data object StateSaved : SelectStateEvent()
 
 data class StatesFetched(val states: List<State>) : SelectStateEvent()
 
 data class FailedToFetchStates(val error: StatesFetchError) : SelectStateEvent()
 
-object RetryButtonClicked : SelectStateEvent() {
+data object RetryButtonClicked : SelectStateEvent() {
   override val analyticsName: String = "Select State:Retry Clicked"
 }
 

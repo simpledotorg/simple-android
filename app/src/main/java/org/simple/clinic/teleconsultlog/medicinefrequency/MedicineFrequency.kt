@@ -11,28 +11,28 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class MedicineFrequency : Parcelable {
 
   @Parcelize
-  object OD : MedicineFrequency() {
+  data object OD : MedicineFrequency() {
     override fun toString(): String {
       return "OD"
     }
   }
 
   @Parcelize
-  object BD : MedicineFrequency() {
+  data object BD : MedicineFrequency() {
     override fun toString(): String {
       return "BD"
     }
   }
 
   @Parcelize
-  object TDS : MedicineFrequency() {
+  data object TDS : MedicineFrequency() {
     override fun toString(): String {
       return "TDS"
     }
   }
 
   @Parcelize
-  object QDS : MedicineFrequency() {
+  data object QDS : MedicineFrequency() {
     override fun toString(): String {
       return "QDS"
     }

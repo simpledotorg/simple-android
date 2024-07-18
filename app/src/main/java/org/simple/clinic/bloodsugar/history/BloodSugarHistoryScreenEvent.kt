@@ -9,7 +9,7 @@ sealed class BloodSugarHistoryScreenEvent : UiEvent
 
 data class PatientLoaded(val patient: Patient) : BloodSugarHistoryScreenEvent()
 
-object AddNewBloodSugarClicked : BloodSugarHistoryScreenEvent() {
+data object AddNewBloodSugarClicked : BloodSugarHistoryScreenEvent() {
   override val analyticsName: String = "Blood Sugar History:Add New Blood Sugar"
 }
 

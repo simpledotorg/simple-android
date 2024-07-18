@@ -19,13 +19,13 @@ class PatientsEnterCodeManuallyClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Enter Code Manually Clicked"
 }
 
-object NewPatientClicked : PatientsTabEvent() {
+data object NewPatientClicked : PatientsTabEvent() {
   override val analyticsName = "Patients:Search For Patient Clicked"
 }
 
 data class UserDetailsLoaded(val user: User) : PatientsTabEvent()
 
-object ActivityResumed : PatientsTabEvent()
+data object ActivityResumed : PatientsTabEvent()
 
 data class DataForShowingApprovedStatusLoaded(
     val currentTime: Instant,
@@ -54,7 +54,7 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val appStaleness: Int?
 ) : PatientsTabEvent()
 
-object UpdateNowButtonClicked : PatientsTabEvent()
+data object UpdateNowButtonClicked : PatientsTabEvent()
 
 data class DrugStockReportLoaded(val result: DrugStockReminder.Result) : PatientsTabEvent()
 

@@ -18,7 +18,7 @@ import org.simple.clinic.widgets.visibleOrGone
 
 sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
 
-  object NewBpButton : BloodPressureHistoryListItem() {
+  data object NewBpButton : BloodPressureHistoryListItem() {
 
     override fun layoutResId(): Int = R.layout.list_new_bp_button
 

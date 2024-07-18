@@ -11,11 +11,11 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 class SafeEnumTypeAdapterTest {
 
   sealed class TestType {
-    object Value1 : TestType() {
+    data object Value1 : TestType() {
       override fun toString() = "TestType:Value1"
     }
 
-    object Value2 : TestType() {
+    data object Value2 : TestType() {
       override fun toString() = "TestType:Value2"
     }
 

@@ -10,11 +10,11 @@ data class LoadPhoneNumber(val patientUuid: PatientUuid) : UpdatePhoneNumberEffe
 
 data class ValidatePhoneNumber(val phoneNumber: String) : UpdatePhoneNumberEffect()
 
-object ShowBlankPhoneNumberError : UpdatePhoneNumberEffect()
+data object ShowBlankPhoneNumberError : UpdatePhoneNumberEffect()
 
 data class ShowPhoneNumberTooShortError(val minimumAllowedNumberLength: Int) : UpdatePhoneNumberEffect()
 
-object CloseDialog : UpdatePhoneNumberEffect()
+data object CloseDialog : UpdatePhoneNumberEffect()
 
 data class SaveNewPhoneNumber(
     val patientUuid: PatientUuid,

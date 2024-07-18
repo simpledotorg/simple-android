@@ -9,10 +9,10 @@ interface PinEntryUi {
   sealed class Mode : Parcelable {
 
     @Parcelize
-    object PinEntry : Mode()
+    data object PinEntry : Mode()
 
     @Parcelize
-    object Progress : Mode()
+    data object Progress : Mode()
 
     @Parcelize
     data class BruteForceLocked(val lockUntil: Instant) : Mode()

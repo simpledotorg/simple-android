@@ -4,6 +4,6 @@ sealed class IntroVideoEffect
 
 sealed class IntroVideoViewEffect : IntroVideoEffect()
 
-object OpenVideo : IntroVideoViewEffect()
+data object OpenVideo : IntroVideoViewEffect()
 
-object OpenHome : IntroVideoViewEffect()
+data object OpenHome : IntroVideoViewEffect()

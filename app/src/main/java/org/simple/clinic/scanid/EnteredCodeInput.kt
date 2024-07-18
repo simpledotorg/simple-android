@@ -28,10 +28,10 @@ data class EnteredCodeInput(val enteredCodeText: String) : Parcelable {
 }
 
 sealed class EnteredCodeValidationResult {
-  object Success : EnteredCodeValidationResult()
+  data object Success : EnteredCodeValidationResult()
 
   sealed class Failure : EnteredCodeValidationResult() {
-    object Empty : Failure()
-    object NotEqualToRequiredLength : Failure()
+    data object Empty : Failure()
+    data object NotEqualToRequiredLength : Failure()
   }
 }

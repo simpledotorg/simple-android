@@ -6,4 +6,4 @@ sealed class ConfirmRemoveBloodSugarEffect
 
 data class MarkBloodSugarAsDeleted(val bloodSugarMeasurementUuid: UUID) : ConfirmRemoveBloodSugarEffect()
 
-object CloseConfirmRemoveBloodSugarDialog : ConfirmRemoveBloodSugarEffect()
+data object CloseConfirmRemoveBloodSugarDialog : ConfirmRemoveBloodSugarEffect()

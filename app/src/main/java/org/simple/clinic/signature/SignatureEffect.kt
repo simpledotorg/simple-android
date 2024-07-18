@@ -4,12 +4,12 @@ import android.graphics.Bitmap
 
 sealed class SignatureEffect
 
-object ClearSignature : SignatureEffect()
+data object ClearSignature : SignatureEffect()
 
 data class AcceptSignature(val bitmap: Bitmap?) : SignatureEffect()
 
-object CloseScreen : SignatureEffect()
+data object CloseScreen : SignatureEffect()
 
-object LoadSignatureBitmap : SignatureEffect()
+data object LoadSignatureBitmap : SignatureEffect()
 
 data class SetSignatureBitmap(val bitmap: Bitmap) : SignatureEffect()

@@ -16,13 +16,13 @@ typealias EveModel = Char
 const val defaultModel: EveModel = 'a'
 
 sealed class EveEvent {
-  object BEvent : EveEvent()
-  object CEvent : EveEvent()
+  data object BEvent : EveEvent()
+  data object CEvent : EveEvent()
 }
 
 sealed class EveEffect {
-  object BEffect : EveEffect()
-  object CEffect : EveEffect()
+  data object BEffect : EveEffect()
+  data object CEffect : EveEffect()
 }
 
 class EveInit : Init<EveModel, EveEffect> {

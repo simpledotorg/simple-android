@@ -5,50 +5,50 @@ import org.simple.clinic.patient.businessid.Identifier
 
 sealed class PatientsTabEffect
 
-object RefreshUserDetails : PatientsTabEffect()
+data object RefreshUserDetails : PatientsTabEffect()
 
-object LoadUser : PatientsTabEffect()
+data object LoadUser : PatientsTabEffect()
 
-object LoadInfoForShowingApprovalStatus : PatientsTabEffect()
+data object LoadInfoForShowingApprovalStatus : PatientsTabEffect()
 
 data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsTabEffect()
 
-object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
+data object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 
-object TouchAppUpdateShownAtTime : PatientsTabEffect()
+data object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
-object LoadAppStaleness : PatientsTabEffect()
+data object LoadAppStaleness : PatientsTabEffect()
 
-object ScheduleAppUpdateNotification : PatientsTabEffect()
+data object ScheduleAppUpdateNotification : PatientsTabEffect()
 
 data class LoadDrugStockReportStatus(val date: String) : PatientsTabEffect()
 
-object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
+data object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
 
-object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
+data object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
 
 data class TouchIsDrugStockReportFilled(val isDrugStockReportFilled: Boolean) : PatientsTabEffect()
 
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
-object OpenEnterOtpScreen : PatientsTabViewEffect()
+data object OpenEnterOtpScreen : PatientsTabViewEffect()
 
 data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : PatientsTabViewEffect()
 
-object ShowUserWasApproved : PatientsTabViewEffect()
+data object ShowUserWasApproved : PatientsTabViewEffect()
 
-object HideUserAccountStatus : PatientsTabViewEffect()
+data object HideUserAccountStatus : PatientsTabViewEffect()
 
-object OpenScanBpPassportScreen : PatientsTabViewEffect()
+data object OpenScanBpPassportScreen : PatientsTabViewEffect()
 
-object ShowAppUpdateAvailable : PatientsTabViewEffect()
+data object ShowAppUpdateAvailable : PatientsTabViewEffect()
 
-object OpenSimpleOnPlayStore : PatientsTabViewEffect()
+data object OpenSimpleOnPlayStore : PatientsTabViewEffect()
 
 data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudgePriority) : PatientsTabViewEffect()
 
-object OpenEnterDrugStockScreen : PatientsTabViewEffect()
+data object OpenEnterDrugStockScreen : PatientsTabViewEffect()
 
-object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()
+data object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()
 
-object OpenDrugStockReportsForm : PatientsTabViewEffect()
+data object OpenDrugStockReportsForm : PatientsTabViewEffect()

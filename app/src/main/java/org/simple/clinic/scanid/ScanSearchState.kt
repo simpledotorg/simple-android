@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 sealed class ScanSearchState : Parcelable {
 
   @Parcelize
-  object Searching : ScanSearchState()
+  data object Searching : ScanSearchState()
 
   @Parcelize
-  object NotSearching : ScanSearchState()
+  data object NotSearching : ScanSearchState()
 }

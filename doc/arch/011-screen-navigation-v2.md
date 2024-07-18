@@ -123,7 +123,7 @@ class FirstScreen : Fragment(R.layout.screen_navigation_first) {
   }
 
   @Parcelize
-  object Key : ScreenKey() {
+  data object Key : ScreenKey() {
 
     override fun instantiateFragment(): Fragment {
       return FirstScreen()

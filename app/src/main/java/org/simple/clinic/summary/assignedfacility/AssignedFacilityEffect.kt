@@ -11,4 +11,4 @@ data class ChangeAssignedFacility(
     val updatedAssignedFacilityId: UUID
 ) : AssignedFacilityEffect()
 
-object NotifyAssignedFacilityChanged : AssignedFacilityEffect()
+data object NotifyAssignedFacilityChanged : AssignedFacilityEffect()

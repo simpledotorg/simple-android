@@ -11,19 +11,19 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class PatientStatus : Parcelable {
 
   @Parcelize
-  object Active : PatientStatus()
+  data object Active : PatientStatus()
 
   @Parcelize
-  object Dead : PatientStatus()
+  data object Dead : PatientStatus()
 
   @Parcelize
-  object Migrated : PatientStatus()
+  data object Migrated : PatientStatus()
 
   @Parcelize
-  object Unresponsive : PatientStatus()
+  data object Unresponsive : PatientStatus()
 
   @Parcelize
-  object Inactive : PatientStatus()
+  data object Inactive : PatientStatus()
 
   @Parcelize
   data class Unknown(val actualValue: String) : PatientStatus()

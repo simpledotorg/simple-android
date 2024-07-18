@@ -6,6 +6,6 @@ sealed class AddPhoneNumberEffect
 
 data class AddPhoneNumber(val patientUuid: UUID, val newNumber: String) : AddPhoneNumberEffect()
 
-object CloseDialog : AddPhoneNumberEffect()
+data object CloseDialog : AddPhoneNumberEffect()
 
 data class ValidatePhoneNumber(val newNumber: String) : AddPhoneNumberEffect()

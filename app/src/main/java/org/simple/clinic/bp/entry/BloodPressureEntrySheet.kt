@@ -259,7 +259,7 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
   }
 
   override fun onDestroy() {
-    screenDestroys.onNext(ScreenDestroyed())
+    screenDestroys.onNext(ScreenDestroyed)
     super.onDestroy()
   }
 

@@ -265,6 +265,6 @@ class EditMedicinesScreenLogicTest {
   private fun setupController() {
     fixture.start()
 
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(ScreenCreated)
   }
 }

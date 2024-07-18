@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 sealed class HelpPullResult : Parcelable {
 
   @Parcelize
-  object Success : HelpPullResult()
+  data object Success : HelpPullResult()
 
   @Parcelize
-  object NetworkError : HelpPullResult()
+  data object NetworkError : HelpPullResult()
 
   @Parcelize
-  object OtherError : HelpPullResult()
+  data object OtherError : HelpPullResult()
 }

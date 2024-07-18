@@ -6,19 +6,19 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class AppLockEvent : UiEvent
 
-object AppLockBackClicked : AppLockEvent() {
+data object AppLockBackClicked : AppLockEvent() {
   override val analyticsName = "App Lock:Back Clicked"
 }
 
-object AppLockForgotPinClicked : AppLockEvent() {
+data object AppLockForgotPinClicked : AppLockEvent() {
   override val analyticsName = "App Lock:Forgot PIN Clicked"
 }
 
-object UnlockApp : AppLockEvent() {
+data object UnlockApp : AppLockEvent() {
   override val analyticsName = "App Lock:Unlocked"
 }
 
-object AppLockPinAuthenticated : AppLockEvent() {
+data object AppLockPinAuthenticated : AppLockEvent() {
   override val analyticsName = "App Lock:PIN authenticated"
 }
 
@@ -28,8 +28,8 @@ data class CurrentFacilityLoaded(val facility: Facility) : AppLockEvent()
 
 data class DataProtectionConsentLoaded(val hasUserConsentedToDataProtection: Boolean) : AppLockEvent()
 
-object FinishedMarkingDataProtectionConsent : AppLockEvent()
+data object FinishedMarkingDataProtectionConsent : AppLockEvent()
 
-object AcceptDataProtectionConsentClicked : AppLockEvent() {
+data object AcceptDataProtectionConsentClicked : AppLockEvent() {
   override val analyticsName: String = "App Lock:Accept Data Protection Consent Clicked"
 }

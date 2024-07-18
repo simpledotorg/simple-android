@@ -7,18 +7,18 @@ sealed class DosagePickerEvent : UiEvent
 
 data class DrugsLoaded(val protocolDrugs: List<ProtocolDrug>) : DosagePickerEvent()
 
-object NoneSelected : DosagePickerEvent() {
+data object NoneSelected : DosagePickerEvent() {
   override val analyticsName: String
     get() = "Protocol Drug Dosage Selection:None Selected"
 }
 
-object ExistingPrescriptionDeleted : DosagePickerEvent()
+data object ExistingPrescriptionDeleted : DosagePickerEvent()
 
 data class DosageSelected(val protocolDrug: ProtocolDrug) : DosagePickerEvent() {
   override val analyticsName: String
     get() = "Protocol Drug Dosage Selection:Dosage Selected"
 }
 
-object NewPrescriptionCreated : DosagePickerEvent()
+data object NewPrescriptionCreated : DosagePickerEvent()
 
-object ExistingPrescriptionChanged : DosagePickerEvent()
+data object ExistingPrescriptionChanged : DosagePickerEvent()

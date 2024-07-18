@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 sealed class DrugDurationValidationResult : Parcelable
 
 @Parcelize
-object Blank : DrugDurationValidationResult()
+data object Blank : DrugDurationValidationResult()
 
 @Parcelize
 data class MaxDrugDuration(val maxDuration: Int) : DrugDurationValidationResult()
 
 @Parcelize
-object Valid : DrugDurationValidationResult()
+data object Valid : DrugDurationValidationResult()

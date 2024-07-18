@@ -5,7 +5,7 @@ import java.util.UUID
 
 sealed class ContactDoctorEffect
 
-object LoadMedicalOfficers : ContactDoctorEffect()
+data object LoadMedicalOfficers : ContactDoctorEffect()
 
 data class CreateTeleconsultRequest(
     val patientUuid: UUID,

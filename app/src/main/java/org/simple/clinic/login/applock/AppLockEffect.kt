@@ -2,22 +2,22 @@ package org.simple.clinic.login.applock
 
 sealed class AppLockEffect
 
-object UnlockOnAuthentication : AppLockEffect()
+data object UnlockOnAuthentication : AppLockEffect()
 
-object LoadLoggedInUser : AppLockEffect()
+data object LoadLoggedInUser : AppLockEffect()
 
-object LoadCurrentFacility : AppLockEffect()
+data object LoadCurrentFacility : AppLockEffect()
 
-object LoadDataProtectionConsent : AppLockEffect()
+data object LoadDataProtectionConsent : AppLockEffect()
 
 sealed class AppLockViewEffect : AppLockEffect()
 
-object MarkDataProtectionConsent : AppLockEffect()
+data object MarkDataProtectionConsent : AppLockEffect()
 
-object ExitApp : AppLockViewEffect()
+data object ExitApp : AppLockViewEffect()
 
-object ShowConfirmResetPinDialog : AppLockViewEffect()
+data object ShowConfirmResetPinDialog : AppLockViewEffect()
 
-object RestorePreviousScreen : AppLockViewEffect()
+data object RestorePreviousScreen : AppLockViewEffect()
 
-object ShowDataProtectionConsentDialog : AppLockViewEffect()
+data object ShowDataProtectionConsentDialog : AppLockViewEffect()

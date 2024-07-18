@@ -11,10 +11,10 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class PatientPhoneNumberType : Parcelable {
 
   @Parcelize
-  object Mobile : PatientPhoneNumberType()
+  data object Mobile : PatientPhoneNumberType()
 
   @Parcelize
-  object Landline : PatientPhoneNumberType()
+  data object Landline : PatientPhoneNumberType()
 
   @Parcelize
   data class Unknown(val actualValue: String) : PatientPhoneNumberType()

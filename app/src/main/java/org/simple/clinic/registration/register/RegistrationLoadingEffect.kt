@@ -11,4 +11,4 @@ data class ConvertRegistrationEntryToUserDetails(val registrationEntry: OngoingR
 
 sealed class RegistrationLoadingViewEffect : RegistrationLoadingEffect()
 
-object GoToHomeScreen : RegistrationLoadingViewEffect()
+data object GoToHomeScreen : RegistrationLoadingViewEffect()

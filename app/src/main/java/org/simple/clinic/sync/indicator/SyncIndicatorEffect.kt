@@ -5,14 +5,14 @@ import java.time.Duration
 
 sealed class SyncIndicatorEffect
 
-object FetchLastSyncedStatus : SyncIndicatorEffect()
+data object FetchLastSyncedStatus : SyncIndicatorEffect()
 
-object FetchDataForSyncIndicatorState : SyncIndicatorEffect()
+data object FetchDataForSyncIndicatorState : SyncIndicatorEffect()
 
 data class StartSyncedStateTimer(val timerDuration: Duration) : SyncIndicatorEffect()
 
-object InitiateDataSync : SyncIndicatorEffect()
+data object InitiateDataSync : SyncIndicatorEffect()
 
 data class ShowDataSyncErrorDialog(val errorType: ResolvedError) : SyncIndicatorEffect()
 
-object FetchPendingSyncRecordsState : SyncIndicatorEffect()
+data object FetchPendingSyncRecordsState : SyncIndicatorEffect()

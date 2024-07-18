@@ -23,4 +23,4 @@ data class ShowConfirmDeleteDialog(
 
 data class ShowConfirmDiedDialog(val patientName: String) : DeletePatientViewEffect()
 
-object ShowHomeScreen : DeletePatientViewEffect()
+data object ShowHomeScreen : DeletePatientViewEffect()

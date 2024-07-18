@@ -75,12 +75,12 @@ class RuntimeNetworkStatusTest {
 
   sealed class Event {
 
-    object FirstEvent : Event()
+    data object FirstEvent : Event()
 
     data class SecondEvent(
         override var networkStatus: Optional<NetworkConnectivityStatus> = Optional.empty()
     ) : Event(), RequiresNetwork
 
-    object ThirdEvent : Event()
+    data object ThirdEvent : Event()
   }
 }

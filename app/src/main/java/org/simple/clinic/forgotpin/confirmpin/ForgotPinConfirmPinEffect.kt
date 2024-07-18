@@ -2,9 +2,9 @@ package org.simple.clinic.forgotpin.confirmpin
 
 sealed class ForgotPinConfirmPinEffect
 
-object LoadLoggedInUser : ForgotPinConfirmPinEffect()
+data object LoadLoggedInUser : ForgotPinConfirmPinEffect()
 
-object LoadCurrentFacility : ForgotPinConfirmPinEffect()
+data object LoadCurrentFacility : ForgotPinConfirmPinEffect()
 
 data class ValidatePinConfirmation(
     val previousPin: String,
@@ -15,14 +15,14 @@ data class SyncPatientDataAndResetPin(val newPin: String) : ForgotPinConfirmPinE
 
 sealed class ForgotPinConfirmPinViewEffect : ForgotPinConfirmPinEffect()
 
-object HideError : ForgotPinConfirmPinViewEffect()
+data object HideError : ForgotPinConfirmPinViewEffect()
 
-object ShowMismatchedError : ForgotPinConfirmPinViewEffect()
+data object ShowMismatchedError : ForgotPinConfirmPinViewEffect()
 
-object ShowProgress : ForgotPinConfirmPinViewEffect()
+data object ShowProgress : ForgotPinConfirmPinViewEffect()
 
-object ShowNetworkError : ForgotPinConfirmPinViewEffect()
+data object ShowNetworkError : ForgotPinConfirmPinViewEffect()
 
-object ShowUnexpectedError : ForgotPinConfirmPinViewEffect()
+data object ShowUnexpectedError : ForgotPinConfirmPinViewEffect()
 
-object GoToHomeScreen : ForgotPinConfirmPinViewEffect()
+data object GoToHomeScreen : ForgotPinConfirmPinViewEffect()

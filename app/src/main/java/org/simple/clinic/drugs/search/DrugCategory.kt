@@ -10,20 +10,20 @@ sealed class DrugCategory {
 
   sealed class Hypertension : DrugCategory() {
 
-    object CCB : Hypertension()
+    data object CCB : Hypertension()
 
-    object ARB : Hypertension()
+    data object ARB : Hypertension()
 
-    object ACE : Hypertension()
+    data object ACE : Hypertension()
 
-    object Diuretic : Hypertension()
+    data object Diuretic : Hypertension()
 
-    object Other : Hypertension()
+    data object Other : Hypertension()
   }
 
-  object Diabetes : DrugCategory()
+  data object Diabetes : DrugCategory()
 
-  object Other : DrugCategory()
+  data object Other : DrugCategory()
 
   data class Unknown(val actualValue: String) : DrugCategory()
 

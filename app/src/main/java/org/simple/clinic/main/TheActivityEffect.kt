@@ -4,22 +4,22 @@ import org.simple.clinic.navigation.v2.History
 
 sealed class TheActivityEffect
 
-object LoadInitialScreenInfo : TheActivityEffect()
+data object LoadInitialScreenInfo : TheActivityEffect()
 
-object ClearLockAfterTimestamp : TheActivityEffect()
+data object ClearLockAfterTimestamp : TheActivityEffect()
 
-object ListenForUserVerifications : TheActivityEffect()
+data object ListenForUserVerifications : TheActivityEffect()
 
-object ShowUserLoggedOutOnOtherDeviceAlert : TheActivityEffect()
+data object ShowUserLoggedOutOnOtherDeviceAlert : TheActivityEffect()
 
-object ListenForUserUnauthorizations : TheActivityEffect()
+data object ListenForUserUnauthorizations : TheActivityEffect()
 
-object RedirectToLoginScreen : TheActivityEffect()
+data object RedirectToLoginScreen : TheActivityEffect()
 
-object ListenForUserDisapprovals : TheActivityEffect()
+data object ListenForUserDisapprovals : TheActivityEffect()
 
-object ClearPatientData : TheActivityEffect()
+data object ClearPatientData : TheActivityEffect()
 
-object ShowAccessDeniedScreen : TheActivityEffect()
+data object ShowAccessDeniedScreen : TheActivityEffect()
 
 data class SetCurrentScreenHistory(val history: History) : TheActivityEffect()

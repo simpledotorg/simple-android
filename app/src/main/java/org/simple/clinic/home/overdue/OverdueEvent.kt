@@ -46,14 +46,14 @@ data class ShareOverdueListClicked(
   override val analyticsName = "Overdue Screen:Share clicked"
 }
 
-object PendingListFooterClicked : OverdueEvent()
+data object PendingListFooterClicked : OverdueEvent()
 
 data class ChevronClicked(val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle) : OverdueEvent()
 
-object OverdueSearchButtonClicked : OverdueEvent()
+data object OverdueSearchButtonClicked : OverdueEvent()
 
 data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueEvent()
 
-object ClearSelectedOverdueAppointmentsClicked : OverdueEvent()
+data object ClearSelectedOverdueAppointmentsClicked : OverdueEvent()
 
 data class SelectedOverdueAppointmentsLoaded(val selectedAppointmentIds: Set<UUID>) : OverdueEvent()

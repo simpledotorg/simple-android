@@ -9,7 +9,7 @@ data class UserDetailsLoaded(val name: String, val phoneNumber: String) : Settin
 
 data class CurrentLanguageLoaded(val language: Language) : SettingsEvent()
 
-object ChangeLanguage : SettingsEvent() {
+data object ChangeLanguage : SettingsEvent() {
   override val analyticsName: String = "Settings:Change Language Clicked"
 }
 
@@ -19,15 +19,15 @@ data class AppUpdateAvailabilityChecked(val isUpdateAvailable: Boolean) : Settin
 
 data class UserLogoutResult(val result: UserSession.LogoutResult) : SettingsEvent()
 
-object LogoutButtonClicked : SettingsEvent() {
+data object LogoutButtonClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Logout Button Clicked"
 }
 
-object ConfirmLogoutButtonClicked : SettingsEvent() {
+data object ConfirmLogoutButtonClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Confirm Logout Button Clicked"
 }
 
-object BackClicked : SettingsEvent() {
+data object BackClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Back Clicked"
 }
 

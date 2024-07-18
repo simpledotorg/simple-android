@@ -16,7 +16,7 @@ data class ForgotPinCreateNewPinTextChanged(val pin: String) : ForgotPinCreateNe
   override val analyticsName = "Forgot PIN:Create new PIN:Text Changed"
 }
 
-object ForgotPinCreateNewPinSubmitClicked : ForgotPinCreateNewEvent() {
+data object ForgotPinCreateNewPinSubmitClicked : ForgotPinCreateNewEvent() {
   override val analyticsName = "Forgot PIN:Create new PIN:Submit Clicked"
 }
 

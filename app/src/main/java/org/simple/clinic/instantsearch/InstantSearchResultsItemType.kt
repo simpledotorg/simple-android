@@ -78,7 +78,7 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
     }
   }
 
-  object NearbyFacilitiesHeader : InstantSearchResultsItemType() {
+  data object NearbyFacilitiesHeader : InstantSearchResultsItemType() {
 
     override fun layoutResId(): Int = R.layout.list_patient_search_header
 

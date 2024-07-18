@@ -6,10 +6,10 @@ import kotlinx.parcelize.Parcelize
 sealed class OpenAs : Parcelable
 
 @Parcelize
-object Share : OpenAs()
+data object Share : OpenAs()
 
 @Parcelize
-object SharingInProgress : OpenAs()
+data object SharingInProgress : OpenAs()
 
 @Parcelize
-object Download : OpenAs()
+data object Download : OpenAs()

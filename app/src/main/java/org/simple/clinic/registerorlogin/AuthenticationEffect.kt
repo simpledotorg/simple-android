@@ -2,6 +2,6 @@ package org.simple.clinic.registerorlogin
 
 sealed class AuthenticationEffect
 
-object OpenCountrySelectionScreen : AuthenticationEffect()
+data object OpenCountrySelectionScreen : AuthenticationEffect()
 
-object OpenRegistrationPhoneScreen : AuthenticationEffect()
+data object OpenRegistrationPhoneScreen : AuthenticationEffect()

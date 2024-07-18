@@ -8,4 +8,4 @@ data class LoadRecentPatients(val count: Int) : LatestRecentPatientsEffect()
 
 data class OpenPatientSummary(val patientUuid: UUID) : LatestRecentPatientsEffect()
 
-object OpenAllRecentPatientsScreen : LatestRecentPatientsEffect()
+data object OpenAllRecentPatientsScreen : LatestRecentPatientsEffect()

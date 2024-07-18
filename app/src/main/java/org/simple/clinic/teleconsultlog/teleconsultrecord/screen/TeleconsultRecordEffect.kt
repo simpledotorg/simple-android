@@ -6,9 +6,9 @@ import java.util.UUID
 
 sealed class TeleconsultRecordEffect
 
-object GoBack : TeleconsultRecordEffect()
+data object GoBack : TeleconsultRecordEffect()
 
-object NavigateToTeleconsultSuccess : TeleconsultRecordEffect()
+data object NavigateToTeleconsultSuccess : TeleconsultRecordEffect()
 
 data class LoadTeleconsultRecord(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
 
@@ -22,7 +22,7 @@ data class CreateTeleconsultRecord(
 
 data class LoadPatientDetails(val patientUuid: UUID) : TeleconsultRecordEffect()
 
-object ShowTeleconsultNotRecordedWarning : TeleconsultRecordEffect()
+data object ShowTeleconsultNotRecordedWarning : TeleconsultRecordEffect()
 
 data class ValidateTeleconsultRecord(val teleconsultRecordId: UUID) : TeleconsultRecordEffect()
 

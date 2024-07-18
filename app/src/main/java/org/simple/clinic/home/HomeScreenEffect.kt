@@ -2,10 +2,10 @@ package org.simple.clinic.home
 
 sealed class HomeScreenEffect
 
-object LoadCurrentFacility : HomeScreenEffect()
+data object LoadCurrentFacility : HomeScreenEffect()
 
 sealed class HomeScreenViewEffect : HomeScreenEffect()
 
-object OpenFacilitySelection : HomeScreenViewEffect()
+data object OpenFacilitySelection : HomeScreenViewEffect()
 
-object ShowNotificationPermissionDenied : HomeScreenViewEffect()
+data object ShowNotificationPermissionDenied : HomeScreenViewEffect()

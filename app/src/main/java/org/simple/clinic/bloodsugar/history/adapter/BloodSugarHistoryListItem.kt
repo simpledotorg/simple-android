@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.visibleOrGone
 
 sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
 
-  object NewBloodSugarButton : BloodSugarHistoryListItem() {
+  data object NewBloodSugarButton : BloodSugarHistoryListItem() {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {

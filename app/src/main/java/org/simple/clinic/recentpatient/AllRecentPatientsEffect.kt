@@ -6,7 +6,7 @@ import java.util.UUID
 
 sealed class AllRecentPatientsEffect
 
-object LoadAllRecentPatients : AllRecentPatientsEffect()
+data object LoadAllRecentPatients : AllRecentPatientsEffect()
 
 sealed class AllRecentPatientsViewEffect : AllRecentPatientsEffect()
 

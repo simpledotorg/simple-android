@@ -20,16 +20,16 @@ sealed class PrefillDate : BloodPressureEntryEffect() {
     }
   }
 
-  object PrefillCurrentDate : PrefillDate()
+  data object PrefillCurrentDate : PrefillDate()
 
   data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
 
-object HideBpErrorMessage : BloodPressureEntryEffect()
+data object HideBpErrorMessage : BloodPressureEntryEffect()
 
-object ChangeFocusToDiastolic : BloodPressureEntryEffect()
+data object ChangeFocusToDiastolic : BloodPressureEntryEffect()
 
-object ChangeFocusToSystolic : BloodPressureEntryEffect()
+data object ChangeFocusToSystolic : BloodPressureEntryEffect()
 
 data class SetSystolic(val systolic: String) : BloodPressureEntryEffect()
 
@@ -39,13 +39,13 @@ data class SetDiastolic(val diastolic: String) : BloodPressureEntryEffect()
 
 data class ShowConfirmRemoveBloodPressureDialog(val bpUuid: UUID) : BloodPressureEntryEffect()
 
-object Dismiss : BloodPressureEntryEffect()
+data object Dismiss : BloodPressureEntryEffect()
 
-object HideDateErrorMessage : BloodPressureEntryEffect()
+data object HideDateErrorMessage : BloodPressureEntryEffect()
 
 data class ShowBpValidationError(val result: ValidationResult) : BloodPressureEntryEffect()
 
-object ShowDateEntryScreen : BloodPressureEntryEffect()
+data object ShowDateEntryScreen : BloodPressureEntryEffect()
 
 data class ShowBpEntryScreen(val date: LocalDate) : BloodPressureEntryEffect()
 
@@ -62,7 +62,7 @@ data class CreateNewBpEntry(
     get() = userEnteredDate != prefilledDate
 }
 
-object SetBpSavedResultAndFinish : BloodPressureEntryEffect()
+data object SetBpSavedResultAndFinish : BloodPressureEntryEffect()
 
 data class UpdateBpEntry(
     val bpUuid: UUID,

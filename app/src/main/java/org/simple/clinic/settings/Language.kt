@@ -21,4 +21,4 @@ data class ProvidedLanguage(val displayName: String, val languageCode: String) :
 }
 
 @Parcelize
-object SystemDefaultLanguage : Language()
+data object SystemDefaultLanguage : Language()

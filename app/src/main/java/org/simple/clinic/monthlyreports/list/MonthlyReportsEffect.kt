@@ -5,7 +5,7 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 sealed class MonthlyReportsEffect
 
-object LoadCurrentFacility : MonthlyReportsEffect()
+data object LoadCurrentFacility : MonthlyReportsEffect()
 
 data class LoadMonthlyReportsEffect(
     val questionnaireType: QuestionnaireType
@@ -13,7 +13,7 @@ data class LoadMonthlyReportsEffect(
 
 sealed class MonthlyReportsViewEffect : MonthlyReportsEffect()
 
-object GoBack : MonthlyReportsViewEffect()
+data object GoBack : MonthlyReportsViewEffect()
 
 data class OpenMonthlyReportForm(
     val questionnaireType: QuestionnaireType,

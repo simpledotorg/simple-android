@@ -6,31 +6,31 @@ import org.simple.clinic.setup.runcheck.Disallowed
 
 sealed class SetupActivityEffect
 
-object FetchUserDetails : SetupActivityEffect()
+data object FetchUserDetails : SetupActivityEffect()
 
-object GoToMainActivity : SetupActivityEffect()
+data object GoToMainActivity : SetupActivityEffect()
 
-object ShowOnboardingScreen : SetupActivityEffect()
+data object ShowOnboardingScreen : SetupActivityEffect()
 
-object InitializeDatabase : SetupActivityEffect()
+data object InitializeDatabase : SetupActivityEffect()
 
-object ShowCountrySelectionScreen : SetupActivityEffect()
+data object ShowCountrySelectionScreen : SetupActivityEffect()
 
-object RunDatabaseMaintenance : SetupActivityEffect()
+data object RunDatabaseMaintenance : SetupActivityEffect()
 
-object FetchDatabaseMaintenanceLastRunAtTime : SetupActivityEffect()
+data object FetchDatabaseMaintenanceLastRunAtTime : SetupActivityEffect()
 
 data class ShowNotAllowedToRunMessage(val reason: Disallowed.Reason) : SetupActivityEffect()
 
-object CheckIfAppCanRun : SetupActivityEffect()
+data object CheckIfAppCanRun : SetupActivityEffect()
 
 data class SaveCountryAndDeployment(
     val country: Country,
     val deployment: Deployment
 ): SetupActivityEffect()
 
-object DeleteStoredCountryV1 : SetupActivityEffect()
+data object DeleteStoredCountryV1 : SetupActivityEffect()
 
-object ExecuteDatabaseEncryption : SetupActivityEffect()
+data object ExecuteDatabaseEncryption : SetupActivityEffect()
 
-object CheckMinimumMemory : SetupActivityEffect()
+data object CheckMinimumMemory : SetupActivityEffect()

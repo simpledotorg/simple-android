@@ -11,7 +11,7 @@ data class ValidatePinConfirmation(
 
 sealed class RegistrationConfirmPinViewEffect : RegistrationConfirmPinEffect()
 
-object ClearPin : RegistrationConfirmPinViewEffect()
+data object ClearPin : RegistrationConfirmPinViewEffect()
 
 data class OpenFacilitySelectionScreen(val entry: OngoingRegistrationEntry) : RegistrationConfirmPinViewEffect()
 

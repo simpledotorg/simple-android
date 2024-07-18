@@ -13,8 +13,8 @@ import kotlin.properties.Delegates
 typealias CounterModel = Int
 
 sealed class CounterEvent {
-  object Increment : CounterEvent()
-  object Decrement : CounterEvent()
+  data object Increment : CounterEvent()
+  data object Decrement : CounterEvent()
 }
 
 class CounterUpdate() : Update<CounterModel, CounterEvent, CounterEffect> {
@@ -34,7 +34,7 @@ fun createEffectHandler(view: VerifiableCounterView): ObservableTransformer<Coun
 }
 
 sealed class CounterEffect {
-  object NegativeNumberEffect : CounterEffect()
+  data object NegativeNumberEffect : CounterEffect()
 }
 
 class VerifiableCounterView {

@@ -188,6 +188,6 @@ class LookupPatientOnline @Inject constructor(
   sealed class Result {
     data class Found(val medicalRecords: List<CompleteMedicalRecord>) : Result()
     data class NotFound(val identifier: String) : Result()
-    object OtherError : Result()
+    data object OtherError : Result()
   }
 }

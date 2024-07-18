@@ -45,13 +45,13 @@ sealed class InputFieldType : Parcelable {
 }
 
 @Parcelize
-object IntegerType : InputFieldType()
+data object IntegerType : InputFieldType()
 
 @Parcelize
-object StringType : InputFieldType()
+data object StringType : InputFieldType()
 
 @Parcelize
-object DateType : InputFieldType()
+data object DateType : InputFieldType()
 
 @Parcelize
 data class UnknownType(val actualValue: String) : InputFieldType()

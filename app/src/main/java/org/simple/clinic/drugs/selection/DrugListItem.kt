@@ -91,7 +91,7 @@ data class CustomPrescribedDrugListItem(
   }
 }
 
-object AddNewPrescriptionListItem : DrugListItem() {
+data object AddNewPrescriptionListItem : DrugListItem() {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_new_custom_drug
 
@@ -122,5 +122,5 @@ sealed class DrugListItemClicked {
 
   data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : DrugListItemClicked()
 
-  object AddNewPrescriptionClicked : DrugListItemClicked()
+  data object AddNewPrescriptionClicked : DrugListItemClicked()
 }

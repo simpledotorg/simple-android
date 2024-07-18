@@ -8,11 +8,11 @@ sealed class CriticalAppUpdateEvent : UiEvent
 
 data class AppUpdateHelpContactLoaded(val appUpdateHelpContact: Optional<AppUpdateHelpContact>) : CriticalAppUpdateEvent()
 
-object ContactHelpClicked : CriticalAppUpdateEvent() {
+data object ContactHelpClicked : CriticalAppUpdateEvent() {
   override val analyticsName: String = "Critical App Update Dialog:Contact Help Clicked"
 }
 
-object UpdateAppClicked : CriticalAppUpdateEvent() {
+data object UpdateAppClicked : CriticalAppUpdateEvent() {
   override val analyticsName: String = "Critical App Update Dialog:Update App Clicked"
 }
 

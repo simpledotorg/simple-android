@@ -11,4 +11,4 @@ data class FacilityChanged(val newFacility: Facility) : ConfirmFacilityChangeEve
 
 data class CurrentFacilityLoaded(val currentFacility: Facility) : ConfirmFacilityChangeEvent()
 
-object FacilitySyncGroupSwitchedAtTimeTouched : ConfirmFacilityChangeEvent()
+data object FacilitySyncGroupSwitchedAtTimeTouched : ConfirmFacilityChangeEvent()

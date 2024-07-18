@@ -8,7 +8,7 @@ sealed class RegistrationPhoneEffect
 
 data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()
 
-object SyncFacilities : RegistrationPhoneEffect()
+data object SyncFacilities : RegistrationPhoneEffect()
 
 data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
 
@@ -18,7 +18,7 @@ data class CreateUserLocally(
     val status: UserStatus
 ) : RegistrationPhoneEffect()
 
-object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
+data object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
 
 sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()
 
@@ -26,8 +26,8 @@ data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhon
 
 data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneViewEffect()
 
-object ProceedToLogin : RegistrationPhoneViewEffect()
+data object ProceedToLogin : RegistrationPhoneViewEffect()
 
-object ShowUserLoggedOutAlert : RegistrationPhoneViewEffect()
+data object ShowUserLoggedOutAlert : RegistrationPhoneViewEffect()
 
 data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneViewEffect()

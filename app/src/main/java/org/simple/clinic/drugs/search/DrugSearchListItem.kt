@@ -87,7 +87,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     }
   }
 
-  object Divider : DrugSearchListItem() {
+  data object Divider : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search_divider
 
@@ -112,7 +112,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     }
   }
 
-  object TopCornerCapItem : DrugSearchListItem() {
+  data object TopCornerCapItem : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search_corner_cap
 
@@ -126,7 +126,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     }
   }
 
-  object BottomCornerCapItem : DrugSearchListItem() {
+  data object BottomCornerCapItem : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search_corner_cap
 

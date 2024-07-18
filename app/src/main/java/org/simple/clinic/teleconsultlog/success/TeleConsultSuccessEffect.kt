@@ -6,7 +6,7 @@ sealed class TeleConsultSuccessEffect {
 
   data class LoadPatientDetails(val patientUuid: UUID) : TeleConsultSuccessEffect()
 
-  object GoToHomeScreen : TeleConsultSuccessEffect()
+  data object GoToHomeScreen : TeleConsultSuccessEffect()
 
   data class GoToPrescriptionScreen(
       val patientUuid: UUID,

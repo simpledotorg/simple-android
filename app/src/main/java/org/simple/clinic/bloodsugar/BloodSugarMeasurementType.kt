@@ -46,16 +46,16 @@ sealed class BloodSugarMeasurementType : Parcelable {
 }
 
 @Parcelize
-object Random : BloodSugarMeasurementType()
+data object Random : BloodSugarMeasurementType()
 
 @Parcelize
-object PostPrandial : BloodSugarMeasurementType()
+data object PostPrandial : BloodSugarMeasurementType()
 
 @Parcelize
-object Fasting : BloodSugarMeasurementType()
+data object Fasting : BloodSugarMeasurementType()
 
 @Parcelize
-object HbA1c : BloodSugarMeasurementType()
+data object HbA1c : BloodSugarMeasurementType()
 
 @Parcelize
 data class Unknown(val actualValue: String) : BloodSugarMeasurementType()

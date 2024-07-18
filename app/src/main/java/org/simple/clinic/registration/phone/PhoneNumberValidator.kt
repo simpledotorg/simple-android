@@ -12,13 +12,13 @@ class PhoneNumberValidator(
 
   sealed class Result : Parcelable {
     @Parcelize
-    object ValidNumber : Result()
+    data object ValidNumber : Result()
 
     @Parcelize
     data class LengthTooShort(val minimumAllowedNumberLength: Int) : Result()
 
     @Parcelize
-    object Blank : Result()
+    data object Blank : Result()
   }
 
   fun validate(number: String): Result {

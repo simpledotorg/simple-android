@@ -7,7 +7,7 @@ import java.time.Instant
 sealed class OtpEntryMode : Parcelable {
 
   @Parcelize
-  object OtpEntry : OtpEntryMode()
+  data object OtpEntry : OtpEntryMode()
 
   @Parcelize
   data class BruteForceOtpEntryLocked(val lockUntil: Instant) : OtpEntryMode()

@@ -9,17 +9,17 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class ScanSimpleIdEvent : UiEvent
 
-object ShowKeyboard : ScanSimpleIdEvent() {
+data object ShowKeyboard : ScanSimpleIdEvent() {
   override val analyticsName: String
     get() = "Scan Simple Card:Show keyboard"
 }
 
-object HideKeyboard : ScanSimpleIdEvent() {
+data object HideKeyboard : ScanSimpleIdEvent() {
   override val analyticsName: String
     get() = "Scan Simple Card:Hide keyboard"
 }
 
-object EnteredCodeChanged : ScanSimpleIdEvent() {
+data object EnteredCodeChanged : ScanSimpleIdEvent() {
   override val analyticsName: String
     get() = "Scan Simple Card:Entered code changed"
 }
@@ -45,7 +45,7 @@ data class ScannedQRCodeJsonParsed(
     val healthIdNumber: String?
 ) : ScanSimpleIdEvent()
 
-object InvalidQrCode : ScanSimpleIdEvent() {
+data object InvalidQrCode : ScanSimpleIdEvent() {
   override val analyticsName = "Scan Simple Card:Invalid QR Code scanned"
 }
 

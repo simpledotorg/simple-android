@@ -76,9 +76,9 @@ data class SupportedLanguagesLoadedEvent(val languages: List<Language>) : Change
 
 data class SelectLanguageEvent(val newLanguage: Language) : ChangeLanguageEvent()
 
-object CurrentLanguageChangedEvent : ChangeLanguageEvent()
+data object CurrentLanguageChangedEvent : ChangeLanguageEvent()
 
-object SaveCurrentLanguageEvent : ChangeLanguageEvent()
+data object SaveCurrentLanguageEvent : ChangeLanguageEvent()
 ```
 
 ##### `Effect`
@@ -91,15 +91,15 @@ of this sealed class. These will be consumed by the `EffectHandler` component to
 ```kotlin
 sealed class ChangeLanguageEffect
 
-object LoadCurrentLanguageEffect : ChangeLanguageEffect()
+data object LoadCurrentLanguageEffect : ChangeLanguageEffect()
 
-object LoadSupportedLanguagesEffect : ChangeLanguageEffect()
+data object LoadSupportedLanguagesEffect : ChangeLanguageEffect()
 
 data class UpdateCurrentLanguageEffect(val newLanguage: Language) : ChangeLanguageEffect()
 
-object GoBack : ChangeLanguageEffect()
+data object GoBack : ChangeLanguageEffect()
 
-object RestartActivity : ChangeLanguageEffect()
+data object RestartActivity : ChangeLanguageEffect()
 ```
 
 ##### `Update`

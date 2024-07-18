@@ -45,13 +45,13 @@ sealed class QuestionnaireType : Parcelable {
 }
 
 @Parcelize
-object MonthlyScreeningReports : QuestionnaireType()
+data object MonthlyScreeningReports : QuestionnaireType()
 
 @Parcelize
-object MonthlySuppliesReports : QuestionnaireType()
+data object MonthlySuppliesReports : QuestionnaireType()
 
 @Parcelize
-object DrugStockReports : QuestionnaireType()
+data object DrugStockReports : QuestionnaireType()
 
 @Parcelize
 data class Unknown(val actualValue: String) : QuestionnaireType()

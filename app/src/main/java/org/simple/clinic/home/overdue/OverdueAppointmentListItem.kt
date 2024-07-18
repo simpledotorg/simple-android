@@ -464,7 +464,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object NoPendingPatients : OverdueAppointmentListItem() {
+  data object NoPendingPatients : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_no_pending_patients
 
@@ -473,7 +473,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object SearchOverduePatientsButtonItem : OverdueAppointmentListItem() {
+  data object SearchOverduePatientsButtonItem : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_search_overdue_patient_button
 
@@ -485,7 +485,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object Divider : OverdueAppointmentListItem() {
+  data object Divider : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_divider
 

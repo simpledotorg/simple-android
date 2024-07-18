@@ -20,13 +20,13 @@ sealed class Outcome : Parcelable {
   )
 
   @Parcelize
-  object AgreedToVisit : Outcome()
+  data object AgreedToVisit : Outcome()
 
   @Parcelize
-  object RemovedFromOverdueList : Outcome()
+  data object RemovedFromOverdueList : Outcome()
 
   @Parcelize
-  object RemindToCallLater : Outcome()
+  data object RemindToCallLater : Outcome()
 
   @Parcelize
   data class Unknown(val actualValue: String) : Outcome()

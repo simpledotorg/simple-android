@@ -14,6 +14,6 @@ data class GetPatientNameFromId(val patientUuid: UUID) : LinkIdWithPatientEffect
 
 sealed class LinkIdWithPatientViewEffect : LinkIdWithPatientEffect()
 
-object CloseSheetWithOutIdLinked : LinkIdWithPatientViewEffect()
+data object CloseSheetWithOutIdLinked : LinkIdWithPatientViewEffect()
 
-object CloseSheetWithLinkedId : LinkIdWithPatientViewEffect()
+data object CloseSheetWithLinkedId : LinkIdWithPatientViewEffect()

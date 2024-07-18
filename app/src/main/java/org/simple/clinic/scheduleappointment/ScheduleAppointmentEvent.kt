@@ -10,11 +10,11 @@ sealed class ScheduleAppointmentEvent : UiEvent
 
 data class DefaultAppointmentDateLoaded(val potentialAppointmentDate: PotentialAppointmentDate) : ScheduleAppointmentEvent()
 
-object AppointmentDateIncremented : ScheduleAppointmentEvent() {
+data object AppointmentDateIncremented : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Increment appointment due date"
 }
 
-object AppointmentDateDecremented : ScheduleAppointmentEvent() {
+data object AppointmentDateDecremented : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Decrement appointment due date"
 }
 
@@ -22,7 +22,7 @@ data class AppointmentCalendarDateSelected(val selectedDate: LocalDate) : Schedu
   override val analyticsName = "Schedule Appointment:Appointment calendar date selected"
 }
 
-object ManuallySelectAppointmentDateClicked : ScheduleAppointmentEvent() {
+data object ManuallySelectAppointmentDateClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Manually Select Appointment Date"
 }
 
@@ -35,23 +35,23 @@ data class PatientFacilityChanged(val facility: Facility) : ScheduleAppointmentE
   override val analyticsName = "Schedule Appointment: Patient facility changed"
 }
 
-object AppointmentScheduled : ScheduleAppointmentEvent()
+data object AppointmentScheduled : ScheduleAppointmentEvent()
 
-object DoneClicked : ScheduleAppointmentEvent() {
+data object DoneClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Appointment done"
 }
 
 data class PatientDefaulterStatusLoaded(val isPatientADefaulter: Boolean) : ScheduleAppointmentEvent()
 
-object SchedulingSkipped : ScheduleAppointmentEvent() {
+data object SchedulingSkipped : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Scheduling skipped"
 }
 
 data class TeleconsultRecordLoaded(val teleconsultRecord: TeleconsultRecord?) : ScheduleAppointmentEvent()
 
-object NextClicked : ScheduleAppointmentEvent() {
+data object NextClicked : ScheduleAppointmentEvent() {
   override val analyticsName = "Schedule Appointment:Next clicked"
 }
 
-object AppointmentScheduledForPatientFromNext : ScheduleAppointmentEvent()
+data object AppointmentScheduledForPatientFromNext : ScheduleAppointmentEvent()
 

@@ -9,7 +9,7 @@ data class LoadProtocolDrugsByName(val drugName: String) : DosagePickerEffect()
 
 data class DeleteExistingPrescription(val prescriptionUuid: UUID) : DosagePickerEffect()
 
-object CloseScreen : DosagePickerEffect()
+data object CloseScreen : DosagePickerEffect()
 
 data class CreateNewPrescription(
     val patientUuid: UUID,

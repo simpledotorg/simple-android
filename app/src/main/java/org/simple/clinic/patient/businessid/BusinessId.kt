@@ -114,22 +114,22 @@ data class BusinessId(
     }
 
     @Parcelize
-    object BpPassportMetaDataV1 : MetaDataVersion()
+    data object BpPassportMetaDataV1 : MetaDataVersion()
 
     @Parcelize
-    object BangladeshNationalIdMetaDataV1 : MetaDataVersion()
+    data object BangladeshNationalIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
-    object MedicalRecordNumberMetaDataV1 : MetaDataVersion()
+    data object MedicalRecordNumberMetaDataV1 : MetaDataVersion()
 
     @Parcelize
-    object IndiaNationalHealthIdMetaDataV1 : MetaDataVersion()
+    data object IndiaNationalHealthIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
-    object SriLankaNationIdMetaDataV1 : MetaDataVersion()
+    data object SriLankaNationIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
-    object SriLankaPersonalHealthNumberMetaDataV1 : MetaDataVersion()
+    data object SriLankaPersonalHealthNumberMetaDataV1 : MetaDataVersion()
 
     @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()

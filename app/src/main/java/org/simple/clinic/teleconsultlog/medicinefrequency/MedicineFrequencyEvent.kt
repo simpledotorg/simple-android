@@ -8,6 +8,6 @@ data class MedicineFrequencyChanged(val medicineFrequency: MedicineFrequency) : 
   override val analyticsName: String = "Medicine Frequency:Medicine Frequency Changed"
 }
 
-object SaveMedicineFrequencyClicked : MedicineFrequencyEvent() {
+data object SaveMedicineFrequencyClicked : MedicineFrequencyEvent() {
   override val analyticsName: String = "Save Medicine Frequency:Save Clicked"
 }

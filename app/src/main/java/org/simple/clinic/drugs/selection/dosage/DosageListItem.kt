@@ -77,7 +77,7 @@ sealed class DosageListItem : ItemAdapter.Item<DosageListItem.Event> {
   }
 
   sealed class Event {
-    object NoneClicked : Event()
+    data object NoneClicked : Event()
     data class DosageClicked(val protocolDrug: ProtocolDrug) : Event()
   }
 }

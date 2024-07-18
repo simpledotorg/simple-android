@@ -56,13 +56,13 @@ data class Appointment(
   sealed class Status : Parcelable {
 
     @Parcelize
-    object Scheduled : Status()
+    data object Scheduled : Status()
 
     @Parcelize
-    object Cancelled : Status()
+    data object Cancelled : Status()
 
     @Parcelize
-    object Visited : Status()
+    data object Visited : Status()
 
     @Parcelize
     data class Unknown(val actualValue: String) : Status()
@@ -102,10 +102,10 @@ data class Appointment(
   sealed class AppointmentType : Parcelable {
 
     @Parcelize
-    object Manual : AppointmentType()
+    data object Manual : AppointmentType()
 
     @Parcelize
-    object Automatic : AppointmentType()
+    data object Automatic : AppointmentType()
 
     @Parcelize
     data class Unknown(val actual: String) : AppointmentType()

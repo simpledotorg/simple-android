@@ -4,6 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class ConfirmRemoveBloodSugarEvent : UiEvent
 
-object BloodSugarMarkedAsDeleted : ConfirmRemoveBloodSugarEvent()
+data object BloodSugarMarkedAsDeleted : ConfirmRemoveBloodSugarEvent()
 
-object RemoveBloodSugarClicked : ConfirmRemoveBloodSugarEvent()
+data object RemoveBloodSugarClicked : ConfirmRemoveBloodSugarEvent()

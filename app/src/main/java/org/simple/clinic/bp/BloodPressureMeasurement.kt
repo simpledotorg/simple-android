@@ -24,10 +24,13 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
-@Entity(indices = [
-  Index("patientUuid", unique = false),
-  Index("facilityUuid", unique = false)
-])
+@Entity(
+    tableName = BloodPressureMeasurement.TABLE_NAME,
+    indices = [
+      Index("patientUuid", unique = false),
+      Index("facilityUuid", unique = false)
+    ]
+)
 data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,
@@ -51,6 +54,10 @@ data class BloodPressureMeasurement(
 
     val recordedAt: Instant
 ) : Parcelable {
+
+  companion object {
+    const val TABLE_NAME = "BloodPressureMeasurement"
+  }
 
   @Transient
   @IgnoredOnParcel

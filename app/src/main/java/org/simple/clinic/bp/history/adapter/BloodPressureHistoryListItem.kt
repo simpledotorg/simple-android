@@ -21,14 +21,16 @@ import org.simple.clinic.widgets.visibleOrGone
 
 sealed interface BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
 
-  fun from(history: PagingData<BloodPressureHistoryListItem>) = history
-      .insertSeparators { previous: BloodPressureHistoryListItem?, next: BloodPressureHistoryListItem? ->
-        if (previous == null && next != null) {
-          NewBpButton
-        } else {
-          null
+  companion object {
+    fun from(history: PagingData<BloodPressureHistoryListItem>) = history
+        .insertSeparators { previous: BloodPressureHistoryListItem?, next: BloodPressureHistoryListItem? ->
+          if (previous == null && next != null) {
+            NewBpButton
+          } else {
+            null
+          }
         }
-      }
+  }
 
   data object NewBpButton : BloodPressureHistoryListItem {
 

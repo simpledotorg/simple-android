@@ -173,7 +173,7 @@ class BloodPressureHistoryScreen : BaseScreen<
   }
 
   override fun showBloodPressures(bloodPressures: PagingData<BloodPressureHistoryListItem>) {
-    bloodPressureHistoryAdapter.submitData(lifecycle, bloodPressures)
+    bloodPressureHistoryAdapter.submitData(lifecycle, BloodPressureHistoryListItem.from(bloodPressures))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

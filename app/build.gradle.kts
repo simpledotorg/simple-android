@@ -457,6 +457,8 @@ dependencies {
   androidTestImplementation(libs.androidx.compose.test.junit)
   debugImplementation(libs.androidx.compose.test.manifest)
 
+  androidTestImplementation(libs.androidx.paging.test)
+
   /**
    * Misc
    */

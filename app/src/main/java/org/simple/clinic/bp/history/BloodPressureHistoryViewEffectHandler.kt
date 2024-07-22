@@ -11,7 +11,6 @@ class BloodPressureHistoryViewEffectHandler(
     when (viewEffect) {
       is OpenBloodPressureEntrySheet -> uiActions.openBloodPressureEntrySheet(viewEffect.patientUuid)
       is OpenBloodPressureUpdateSheet -> uiActions.openBloodPressureUpdateSheet(viewEffect.bloodPressureMeasurement.uuid)
-      is ShowBloodPressures -> uiActions.showBloodPressures(viewEffect.bloodPressureHistoryDataSourceFactory)
     }.exhaustive()
   }
 }

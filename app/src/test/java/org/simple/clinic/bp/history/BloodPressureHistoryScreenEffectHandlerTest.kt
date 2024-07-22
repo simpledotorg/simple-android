@@ -1,24 +1,30 @@
 package org.simple.clinic.bp.history
 
-import androidx.paging.DataSource
-import androidx.paging.PositionalDataSource
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
+import androidx.paging.PagingData
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
-import org.simple.clinic.bp.BloodPressureMeasurement
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.summary.PatientSummaryConfig
+import org.simple.clinic.util.PagerFactory
+import org.simple.clinic.util.PagingSourceFactory
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.Optional
 import java.util.UUID
 
@@ -28,13 +34,18 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
-  private val dataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory.Factory>()
   private val viewEffectHandler = BloodPressureHistoryViewEffectHandler(uiActions)
+  private val pagerFactory = mock<PagerFactory>()
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
       patientRepository,
-      TrampolineSchedulersProvider(),
-      dataSourceFactory,
+      TestSchedulersProvider.trampoline(),
+      pagerFactory = pagerFactory,
+      pagingSourceFactory = mock(),
+      patientSummaryConfig = PatientSummaryConfig(
+          bpEditableDuration = Duration.ofMinutes(10),
+          numberOfMeasurementsForTeleconsultation = 0,
+      ),
       viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -91,35 +102,60 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   }
 
   @Test
-  fun `when show blood pressures effect is received, then show blood pressures`() {
-    // given
-    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
-
-    // when
-    testCase.dispatch(ShowBloodPressures(bloodPressureHistoryListItemDataSourceFactory))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when load blood pressure history effect is received, then load blood pressure history`() {
     // given
-    val bloodPressuresDataSourceFactory = mock<DataSource.Factory<Int, BloodPressureMeasurement>>()
-    val bloodPressuresDataSource = mock<PositionalDataSource<BloodPressureMeasurement>>()
-    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+    val patientUuid = UUID.fromString("f6f60760-b290-4e0f-9db0-74179b7cd170")
+    val createdAt = Instant.parse("2020-01-01T00:00:00Z")
+    val recordedAt = Instant.parse("2020-01-01T00:00:00Z")
 
-    whenever(bloodPressureRepository.allBloodPressuresDataSource(patientUuid)).thenReturn(bloodPressuresDataSourceFactory)
-    whenever(bloodPressuresDataSourceFactory.create()).thenReturn(bloodPressuresDataSource)
-    whenever(dataSourceFactory.create(bloodPressuresDataSource)).thenReturn(bloodPressureHistoryListItemDataSourceFactory)
+    val bloodPressureNow = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("78e876ae-3055-43d6-a132-7ad5dd930e23"),
+        patientUuid = patientUuid,
+        systolic = 120,
+        diastolic = 70,
+        createdAt = createdAt,
+        recordedAt = recordedAt
+    )
+
+    val bloodPressure15MinutesInPast = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("2b929a33-e543-4a4f-a98e-5d0d3e8e1e03"),
+        patientUuid = patientUuid,
+        systolic = 120,
+        diastolic = 85,
+        createdAt = createdAt.minus(15, ChronoUnit.MINUTES),
+        recordedAt = recordedAt.minus(1, ChronoUnit.DAYS)
+    )
+
+    val bloodPressures: PagingData<BloodPressureHistoryListItem> = PagingData.from(listOf(
+        BloodPressureHistoryListItem.BloodPressureHistoryItem(
+            measurement = bloodPressureNow,
+            isBpEditable = true,
+            isBpHigh = false,
+            bpDate = "1-Jan-2020",
+            bpTime = null
+        ),
+        BloodPressureHistoryListItem.BloodPressureHistoryItem(
+            measurement = bloodPressure15MinutesInPast,
+            isBpEditable = false,
+            isBpHigh = false,
+            bpDate = "31-Dec-2019",
+            bpTime = "12:00 AM"
+        ),
+    ))
+
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, BloodPressureHistoryListItem>>(),
+        pageSize = eq(25),
+        enablePlaceholders = eq(false),
+        initialKey = eq(null),
+        cacheScope = eq(null),
+    )) doReturn Observable.just(bloodPressures)
 
     // when
     testCase.dispatch(LoadBloodPressureHistory(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(BloodPressuresHistoryLoaded(bloodPressureHistoryListItemDataSourceFactory))
+    testCase.assertOutgoingEvents(BloodPressuresHistoryLoaded(bloodPressures))
     verifyNoInteractions(uiActions)
   }
 }

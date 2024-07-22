@@ -5,23 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.asFlow
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItemDiffCallback
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.databinding.ListBpHistoryItemBinding
@@ -39,7 +34,7 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -78,14 +73,10 @@ class BloodPressureHistoryScreen : BaseScreen<
   lateinit var timeFormatter: DateTimeFormatter
 
   @Inject
-  @Named("for_measurement_history")
-  lateinit var measurementHistoryPaginationConfig: PagedList.Config
-
-  @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private val bloodPressureHistoryAdapter = PagingItemAdapter_old(
-      diffCallback = BloodPressureHistoryListItemDiffCallback(),
+  private val bloodPressureHistoryAdapter = PagingItemAdapter(
+      diffCallback = BloodPressureHistoryListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_new_bp_button to { layoutInflater, parent ->
             ListNewBpButtonBinding.inflate(layoutInflater, parent, false)
@@ -181,18 +172,8 @@ class BloodPressureHistoryScreen : BaseScreen<
     requireContext().startActivity(intent)
   }
 
-  override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
-    // TODO: Remove this once Paging 3 implementation is added for blood pressure history.
-    val detaches = viewLifecycleOwnerLiveData
-        .asFlow()
-        .mapNotNull { it }
-        .asObservable()
-        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
-        .map { Unit }
-
-    // Initial load size hint should be a multiple of page size
-    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .subscribe(bloodPressureHistoryAdapter::submitList))
+  override fun showBloodPressures(bloodPressures: PagingData<BloodPressureHistoryListItem>) {
+    bloodPressureHistoryAdapter.submitData(lifecycle, bloodPressures)
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

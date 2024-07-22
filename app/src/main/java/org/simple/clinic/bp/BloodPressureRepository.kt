@@ -1,6 +1,5 @@
 package org.simple.clinic.bp
 
-import androidx.paging.DataSource
 import androidx.paging.PagingSource
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -139,10 +138,6 @@ class BloodPressureRepository @Inject constructor(
 
   fun allBloodPressuresRecordedSinceImmediate(patientUuid: UUID, since: Instant): List<BloodPressureMeasurement> {
     return dao.allBloodPressuresRecordedSinceImmediate(patientUuid = patientUuid, since = since)
-  }
-
-  fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement> {
-    return dao.allBloodPressuresDataSource(patientUuid)
   }
 
   fun allBloodPressuresPagingSource(patientUuid: UUID): PagingSource<Int, BloodPressureMeasurement> {

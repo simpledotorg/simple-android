@@ -22,6 +22,7 @@
 - Add Google services plugin to app module Gradle file
 - Bump Gradle to v8.9
 - Convert sealed sub-object to data object
+- Bump KSP to v2.0.0-1.0.23
 
 ## 2024-06-27-9140
 

@@ -16,8 +16,8 @@ class PagerFactory @Inject constructor() {
 
   fun <K : Any, V : Any> createPager(
       sourceFactory: PagingSourceFactory<K, V>,
-      pageSize: Int,
-      enablePlaceholders: Boolean,
+      pageSize: Int = 25,
+      enablePlaceholders: Boolean = false,
       initialKey: K? = null,
       cacheScope: CoroutineScope? = null
   ): Observable<PagingData<V>> {

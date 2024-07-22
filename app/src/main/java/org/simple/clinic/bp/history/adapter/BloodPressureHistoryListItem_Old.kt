@@ -16,9 +16,9 @@ import org.simple.clinic.widgets.PagingItemAdapter_old
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
+sealed class BloodPressureHistoryListItem_Old : PagingItemAdapter_old.Item<Event> {
 
-  data object NewBpButton : BloodPressureHistoryListItem() {
+  data object NewBpButton : BloodPressureHistoryListItem_Old() {
 
     override fun layoutResId(): Int = R.layout.list_new_bp_button
 
@@ -34,7 +34,7 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
       val isBpHigh: Boolean,
       val bpDate: String,
       val bpTime: String?
-  ) : BloodPressureHistoryListItem() {
+  ) : BloodPressureHistoryListItem_Old() {
 
     override fun layoutResId(): Int = R.layout.list_bp_history_item
 

@@ -2,14 +2,14 @@ package org.simple.clinic.bp.history.adapter
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpButton
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.BloodPressureHistoryItem
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.NewBpButton
 
-class BloodPressureHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodPressureHistoryListItem>() {
+class BloodPressureHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodPressureHistoryListItem_Old>() {
 
   override fun areItemsTheSame(
-      oldItem: BloodPressureHistoryListItem,
-      newItem: BloodPressureHistoryListItem
+      oldItem: BloodPressureHistoryListItem_Old,
+      newItem: BloodPressureHistoryListItem_Old
   ): Boolean {
     return when {
       oldItem is NewBpButton && newItem is NewBpButton -> true
@@ -20,8 +20,8 @@ class BloodPressureHistoryListItemDiffCallback : DiffUtil.ItemCallback<BloodPres
 
   @SuppressLint("DiffUtilEquals")
   override fun areContentsTheSame(
-      oldItem: BloodPressureHistoryListItem,
-      newItem: BloodPressureHistoryListItem
+      oldItem: BloodPressureHistoryListItem_Old,
+      newItem: BloodPressureHistoryListItem_Old
   ): Boolean {
     return oldItem == newItem
   }

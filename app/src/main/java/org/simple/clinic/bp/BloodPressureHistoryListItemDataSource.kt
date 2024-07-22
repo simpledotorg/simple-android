@@ -11,9 +11,9 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpButton
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.BloodPressureHistoryItem
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.NewBpButton
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -31,7 +31,7 @@ class BloodPressureHistoryListItemDataSource(
     private val timeFormatter: DateTimeFormatter,
     private val canEditFor: Duration,
     private val source: PositionalDataSource<BloodPressureMeasurement>
-) : PositionalDataSource<BloodPressureHistoryListItem>() {
+) : PositionalDataSource<BloodPressureHistoryListItem_Old>() {
 
   private val invalidationTracker = object : InvalidationTracker.Observer(arrayOf(BloodPressureMeasurement.TABLE_NAME)) {
     override fun onInvalidated(tables: Set<String>) {
@@ -45,7 +45,7 @@ class BloodPressureHistoryListItemDataSource(
 
   override fun loadRange(
       params: LoadRangeParams,
-      callback: LoadRangeCallback<BloodPressureHistoryListItem>
+      callback: LoadRangeCallback<BloodPressureHistoryListItem_Old>
   ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
     // from using the params because we will be adding a header to the BloodPressureHistoryListItemDataSource list, which
@@ -66,7 +66,7 @@ class BloodPressureHistoryListItemDataSource(
 
   override fun loadInitial(
       params: LoadInitialParams,
-      callback: LoadInitialCallback<BloodPressureHistoryListItem>
+      callback: LoadInitialCallback<BloodPressureHistoryListItem_Old>
   ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
     // from using the params because we will be adding a header to the BloodPressureHistoryListItemDataSource list, which
@@ -107,7 +107,7 @@ class BloodPressureHistoryListItemDataSource(
     appDatabase.invalidationTracker.removeObserver(invalidationTracker)
   }
 
-  private fun convertToBloodPressureHistoryListItems(measurements: List<BloodPressureMeasurement>): List<BloodPressureHistoryListItem> {
+  private fun convertToBloodPressureHistoryListItems(measurements: List<BloodPressureMeasurement>): List<BloodPressureHistoryListItem_Old> {
     val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
     return measurementsByDate.mapValues { (_, measurementsList) ->
@@ -155,7 +155,7 @@ class BloodPressureHistoryListItemDataSourceFactory @AssistedInject constructor(
     @Named("full_date") private val dateFormatter: DateTimeFormatter,
     @Named("time_for_measurement_history") private val timeFormatter: DateTimeFormatter,
     @Assisted private val source: PositionalDataSource<BloodPressureMeasurement>
-) : DataSource.Factory<Int, BloodPressureHistoryListItem>() {
+) : DataSource.Factory<Int, BloodPressureHistoryListItem_Old>() {
 
   private val disposable = CompositeDisposable()
   private var dataSource: BloodPressureHistoryListItemDataSource? = null
@@ -170,7 +170,7 @@ class BloodPressureHistoryListItemDataSourceFactory @AssistedInject constructor(
   fun toObservable(
       config: PagedList.Config,
       detaches: Observable<Unit>
-  ): Observable<PagedList<BloodPressureHistoryListItem>> {
+  ): Observable<PagedList<BloodPressureHistoryListItem_Old>> {
     disposable.add(
         detaches.subscribe {
           dataSource?.dispose()
@@ -181,7 +181,7 @@ class BloodPressureHistoryListItemDataSourceFactory @AssistedInject constructor(
     return toObservable(config)
   }
 
-  override fun create(): DataSource<Int, BloodPressureHistoryListItem> {
+  override fun create(): DataSource<Int, BloodPressureHistoryListItem_Old> {
     dataSource = BloodPressureHistoryListItemDataSource(appDatabase, utcClock, userClock, dateFormatter, timeFormatter, config.bpEditableDuration, source)
     return dataSource!!
   }

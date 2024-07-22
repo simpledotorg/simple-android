@@ -13,9 +13,9 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.sharedTestCode.TestData
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
-import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.NewBpButton
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.BloodPressureHistoryItem
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem_Old.NewBpButton
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
@@ -28,7 +28,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureHistoryListItemDataSourceTest {
+class BloodPressureHistoryListItemOldDataSourceTest {
 
   @Inject
   lateinit var appDatabase: AppDatabase
@@ -104,9 +104,9 @@ class BloodPressureHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressureInPast))
-    dataSource.loadInitial(params, object : LoadInitialCallback<BloodPressureHistoryListItem>() {
+    dataSource.loadInitial(params, object : LoadInitialCallback<BloodPressureHistoryListItem_Old>() {
       override fun onResult(
-          data: List<BloodPressureHistoryListItem>,
+          data: List<BloodPressureHistoryListItem_Old>,
           position: Int,
           totalCount: Int
       ) {
@@ -118,7 +118,7 @@ class BloodPressureHistoryListItemDataSourceTest {
             )
       }
 
-      override fun onResult(data: List<BloodPressureHistoryListItem>, position: Int) {
+      override fun onResult(data: List<BloodPressureHistoryListItem_Old>, position: Int) {
       }
     })
   }
@@ -180,8 +180,8 @@ class BloodPressureHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressure15MinutesInPast, bloodPressure40MinutesInPast, bloodPressure1DayInPast))
-    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem>() {
-      override fun onResult(data: List<BloodPressureHistoryListItem>) {
+    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem_Old>() {
+      override fun onResult(data: List<BloodPressureHistoryListItem_Old>) {
         assertThat(data)
             .containsExactly(
                 BloodPressureHistoryItem(measurement = bloodPressureNow, isBpEditable = true, isBpHigh = false, bpDate = "1-Jan-2020", bpTime = null),
@@ -249,8 +249,8 @@ class BloodPressureHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressureNow, bloodPressure15MinutesInPast, bloodPressure40MinutesInPast, bloodPressure1DayInPast))
-    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem>() {
-      override fun onResult(data: List<BloodPressureHistoryListItem>) {
+    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodPressureHistoryListItem_Old>() {
+      override fun onResult(data: List<BloodPressureHistoryListItem_Old>) {
         assertThat(data)
             .containsExactly(
                 NewBpButton,

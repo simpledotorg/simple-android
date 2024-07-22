@@ -3,14 +3,13 @@ package org.simple.clinic.bp
 import android.annotation.SuppressLint
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.paging.rxjava2.RxPagingSource
 import androidx.room.paging.util.ThreadSafeInvalidationObserver
 import androidx.room.paging.util.getClippedRefreshKey
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.Single
-import kotlinx.coroutines.rx2.rxSingle
+import kotlinx.coroutines.rx2.asCoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
@@ -34,7 +33,7 @@ class BloodPressureHistoryListItemPagingSource @AssistedInject constructor(
     @Named("time_for_measurement_history") private val timeFormatter: DateTimeFormatter,
     @Assisted private val bpEditableDuration: Duration,
     @Assisted private val source: PagingSource<Int, BloodPressureMeasurement>
-) : RxPagingSource<Int, BloodPressureHistoryListItem>() {
+) : PagingSource<Int, BloodPressureHistoryListItem>() {
 
   @AssistedFactory
   interface Factory {
@@ -49,33 +48,30 @@ class BloodPressureHistoryListItemPagingSource @AssistedInject constructor(
       onInvalidated = ::invalidate
   )
 
-  override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, BloodPressureHistoryListItem>> {
-    observer.registerIfNecessary(db = appDatabase)
-    return try {
-      val sourceLoadResultSingle = rxSingle { source.load(params) }
-      return sourceLoadResultSingle
-          .observeOn(schedulersProvider.io())
-          .map { sourceLoadResult ->
-            when (sourceLoadResult) {
-              is LoadResult.Page -> {
-                val bloodPressureMeasurements = sourceLoadResult.data
-                val measurementListItems = convertToBloodPressureHistoryListItems(bloodPressureMeasurements)
-                LoadResult.Page(
-                    data = measurementListItems,
-                    prevKey = sourceLoadResult.prevKey,
-                    nextKey = sourceLoadResult.nextKey,
-                )
-              }
-
-              is LoadResult.Error -> LoadResult.Error(sourceLoadResult.throwable)
-              is LoadResult.Invalid -> {
-                @Suppress("UNCHECKED_CAST")
-                INVALID as LoadResult.Invalid<Int, BloodPressureHistoryListItem>
-              }
-            }
+  override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BloodPressureHistoryListItem> {
+    return withContext(schedulersProvider.io().asCoroutineDispatcher()) {
+      observer.registerIfNecessary(db = appDatabase)
+      try {
+        when (val sourceLoadResult = source.load(params)) {
+          is LoadResult.Page -> {
+            val bloodPressureMeasurements = sourceLoadResult.data
+            val measurementListItems = convertToBloodPressureHistoryListItems(bloodPressureMeasurements)
+            LoadResult.Page(
+                data = measurementListItems,
+                prevKey = sourceLoadResult.prevKey,
+                nextKey = sourceLoadResult.nextKey,
+            )
           }
-    } catch (e: Exception) {
-      Single.just(LoadResult.Error(e))
+
+          is LoadResult.Error -> LoadResult.Error(sourceLoadResult.throwable)
+          is LoadResult.Invalid -> {
+            @Suppress("UNCHECKED_CAST")
+            INVALID as LoadResult.Invalid<Int, BloodPressureHistoryListItem>
+          }
+        }
+      } catch (e: Exception) {
+        LoadResult.Error(e)
+      }
     }
   }
 

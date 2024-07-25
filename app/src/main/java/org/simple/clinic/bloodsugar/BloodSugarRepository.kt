@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar
 
 import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -136,5 +137,9 @@ class BloodSugarRepository @Inject constructor(
         syncStatus = PENDING
     )
     dao.save(listOf(deletedBloodSugarMeasurement))
+  }
+
+  fun allBloodSugarsPagingSource(patientUuid: UUID): PagingSource<Int, BloodSugarMeasurement> {
+    return dao.allBloodSugarsPagingSource(patientUuid)
   }
 }

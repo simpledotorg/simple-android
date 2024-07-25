@@ -49,7 +49,7 @@ sqlCipher = "4.5.4"
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.0.4"
 
-androidx-annotation-annotation = "androidx.annotation:annotation:1.8.0"
+androidx-annotation-annotation = "androidx.annotation:annotation:1.8.1"
 
 # When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
 # can be enabled again.

@@ -73,6 +73,7 @@
 - Bump Datadog Gradle Plugin to v1.14.0
 - Bump UUID generator to v5.1.0
 - Move install git hook task to app build gradle file
+- Bump AndroidX Annotation to v1.8.1
 
 ### Features
 

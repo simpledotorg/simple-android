@@ -15,6 +15,7 @@ import org.simple.clinic.benchmark.patientlookup.PatientLookupBenchmark
 import org.simple.clinic.benchmark.patientregistration.PatientRegistrationBenchmark
 import org.simple.clinic.benchmark.recentpatient.RecentPatientsBenchmark
 import org.simple.clinic.bloodsugar.BloodSugarHistoryDeprecatedListItemDeprecatedDataSourceTest
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemPagingSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemPagingSourceTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
@@ -120,6 +121,7 @@ interface TestAppComponent {
   fun inject(target: Migration59AndroidTest)
   fun inject(target: BloodPressureHistoryListItemPagingSourceTest)
   fun inject(target: BloodSugarHistoryDeprecatedListItemDeprecatedDataSourceTest)
+  fun inject(target: BloodSugarHistoryListItemPagingSourceTest)
   fun inject(target: TeleconsultationFacilityWithMedicalOfficersTest)
   fun inject(target: TeleconsultationFacilityRepositoryAndroidTest)
   fun inject(target: PatientSyncIntegrationTest)

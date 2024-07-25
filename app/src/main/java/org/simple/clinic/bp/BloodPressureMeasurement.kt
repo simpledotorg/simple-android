@@ -1,7 +1,7 @@
 package org.simple.clinic.bp
 
 import android.os.Parcelable
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -24,10 +24,13 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
-@Entity(indices = [
-  Index("patientUuid", unique = false),
-  Index("facilityUuid", unique = false)
-])
+@Entity(
+    tableName = BloodPressureMeasurement.TABLE_NAME,
+    indices = [
+      Index("patientUuid", unique = false),
+      Index("facilityUuid", unique = false)
+    ]
+)
 data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,
@@ -51,6 +54,10 @@ data class BloodPressureMeasurement(
 
     val recordedAt: Instant
 ) : Parcelable {
+
+  companion object {
+    const val TABLE_NAME = "BloodPressureMeasurement"
+  }
 
   @Transient
   @IgnoredOnParcel
@@ -203,7 +210,7 @@ data class BloodPressureMeasurement(
       WHERE patientUuid == :patientUuid AND deletedAt IS NULL
       ORDER BY recordedAt DESC
     """)
-    fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement>
+    fun allBloodPressuresPagingSource(patientUuid: UUID): PagingSource<Int, BloodPressureMeasurement>
 
     @Query("""
       DELETE FROM BloodPressureMeasurement

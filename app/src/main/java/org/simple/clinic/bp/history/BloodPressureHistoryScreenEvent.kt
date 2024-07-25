@@ -1,7 +1,8 @@
 package org.simple.clinic.bp.history
 
-import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
+import androidx.paging.PagingData
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.widgets.UiEvent
 
@@ -14,5 +15,5 @@ data object NewBloodPressureClicked : BloodPressureHistoryScreenEvent()
 data class BloodPressureClicked(val bloodPressureMeasurement: BloodPressureMeasurement) : BloodPressureHistoryScreenEvent()
 
 data class BloodPressuresHistoryLoaded(
-    val bloodPressureHistoryListItemDataSourceFactory: BloodPressureHistoryListItemDataSourceFactory
+    val bloodPressures: PagingData<BloodPressureHistoryListItem>
 ) : BloodPressureHistoryScreenEvent()

@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.history
 
-import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.BloodPressureMeasurement
 import java.util.UUID
 
@@ -15,7 +14,3 @@ sealed class BloodPressureHistoryViewEffect : BloodPressureHistoryScreenEffect()
 data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : BloodPressureHistoryViewEffect()
 
 data class OpenBloodPressureUpdateSheet(val bloodPressureMeasurement: BloodPressureMeasurement) : BloodPressureHistoryViewEffect()
-
-data class ShowBloodPressures(
-    val bloodPressureHistoryDataSourceFactory: BloodPressureHistoryListItemDataSourceFactory
-) : BloodPressureHistoryViewEffect()

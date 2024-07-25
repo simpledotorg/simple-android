@@ -71,7 +71,8 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 
 androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
-androidx-paging-rx2 = { module = "androidx.paging:paging-rxjava2", version.ref = "androidx-paging" }
+androidx-paging-rx2 = { module = "androidx.paging:paging-rxjava2-ktx", version.ref = "androidx-paging" }
+androidx-paging-test = { module = "androidx.paging:paging-testing", version.ref = "androidx-paging" }
 
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }

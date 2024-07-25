@@ -1,6 +1,6 @@
 package org.simple.clinic.bp.history
 
-import org.mockito.kotlin.mock
+import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -8,8 +8,10 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
+import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.sharedTestCode.TestData
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 class BloodPressureHistoryScreenUpdateTest {
@@ -64,15 +66,52 @@ class BloodPressureHistoryScreenUpdateTest {
   }
 
   @Test
-  fun `when blood pressure history is loaded, then show blood pressures`() {
-    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+  fun `when blood pressure history is loaded, then update state`() {
+    val patientUuid = UUID.fromString("f6f60760-b290-4e0f-9db0-74179b7cd170")
+    val createdAt = Instant.parse("2020-01-01T00:00:00Z")
+    val recordedAt = Instant.parse("2020-01-01T00:00:00Z")
+
+    val bloodPressureNow = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("78e876ae-3055-43d6-a132-7ad5dd930e23"),
+        patientUuid = patientUuid,
+        systolic = 120,
+        diastolic = 70,
+        createdAt = createdAt,
+        recordedAt = recordedAt
+    )
+
+    val bloodPressure15MinutesInPast = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("2b929a33-e543-4a4f-a98e-5d0d3e8e1e03"),
+        patientUuid = patientUuid,
+        systolic = 120,
+        diastolic = 85,
+        createdAt = createdAt.minus(15, ChronoUnit.MINUTES),
+        recordedAt = recordedAt.minus(1, ChronoUnit.DAYS)
+    )
+
+    val bloodPressures: PagingData<BloodPressureHistoryListItem> = PagingData.from(listOf(
+        BloodPressureHistoryListItem.BloodPressureHistoryItem(
+            measurement = bloodPressureNow,
+            isBpEditable = true,
+            isBpHigh = false,
+            bpDate = "1-Jan-2020",
+            bpTime = null
+        ),
+        BloodPressureHistoryListItem.BloodPressureHistoryItem(
+            measurement = bloodPressure15MinutesInPast,
+            isBpEditable = false,
+            isBpHigh = false,
+            bpDate = "31-Dec-2019",
+            bpTime = "12:00 AM"
+        ),
+    ))
 
     updateSpec
         .given(model)
-        .whenEvent(BloodPressuresHistoryLoaded(bloodPressureHistoryListItemDataSourceFactory))
+        .whenEvent(BloodPressuresHistoryLoaded(bloodPressures))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowBloodPressures(bloodPressureHistoryListItemDataSourceFactory))
+            hasModel(model.bloodPressuresLoaded(bloodPressures = bloodPressures)),
+            hasNoEffects()
         ))
   }
 }

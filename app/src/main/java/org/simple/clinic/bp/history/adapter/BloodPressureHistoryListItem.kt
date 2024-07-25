@@ -5,6 +5,9 @@ import android.content.Context
 import android.text.style.TextAppearanceSpan
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.paging.PagingData
+import androidx.paging.insertSeparators
+import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -12,13 +15,24 @@ import org.simple.clinic.bp.history.adapter.Event.AddNewBpClicked
 import org.simple.clinic.bp.history.adapter.Event.BloodPressureHistoryItemClicked
 import org.simple.clinic.databinding.ListBpHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBpButtonBinding
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
+sealed interface BloodPressureHistoryListItem : PagingItemAdapter.Item<Event> {
 
-  data object NewBpButton : BloodPressureHistoryListItem() {
+  companion object {
+    fun from(history: PagingData<BloodPressureHistoryListItem>) = history
+        .insertSeparators { previous: BloodPressureHistoryListItem?, next: BloodPressureHistoryListItem? ->
+          if (previous == null && next != null) {
+            NewBpButton
+          } else {
+            null
+          }
+        }
+  }
+
+  data object NewBpButton : BloodPressureHistoryListItem {
 
     override fun layoutResId(): Int = R.layout.list_new_bp_button
 
@@ -34,9 +48,11 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
       val isBpHigh: Boolean,
       val bpDate: String,
       val bpTime: String?
-  ) : BloodPressureHistoryListItem() {
+  ) : BloodPressureHistoryListItem {
 
-    override fun layoutResId(): Int = R.layout.list_bp_history_item
+    override fun layoutResId(): Int {
+      return R.layout.list_bp_history_item
+    }
 
     @SuppressLint("SetTextI18n")
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
@@ -82,6 +98,26 @@ sealed class BloodPressureHistoryListItem : PagingItemAdapter_old.Item<Event> {
       } else {
         TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
       }
+    }
+  }
+
+  class DiffCallback : DiffUtil.ItemCallback<BloodPressureHistoryListItem>() {
+
+    override fun areItemsTheSame(
+        oldItem: BloodPressureHistoryListItem,
+        newItem: BloodPressureHistoryListItem
+    ): Boolean {
+      return when {
+        oldItem is BloodPressureHistoryItem && newItem is BloodPressureHistoryItem -> oldItem.measurement.uuid == newItem.measurement.uuid
+        else -> false
+      }
+    }
+
+    override fun areContentsTheSame(
+        oldItem: BloodPressureHistoryListItem,
+        newItem: BloodPressureHistoryListItem
+    ): Boolean {
+      return oldItem == newItem
     }
   }
 }

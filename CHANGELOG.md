@@ -11,7 +11,7 @@
 - Bump Fragment KTX to v1.8.1
 - Bump Jackson Core to v2.17.2
 - Bump Sentry Gradle plugin to v4.10.0
-- Bump AndroidX Lifecycle to v2.8.3
+- Bump AndroidX Lifecycle to v2.8.4
 - Bump Sentry to v7.12.0
 - Bump Google Truth to v1.4.4
 - Bump Mockito Kotlin to v5.4.0

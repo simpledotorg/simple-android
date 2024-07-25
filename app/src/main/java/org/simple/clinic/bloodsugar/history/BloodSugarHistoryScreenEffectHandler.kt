@@ -1,6 +1,6 @@
 package org.simple.clinic.bloodsugar.history
 
-import androidx.paging.PositionalDataSource
+import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
@@ -8,10 +8,12 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
-import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemPagingSource
 import org.simple.clinic.bloodsugar.BloodSugarRepository
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
+import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -19,7 +21,10 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory.Factory,
+    private val pagerFactory: PagerFactory,
+    private val pagingSourceFactory: BloodSugarHistoryListItemPagingSource.Factory,
+    private val config: BloodSugarSummaryConfig,
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
     @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
 ) {
 
@@ -43,12 +48,18 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map {
-            val dataSource = bloodSugarRepository
-                .allBloodSugarsDataSource(it.patientUuid)
-                .create() as PositionalDataSource<BloodSugarMeasurement>
+          .flatMap {
+            val pagingSource = bloodSugarRepository.allBloodSugarsPagingSource(it.patientUuid)
 
-            dataSourceFactory.create(dataSource)
+            pagerFactory.createPager(
+                sourceFactory = {
+                  pagingSourceFactory.create(
+                      canEditFor = config.bloodSugarEditableDuration,
+                      bloodSugarUnitPreference = bloodSugarUnitPreference.get(),
+                      source = pagingSource,
+                  )
+                },
+            )
           }
           .map(::BloodSugarHistoryLoaded)
     }

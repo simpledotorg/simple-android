@@ -7,25 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.asFlow
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryItemClicked
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItemDiffCallback
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.bloodsugar.history.adapter.NewBloodSugarClicked
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
@@ -47,7 +42,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.DividerItemDecorator
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -92,10 +87,6 @@ class BloodSugarHistoryScreen : BaseScreen<
   lateinit var utcClock: UtcClock
 
   @Inject
-  @Named("for_measurement_history")
-  lateinit var measurementHistoryPaginationConfig: PagedList.Config
-
-  @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   private val toolbar
@@ -104,8 +95,8 @@ class BloodSugarHistoryScreen : BaseScreen<
   private val bloodSugarHistoryList
     get() = binding.bloodSugarHistoryList
 
-  private val bloodSugarHistoryAdapter = PagingItemAdapter_old(
-      diffCallback = BloodSugarHistoryListItemDiffCallback(),
+  private val bloodSugarHistoryAdapter = PagingItemAdapter(
+      diffCallback = BloodSugarHistoryListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_new_blood_sugar_button to { layoutInflater, parent ->
             ListNewBloodSugarButtonBinding.inflate(layoutInflater, parent, false)
@@ -169,6 +160,10 @@ class BloodSugarHistoryScreen : BaseScreen<
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
   }
 
+  override fun showBloodSugars(bloodSugars: PagingData<BloodSugarHistoryListItem>) {
+    bloodSugarHistoryAdapter.submitData(lifecycle, BloodSugarHistoryListItem.from(bloodSugars))
+  }
+
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
     val intent = BloodSugarTypePickerSheet.intent(requireContext())
     activity.startActivityForResult(intent, TYPE_PICKER_SHEET)
@@ -179,20 +174,6 @@ class BloodSugarHistoryScreen : BaseScreen<
         bloodSugarMeasurementUuid = measurement.uuid,
         measurementType = measurement.reading.type
     ))
-  }
-
-  override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
-    // TODO: Remove this once Paging 3 implementation is added for blood sugar history.
-    val detaches = viewLifecycleOwnerLiveData
-        .asFlow()
-        .mapNotNull { it }
-        .asObservable()
-        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
-        .map { Unit }
-
-    // Initial load size hint should be a multiple of page size
-    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .subscribe(bloodSugarHistoryAdapter::submitList))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

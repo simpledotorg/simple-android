@@ -1,7 +1,8 @@
 package org.simple.clinic.bloodsugar.history
 
-import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
+import androidx.paging.PagingData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.widgets.UiEvent
 
@@ -18,5 +19,5 @@ data class BloodSugarClicked(val bloodSugarMeasurement: BloodSugarMeasurement) :
 }
 
 data class BloodSugarHistoryLoaded(
-    val bloodSugarHistoryListItemDataSourceFactory: BloodSugarHistoryListItemDataSourceFactory
+    val bloodSugars: PagingData<BloodSugarHistoryListItem>
 ) : BloodSugarHistoryScreenEvent()

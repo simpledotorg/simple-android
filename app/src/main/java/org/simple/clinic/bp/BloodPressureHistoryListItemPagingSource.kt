@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.room.paging.util.ThreadSafeInvalidationObserver
-import androidx.room.paging.util.getClippedRefreshKey
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -16,6 +15,7 @@ import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPr
 import org.simple.clinic.util.INVALID
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.getClippedRefreshKey
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.Duration

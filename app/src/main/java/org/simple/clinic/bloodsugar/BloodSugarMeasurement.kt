@@ -23,7 +23,7 @@ import java.time.Instant
 import java.util.UUID
 
 @Entity(
-    tableName = "BloodSugarMeasurements",
+    tableName = BloodSugarMeasurement.TABLE_NAME,
     indices = [
       Index("patientUuid", unique = false),
       Index("facilityUuid", unique = false)
@@ -50,6 +50,10 @@ data class BloodSugarMeasurement(
 
     val syncStatus: SyncStatus
 ) : Parcelable {
+
+  companion object {
+    const val TABLE_NAME = "BloodSugarMeasurements"
+  }
 
   fun toPayload() = BloodSugarMeasurementPayload(
       uuid = uuid,

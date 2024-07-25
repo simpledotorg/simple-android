@@ -105,13 +105,6 @@ data class BloodSugarMeasurement(
       WHERE patientUuid == :patientUuid AND deletedAt IS NULL
       ORDER BY recordedAt DESC
     """)
-    fun allBloodSugarsDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodSugarMeasurement>
-
-    @Query("""
-      SELECT * FROM BloodSugarMeasurements
-      WHERE patientUuid == :patientUuid AND deletedAt IS NULL
-      ORDER BY recordedAt DESC
-    """)
     fun allBloodSugarsPagingSource(patientUuid: UUID): PagingSource<Int, BloodSugarMeasurement>
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE syncStatus = :status")

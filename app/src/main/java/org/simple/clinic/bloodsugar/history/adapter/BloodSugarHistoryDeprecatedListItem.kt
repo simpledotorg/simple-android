@@ -17,9 +17,9 @@ import org.simple.clinic.widgets.PagingItemAdapter_old
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
+sealed class BloodSugarHistoryDeprecatedListItem : PagingItemAdapter_old.Item<Event> {
 
-  data object NewBloodSugarButton : BloodSugarHistoryListItem() {
+  data object NewBloodSugarButton : BloodSugarHistoryDeprecatedListItem() {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
@@ -35,7 +35,7 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
       val bloodSugarTime: String?,
       val isBloodSugarEditable: Boolean,
       val bloodSugarUnitPreference: BloodSugarUnitPreference
-  ) : BloodSugarHistoryListItem() {
+  ) : BloodSugarHistoryDeprecatedListItem() {
     override fun layoutResId(): Int = R.layout.list_blood_sugar_history_item
 
     @SuppressLint("SetTextI18n")
@@ -80,11 +80,13 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
           binding.bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_low)
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
         }
+
         reading.isHigh -> {
           binding.bloodSugarLevelTextView.visibility = View.VISIBLE
           binding.bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_high)
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
         }
+
         else -> {
           binding.bloodSugarLevelTextView.visibility = View.GONE
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)

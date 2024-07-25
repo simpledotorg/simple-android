@@ -13,9 +13,9 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.sharedTestCode.TestData
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.BloodSugarHistoryItem
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem.BloodSugarHistoryItem
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem.NewBloodSugarButton
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
@@ -28,7 +28,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarHistoryListItemDataSourceTest {
+class BloodSugarHistoryDeprecatedListItemDeprecatedDataSourceTest {
 
   @Inject
   lateinit var appDatabase: AppDatabase
@@ -90,7 +90,7 @@ class BloodSugarHistoryListItemDataSourceTest {
         false
     )
 
-    val dataSource = BloodSugarHistoryListItemDataSource(
+    val dataSource = BloodSugarHistoryListItemDeprecatedDataSource(
         appDatabase,
         utcClock,
         userClock,
@@ -102,9 +102,9 @@ class BloodSugarHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugarInPast))
-    dataSource.loadInitial(params, object : LoadInitialCallback<BloodSugarHistoryListItem>() {
+    dataSource.loadInitial(params, object : LoadInitialCallback<BloodSugarHistoryDeprecatedListItem>() {
       override fun onResult(
-          data: List<BloodSugarHistoryListItem>,
+          data: List<BloodSugarHistoryDeprecatedListItem>,
           position: Int,
           totalCount: Int
       ) {
@@ -116,7 +116,7 @@ class BloodSugarHistoryListItemDataSourceTest {
             )
       }
 
-      override fun onResult(data: List<BloodSugarHistoryListItem>, position: Int) {
+      override fun onResult(data: List<BloodSugarHistoryDeprecatedListItem>, position: Int) {
       }
     })
   }
@@ -159,7 +159,7 @@ class BloodSugarHistoryListItemDataSourceTest {
         3
     )
 
-    val dataSource = BloodSugarHistoryListItemDataSource(
+    val dataSource = BloodSugarHistoryListItemDeprecatedDataSource(
         appDatabase,
         utcClock,
         userClock,
@@ -171,8 +171,8 @@ class BloodSugarHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
-    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryListItem>() {
-      override fun onResult(data: List<BloodSugarHistoryListItem>) {
+    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryDeprecatedListItem>() {
+      override fun onResult(data: List<BloodSugarHistoryDeprecatedListItem>) {
         assertThat(data)
             .containsExactly(
                 BloodSugarHistoryItem(measurement = bloodSugarNow, bloodSugarDate = "1-Jan-2020", bloodSugarTime = null, isBloodSugarEditable = true, bloodSugarUnitPreference = bloodSugarUnitPreference),
@@ -221,7 +221,7 @@ class BloodSugarHistoryListItemDataSourceTest {
         3
     )
 
-    val dataSource = BloodSugarHistoryListItemDataSource(
+    val dataSource = BloodSugarHistoryListItemDeprecatedDataSource(
         appDatabase,
         utcClock,
         userClock,
@@ -233,8 +233,8 @@ class BloodSugarHistoryListItemDataSourceTest {
     )
 
     appDatabase.bloodSugarDao().save(listOf(bloodSugarNow, bloodSugar15MinutesInPast, bloodSugar40MinutesInPast, bloodSugar1DayInPast))
-    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryListItem>() {
-      override fun onResult(data: List<BloodSugarHistoryListItem>) {
+    dataSource.loadRange(params, object : PositionalDataSource.LoadRangeCallback<BloodSugarHistoryDeprecatedListItem>() {
+      override fun onResult(data: List<BloodSugarHistoryDeprecatedListItem>) {
         assertThat(data)
             .containsExactly(
                 NewBloodSugarButton,

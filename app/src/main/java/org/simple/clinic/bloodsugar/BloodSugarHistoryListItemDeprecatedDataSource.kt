@@ -12,9 +12,9 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.BloodSugarHistoryItem
-import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem.NewBloodSugarButton
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem.BloodSugarHistoryItem
+import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryDeprecatedListItem.NewBloodSugarButton
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -24,7 +24,7 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import javax.inject.Named
 
-class BloodSugarHistoryListItemDataSource(
+class BloodSugarHistoryListItemDeprecatedDataSource(
     private val appDatabase: AppDatabase,
     private val utcClock: UtcClock,
     private val userClock: UserClock,
@@ -33,7 +33,7 @@ class BloodSugarHistoryListItemDataSource(
     private val canEditFor: Duration,
     private val source: PositionalDataSource<BloodSugarMeasurement>,
     private val bloodSugarUnitPreference: BloodSugarUnitPreference
-) : PositionalDataSource<BloodSugarHistoryListItem>() {
+) : PositionalDataSource<BloodSugarHistoryDeprecatedListItem>() {
 
   private val invalidationTracker = object : InvalidationTracker.Observer(arrayOf(BloodSugarMeasurement.TABLE_NAME)) {
     override fun onInvalidated(tables: Set<String>) {
@@ -47,10 +47,10 @@ class BloodSugarHistoryListItemDataSource(
 
   override fun loadRange(
       params: LoadRangeParams,
-      callback: LoadRangeCallback<BloodSugarHistoryListItem>
+      callback: LoadRangeCallback<BloodSugarHistoryDeprecatedListItem>
   ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
-    // from using the params because we will be adding a header to the BloodSugarHistoryListItemDataSource list, which
+    // from using the params because we will be adding a header to the BloodSugarHistoryListItemDeprecatedDataSource list, which
     // is not present in the source data source
     val loadParamsForDatabaseSource = LoadRangeParams(params.startPosition - 1, params.loadSize)
     source.loadRange(loadParamsForDatabaseSource, object : LoadRangeCallback<BloodSugarMeasurement>() {
@@ -68,10 +68,10 @@ class BloodSugarHistoryListItemDataSource(
 
   override fun loadInitial(
       params: LoadInitialParams,
-      callback: LoadInitialCallback<BloodSugarHistoryListItem>
+      callback: LoadInitialCallback<BloodSugarHistoryDeprecatedListItem>
   ) {
     // we are subtracting 1 from load size and page size to avoid the source data source
-    // from using the params because we will be adding a header to the BloodSugarHistoryListItemDataSource list, which
+    // from using the params because we will be adding a header to the BloodSugarHistoryListItemDeprecatedDataSource list, which
     // is not present in the source data source
     val loadParamsForDatabaseSource = LoadInitialParams(
         params.requestedStartPosition,
@@ -85,7 +85,7 @@ class BloodSugarHistoryListItemDataSource(
           position: Int,
           totalCount: Int
       ) {
-        // Adding 1 to the total count so that BloodSugarHistoryListItemDataSource knows that we are
+        // Adding 1 to the total count so that BloodSugarHistoryListItemDeprecatedDataSource knows that we are
         // adding a another item on top the measurements total count
         val finalTotalCount = totalCount + 1
 
@@ -109,7 +109,7 @@ class BloodSugarHistoryListItemDataSource(
     appDatabase.invalidationTracker.removeObserver(invalidationTracker)
   }
 
-  private fun convertToBloodSugarHistoryListItems(measurements: List<BloodSugarMeasurement>): List<BloodSugarHistoryListItem> {
+  private fun convertToBloodSugarHistoryListItems(measurements: List<BloodSugarMeasurement>): List<BloodSugarHistoryDeprecatedListItem> {
     val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
     return measurementsByDate.mapValues { (_, measurementsList) ->
@@ -158,10 +158,10 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
     @Named("full_date") private val dateFormatter: DateTimeFormatter,
     @Named("time_for_measurement_history") private val timeFormatter: DateTimeFormatter,
     @Assisted private val source: PositionalDataSource<BloodSugarMeasurement>
-) : DataSource.Factory<Int, BloodSugarHistoryListItem>() {
+) : DataSource.Factory<Int, BloodSugarHistoryDeprecatedListItem>() {
 
   private val disposable = CompositeDisposable()
-  private var dataSource: BloodSugarHistoryListItemDataSource? = null
+  private var dataSource: BloodSugarHistoryListItemDeprecatedDataSource? = null
 
   @AssistedFactory
   interface Factory {
@@ -173,7 +173,7 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
   fun toObservable(
       config: PagedList.Config,
       detaches: Observable<Unit>
-  ): Observable<PagedList<BloodSugarHistoryListItem>> {
+  ): Observable<PagedList<BloodSugarHistoryDeprecatedListItem>> {
     disposable.add(
         detaches.subscribe {
           dataSource?.dispose()
@@ -184,8 +184,8 @@ class BloodSugarHistoryListItemDataSourceFactory @AssistedInject constructor(
     return toObservable(config)
   }
 
-  override fun create(): DataSource<Int, BloodSugarHistoryListItem> {
-    dataSource = BloodSugarHistoryListItemDataSource(appDatabase, utcClock, userClock, dateFormatter, timeFormatter, config.bloodSugarEditableDuration, source, bloodSugarUnitPreference.get())
+  override fun create(): DataSource<Int, BloodSugarHistoryDeprecatedListItem> {
+    dataSource = BloodSugarHistoryListItemDeprecatedDataSource(appDatabase, utcClock, userClock, dateFormatter, timeFormatter, config.bloodSugarEditableDuration, source, bloodSugarUnitPreference.get())
     return dataSource!!
   }
 }

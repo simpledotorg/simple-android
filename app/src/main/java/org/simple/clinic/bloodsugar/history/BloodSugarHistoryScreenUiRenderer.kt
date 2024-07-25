@@ -7,5 +7,6 @@ class BloodSugarHistoryScreenUiRenderer(private val ui: BloodSugarHistoryScreenU
     if (model.hasLoadedPatient) {
       ui.showPatientInformation(model.patient!!)
     }
+    ui.showBloodSugars(model.bloodSugars)
   }
 }

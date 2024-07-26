@@ -6,20 +6,19 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
-import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
@@ -94,8 +93,8 @@ class BloodSugarRepositoryAndroidTest {
     //given
     val patientUuid = UUID.fromString("19848a57-496a-46d6-aa5c-94d35e3b4139")
     val bloodSugarToday = testData.bloodSugarMeasurement(UUID.fromString("290b751b-7c6f-4a40-9f00-532170dab252"), recordedAt = Instant.now(clock), patientUuid = patientUuid)
-    val bloodSugarYesterday = testData.bloodSugarMeasurement(UUID.fromString("060aac7a-265f-4b94-9253-85a382a42a8d"), recordedAt = Instant.now(clock).minus(1, ChronoUnit.DAYS), patientUuid = patientUuid)
-    val bloodSugarTomorrow = testData.bloodSugarMeasurement(UUID.fromString("ae6534a6-e967-45d5-8b3e-4c472fea8b51"), recordedAt = Instant.now(clock).plus(1, ChronoUnit.DAYS), patientUuid = patientUuid)
+    val bloodSugarYesterday = testData.bloodSugarMeasurement(UUID.fromString("060aac7a-265f-4b94-9253-85a382a42a8d"), recordedAt = Instant.now(clock).minus(1, DAYS), patientUuid = patientUuid)
+    val bloodSugarTomorrow = testData.bloodSugarMeasurement(UUID.fromString("ae6534a6-e967-45d5-8b3e-4c472fea8b51"), recordedAt = Instant.now(clock).plus(1, DAYS), patientUuid = patientUuid)
 
     val expected = listOf(bloodSugarTomorrow, bloodSugarToday, bloodSugarYesterday)
 

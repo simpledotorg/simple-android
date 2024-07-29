@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar
 
 import android.os.Parcelable
 import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -23,7 +24,7 @@ import java.time.Instant
 import java.util.UUID
 
 @Entity(
-    tableName = "BloodSugarMeasurements",
+    tableName = BloodSugarMeasurement.TABLE_NAME,
     indices = [
       Index("patientUuid", unique = false),
       Index("facilityUuid", unique = false)
@@ -50,6 +51,10 @@ data class BloodSugarMeasurement(
 
     val syncStatus: SyncStatus
 ) : Parcelable {
+
+  companion object {
+    const val TABLE_NAME = "BloodSugarMeasurements"
+  }
 
   fun toPayload() = BloodSugarMeasurementPayload(
       uuid = uuid,
@@ -100,7 +105,7 @@ data class BloodSugarMeasurement(
       WHERE patientUuid == :patientUuid AND deletedAt IS NULL
       ORDER BY recordedAt DESC
     """)
-    fun allBloodSugarsDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodSugarMeasurement>
+    fun allBloodSugarsPagingSource(patientUuid: UUID): PagingSource<Int, BloodSugarMeasurement>
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<BloodSugarMeasurement>

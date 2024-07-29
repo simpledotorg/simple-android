@@ -10,7 +10,6 @@ class BloodSugarHistoryScreenViewEffectHandler(
     when (viewEffect) {
       is OpenBloodSugarEntrySheet -> uiActions.openBloodSugarEntrySheet(viewEffect.patientUuid)
       is OpenBloodSugarUpdateSheet -> uiActions.openBloodSugarUpdateSheet(viewEffect.bloodSugarMeasurement)
-      is ShowBloodSugars -> uiActions.showBloodSugars(viewEffect.bloodSugarHistoryListItemDataSourceFactory)
     }.exhaustive()
   }
 }

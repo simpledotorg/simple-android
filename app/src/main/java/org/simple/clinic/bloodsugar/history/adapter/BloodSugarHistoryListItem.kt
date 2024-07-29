@@ -6,6 +6,9 @@ import android.text.style.TextAppearanceSpan
 import android.view.View
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.paging.PagingData
+import androidx.paging.insertSeparators
+import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -13,13 +16,24 @@ import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
-import org.simple.clinic.widgets.PagingItemAdapter_old
+import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
 
-sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
+sealed interface BloodSugarHistoryListItem : PagingItemAdapter.Item<Event> {
 
-  data object NewBloodSugarButton : BloodSugarHistoryListItem() {
+  companion object {
+    fun from(history: PagingData<BloodSugarHistoryListItem>) = history
+        .insertSeparators { previous: BloodSugarHistoryListItem?, next: BloodSugarHistoryListItem? ->
+          if (previous == null && next != null) {
+            NewBloodSugarButton
+          } else {
+            null
+          }
+        }
+  }
+
+  data object NewBloodSugarButton : BloodSugarHistoryListItem {
     override fun layoutResId(): Int = R.layout.list_new_blood_sugar_button
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
@@ -35,7 +49,7 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
       val bloodSugarTime: String?,
       val isBloodSugarEditable: Boolean,
       val bloodSugarUnitPreference: BloodSugarUnitPreference
-  ) : BloodSugarHistoryListItem() {
+  ) : BloodSugarHistoryListItem {
     override fun layoutResId(): Int = R.layout.list_blood_sugar_history_item
 
     @SuppressLint("SetTextI18n")
@@ -80,11 +94,13 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
           binding.bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_low)
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
         }
+
         reading.isHigh -> {
           binding.bloodSugarLevelTextView.visibility = View.VISIBLE
           binding.bloodSugarLevelTextView.text = context.getString(R.string.bloodsugar_level_high)
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_filled)
         }
+
         else -> {
           binding.bloodSugarLevelTextView.visibility = View.GONE
           binding.bloodSugarIconImageView.setImageResource(R.drawable.ic_blood_sugar_outline)
@@ -106,6 +122,26 @@ sealed class BloodSugarHistoryListItem : PagingItemAdapter_old.Item<Event> {
       } else {
         TextAppearanceSpan(context, R.style.TextAppearance_Simple_Body2)
       }
+    }
+  }
+
+  class DiffCallback : DiffUtil.ItemCallback<BloodSugarHistoryListItem>() {
+    override fun areItemsTheSame(
+        oldItem: BloodSugarHistoryListItem,
+        newItem: BloodSugarHistoryListItem
+    ): Boolean {
+      return when {
+        oldItem is BloodSugarHistoryItem && newItem is BloodSugarHistoryItem -> oldItem.measurement.uuid == newItem.measurement.uuid
+        else -> false
+      }
+    }
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(
+        oldItem: BloodSugarHistoryListItem,
+        newItem: BloodSugarHistoryListItem
+    ): Boolean {
+      return oldItem == newItem
     }
   }
 }

@@ -25,6 +25,7 @@
 - Bump KSP to v2.0.0-1.0.23
 - Migrate `BloodPressureHistoryListItemDataSource` to `PagingSource`
 - Migrate `BloodSugarHistoryListItemDataSource` to `PagingSource`
+- Bump AndroidX Paging to v3.3.1
 
 ## 2024-06-27-9140
 

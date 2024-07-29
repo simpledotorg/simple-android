@@ -14,7 +14,7 @@ androidx-lifecycle = "2.8.4"
 
 dagger = "2.51.1"
 
-flipper = "0.259.0"
+flipper = "0.260.0"
 
 kotlin = "2.0.0"
 

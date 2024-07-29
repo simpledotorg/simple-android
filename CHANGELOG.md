@@ -26,6 +26,7 @@
 - Migrate `BloodPressureHistoryListItemDataSource` to `PagingSource`
 - Migrate `BloodSugarHistoryListItemDataSource` to `PagingSource`
 - Bump AndroidX Paging to v3.3.1
+- Bump AndroidX ViewModel to v2.8.4 
 
 ## 2024-06-27-9140
 

@@ -6,9 +6,9 @@
 
 - Bump androidx-test-runner to v1.6.1
 - Bump AndroidX JUnit to v1.2.1
-- Bump AndroidX ViewModel to v2.8.3
+- Bump AndroidX ViewModel to v2.8.4
 - Bump AndroidX Test Rules to v1.6.1
-- Bump Fragment KTX to v1.8.1
+- Bump Fragment KTX to v1.8.2
 - Bump Jackson Core to v2.17.2
 - Bump Sentry Gradle plugin to v4.10.0
 - Bump AndroidX Lifecycle to v2.8.4
@@ -26,7 +26,6 @@
 - Migrate `BloodPressureHistoryListItemDataSource` to `PagingSource`
 - Migrate `BloodSugarHistoryListItemDataSource` to `PagingSource`
 - Bump AndroidX Paging to v3.3.1
-- Bump AndroidX ViewModel to v2.8.4 
 
 ## 2024-06-27-9140
 

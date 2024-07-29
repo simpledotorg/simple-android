@@ -18,7 +18,7 @@
 - Bump AGP to v8.5.1
 - Bump Lint to v31.5.1
 - Remove Maestro tests from CI
-- Bump Flipper to v0.259.0
+- Bump Flipper to v0.260.0
 - Add Google services plugin to app module Gradle file
 - Bump Gradle to v8.9
 - Convert sealed sub-object to data object

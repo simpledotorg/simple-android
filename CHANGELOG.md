@@ -27,6 +27,7 @@
 - Migrate `BloodSugarHistoryListItemDataSource` to `PagingSource`
 - Bump AndroidX Paging to v3.3.1
 - Bump Lottie to v6.5.0
+- Bump AGP to v8.5.2
 
 ## 2024-06-27-9140
 

@@ -6,6 +6,7 @@
 
 - Bump AGP to v8.5.2
 - Bump Dagger to v2.52
+- Bump Lint to v31.5.2
 
 ## 2024-08-05-9175
 

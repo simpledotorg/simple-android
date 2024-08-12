@@ -10,6 +10,7 @@
 - Bump Sentry Gradle plugin to v4.11.0
 - Bump KSP to v2.0.10-1.0.24
 - Bump AndroidX Paging to v3.3.2
+- Bump AndroidX Annotation to v1.8.2
 
 ## 2024-08-05-9175
 

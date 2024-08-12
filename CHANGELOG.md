@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump AGP to v8.5.2
+- Bump Dagger to v2.52
 
 ## 2024-08-05-9175
 

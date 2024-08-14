@@ -13,6 +13,7 @@
 - Bump AndroidX Paging to v3.3.2
 - Bump AndroidX Annotation to v1.8.2
 - Bump Flipper to v0.262.0
+- Bump Kotlin to v2.0.10
 
 ## 2024-08-05-9175
 

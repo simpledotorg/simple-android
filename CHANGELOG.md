@@ -8,6 +8,7 @@
 - Bump Dagger to v2.52
 - Bump Lint to v31.5.2
 - Bump Sentry Gradle plugin to v4.11.0
+- Bump Sentry to v7.14.0
 - Bump KSP to v2.0.10-1.0.24
 - Bump AndroidX Paging to v3.3.2
 - Bump AndroidX Annotation to v1.8.2

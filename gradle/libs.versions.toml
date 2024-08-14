@@ -16,7 +16,7 @@ dagger = "2.52"
 
 flipper = "0.262.0"
 
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 
 ktlint = "0.36.0"
 

@@ -14,6 +14,7 @@
 - Bump AndroidX Annotation to v1.8.2
 - Bump Flipper to v0.262.0
 - Bump Kotlin to v2.0.10
+- Bump AndroidX Test Runner to v1.6.2
 
 ## 2024-08-05-9175
 

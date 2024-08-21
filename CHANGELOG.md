@@ -17,6 +17,7 @@
 - Bump AndroidX Test Runner to v1.6.2
 - Bump AndroidX Work to v2.9.1
 - Bump MLKit Barcode Scanning to v18.3.1
+- Bump Gradle to v8.10
 
 ## 2024-08-05-9175
 

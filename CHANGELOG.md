@@ -18,6 +18,7 @@
 - Bump AndroidX Work to v2.9.1
 - Bump MLKit Barcode Scanning to v18.3.1
 - Bump Gradle to v8.10
+- Bump Firebase Analytics to v22.1.0
 
 ## 2024-08-05-9175
 

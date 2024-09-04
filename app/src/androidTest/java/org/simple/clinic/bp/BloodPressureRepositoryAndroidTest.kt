@@ -484,4 +484,56 @@ class BloodPressureRepositoryAndroidTest {
     assertThat(isNewestBpEntryHighForPatient2).isFalse()
     assertThat(isNewestBpEntryHighForPatient3).isTrue()
   }
+
+  @Test
+  fun checking_if_bp_recorded_today_should_work_correctly() {
+    // given
+    val patient1Uuid = UUID.fromString("6eaa6dbd-89cc-40bd-a5aa-e209d3c048a9")
+    val patient2Uuid = UUID.fromString("0acf64df-7f4e-4cc1-b436-71a7867435c5")
+
+    val patient1Profile = TestData.patientProfile(patientUuid = patient1Uuid)
+    val patient2Profile = TestData.patientProfile(patientUuid = patient2Uuid)
+
+    val patient1Bp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3892f569-6201-40f9-8101-80525aa413ce"),
+        patientUuid = patient1Uuid,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val patient1BP2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("153c42a0-cb1b-44af-aa03-6ef40fee929e"),
+        patientUuid = patient1Uuid,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val patient2BP1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("d72ac32e-6d39-4136-8bc8-056fe4faef4b"),
+        patientUuid = patient2Uuid,
+        createdAt = Instant.parse("2017-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-01-01T00:00:00Z")
+    )
+
+    patientRepository.save(listOf(patient1Profile, patient2Profile))
+    repository.save(listOf(patient1Bp1, patient1BP2, patient2BP1))
+
+    // when
+    val patient1HasBPRecordedToday = repository.hasBPRecordedToday(
+        patientUuid = patient1Uuid,
+        today = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val patient2HasBPRecordedToday = repository.hasBPRecordedToday(
+        patientUuid = patient2Uuid,
+        today = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    // then
+    assertThat(patient1HasBPRecordedToday.blockingFirst()).isTrue()
+    assertThat(patient2HasBPRecordedToday.blockingFirst()).isFalse()
+  }
 }

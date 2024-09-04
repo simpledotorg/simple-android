@@ -199,6 +199,14 @@ data class BloodPressureMeasurement(
     fun allBloodPressures(patientUuid: UUID): Observable<List<BloodPressureMeasurement>>
 
     @Query("""
+      SELECT EXISTS (
+        SELECT 1 FROM bloodpressuremeasurement
+        WHERE patientUuid = :patientUuid AND recordedAt >= :today AND deletedAt IS NULL
+      )
+    """)
+    fun hasBPRecordedToday(patientUuid: UUID, today: Instant): Observable<Boolean>
+
+    @Query("""
       SELECT * FROM bloodpressuremeasurement
       WHERE patientUuid = :patientUuid AND recordedAt >= :since AND deletedAt IS NULL
       ORDER BY recordedAt DESC

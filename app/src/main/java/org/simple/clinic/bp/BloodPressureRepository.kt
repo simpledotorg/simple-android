@@ -144,6 +144,13 @@ class BloodPressureRepository @Inject constructor(
     return dao.allBloodPressuresPagingSource(patientUuid)
   }
 
+  fun hasBPRecordedToday(patientUuid: UUID, today: Instant): Observable<Boolean> {
+    return dao.hasBPRecordedToday(
+        patientUuid = patientUuid,
+        today = today,
+    )
+  }
+
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .countWithStatus(SyncStatus.PENDING)

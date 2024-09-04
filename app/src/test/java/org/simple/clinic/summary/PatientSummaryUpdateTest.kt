@@ -2086,6 +2086,33 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when statin prescription check info is loaded and can prescribe statin, then update the state`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 50,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = Yes,
+                hasHadStroke = Yes,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinPrescriptionStatus(canPrescribeStatin = true)),
+            hasNoEffects()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

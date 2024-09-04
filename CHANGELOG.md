@@ -12,7 +12,7 @@
 - Bump KSP to v2.0.10-1.0.24
 - Bump AndroidX Paging to v3.3.2
 - Bump AndroidX Annotation to v1.8.2
-- Bump Flipper to v0.263.0
+- Bump Flipper to v0.264.0
 - Bump Kotlin to v2.0.10
 - Bump AndroidX Test Runner to v1.6.2
 - Bump AndroidX Work to v2.9.1

@@ -137,3 +137,12 @@ data object HasDiabetesClicked : PatientSummaryEvent()
 data class HasHypertensionClicked(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryEvent()
 
 data class HypertensionNotNowClicked(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryEvent()
+
+data class StatinPrescriptionCheckInfoLoaded(
+    val age: Int,
+    val isPatientDead: Boolean,
+    val hasBPRecordedToday: Boolean,
+    val assignedFacility: Facility?,
+    val medicalHistory: MedicalHistory,
+    val prescriptions: List<PrescribedDrug>,
+) : PatientSummaryEvent()

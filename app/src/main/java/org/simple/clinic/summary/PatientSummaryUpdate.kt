@@ -93,6 +93,7 @@ class PatientSummaryUpdate(
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
+      is StatinPrescriptionCheckInfoLoaded -> noChange()
     }
   }
 

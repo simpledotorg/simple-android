@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Answer
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
@@ -54,6 +55,8 @@ data class CheckPatientReassignmentStatus(
 data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
+
+data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 

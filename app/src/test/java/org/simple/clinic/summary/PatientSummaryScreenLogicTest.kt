@@ -192,6 +192,7 @@ class PatientSummaryScreenLogicTest {
     val viewEffectHandler = PatientSummaryViewEffectHandler(uiActions)
     val effectHandler = PatientSummaryEffectHandler(
         clock = TestUtcClock(),
+        userClock = TestUserClock(),
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,

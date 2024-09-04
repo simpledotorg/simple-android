@@ -19,6 +19,7 @@
 - Bump MLKit Barcode Scanning to v18.3.1
 - Bump Gradle to v8.10
 - Bump Firebase Analytics to v22.1.0
+- Bump desugar JDK library to v2.1.1
 
 ## 2024-08-05-9175
 

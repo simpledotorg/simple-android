@@ -107,7 +107,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasNoEffects()
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patient))
         ))
   }
 
@@ -128,7 +128,10 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(linkIdWithPatientModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier))
+            hasEffects(
+                LoadStatinPrescriptionCheckInfo(patient = patient),
+                ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier)
+            )
         ))
   }
 

@@ -281,7 +281,9 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = mutableSetOf<PatientSummaryEffect>()
+    val effects = mutableSetOf<PatientSummaryEffect>(
+        LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient)
+    )
     if (model.openIntention is LinkIdWithPatient &&
         !event.patientSummaryProfile.hasIdentifier(model.openIntention.identifier)) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))

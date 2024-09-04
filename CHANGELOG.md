@@ -6,7 +6,7 @@
 
 - Bump AGP to v8.6.0
 - Bump Dagger to v2.52
-- Bump Lint to v31.5.2
+- Bump Lint to v31.6.0
 - Bump Sentry Gradle plugin to v4.11.0
 - Bump Sentry to v7.14.0
 - Bump KSP to v2.0.10-1.0.24

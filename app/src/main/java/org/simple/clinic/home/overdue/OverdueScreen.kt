@@ -60,6 +60,7 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -111,6 +112,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
+
+  @Inject
+  lateinit var locale: Locale
 
   private val overdueListAdapter = ItemAdapter(
       diffCallback = OverdueAppointmentListItem.DiffCallback(),
@@ -270,8 +274,11 @@ class OverdueScreen : BaseScreen<
         isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
         selectedOverdueAppointments = selectedOverdueAppointments,
         isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
+        locale = locale,
     ))
-    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.VISIBLE }
+    if (isOverdueListDownloadAndShareEnabled) {
+      buttonsFrame.visibility = View.VISIBLE
+    }
   }
 
   override fun showOverdueCount(count: Int) {
@@ -297,7 +304,9 @@ class OverdueScreen : BaseScreen<
 
   override fun showNoOverduePatientsView() {
     viewForEmptyList.visibility = View.VISIBLE
-    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.GONE }
+    if (isOverdueListDownloadAndShareEnabled) {
+      buttonsFrame.visibility = View.GONE
+    }
   }
 
   override fun hideNoOverduePatientsView() {

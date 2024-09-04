@@ -31,6 +31,7 @@ import org.simple.clinic.widgets.setCompoundDrawableEnd
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import java.util.UUID
 
 sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
@@ -46,6 +47,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(isOverdueInstantSearchEnabled)
 
@@ -57,6 +59,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          locale
       )
       val agreedToVisitListItem = agreedToVisitItem(
           overdueAppointmentSections,
@@ -65,6 +68,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          locale
       )
       val remindToCallListItem = remindToCallItem(
           overdueAppointmentSections,
@@ -73,6 +77,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          locale
       )
       val removedFromOverdueListItem = removedFromOverdueItem(
           overdueAppointmentSections,
@@ -81,6 +86,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          locale
       )
       val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(
           overdueAppointmentSections,
@@ -89,6 +95,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          locale
       )
       val dividerListItem = listOf(Divider)
 
@@ -110,12 +117,14 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val moreThanAnOneYearOverdueHeader = listOf(
           OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header,
               overdueAppointmentSections.moreThanAnYearOverdueAppointments.size,
               overdueListSectionStates.isMoreThanAnOneYearOverdueHeader,
-              MORE_THAN_A_YEAR_OVERDUE
+              MORE_THAN_A_YEAR_OVERDUE,
+              locale
           ))
 
       val moreThanAnOneYearOverdueListItems = expandedOverdueAppointmentList(
@@ -137,12 +146,14 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val removedFromOverdueListHeader = listOf(
           OverdueSectionHeader(R.string.overdue_removed_from_list_call_header,
               overdueAppointmentSections.removedFromOverdueAppointments.size,
               overdueListSectionStates.isRemovedFromOverdueListHeaderExpanded,
-              REMOVED_FROM_OVERDUE
+              REMOVED_FROM_OVERDUE,
+              locale
           ))
 
       val removedFromOverdueListItems = expandedOverdueAppointmentList(
@@ -164,12 +175,14 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val remindToCallHeader = listOf(
           OverdueSectionHeader(R.string.overdue_remind_to_call_header,
               overdueAppointmentSections.remindToCallLaterAppointments.size,
               overdueListSectionStates.isRemindToCallLaterHeaderExpanded,
-              REMIND_TO_CALL
+              REMIND_TO_CALL,
+              locale
           ))
 
       val remindToCallListItems = expandedOverdueAppointmentList(
@@ -191,12 +204,14 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val agreedToVisitHeader = listOf(
           OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header,
               overdueAppointmentSections.agreedToVisitAppointments.size,
               overdueListSectionStates.isAgreedToVisitHeaderExpanded,
-              AGREED_TO_VISIT
+              AGREED_TO_VISIT,
+              locale
           ))
 
       val agreedToVisitListItems = expandedOverdueAppointmentList(
@@ -219,13 +234,15 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        locale: Locale,
     ): List<OverdueAppointmentListItem> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
       val pendingToCallHeader = listOf(
           OverdueSectionHeader(R.string.overdue_pending_to_call_header,
               overdueAppointmentSections.pendingAppointments.size,
               overdueListSectionStates.isPendingHeaderExpanded,
-              PENDING_TO_CALL
+              PENDING_TO_CALL,
+              locale
           ))
       val pendingAppointmentsContent = generatePendingAppointmentsContent(
           overdueAppointmentSections,
@@ -424,7 +441,8 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
       @StringRes val headerText: Int,
       val count: Int,
       val isOverdueSectionHeaderExpanded: Boolean,
-      val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle
+      val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle,
+      val locale: Locale,
   ) : OverdueAppointmentListItem() {
     override fun layoutResId(): Int = R.layout.list_item_overdue_list_section_header
 
@@ -432,7 +450,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
       val binding = holder.binding as ListItemOverdueListSectionHeaderBinding
 
       binding.overdueSectionHeaderTextView.setText(headerText)
-      binding.overdueSectionHeaderIcon.text = count.toString()
+      binding.overdueSectionHeaderIcon.text = String.format(locale = locale, format = "%d", count)
       binding.root.setOnClickListener {
         subject.onNext(ChevronClicked(overdueAppointmentSectionTitle))
       }

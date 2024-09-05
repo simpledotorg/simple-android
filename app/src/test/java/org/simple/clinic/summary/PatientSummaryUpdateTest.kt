@@ -2100,7 +2100,7 @@ class PatientSummaryUpdateTest {
             ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = Yes,
-                hasHadStroke = Yes,
+                hasHadStroke = No,
                 hasHadHeartAttack = No,
             ),
             prescriptions = listOf(

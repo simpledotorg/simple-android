@@ -105,8 +105,8 @@ class PatientSummaryUpdate(
     val hasCVD = with(event.medicalHistory) {
       hasHadStroke == Yes || hasHadHeartAttack == Yes
     }
-    val isPatientEligibleForStatin = event.age >= minAgeForStatin &&
-        event.medicalHistory.diagnosedWithDiabetes == Yes &&
+    val isPatientEligibleForStatin = (event.age >= minAgeForStatin &&
+        event.medicalHistory.diagnosedWithDiabetes == Yes) ||
         hasCVD
     val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
     val canPrescribeStatin = event.isPatientDead.not() &&

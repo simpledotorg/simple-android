@@ -107,7 +107,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasNoEffects()
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patient))
         ))
   }
 
@@ -128,7 +128,10 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(linkIdWithPatientModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier))
+            hasEffects(
+                LoadStatinPrescriptionCheckInfo(patient = patient),
+                ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier)
+            )
         ))
   }
 
@@ -2080,6 +2083,33 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true))
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and can prescribe statin, then update the state`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 50,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = Yes,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinPrescriptionStatus(canPrescribeStatin = true)),
+            hasNoEffects()
         ))
   }
 

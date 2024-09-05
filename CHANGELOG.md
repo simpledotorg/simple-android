@@ -22,6 +22,7 @@
 - Bump desugar JDK library to v2.1.1
 - Bump AndroidX ViewModel to v2.8.5
 - Bump AndroidX Lifecycle to v2.8.5
+- Check statin nudge status in patient summary screen
 
 ## 2024-08-05-9175
 

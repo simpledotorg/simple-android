@@ -22,17 +22,20 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.Instant
+import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
@@ -41,6 +44,7 @@ import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
     private val clock: UtcClock,
+    private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
@@ -89,7 +93,46 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
+        .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
         .build()
+  }
+
+  private fun loadStatinPrescriptionCheckInfo(): ObservableTransformer<LoadStatinPrescriptionCheckInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .flatMap { effect ->
+            val patient = effect.patient
+            val today = LocalDate.now(userClock)
+                .atStartOfDay()
+                .atZone(userClock.zone)
+                .toInstant()
+
+            bloodPressureRepository.hasBPRecordedToday(
+                patientUuid = patient.uuid,
+                today = today,
+            ).map {
+              Pair(patient, it)
+            }
+          }
+          .map { (patient, hasBPRecordedToday) ->
+            val assignedFacility = getAssignedFacility(patient.assignedFacilityId).toNullable()
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patient.uuid
+            )
+            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patient.uuid)
+
+            StatinPrescriptionCheckInfoLoaded(
+                age = patient.ageDetails.estimateAge(userClock = userClock),
+                isPatientDead = patient.status == PatientStatus.Dead,
+                hasBPRecordedToday = hasBPRecordedToday,
+                assignedFacility = assignedFacility,
+                medicalHistory = medicalHistory,
+                prescriptions = prescriptions
+            )
+          }
+    }
   }
 
   private fun markHypertension(patientUuid: UUID) {
@@ -226,7 +269,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(scheduler)
           .switchMap { patientRepository.patientProfile(it.patientUuid) }
-          .filterAndUnwrapJust()
+          .extractIfPresent()
           .map { it.withoutDeletedBusinessIds().withoutDeletedPhoneNumbers() }
           .map { patientProfile ->
             val registeredFacility = getRegisteredFacility(patientProfile.patient.registeredFacilityId)
@@ -243,6 +286,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return Optional
         .ofNullable(patientRegisteredFacilityId)
         .flatMap(Function { facilityRepository.facility(it) })
+  }
+
+  private fun getAssignedFacility(assignedFacilityId: UUID?): Optional<Facility> {
+    return Optional
+        .ofNullable(assignedFacilityId)
+        .flatMap { facilityRepository.facility(it) }
   }
 
   private fun mapPatientProfileToSummaryProfile(
@@ -375,7 +424,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     val appointment = appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)
 
     return when {
-      !phoneNumber.isPresent() || !appointment.isPresent() -> false
+      !phoneNumber.isPresent || !appointment.isPresent -> false
       else -> {
         val actualNumber = phoneNumber.get()
         val actualAppointment = appointment.get()

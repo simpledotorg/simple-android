@@ -23,8 +23,10 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Answer
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -34,8 +36,8 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
@@ -64,13 +66,15 @@ class PatientSummaryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
 
   private val clock = TestUtcClock()
+  private val userClock = TestUserClock(instant = Instant.parse("2018-01-01T00:00:00Z"))
   private val diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
       htnPrescriptions = listOf("amlodipine"),
       diabetesPrescriptions = listOf("metformin")
   )
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      userClock = userClock,
+      schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       bloodPressureRepository = bloodPressureRepository,
       appointmentRepository = appointmentRepository,
@@ -112,7 +116,8 @@ class PatientSummaryEffectHandlerTest {
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         clock = clock,
-        schedulersProvider = TrampolineSchedulersProvider(),
+        userClock = userClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
         appointmentRepository = mock(),
@@ -171,7 +176,8 @@ class PatientSummaryEffectHandlerTest {
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         clock = clock,
-        schedulersProvider = TrampolineSchedulersProvider(),
+        userClock = TestUserClock(),
+        schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
         appointmentRepository = mock(),
@@ -599,6 +605,7 @@ class PatientSummaryEffectHandlerTest {
     )
     val effectHandler = PatientSummaryEffectHandler(
         clock = clock,
+        userClock = userClock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
@@ -775,5 +782,81 @@ class PatientSummaryEffectHandlerTest {
 
     verify(uiActions).showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load statin prescription check info effect is received, then load info`() {
+    // given
+    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val effectHandler = PatientSummaryEffectHandler(
+        clock = clock,
+        userClock = userClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = mock(),
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        bloodSugarRepository = bloodSugarRepository,
+        dataSync = dataSync,
+        medicalHistoryRepository = medicalHistoryRepository,
+        country = bangladesh,
+        currentUser = Lazy { user },
+        currentFacility = Lazy { facility },
+        uuidGenerator = uuidGenerator,
+        facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = teleconsultFacilityRepository,
+        prescriptionRepository = prescriptionRepository,
+        cdssPilotFacilities = { emptyList() },
+        viewEffectsConsumer = viewEffectHandler::handle,
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+    )
+    val testCase = EffectHandlerTestCase(effectHandler.build())
+    val assignedFacilityId = UUID.fromString("079784fd-de89-4499-9371-f8ae64f26f70")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active,
+        assignedFacilityId = assignedFacilityId,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 50,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null,
+        )
+    )
+
+    val facility = TestData.facility(
+        uuid = assignedFacilityId,
+        name = "PHC Simple"
+    )
+
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("281f2524-8864-4b0f-859c-97952d881ccb"),
+        diagnosedWithHypertension = No
+    )
+
+    whenever(bloodPressureRepository.hasBPRecordedToday(
+        patientUuid = patientUuid,
+        today = Instant.parse("2018-01-01T00:00:00Z"),
+    )) doReturn Observable.just(true)
+    whenever(facilityRepository.facility(assignedFacilityId)) doReturn Optional.of(facility)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )) doReturn medicalHistory
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn emptyList()
+
+    // when
+    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patient))
+
+    // then
+    testCase.assertOutgoingEvents(StatinPrescriptionCheckInfoLoaded(
+        age = 50,
+        isPatientDead = false,
+        hasBPRecordedToday = true,
+        assignedFacility = facility,
+        medicalHistory = medicalHistory,
+        prescriptions = emptyList(),
+    ))
+
+    verifyNoInteractions(uiActions)
   }
 }

@@ -93,7 +93,32 @@ class PatientSummaryUpdate(
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
+      is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
     }
+  }
+
+  private fun statinPrescriptionCheckInfoLoaded(
+      event: StatinPrescriptionCheckInfoLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val minAgeForStatin = 40
+    val hasCVD = with(event.medicalHistory) {
+      hasHadStroke == Yes || hasHadHeartAttack == Yes
+    }
+    val isPatientEligibleForStatin = (event.age >= minAgeForStatin &&
+        event.medicalHistory.diagnosedWithDiabetes == Yes) ||
+        hasCVD
+    val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val canPrescribeStatin = event.isPatientDead.not() &&
+        event.assignedFacility?.facilityType.equals("UHC", ignoreCase = true) &&
+        event.hasBPRecordedToday &&
+        hasStatinsPrescribedAlready.not() &&
+        isPatientEligibleForStatin
+
+    val updatedModel = model.updateStatinPrescriptionStatus(
+        canPrescribeStatin = canPrescribeStatin
+    )
+    return next(updatedModel)
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {
@@ -280,7 +305,9 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = mutableSetOf<PatientSummaryEffect>()
+    val effects = mutableSetOf<PatientSummaryEffect>(
+        LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient)
+    )
     if (model.openIntention is LinkIdWithPatient &&
         !event.patientSummaryProfile.hasIdentifier(model.openIntention.identifier)) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))

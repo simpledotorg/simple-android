@@ -1,9 +1,9 @@
 package org.simple.clinic.summary
 
+import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
@@ -788,6 +788,60 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when statin info is loaded and can prescribe statin then show the statin alert`() {
+    //given
+    val statinModel = StatinModel(
+        canPrescribeStatin = true,
+        age = 40,
+        hasDiabetes = true,
+        hasHadStroke = false,
+        hasHadHeartAttack = false,
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .updateStatinInfo(statinModel)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).showStatinAlert(statinModel)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when statin info is loaded and can not prescribe statin then hide the statin alert`() {
+    //given
+    val statinModel = StatinModel(
+        canPrescribeStatin = false,
+        age = 40,
+        hasDiabetes = false,
+        hasHadStroke = false,
+        hasHadHeartAttack = false,
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .updateStatinInfo(statinModel)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideStatinAlert()
     verifyNoMoreInteractions(ui)
   }
 }

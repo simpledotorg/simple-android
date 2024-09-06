@@ -792,6 +792,14 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
+  override fun showStatinAlert(statin: StatinModel) {
+    //TODO
+  }
+
+  override fun hideStatinAlert() {
+    //TODO
+  }
+
   override fun showReassignPatientWarningSheet(
       patientUuid: UUID,
       currentFacility: Facility,

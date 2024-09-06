@@ -42,6 +42,10 @@ class PatientSummaryViewRenderer(
       } else {
         ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
+
+      if (model.hasStatinInfoLoaded) {
+        renderStatinAlert(model.statin!!)
+      }
     }
   }
 
@@ -143,6 +147,14 @@ class PatientSummaryViewRenderer(
       ui.showDiabetesView()
     } else {
       ui.hideDiabetesView()
+    }
+  }
+
+  private fun renderStatinAlert(statinModel: StatinModel) {
+    if (statinModel.canPrescribeStatin) {
+      ui.showStatinAlert(statinModel)
+    } else {
+      ui.hideStatinAlert()
     }
   }
 }

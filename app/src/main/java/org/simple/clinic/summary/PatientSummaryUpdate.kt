@@ -102,12 +102,12 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val minAgeForStatin = 40
-    val hasCVD = with(event.medicalHistory) {
-      hasHadStroke == Yes || hasHadHeartAttack == Yes
-    }
-    val isPatientEligibleForStatin = (event.age >= minAgeForStatin &&
-        event.medicalHistory.diagnosedWithDiabetes == Yes) ||
-        hasCVD
+    val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
+    val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
+    val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
+
+    val hasCVD = hasHadStroke || hasHadHeartAttack
+    val isPatientEligibleForStatin = (event.age >= minAgeForStatin && hasDiabetes) || hasCVD
     val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
     val canPrescribeStatin = event.isPatientDead.not() &&
         event.assignedFacility?.facilityType.equals("UHC", ignoreCase = true) &&
@@ -115,8 +115,14 @@ class PatientSummaryUpdate(
         hasStatinsPrescribedAlready.not() &&
         isPatientEligibleForStatin
 
-    val updatedModel = model.updateStatinPrescriptionStatus(
-        canPrescribeStatin = canPrescribeStatin
+    val updatedModel = model.updateStatinInfo(
+        StatinModel(
+            canPrescribeStatin = canPrescribeStatin,
+            age = event.age,
+            hasDiabetes = hasDiabetes,
+            hasHadStroke = hasHadStroke,
+            hasHadHeartAttack = hasHadHeartAttack,
+        )
     )
     return next(updatedModel)
   }

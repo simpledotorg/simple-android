@@ -27,7 +27,7 @@ data class PatientSummaryModel(
     val hasPrescribedDrugsChangedToday: Boolean?,
     val scheduledAppointment: ParcelableOptional<Appointment>?,
     val hasShownDiagnosisWarningDialog: Boolean,
-    val canPrescribeStatin: Boolean,
+    val statin: StatinModel?,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -46,7 +46,7 @@ data class PatientSummaryModel(
           hasPrescribedDrugsChangedToday = null,
           scheduledAppointment = null,
           hasShownDiagnosisWarningDialog = false,
-          canPrescribeStatin = false,
+          statin = null,
       )
     }
   }
@@ -125,7 +125,7 @@ data class PatientSummaryModel(
     return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 
-  fun updateStatinPrescriptionStatus(canPrescribeStatin: Boolean): PatientSummaryModel {
-    return copy(canPrescribeStatin = canPrescribeStatin)
+  fun updateStatinInfo(statin: StatinModel): PatientSummaryModel {
+    return copy(statin = statin)
   }
 }

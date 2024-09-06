@@ -2108,7 +2108,15 @@ class PatientSummaryUpdateTest {
             ),
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinPrescriptionStatus(canPrescribeStatin = true)),
+            hasModel(defaultModel.updateStatinInfo(
+                StatinModel(
+                    canPrescribeStatin = true,
+                    age = 50,
+                    hasDiabetes = true,
+                    hasHadStroke = false,
+                    hasHadHeartAttack = false,
+                )
+            )),
             hasNoEffects()
         ))
   }

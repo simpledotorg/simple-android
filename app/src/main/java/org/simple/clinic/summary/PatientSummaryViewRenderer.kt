@@ -50,6 +50,10 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
+    //We don't show CDSS alert when statin alert is shown
+    if (model.statin?.canPrescribeStatin == true)
+      return
+
     if (model.hasScheduledAppointment) {
       renderClinicalDecisionBasedOnAppointmentOverdue(model)
     } else {
@@ -153,6 +157,7 @@ class PatientSummaryViewRenderer(
   private fun renderStatinAlert(statinModel: StatinModel) {
     if (statinModel.canPrescribeStatin) {
       ui.showStatinAlert(statinModel)
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
     } else {
       ui.hideStatinAlert()
     }

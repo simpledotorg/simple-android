@@ -23,6 +23,7 @@
 - Bump AndroidX ViewModel to v2.8.5
 - Bump AndroidX Lifecycle to v2.8.5
 - Check statin nudge status in patient summary screen
+- Show statin nudge alert when statins can be prescribed 
 
 ## 2024-08-05-9175
 

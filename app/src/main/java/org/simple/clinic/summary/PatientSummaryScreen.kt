@@ -168,6 +168,12 @@ class PatientSummaryScreen :
   private val clinicalDecisionSupportAlertView
     get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
+  private val statinAlertView
+    get() = binding.statinAlert.rootView
+
+  private val statinAlertDescription
+    get() = binding.statinAlert.statinAlertSubtitle
+
   @Inject
   lateinit var router: Router
 
@@ -793,11 +799,46 @@ class PatientSummaryScreen :
   }
 
   override fun showStatinAlert(statin: StatinModel) {
-    //TODO
+    val patientText = getString(R.string.statin_alert_patient)
+    var statinAlertDescriptionText = ""
+
+    if (statin.hasDiabetes) {
+      statinAlertDescriptionText = String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString())
+    }
+
+    val historyList = mutableListOf<String>()
+    if (statin.hasHadStroke) {
+      historyList.add(getString(R.string.statin_alert_stroke))
+    }
+    if (statin.hasHadHeartAttack) {
+      historyList.add(getString(R.string.statin_alert_heart_attack))
+    }
+
+    if (historyList.isNotEmpty()) {
+      val historyText = when (historyList.size) {
+        1 -> if (statin.hasDiabetes) {
+          " ${getString(R.string.statin_alert_and_seperator)} ${getString(R.string.statin_alert_cvh_history)} ${historyList[0]}"
+        } else {
+          "${getString(R.string.statin_alert_cvh_history)} ${historyList[0]}"
+        }
+
+        else -> if (statin.hasDiabetes) {
+          ", ${getString(R.string.statin_alert_cvh_history)} ${historyList.joinToString(" ${getString(R.string.statin_alert_and_seperator)} ")}"
+        } else {
+          "${getString(R.string.statin_alert_cvh_history)} ${historyList.joinToString(" ${getString(R.string.statin_alert_and_seperator)} ")}"
+        }
+      }
+
+      statinAlertDescriptionText += historyText
+    }
+
+    statinAlertDescriptionText = "$patientText $statinAlertDescriptionText."
+    statinAlertDescription.text = statinAlertDescriptionText
+    statinAlertView.visibility = VISIBLE
   }
 
   override fun hideStatinAlert() {
-    //TODO
+    statinAlertView.visibility = GONE
   }
 
   override fun showReassignPatientWarningSheet(

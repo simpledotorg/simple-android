@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootView"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginHorizontal="@dimen/spacing_8"
+  android:layout_marginTop="@dimen/spacing_8"
+  android:layout_marginBottom="@dimen/spacing_0"
+  android:background="@drawable/background_statin_alert"
+  android:elevation="@dimen/spacing_4"
+  android:paddingHorizontal="@dimen/spacing_8"
+  android:paddingVertical="@dimen/spacing_12"
+  android:visibility="gone"
+  tools:visibility="visible">
+
+  <ImageView
+    android:id="@+id/statinAlertIcon"
+    android:layout_width="@dimen/spacing_56"
+    android:layout_height="@dimen/spacing_56"
+    android:contentDescription="@null"
+    android:scaleType="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_statin_alert" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/statinAlertTitle"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:text="@string/statin_alert_title"
+    android:textAppearance="?attr/textAppearanceSubtitle1Medium"
+    android:textColor="@color/simple_brown_600"
+    app:layout_constraintBottom_toTopOf="@id/statinAlertSubtitle"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/statinAlertIcon"
+    app:layout_constraintTop_toTopOf="@id/statinAlertIcon"
+    app:layout_constraintVertical_chainStyle="packed" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/statinAlertSubtitle"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_2"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="@color/simple_brown_600_alpha_80"
+    app:layout_constraintBottom_toBottomOf="@id/statinAlertIcon"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/statinAlertIcon"
+    app:layout_constraintTop_toBottomOf="@id/statinAlertTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

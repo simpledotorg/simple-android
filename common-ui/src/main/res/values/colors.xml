@@ -23,8 +23,12 @@
   <color name="simple_red_100_alpha_50">#80FFD6DD</color>
 
   <color name="simple_yellow_600">#B48E00</color>
+  <color name="simple_yellow_550_alpha_40">#66E0B000</color>
   <color name="simple_yellow_500">#FFC800</color>
   <color name="simple_yellow_100">#FFF8E0</color>
+
+  <color name="simple_brown_600">#874D00</color>
+  <color name="simple_brown_600_alpha_80">#CC874D00</color>
 
   <color name="white">#FFFFFF</color>
   <color name="white_72">#B8FFFFFF</color>

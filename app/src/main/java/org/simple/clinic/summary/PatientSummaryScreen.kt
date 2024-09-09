@@ -799,43 +799,35 @@ class PatientSummaryScreen :
   }
 
   override fun showStatinAlert(statin: StatinModel) {
-    val statinAlertDescriptionText = buildString {
+    statinAlertDescription.text = buildString {
       append("${getString(R.string.statin_alert_patient)} ")
+
       if (statin.hasDiabetes) {
         append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
+
+        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
+          append(" ${getString(R.string.statin_alert_and_seperator)} ")
+        }
       }
-      if (statin.hasHadStroke || statin.hasHadHeartAttack) {
-        append(getCVHHistoryString(statin))
+
+      when {
+        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
+        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
+        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
       }
+
       append(".")
     }
 
-    statinAlertDescription.text = statinAlertDescriptionText
     statinAlertView.visibility = VISIBLE
   }
 
-  private fun getCVHHistoryString(statin: StatinModel): String {
-    val historyList = mutableListOf<String>()
-    if (statin.hasHadStroke) {
-      historyList.add(getString(R.string.statin_alert_stroke))
+  private fun getCVDString(hasDiabetes: Boolean): String {
+    return if (hasDiabetes) {
+      getString(R.string.statin_alert_cvd_with_diabetes)
+    } else {
+      getString(R.string.statin_alert_cvd)
     }
-    if (statin.hasHadHeartAttack) {
-      historyList.add(getString(R.string.statin_alert_heart_attack))
-    }
-    val historyText = when (historyList.size) {
-      1 -> if (statin.hasDiabetes) {
-        " ${getString(R.string.statin_alert_and_seperator)} ${getString(R.string.statin_alert_cvh_history)} ${historyList[0]}"
-      } else {
-        "${getString(R.string.statin_alert_cvh_history)} ${historyList[0]}"
-      }
-
-      else -> if (statin.hasDiabetes) {
-        ", ${getString(R.string.statin_alert_cvh_history)} ${historyList.joinToString(" ${getString(R.string.statin_alert_and_seperator)} ")}"
-      } else {
-        "${getString(R.string.statin_alert_cvh_history)} ${historyList.joinToString(" ${getString(R.string.statin_alert_and_seperator)} ")}"
-      }
-    }
-    return historyText
   }
 
   override fun hideStatinAlert() {

@@ -19,7 +19,7 @@ class PatientSummaryViewRenderer(
   private val today = LocalDate.now(userClock)
 
   override fun render(model: PatientSummaryModel) {
-    modelUpdateCallback?.invoke(model)
+    modelUpdateCallback.invoke(model)
 
     with(ui) {
       if (model.hasLoadedPatientSummaryProfile) {
@@ -43,9 +43,7 @@ class PatientSummaryViewRenderer(
         ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
 
-      if (model.hasStatinInfoLoaded) {
-        renderStatinAlert(model.statin!!)
-      }
+      renderStatinAlert(model)
     }
   }
 
@@ -153,9 +151,11 @@ class PatientSummaryViewRenderer(
     }
   }
 
-  private fun renderStatinAlert(statinModel: StatinModel) {
-    if (statinModel.canPrescribeStatin) {
-      ui.showStatinAlert(statinModel)
+  private fun renderStatinAlert(model: PatientSummaryModel) {
+    if (model.hasStatinInfoLoaded.not()) return
+
+    if (model.statin!!.canPrescribeStatin) {
+      ui.showStatinAlert(model.statin)
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
     } else {
       ui.hideStatinAlert()

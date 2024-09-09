@@ -50,7 +50,6 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
-    //We don't show CDSS alert when statin alert is shown
     if (model.statin?.canPrescribeStatin == true)
       return
 

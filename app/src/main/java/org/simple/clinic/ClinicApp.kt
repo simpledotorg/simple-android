@@ -26,6 +26,7 @@ import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.remoteconfig.UpdateFacilityRemoteConfig
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
@@ -64,6 +65,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
+  @Inject
+  lateinit var updateFacilityRemoteConfig: UpdateFacilityRemoteConfig
+
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
   protected open val crashReporterSinks = emptyList<CrashReporter.Sink>()
@@ -83,6 +87,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
           updateInfrastructureUserDetails.track()
           updateAnalyticsUserId.listen()
           closeActivitiesWhenUserIsUnauthorized.listen()
+          updateFacilityRemoteConfig.track()
         }
 
     crashReporterSinks.forEach(CrashReporter::addSink)

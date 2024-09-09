@@ -26,6 +26,7 @@ class UpdateFacilityRemoteConfig @Inject constructor(
   fun track() {
     currentFacilityStream
         .subscribeOn(schedulers.io())
+        .distinctUntilChanged()
         .subscribe {
           workManager.enqueueUniqueWork(REMOTE_CONFIG_SYNC_WORKER, REPLACE, UpdateRemoteConfigWorker.createWorkRequest())
         }

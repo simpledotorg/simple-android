@@ -25,7 +25,8 @@ import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import java.util.UUID
 
 class PatientSummaryUpdate(
-    private val isPatientReassignmentFeatureEnabled: Boolean
+    private val isPatientReassignmentFeatureEnabled: Boolean,
+    private val isPatientStatinNudgeEnabled: Boolean,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -311,9 +312,12 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = mutableSetOf<PatientSummaryEffect>(
-        LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient)
-    )
+    val effects = mutableSetOf<PatientSummaryEffect>()
+
+    if (isPatientStatinNudgeEnabled) {
+      effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
+    }
+
     if (model.openIntention is LinkIdWithPatient &&
         !event.patientSummaryProfile.hasIdentifier(model.openIntention.identifier)) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))

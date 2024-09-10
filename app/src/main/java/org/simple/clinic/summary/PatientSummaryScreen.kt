@@ -168,6 +168,12 @@ class PatientSummaryScreen :
   private val clinicalDecisionSupportAlertView
     get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
+  private val statinAlertView
+    get() = binding.statinAlert.rootView
+
+  private val statinAlertDescription
+    get() = binding.statinAlert.statinAlertSubtitle
+
   @Inject
   lateinit var router: Router
 
@@ -790,6 +796,42 @@ class PatientSummaryScreen :
 
   override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
     clinicalDecisionSupportAlertView.visibility = GONE
+  }
+
+  override fun showStatinAlert(statin: StatinModel) {
+    statinAlertDescription.text = buildString {
+      append("${getString(R.string.statin_alert_patient)} ")
+
+      if (statin.hasDiabetes) {
+        append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
+
+        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
+          append(" ${getString(R.string.statin_alert_and_seperator)} ")
+        }
+      }
+
+      when {
+        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
+        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
+        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
+      }
+
+      append(".")
+    }
+
+    statinAlertView.visibility = VISIBLE
+  }
+
+  private fun getCVDString(hasDiabetes: Boolean): String {
+    return if (hasDiabetes) {
+      getString(R.string.statin_alert_cvd_with_diabetes)
+    } else {
+      getString(R.string.statin_alert_cvd)
+    }
+  }
+
+  override fun hideStatinAlert() {
+    statinAlertView.visibility = GONE
   }
 
   override fun showReassignPatientWarningSheet(

@@ -19,7 +19,7 @@ class PatientSummaryViewRenderer(
   private val today = LocalDate.now(userClock)
 
   override fun render(model: PatientSummaryModel) {
-    modelUpdateCallback?.invoke(model)
+    modelUpdateCallback.invoke(model)
 
     with(ui) {
       if (model.hasLoadedPatientSummaryProfile) {
@@ -42,10 +42,15 @@ class PatientSummaryViewRenderer(
       } else {
         ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
+
+      renderStatinAlert(model)
     }
   }
 
   private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
+    if (model.statin?.canPrescribeStatin == true)
+      return
+
     if (model.hasScheduledAppointment) {
       renderClinicalDecisionBasedOnAppointmentOverdue(model)
     } else {
@@ -143,6 +148,17 @@ class PatientSummaryViewRenderer(
       ui.showDiabetesView()
     } else {
       ui.hideDiabetesView()
+    }
+  }
+
+  private fun renderStatinAlert(model: PatientSummaryModel) {
+    if (model.hasStatinInfoLoaded.not()) return
+
+    if (model.statin!!.canPrescribeStatin) {
+      ui.showStatinAlert(model.statin)
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+    } else {
+      ui.hideStatinAlert()
     }
   }
 }

@@ -1,9 +1,10 @@
 package org.simple.clinic.summary
 
+import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
@@ -786,6 +787,132 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when statin info is loaded and can prescribe statin then show the statin alert`() {
+    //given
+    val statinModel = StatinModel(
+        canPrescribeStatin = true,
+        age = 40,
+        hasDiabetes = true,
+        hasHadStroke = false,
+        hasHadHeartAttack = false,
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .updateStatinInfo(statinModel)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui, times(2)).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).showStatinAlert(statinModel)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when statin info is loaded and can not prescribe statin then hide the statin alert`() {
+    //given
+    val statinModel = StatinModel(
+        canPrescribeStatin = false,
+        age = 40,
+        hasDiabetes = false,
+        hasHadStroke = false,
+        hasHadHeartAttack = false,
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .updateStatinInfo(statinModel)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideStatinAlert()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when both cdss alert and statin alert can be shown, then show statin alert and hide cdss alert`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("fd7d65be-05e4-4ab4-869f-ba9d96f7c556"),
+        scheduledDate = LocalDate.parse("2018-01-01")
+    )
+
+    val statinModel = StatinModel(
+        canPrescribeStatin = true,
+        age = 40,
+        hasDiabetes = true,
+        hasHadStroke = false,
+        hasHadHeartAttack = false,
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
+        .scheduledAppointmentLoaded(appointment)
+        .updateStatinInfo(statinModel)
+
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).showStatinAlert(statinModel)
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)

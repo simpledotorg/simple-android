@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.functions.Consumer
@@ -110,7 +111,10 @@ class BloodPressureHistoryScreen : BaseScreen<
   override fun createUpdate() = BloodPressureHistoryScreenUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>) = effectHandler
-      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .create(
+          viewEffectsConsumer = viewEffectsConsumer,
+          pagingCacheScope = { lifecycleScope }
+      )
       .build()
 
   override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)

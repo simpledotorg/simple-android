@@ -57,6 +57,10 @@
 - Bump AndroidX Paging to v3.3.1
 - Bump Lottie to v6.5.0
 
+### Fixes
+
+- Fix app crashing when viewing BP history 
+
 ## 2024-06-27-9140
 
 ### Internal

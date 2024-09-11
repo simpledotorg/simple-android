@@ -2,6 +2,7 @@ package org.simple.clinic.bp.history
 
 import androidx.paging.PagingData
 import io.reactivex.Observable
+import kotlinx.coroutines.test.TestScope
 import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -36,6 +37,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
   private val viewEffectHandler = BloodPressureHistoryViewEffectHandler(uiActions)
   private val pagerFactory = mock<PagerFactory>()
+  private val pagingCacheScope = TestScope()
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
       patientRepository,
@@ -46,7 +48,8 @@ class BloodPressureHistoryScreenEffectHandlerTest {
           bpEditableDuration = Duration.ofMinutes(10),
           numberOfMeasurementsForTeleconsultation = 0,
       ),
-      viewEffectHandler::handle
+      viewEffectsConsumer = viewEffectHandler::handle,
+      pagingCacheScope = { pagingCacheScope }
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -148,7 +151,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
         pageSize = eq(25),
         enablePlaceholders = eq(false),
         initialKey = eq(null),
-        cacheScope = eq(null),
+        cacheScope = eq(pagingCacheScope),
     )) doReturn Observable.just(bloodPressures)
 
     // when

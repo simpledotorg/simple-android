@@ -81,7 +81,10 @@ class PatientSummaryUpdateTest {
       )
   )
 
-  private val updateSpec = UpdateSpec(PatientSummaryUpdate(true))
+  private val updateSpec = UpdateSpec(PatientSummaryUpdate(
+      isPatientReassignmentFeatureEnabled = true,
+      isPatientStatinNudgeEnabled = false,
+  ))
 
   @Test
   fun `when the current facility is loaded, update the UI`() {
@@ -102,6 +105,22 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when the patient summary profile is loaded, then update the UI`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when the patient summary profile is loaded and statin nudge feature flag is enabled, then update the UI and load statin check info`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = true,
+        isPatientStatinNudgeEnabled = true,
+    ))
+
     updateSpec
         .given(defaultModel)
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
@@ -129,7 +148,6 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(linkIdWithPatientModel.patientSummaryProfileLoaded(patientSummaryProfile)),
             hasEffects(
-                LoadStatinPrescriptionCheckInfo(patient = patient),
                 ShowLinkIdWithPatientView(patientUuid, bpPassportIdentifier)
             )
         ))
@@ -1647,7 +1665,8 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when patient reassignment feature is disabled, and patient is not dead, and done is clicked, then load data for done click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
-        isPatientReassignmentFeatureEnabled = false
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1674,7 +1693,8 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when patient reassignment feature is disabled, and patient is not dead, and back is clicked, then load data for back click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
-        isPatientReassignmentFeatureEnabled = false
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1701,7 +1721,8 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when patient reassignment feature is disabled and measurement warning not now is clicked, then load data for back click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
-        isPatientReassignmentFeatureEnabled = false
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)

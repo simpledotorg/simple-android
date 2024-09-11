@@ -256,7 +256,8 @@ class PatientSummaryScreen :
 
   override fun createUpdate(): Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
     return PatientSummaryUpdate(
-        isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment)
+        isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment),
+        isPatientStatinNudgeEnabled = features.isEnabled(Feature.PatientStatinNudge),
     )
   }
 

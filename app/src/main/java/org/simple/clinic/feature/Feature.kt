@@ -39,5 +39,6 @@ enum class Feature(
   OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
   PatientLineListDownload(false, "patient_line_list_download_v2"),
   LogoutUser(false, "logout_user_v1"),
-  PatientReassignment(false, "patient_reassignment_v0")
+  PatientReassignment(false, "patient_reassignment_v0"),
+  PatientStatinNudge(false, "patient_statin_nudge_v0")
 }

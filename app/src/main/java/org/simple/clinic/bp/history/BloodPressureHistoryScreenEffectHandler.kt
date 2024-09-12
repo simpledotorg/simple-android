@@ -7,12 +7,13 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.bp.BloodPressureHistoryListItemPagingSource
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.PagerFactory
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
@@ -23,12 +24,14 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val pagingSourceFactory: BloodPressureHistoryListItemPagingSource.Factory,
     private val patientSummaryConfig: PatientSummaryConfig,
     @Assisted private val viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>,
+    @Assisted private val pagingCacheScope: () -> CoroutineScope
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
         viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>,
+        pagingCacheScope: () -> CoroutineScope
     ): BloodPressureHistoryScreenEffectHandler
   }
 
@@ -55,6 +58,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
                       source = pagingSource,
                   )
                 },
+                cacheScope = pagingCacheScope.invoke(),
             )
           }
           .map(::BloodPressuresHistoryLoaded)
@@ -72,7 +76,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
                 .take(1)
                 .subscribeOn(scheduler)
           }
-          .filterAndUnwrapJust()
+          .extractIfPresent()
           .map(::PatientLoaded)
     }
   }

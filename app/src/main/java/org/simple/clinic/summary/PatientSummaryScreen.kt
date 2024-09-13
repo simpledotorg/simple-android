@@ -730,40 +730,7 @@ class PatientSummaryScreen :
   }
 
   override fun showClinicalDecisionSupportAlert() {
-    clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
-
-    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
-      excludeTarget(R.id.newBPItemContainer, true)
-      excludeTarget(R.id.bloodSugarItemContainer, true)
-      excludeTarget(R.id.drugsSummaryContainer, true)
-      // We are doing this to wait for the router transitions to be done before we start this.
-      startDelay = 500
-    }
-    val transitionListener = object : Transition.TransitionListener {
-      override fun onTransitionStart(transition: Transition) {
-      }
-
-      override fun onTransitionEnd(transition: Transition) {
-        transition.removeListener(this)
-        spring.animateToFinalPosition(0f)
-      }
-
-      override fun onTransitionCancel(transition: Transition) {
-      }
-
-      override fun onTransitionPause(transition: Transition) {
-      }
-
-      override fun onTransitionResume(transition: Transition) {
-      }
-    }
-    transition.addListener(transitionListener)
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    clinicalDecisionSupportAlertView.visibility = VISIBLE
+    showWithAnimation(clinicalDecisionSupportAlertView)
   }
 
   override fun hideClinicalDecisionSupportAlert() {
@@ -819,8 +786,7 @@ class PatientSummaryScreen :
 
       append(".")
     }
-
-    statinAlertView.visibility = VISIBLE
+    showWithAnimation(statinAlertView)
   }
 
   private fun getCVDString(hasDiabetes: Boolean): String {
@@ -829,6 +795,43 @@ class PatientSummaryScreen :
     } else {
       getString(R.string.statin_alert_cvd)
     }
+  }
+
+  private fun showWithAnimation(view: View) {
+    view.translationY = view.height.unaryMinus().toFloat()
+
+    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(view, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+      // We are doing this to wait for the router transitions to be done before we start this.
+      startDelay = 500
+    }
+    val transitionListener = object : Transition.TransitionListener {
+      override fun onTransitionStart(transition: Transition) {
+      }
+
+      override fun onTransitionEnd(transition: Transition) {
+        transition.removeListener(this)
+        spring.animateToFinalPosition(0f)
+      }
+
+      override fun onTransitionCancel(transition: Transition) {
+      }
+
+      override fun onTransitionPause(transition: Transition) {
+      }
+
+      override fun onTransitionResume(transition: Transition) {
+      }
+    }
+    transition.addListener(transitionListener)
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    view.visibility = VISIBLE
   }
 
   override fun hideStatinAlert() {

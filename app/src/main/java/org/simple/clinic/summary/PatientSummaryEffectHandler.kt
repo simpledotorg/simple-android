@@ -115,13 +115,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
               Pair(patient, it)
             }
           }
-          .map { (patient, hasBPRecordedToday) ->
+          .flatMap { (patient, hasBPRecordedToday) ->
+            val prescriptionsObservable = prescriptionRepository.newestPrescriptionsForPatient(patient.uuid)
+            prescriptionsObservable.map { prescriptions ->
+              Triple(patient, prescriptions, hasBPRecordedToday)
+            }
+          }
+          .map { (patient, prescriptions, hasBPRecordedToday) ->
             val assignedFacility = getAssignedFacility(patient.assignedFacilityId).toNullable()
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
             )
-            val prescriptions = prescriptionRepository.newestPrescriptionsForPatientImmediate(patient.uuid)
 
             StatinPrescriptionCheckInfoLoaded(
                 age = patient.ageDetails.estimateAge(userClock = userClock),

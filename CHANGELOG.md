@@ -24,6 +24,7 @@
 - Bump AndroidX Lifecycle to v2.8.5
 - Check statin nudge status in patient summary screen
 - Add feature flag for statin nudge
+- Fix statin nudge not getting dismissed when a statin is added
 
 ### Features
 

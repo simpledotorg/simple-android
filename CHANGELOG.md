@@ -25,6 +25,7 @@
 - Check statin nudge status in patient summary screen
 - Add feature flag for statin nudge
 - Fix statin nudge not getting dismissed when a statin is added
+- Animate statin nudge visibility in `PatientSummaryScreen`
 
 ### Features
 
@@ -60,7 +61,7 @@
 
 ### Fixes
 
-- Fix app crashing when viewing BP history 
+- Fix app crashing when viewing BP history
 
 ## 2024-06-27-9140
 

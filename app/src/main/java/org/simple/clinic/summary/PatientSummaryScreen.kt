@@ -734,32 +734,7 @@ class PatientSummaryScreen :
   }
 
   override fun hideClinicalDecisionSupportAlert() {
-    if (clinicalDecisionSupportAlertView.visibility != VISIBLE) return
-
-    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
-    (clinicalDecisionSupportAlertView.getTag(R.id.tag_clinical_decision_pending_end_listener) as?
-        DynamicAnimation.OnAnimationEndListener)?.let {
-      spring.removeEndListener(it)
-    }
-
-    val listener = object : DynamicAnimation.OnAnimationEndListener {
-      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
-        spring.removeEndListener(this)
-        clinicalDecisionSupportAlertView.visibility = GONE
-      }
-    }
-    spring.addEndListener(listener)
-    clinicalDecisionSupportAlertView.setTag(R.id.tag_clinical_decision_pending_end_listener, listener)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
-      excludeTarget(R.id.newBPItemContainer, true)
-      excludeTarget(R.id.bloodSugarItemContainer, true)
-      excludeTarget(R.id.drugsSummaryContainer, true)
-    }
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
+    hideWithAnimation(clinicalDecisionSupportAlertView, R.id.tag_clinical_decision_pending_end_listener)
   }
 
   override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
@@ -787,6 +762,10 @@ class PatientSummaryScreen :
       append(".")
     }
     showWithAnimation(statinAlertView)
+  }
+
+  override fun hideStatinAlert() {
+    hideWithAnimation(statinAlertView, R.id.tag_statin_alert_end_listener)
   }
 
   private fun getCVDString(hasDiabetes: Boolean): String {
@@ -834,9 +813,35 @@ class PatientSummaryScreen :
     view.visibility = VISIBLE
   }
 
-  override fun hideStatinAlert() {
-    statinAlertView.visibility = GONE
+  private fun hideWithAnimation(view: View, tag: Int) {
+    if (view.visibility != VISIBLE) return
+
+    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
+    (view.getTag(tag) as?
+        DynamicAnimation.OnAnimationEndListener)?.let {
+      spring.removeEndListener(it)
+    }
+
+    val listener = object : DynamicAnimation.OnAnimationEndListener {
+      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
+        spring.removeEndListener(this)
+        view.visibility = GONE
+      }
+    }
+    spring.addEndListener(listener)
+    view.setTag(tag, listener)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(view, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    spring.animateToFinalPosition(view.height.unaryMinus().toFloat())
   }
+
 
   override fun showReassignPatientWarningSheet(
       patientUuid: UUID,

@@ -15,4 +15,5 @@
   <item name="spring_animation_scrollx" type="id" />
   <item name="spring_animation_scrollY" type="id" />
   <item name="tag_clinical_decision_pending_end_listener" type="id" />
+  <item name="tag_statin_alert_end_listener" type="id" />
 </resources>

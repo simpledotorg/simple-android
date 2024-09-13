@@ -820,6 +820,39 @@ class PatientSummaryScreen :
       append(".")
     }
 
+    statinAlertView.translationY = statinAlertView.height.unaryMinus().toFloat()
+
+    val spring = statinAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(statinAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+      // We are doing this to wait for the router transitions to be done before we start this.
+      startDelay = 500
+    }
+    val transitionListener = object : Transition.TransitionListener {
+      override fun onTransitionStart(transition: Transition) {
+      }
+
+      override fun onTransitionEnd(transition: Transition) {
+        transition.removeListener(this)
+        spring.animateToFinalPosition(0f)
+      }
+
+      override fun onTransitionCancel(transition: Transition) {
+      }
+
+      override fun onTransitionPause(transition: Transition) {
+      }
+
+      override fun onTransitionResume(transition: Transition) {
+      }
+    }
+    transition.addListener(transitionListener)
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
     statinAlertView.visibility = VISIBLE
   }
 
@@ -832,7 +865,33 @@ class PatientSummaryScreen :
   }
 
   override fun hideStatinAlert() {
-    statinAlertView.visibility = GONE
+    if (statinAlertView.visibility != VISIBLE) return
+
+    val spring = statinAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+    (statinAlertView.getTag(R.id.tag_statin_alert_end_listener) as?
+        DynamicAnimation.OnAnimationEndListener)?.let {
+      spring.removeEndListener(it)
+    }
+
+    val listener = object : DynamicAnimation.OnAnimationEndListener {
+      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
+        spring.removeEndListener(this)
+        statinAlertView.visibility = GONE
+      }
+    }
+    spring.addEndListener(listener)
+    statinAlertView.setTag(R.id.tag_statin_alert_end_listener, listener)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(statinAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    spring.animateToFinalPosition(statinAlertView.height.unaryMinus().toFloat())
+
   }
 
   override fun showReassignPatientWarningSheet(

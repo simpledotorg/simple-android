@@ -842,7 +842,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
     )) doReturn medicalHistory
-    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn emptyList()
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.just(emptyList())
 
     // when
     testCase.dispatch(LoadStatinPrescriptionCheckInfo(patient))

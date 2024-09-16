@@ -730,12 +730,59 @@ class PatientSummaryScreen :
   }
 
   override fun showClinicalDecisionSupportAlert() {
-    clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
+    showWithAnimation(clinicalDecisionSupportAlertView)
+  }
 
-    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+  override fun hideClinicalDecisionSupportAlert() {
+    hideWithAnimation(clinicalDecisionSupportAlertView, R.id.tag_clinical_decision_pending_end_listener)
+  }
+
+  override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
+    clinicalDecisionSupportAlertView.visibility = GONE
+  }
+
+  override fun showStatinAlert(statin: StatinModel) {
+    statinAlertDescription.text = buildString {
+      append("${getString(R.string.statin_alert_patient)} ")
+
+      if (statin.hasDiabetes) {
+        append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
+
+        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
+          append(" ${getString(R.string.statin_alert_and_seperator)} ")
+        }
+      }
+
+      when {
+        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
+        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
+        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
+      }
+
+      append(".")
+    }
+    showWithAnimation(statinAlertView)
+  }
+
+  override fun hideStatinAlert() {
+    hideWithAnimation(statinAlertView, R.id.tag_statin_alert_end_listener)
+  }
+
+  private fun getCVDString(hasDiabetes: Boolean): String {
+    return if (hasDiabetes) {
+      getString(R.string.statin_alert_cvd_with_diabetes)
+    } else {
+      getString(R.string.statin_alert_cvd)
+    }
+  }
+
+  private fun showWithAnimation(view: View) {
+    view.translationY = view.height.unaryMinus().toFloat()
+
+    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
 
     val transition = AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeChildren(view, true)
       excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
       excludeTarget(R.id.drugsSummaryContainer, true)
@@ -763,14 +810,14 @@ class PatientSummaryScreen :
     transition.addListener(transitionListener)
     TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 
-    clinicalDecisionSupportAlertView.visibility = VISIBLE
+    view.visibility = VISIBLE
   }
 
-  override fun hideClinicalDecisionSupportAlert() {
-    if (clinicalDecisionSupportAlertView.visibility != VISIBLE) return
+  private fun hideWithAnimation(view: View, tag: Int) {
+    if (view.visibility != VISIBLE) return
 
-    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
-    (clinicalDecisionSupportAlertView.getTag(R.id.tag_clinical_decision_pending_end_listener) as?
+    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
+    (view.getTag(tag) as?
         DynamicAnimation.OnAnimationEndListener)?.let {
       spring.removeEndListener(it)
     }
@@ -778,62 +825,23 @@ class PatientSummaryScreen :
     val listener = object : DynamicAnimation.OnAnimationEndListener {
       override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
         spring.removeEndListener(this)
-        clinicalDecisionSupportAlertView.visibility = GONE
+        view.visibility = GONE
       }
     }
     spring.addEndListener(listener)
-    clinicalDecisionSupportAlertView.setTag(R.id.tag_clinical_decision_pending_end_listener, listener)
+    view.setTag(tag, listener)
 
     val transition = AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeChildren(view, true)
       excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
       excludeTarget(R.id.drugsSummaryContainer, true)
     }
     TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 
-    spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
+    spring.animateToFinalPosition(view.height.unaryMinus().toFloat())
   }
 
-  override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
-    clinicalDecisionSupportAlertView.visibility = GONE
-  }
-
-  override fun showStatinAlert(statin: StatinModel) {
-    statinAlertDescription.text = buildString {
-      append("${getString(R.string.statin_alert_patient)} ")
-
-      if (statin.hasDiabetes) {
-        append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
-
-        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
-          append(" ${getString(R.string.statin_alert_and_seperator)} ")
-        }
-      }
-
-      when {
-        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
-        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
-        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
-      }
-
-      append(".")
-    }
-
-    statinAlertView.visibility = VISIBLE
-  }
-
-  private fun getCVDString(hasDiabetes: Boolean): String {
-    return if (hasDiabetes) {
-      getString(R.string.statin_alert_cvd_with_diabetes)
-    } else {
-      getString(R.string.statin_alert_cvd)
-    }
-  }
-
-  override fun hideStatinAlert() {
-    statinAlertView.visibility = GONE
-  }
 
   override fun showReassignPatientWarningSheet(
       patientUuid: UUID,

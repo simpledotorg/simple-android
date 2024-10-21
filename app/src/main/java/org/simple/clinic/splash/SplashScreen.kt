@@ -7,12 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -33,7 +30,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
-import org.simple.clinic.common.ui.components.FilledButton
+import org.simple.clinic.common.ui.components.FilledButtonWithFrame
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
@@ -91,19 +88,12 @@ private fun SplashScreen(
           .fillMaxWidth()
           .then(modifier),
       bottomBar = {
-        Box(
-            modifier = Modifier
-                .background(SimpleTheme.colors.material.primaryVariant)
-                .padding(12.dp)
+        FilledButtonWithFrame(
+            onClick = onNextClick,
         ) {
-          FilledButton(
-              modifier = Modifier.fillMaxWidth(),
-              onClick = onNextClick,
-          ) {
-            Text(
-                text = stringResource(R.string.screensplash_next).uppercase()
-            )
-          }
+          Text(
+              text = stringResource(R.string.screensplash_next).uppercase()
+          )
         }
       },
       backgroundColor = SimpleTheme.colors.toolbarPrimary,

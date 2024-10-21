@@ -916,14 +916,4 @@
 
   <string name="htn_warning_dialog_negative_button">এখন নয়</string>
 
-  <!-- Statin Alerts -->
-  <string name="statin_alert_title">উচ্চ ঝুঁকিতে, স্ট্যাটিন ওষুধ যোগ করুন</string>
-  <string name="statin_alert_patient">রোগী</string>
-  <string name="statin_alert_has_diabetes">ডায়াবেটিসে আক্রান্ত, বয়স %s </string>
-  <string name="statin_alert_and_seperator">এবং</string>
-  <string name="statin_alert_cvd_with_diabetes">, হার্ট অ্যাটাক এবং স্ট্রোকের ইতিহাস রয়েছে।</string>
-  <string name="statin_alert_cvd"> হার্ট অ্যাটাক এবং স্ট্রোকের ইতিহাস রয়েছে।</string>
-  <string name="statin_alert_heart_attack">হার্ট অ্যাটাকের ইতিহাস আছে।</string>
-  <string name="statin_alert_stroke">স্ট্রোকের ইতিহাস আছে</string>
-
 </resources>

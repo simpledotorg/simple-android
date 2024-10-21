@@ -1084,14 +1084,6 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="htn_warning_dialog_negative_button">Not now</string>
 
   <!-- Statin Alerts -->
-  <string name="statin_alert_title">High risk. Add statin medicine</string>
-  <string name="statin_alert_patient">Patient</string>
-  <string name="statin_alert_has_diabetes">is %s with diabetes</string>
-  <string name="statin_alert_and_seperator">and</string>
-  <string name="statin_alert_cvd_with_diabetes">, has history of heart attack and stroke</string>
-  <string name="statin_alert_cvd">has history of heart attack and stroke</string>
-  <string name="statin_alert_heart_attack">has history of heart attack</string>
-  <string name="statin_alert_stroke">has history of stroke</string>
   <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
   <string name="statin_alert_refer_to_doctor_for">Refer to doctor for</string>
   <string name="statin_alert_statin_medicine">statin medicine</string>

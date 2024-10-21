@@ -174,14 +174,8 @@ class PatientSummaryScreen :
   private val clinicalDecisionSupportAlertView
     get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
-  private val statinAlertView
-    get() = binding.statinAlert.rootView
-
   private val statinComposeView
     get() = binding.statinComposeView
-
-  private val statinAlertDescription
-    get() = binding.statinAlert.statinAlertSubtitle
 
   @Inject
   lateinit var router: Router
@@ -762,20 +756,12 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showStatinAlert(statin: StatinModel) {
+  override fun showStatinAlert() {
     shouldShowStatinNudge.value = true
   }
 
   override fun hideStatinAlert() {
     shouldShowStatinNudge.value = false
-  }
-
-  private fun getCVDString(hasDiabetes: Boolean): String {
-    return if (hasDiabetes) {
-      getString(R.string.statin_alert_cvd_with_diabetes)
-    } else {
-      getString(R.string.statin_alert_cvd)
-    }
   }
 
   private fun showWithAnimation(view: View) {

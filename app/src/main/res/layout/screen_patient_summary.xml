@@ -163,10 +163,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-      <include
-        android:id="@+id/statinAlert"
-        layout="@layout/view_statin_alert" />
-
       <org.simple.clinic.widgets.PatientStatusView
         android:id="@+id/patientDiedStatusView"
         android:layout_width="match_parent"

@@ -1092,5 +1092,8 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="statin_alert_cvd">has history of heart attack and stroke</string>
   <string name="statin_alert_heart_attack">has history of heart attack</string>
   <string name="statin_alert_stroke">has history of stroke</string>
+  <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
+  <string name="statin_alert_refer_to_doctor_for">Refer to doctor for</string>
+  <string name="statin_alert_statin_medicine">statin medicine</string>
 
 </resources>

@@ -158,6 +158,11 @@
         android:id="@+id/clinicalDecisionSupportBpHighAlert"
         layout="@layout/view_clinical_decision_support_bp_high" />
 
+      <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/statin_compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
       <include
         android:id="@+id/statinAlert"
         layout="@layout/view_statin_alert" />

@@ -12,6 +12,11 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.dynamicanimation.animation.DynamicAnimation
@@ -61,6 +66,7 @@ import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
@@ -171,6 +177,9 @@ class PatientSummaryScreen :
   private val statinAlertView
     get() = binding.statinAlert.rootView
 
+  private val statinComposeView
+    get() = binding.statinComposeView
+
   private val statinAlertDescription
     get() = binding.statinAlert.statinAlertSubtitle
 
@@ -209,6 +218,8 @@ class PatientSummaryScreen :
   private val subscriptions = CompositeDisposable()
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
+
+  private val shouldShowStatinNudge = mutableStateOf(false)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -305,6 +316,16 @@ class PatientSummaryScreen :
     rootLayout.hideKeyboard()
 
     subscriptions.add(setupChildViewVisibility())
+
+    statinComposeView.apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+      setContent {
+        StatinNudge(
+            isVisible = shouldShowStatinNudge.value,
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+        )
+      }
+    }
   }
 
   private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
@@ -742,30 +763,11 @@ class PatientSummaryScreen :
   }
 
   override fun showStatinAlert(statin: StatinModel) {
-    statinAlertDescription.text = buildString {
-      append("${getString(R.string.statin_alert_patient)} ")
-
-      if (statin.hasDiabetes) {
-        append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
-
-        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
-          append(" ${getString(R.string.statin_alert_and_seperator)} ")
-        }
-      }
-
-      when {
-        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
-        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
-        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
-      }
-
-      append(".")
-    }
-    showWithAnimation(statinAlertView)
+    shouldShowStatinNudge.value = true
   }
 
   override fun hideStatinAlert() {
-    hideWithAnimation(statinAlertView, R.id.tag_statin_alert_end_listener)
+    shouldShowStatinNudge.value = false
   }
 
   private fun getCVDString(hasDiabetes: Boolean): String {

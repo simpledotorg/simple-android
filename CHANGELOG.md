@@ -27,6 +27,7 @@
 - Fix statin nudge not getting dismissed when a statin is added
 - Animate statin nudge visibility in `PatientSummaryScreen`
 - Update translations: `bn-BD`
+- Migrate `SplashScreen` to Compose
 
 ### Features
 

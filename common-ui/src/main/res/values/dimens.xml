@@ -24,7 +24,6 @@
   <dimen name="spacing_128">128dp</dimen>
   <dimen name="spacing_150">150dp</dimen>
   <dimen name="spacing_192">192dp</dimen>
-  <dimen name="spacing_200">200dp</dimen>
 
   <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
   <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>

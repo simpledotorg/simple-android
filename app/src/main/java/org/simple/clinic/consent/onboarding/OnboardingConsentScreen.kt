@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clipScrollableContainer
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,38 +26,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
-import org.simple.clinic.common.ui.components.FilledButton
+import org.simple.clinic.common.ui.components.FilledButtonWithFrame
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.AgreeButtonClicked
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.mobiusViewModels
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class OnboardingConsentScreenFragment : Fragment(), UiActions {
+class OnboardingConsentScreen : Fragment(), UiActions {
 
   @Inject
   lateinit var effectHandlerFactory: OnboardingConsentEffectHandler.Factory
 
   private val viewEffectHandler by unsafeLazy { OnboardingConsentViewEffectHandler(this) }
-  private val viewModel by mobiusViewModels(
-      defaultModel = { OnboardingConsentModel },
-      update = { OnboardingConsentUpdate() },
-      effectHandler = { viewEffectsConsumer -> effectHandlerFactory.create(viewEffectsConsumer).build() }
+  private val viewModel by viewModels<OnboardingConsentViewModel>(
+      factoryProducer = { OnboardingConsentViewModel.factory(effectHandlerFactory) }
   )
 
   override fun onAttach(context: Context) {
@@ -70,23 +64,17 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+
       setContent {
         SimpleTheme {
+          viewModel.viewEffects.DisposableViewEffect(viewEffectHandler::handle)
+
           OnboardingConsentScreen(
-              onAccept = { viewModel.dispatchEvent(AgreeButtonClicked) }
+              onAccept = { viewModel.dispatch(event = AgreeButtonClicked) }
           )
         }
       }
     }
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    viewModel.viewEffects.setObserver(
-        viewLifecycleOwner,
-        { viewEffect -> viewEffectHandler.handle(viewEffect) },
-        { pausedViewEffects -> pausedViewEffects.forEach { viewEffectHandler.handle(it) } }
-    )
   }
 
   override fun moveToRegistrationActivity() {
@@ -103,7 +91,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
   }
 
   interface Injector {
-    fun inject(target: OnboardingConsentScreenFragment)
+    fun inject(target: OnboardingConsentScreen)
   }
 
   @Parcelize
@@ -111,7 +99,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
       override val analyticsName: String = "Onboarding Consent Screen"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = OnboardingConsentScreenFragment()
+    override fun instantiateFragment() = OnboardingConsentScreen()
   }
 }
 
@@ -124,20 +112,11 @@ private fun OnboardingConsentScreen(
   Scaffold(
       modifier = modifier,
       bottomBar = {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(SimpleTheme.colors.material.primaryVariant)
-                .padding(dimensionResource(id = R.dimen.spacing_12))
+        FilledButtonWithFrame(
+            testTag = "agreeAndContinue",
+            onClick = onAccept
         ) {
-          FilledButton(
-              onClick = onAccept,
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .semantics { testTagsAsResourceId = true }.testTag("agreeAndContinue")
-          ) {
-            Text(text = stringResource(id = R.string.data_protection_consent_accept_button))
-          }
+          Text(text = stringResource(id = R.string.data_protection_consent_accept_button))
         }
       }
   ) { paddingValues ->

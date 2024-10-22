@@ -33,7 +33,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButtonWithFrame
 import org.simple.clinic.common.ui.theme.SimpleTheme
-import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
+import org.simple.clinic.consent.onboarding.OnboardingConsentScreen
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.Router
@@ -78,7 +78,7 @@ class OnboardingScreen : Fragment(), OnboardingUi {
   }
 
   override fun openOnboardingConsentScreen() {
-    router.clearHistoryAndPush(OnboardingConsentScreenFragment.Key())
+    router.clearHistoryAndPush(OnboardingConsentScreen.Key())
   }
 
   @Parcelize
@@ -104,6 +104,7 @@ private fun OnboardingScreen(
           .then(modifier),
       bottomBar = {
         FilledButtonWithFrame(
+            testTag = "getStartedButton",
             onClick = onGetStartedClick,
         ) {
           Text(

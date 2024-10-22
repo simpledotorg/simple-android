@@ -6,15 +6,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.common.ui.theme.SimpleTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FilledButtonWithFrame(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    testTag: String = "",
     content: @Composable () -> Unit,
 ) {
   Box(
@@ -24,7 +30,10 @@ fun FilledButtonWithFrame(
           .padding(12.dp)
   ) {
     FilledButton(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics { testTagsAsResourceId = true }
+            .testTag(testTag),
         onClick = onClick,
     ) {
       content()

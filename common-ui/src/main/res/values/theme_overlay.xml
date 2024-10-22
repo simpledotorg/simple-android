@@ -130,10 +130,6 @@
   </style>
 
   <!-- Screen Specific Theme Overlays -->
-  <style name="ThemeOverlay.Simple.OnboardingScreen" parent="">
-    <item name="android:colorBackground">@color/white</item>
-  </style>
-
   <style name="ThemeOverlay.Simple.DeletePatient" parent="">
     <item name="android:colorBackground">@color/white</item>
   </style>

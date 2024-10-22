@@ -50,7 +50,7 @@ import org.simple.clinic.util.mobiusViewModels
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class OnboardingConsentScreenFragment : Fragment(), UiActions {
+class OnboardingConsentScreen : Fragment(), UiActions {
 
   @Inject
   lateinit var effectHandlerFactory: OnboardingConsentEffectHandler.Factory
@@ -103,7 +103,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
   }
 
   interface Injector {
-    fun inject(target: OnboardingConsentScreenFragment)
+    fun inject(target: OnboardingConsentScreen)
   }
 
   @Parcelize
@@ -111,7 +111,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
       override val analyticsName: String = "Onboarding Consent Screen"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = OnboardingConsentScreenFragment()
+    override fun instantiateFragment() = OnboardingConsentScreen()
   }
 }
 

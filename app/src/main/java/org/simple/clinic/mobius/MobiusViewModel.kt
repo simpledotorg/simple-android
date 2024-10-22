@@ -18,12 +18,12 @@ abstract class MobiusViewModel<M : Parcelable, E : UiEvent, F, V>(
   private val modelKey: String,
   private val savedStateHandle: SavedStateHandle,
   defaultModel: M,
-  init: Init<M, F>,
+  init: Init<M, F>? = null,
   loopFactoryProvider: (Consumer<V>) -> MobiusLoop.Builder<M, E, F>,
 ) : MobiusLoopViewModel<M, E, F, V>(
   /* loopFactoryProvider = */ loopFactoryProvider,
   /* modelToStartFrom = */ savedStateHandle.get<M>(modelKey) ?: defaultModel,
-  /* init = */ init,
+  /* init = */ init ?: Init { first(it) },
   /* mainLoopWorkRunner = */ MainThreadWorkRunner.create(),
   /* maxEffectQueueSize = */ MAX_EFFECTS_QUEUE_SIZE
 ) {

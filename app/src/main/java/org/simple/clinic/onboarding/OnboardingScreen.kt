@@ -12,32 +12,25 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.cast
-import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.common.ui.components.FilledButtonWithFrame
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
@@ -120,13 +113,7 @@ private fun OnboardingScreen(
       },
       backgroundColor = SimpleTheme.colors.material.surface,
   ) { innerPadding ->
-    val emphasisSpanStyle = SpanStyle(
-        color = SimpleTheme.colors.material.onBackground,
-        fontSize = SimpleTheme.typography.subtitle1Medium.fontSize,
-        fontStyle = SimpleTheme.typography.subtitle1Medium.fontStyle,
-        fontFamily = SimpleTheme.typography.subtitle1Medium.fontFamily,
-        fontWeight = SimpleTheme.typography.subtitle1Medium.fontWeight,
-    )
+    val onboardingEmphasisSpan = SimpleTheme.typography.subtitle1Medium.toSpanStyle()
 
     Column(
         modifier = Modifier
@@ -135,17 +122,55 @@ private fun OnboardingScreen(
             .padding(horizontal = 32.dp, vertical = 48.dp),
         verticalArrangement = Arrangement.SpaceAround,
     ) {
-      OnboardingInfo1(emphasisSpanStyle)
-      OnboardingInfo2(emphasisSpanStyle)
-      OnboardingInfo3(emphasisSpanStyle)
+      OnboardingInfoItem(
+          image = painterResource(R.drawable.ic_onboarding_intro_1),
+          infoText = buildAnnotatedString {
+            append(stringResource(R.string.screenonboarding_intro_1))
+
+            withStyle(onboardingEmphasisSpan) {
+              append(stringResource(R.string.screenonboarding_intro_1_hypertension))
+            }
+          }
+      )
+
+      OnboardingInfoItem(
+          image = painterResource(R.drawable.ic_onboarding_intro_2),
+          infoText = buildAnnotatedString {
+            append(stringResource(R.string.screenonboarding_intro_2))
+
+            withStyle(onboardingEmphasisSpan) {
+              append(stringResource(R.string.screenonboarding_intro_2_bp))
+            }
+
+            append(stringResource(R.string.screenonboarding_intro_2_and))
+
+            withStyle(onboardingEmphasisSpan) {
+              append(stringResource(R.string.screenonboarding_intro_2_medicines))
+            }
+          }
+      )
+
+      OnboardingInfoItem(
+          image = painterResource(R.drawable.ic_onboarding_intro_3),
+          infoText = buildAnnotatedString {
+            append(stringResource(R.string.screenonboarding_intro_3))
+
+            withStyle(onboardingEmphasisSpan) {
+              append(stringResource(R.string.screenonboarding_intro_3_reminder))
+            }
+
+            append(stringResource(R.string.screenonboarding_intro_3_visits))
+          }
+      )
     }
   }
 }
 
 @Composable
-private fun OnboardingInfo1(
-    spanStyle: SpanStyle,
-    modifier: Modifier = Modifier,
+private fun OnboardingInfoItem(
+    image: Painter,
+    infoText: AnnotatedString,
+    modifier: Modifier = Modifier
 ) {
   Row(
       modifier = Modifier
@@ -155,88 +180,12 @@ private fun OnboardingInfo1(
       horizontalArrangement = Arrangement.spacedBy(24.dp)
   ) {
     Image(
-        painter = painterResource(R.drawable.ic_onboarding_intro_1),
+        painter = image,
         contentDescription = null
     )
 
     Text(
-        text = buildAnnotatedString {
-          append(stringResource(R.string.screenonboarding_intro_1))
-
-          withStyle(spanStyle) {
-            append(stringResource(R.string.screenonboarding_intro_1_hypertension))
-          }
-        },
-        style = MaterialTheme.typography.subtitle1,
-        color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
-    )
-  }
-}
-
-@Composable
-private fun OnboardingInfo2(
-    spanStyle: SpanStyle,
-    modifier: Modifier = Modifier,
-) {
-  Row(
-      modifier = Modifier
-          .fillMaxWidth()
-          .then(modifier),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(24.dp)
-  ) {
-    Image(
-        painter = painterResource(R.drawable.ic_onboarding_intro_2),
-        contentDescription = null
-    )
-
-    Text(
-        text = buildAnnotatedString {
-          append(stringResource(R.string.screenonboarding_intro_2))
-
-          withStyle(spanStyle) {
-            append(stringResource(R.string.screenonboarding_intro_2_bp))
-          }
-
-          append(stringResource(R.string.screenonboarding_intro_2_and))
-
-          withStyle(spanStyle) {
-            append(stringResource(R.string.screenonboarding_intro_2_medicines))
-          }
-        },
-        style = MaterialTheme.typography.subtitle1,
-        color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
-    )
-  }
-}
-
-@Composable
-private fun OnboardingInfo3(
-    spanStyle: SpanStyle,
-    modifier: Modifier = Modifier,
-) {
-  Row(
-      modifier = Modifier
-          .fillMaxWidth()
-          .then(modifier),
-      verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(24.dp)
-  ) {
-    Image(
-        painter = painterResource(R.drawable.ic_onboarding_intro_3),
-        contentDescription = null
-    )
-
-    Text(
-        text = buildAnnotatedString {
-          append(stringResource(R.string.screenonboarding_intro_3))
-
-          withStyle(spanStyle) {
-            append(stringResource(R.string.screenonboarding_intro_3_reminder))
-          }
-
-          append(stringResource(R.string.screenonboarding_intro_3_visits))
-        },
+        text = infoText,
         style = SimpleTheme.typography.material.subtitle1,
         color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
     )

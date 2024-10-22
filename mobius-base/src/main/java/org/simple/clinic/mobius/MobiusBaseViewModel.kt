@@ -13,6 +13,7 @@ import timber.log.Timber
 
 private const val MAX_EFFECTS_QUEUE_SIZE = 100
 
+@Deprecated("Use MobiusViewModel to create a new instance of the class")
 class MobiusBaseViewModel<M : Parcelable, E, F, V>(
     private val modelKey: String,
     private val savedStateHandle: SavedStateHandle,

@@ -28,6 +28,7 @@
 - Animate statin nudge visibility in `PatientSummaryScreen`
 - Update translations: `bn-BD`
 - Migrate `SplashScreen` to Compose
+- Migrate `OnboardingScreen` to Compose
 
 ### Features
 

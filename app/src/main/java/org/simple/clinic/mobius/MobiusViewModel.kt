@@ -9,23 +9,23 @@ import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.android.MobiusLoopViewModel
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
-import timber.log.Timber
+import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.widgets.UiEvent
 
-private const val MAX_EFFECTS_QUEUE_SIZE = 100
+private const val MAX_EFFECTS_QUEUE_SIZE = 20
 
-@Deprecated("Use MobiusViewModel to create a new instance of the class")
-class MobiusBaseViewModel<M : Parcelable, E, F, V>(
-    private val modelKey: String,
-    private val savedStateHandle: SavedStateHandle,
-    loopFactoryProvider: (Consumer<V>) -> MobiusLoop.Builder<M, E, F>,
-    defaultModel: M,
-    init: Init<M, F>,
+abstract class MobiusViewModel<M : Parcelable, E : UiEvent, F, V>(
+  private val modelKey: String,
+  private val savedStateHandle: SavedStateHandle,
+  defaultModel: M,
+  init: Init<M, F>? = null,
+  loopFactoryProvider: (Consumer<V>) -> MobiusLoop.Builder<M, E, F>,
 ) : MobiusLoopViewModel<M, E, F, V>(
-    loopFactoryProvider,
-    savedStateHandle.get<M>(modelKey) ?: defaultModel,
-    init,
-    MainThreadWorkRunner.create(),
-    MAX_EFFECTS_QUEUE_SIZE
+  /* loopFactoryProvider = */ loopFactoryProvider,
+  /* modelToStartFrom = */ savedStateHandle.get<M>(modelKey) ?: defaultModel,
+  /* init = */ init ?: Init { first(it) },
+  /* mainLoopWorkRunner = */ MainThreadWorkRunner.create(),
+  /* maxEffectQueueSize = */ MAX_EFFECTS_QUEUE_SIZE
 ) {
 
   @get:JvmName("distinctSavedStateModels")
@@ -43,6 +43,14 @@ class MobiusBaseViewModel<M : Parcelable, E, F, V>(
 
   init {
     getModels().distinctUntilChanged().observeForever(modelsObserver)
+  }
+
+  fun dispatch(event: E) {
+    if (event.analyticsName.isNotBlank()) {
+      Analytics.reportUserInteraction(event.analyticsName)
+    }
+
+    dispatchEvent(event)
   }
 
   override fun onClearedInternal() {

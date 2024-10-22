@@ -9,7 +9,8 @@ class SimpleIssueRegistry : IssueRegistry() {
   override val issues = listOf(
       ImageSrcDetector.ImageSrcIssue,
       CardViewDetector.CardViewIssue,
-      TextViewTextSizeDetector.TextViewTextSizeIssue
+      TextViewTextSizeDetector.TextViewTextSizeIssue,
+      MobiusDispatchEventDetector.ISSUE
   )
 
   override val api: Int

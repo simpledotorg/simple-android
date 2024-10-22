@@ -89,6 +89,7 @@ private fun SplashScreen(
           .then(modifier),
       bottomBar = {
         FilledButtonWithFrame(
+            testTag = "nextButton",
             onClick = onNextClick,
         ) {
           Text(

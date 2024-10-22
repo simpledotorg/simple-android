@@ -104,6 +104,7 @@ private fun OnboardingScreen(
           .then(modifier),
       bottomBar = {
         FilledButtonWithFrame(
+            testTag = "getStartedButton",
             onClick = onGetStartedClick,
         ) {
           Text(

@@ -12,7 +12,6 @@ data class SimpleColors(
   val toolbarPrimaryVariant: Color = Color.Unspecified,
   val onToolbarPrimary: Color = Color.Unspecified,
   val material: Colors = lightColors(),
-  val error: Color = Color.Unspecified,
 )
 
 internal val LocalSimpleColors = staticCompositionLocalOf { SimpleColors() }

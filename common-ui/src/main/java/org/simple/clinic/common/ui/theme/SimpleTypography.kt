@@ -14,10 +14,8 @@ data class SimpleTypography(
   val body0Medium: TextStyle = TextStyle.Default,
   val body0Numeric: TextStyle = TextStyle.Default,
   val body1Numeric: TextStyle = TextStyle.Default,
-  val body2: TextStyle = TextStyle.Default,
   val body2Numeric: TextStyle = TextStyle.Default,
   val body2Bold: TextStyle = TextStyle.Default,
-  val button: TextStyle = TextStyle.Default,
   val buttonBig: TextStyle = TextStyle.Default,
   val tag: TextStyle = TextStyle.Default,
   val material: Typography = Typography()

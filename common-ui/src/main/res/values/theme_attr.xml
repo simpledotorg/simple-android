@@ -5,7 +5,6 @@
     <attr name="colorToolbarPrimary" format="color" />
     <attr name="colorToolbarPrimaryVariant" format="color" />
     <attr name="colorOnToolbarPrimary" format="color" />
-    <attr name="colorError" format="color" />
 
     <!-- Text Appearances -->
     <attr name="textAppearanceHeadline5Numeric" format="reference" />
@@ -15,10 +14,8 @@
     <attr name="textAppearanceBody0Medium" format="reference" />
     <attr name="textAppearanceBody0Numeric" format="reference" />
     <attr name="textAppearanceBody1Numeric" format="reference" />
-    <attr name="textAppearanceBody2" format="reference" />
     <attr name="textAppearanceBody2Numeric" format="reference" />
     <attr name="textAppearanceBody2Bold" format="reference" />
-    <attr name="textAppearanceButton" format="reference" />
     <attr name="textAppearanceButtonBig" format="reference" />
     <attr name="textAppearanceTag" format="reference" />
 

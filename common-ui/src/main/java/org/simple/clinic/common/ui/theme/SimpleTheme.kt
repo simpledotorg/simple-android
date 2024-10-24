@@ -126,8 +126,7 @@ private fun parseSimpleColors(ta: TypedArray, materialColors: Colors) =
     toolbarPrimary = ta.parseColor(R.styleable.SimpleThemeAttrs_colorToolbarPrimary),
     toolbarPrimaryVariant = ta.parseColor(R.styleable.SimpleThemeAttrs_colorToolbarPrimaryVariant),
     onToolbarPrimary = ta.parseColor(R.styleable.SimpleThemeAttrs_colorOnToolbarPrimary),
-    material = materialColors,
-    error = ta.parseColor(R.styleable.SimpleThemeAttrs_colorError),
+    material = materialColors
   )
 
 @Composable
@@ -270,15 +269,6 @@ private fun parseSimpleTypography(
           null
         )
         .copy(platformStyle = platformTextStyle, lineHeightStyle = lineHeightStyle),
-      body2 =
-      parseTextAppearance(
-          context,
-          ta.getResourceIdOrThrow(R.styleable.SimpleThemeAttrs_textAppearanceBody2),
-          density,
-          false,
-          null
-      )
-      .copy(platformStyle = platformTextStyle, lineHeightStyle = lineHeightStyle),
     body2Numeric =
       parseTextAppearance(
           context,
@@ -297,15 +287,6 @@ private fun parseSimpleTypography(
           null
         )
         .copy(platformStyle = platformTextStyle, lineHeightStyle = lineHeightStyle),
-    button =
-      parseTextAppearance(
-          context,
-          ta.getResourceIdOrThrow(R.styleable.SimpleThemeAttrs_textAppearanceButton),
-          density,
-          false,
-          null
-      )
-      .copy(platformStyle = platformTextStyle, lineHeightStyle = lineHeightStyle),
     buttonBig =
      parseTextAppearance(
           context,

@@ -13,7 +13,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
@@ -37,6 +39,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
@@ -213,7 +216,7 @@ class PatientSummaryScreen :
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
-  private val shouldShowStatinNudge = mutableStateOf(false)
+  private var shouldShowStatinNudge by mutableStateOf(false)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -314,10 +317,12 @@ class PatientSummaryScreen :
     statinComposeView.apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
-        StatinNudge(
-            isVisible = shouldShowStatinNudge.value,
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
-        )
+        SimpleTheme {
+          StatinNudge(
+              isVisible = shouldShowStatinNudge,
+              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+          )
+        }
       }
     }
   }
@@ -757,11 +762,11 @@ class PatientSummaryScreen :
   }
 
   override fun showStatinAlert() {
-    shouldShowStatinNudge.value = true
+    shouldShowStatinNudge = true
   }
 
   override fun hideStatinAlert() {
-    shouldShowStatinNudge.value = false
+    shouldShowStatinNudge = false
   }
 
   private fun showWithAnimation(view: View) {

@@ -27,7 +27,7 @@ data class PatientSummaryModel(
     val hasPrescribedDrugsChangedToday: Boolean?,
     val scheduledAppointment: ParcelableOptional<Appointment>?,
     val hasShownDiagnosisWarningDialog: Boolean,
-    val statin: StatinModel?,
+    val canPrescribeStatin: Boolean?,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -46,7 +46,7 @@ data class PatientSummaryModel(
           hasPrescribedDrugsChangedToday = null,
           scheduledAppointment = null,
           hasShownDiagnosisWarningDialog = false,
-          statin = null,
+          canPrescribeStatin = null,
       )
     }
   }
@@ -82,7 +82,7 @@ data class PatientSummaryModel(
     get() = scheduledAppointment != null && scheduledAppointment.isPresent()
 
   val hasStatinInfoLoaded: Boolean
-    get() = statin != null
+    get() = canPrescribeStatin != null
 
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
@@ -128,7 +128,7 @@ data class PatientSummaryModel(
     return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 
-  fun updateStatinInfo(statin: StatinModel): PatientSummaryModel {
-    return copy(statin = statin)
+  fun updateStatinInfo(canPrescribeStatin: Boolean): PatientSummaryModel {
+    return copy(canPrescribeStatin = canPrescribeStatin)
   }
 }

@@ -29,6 +29,7 @@
 - Update translations: `bn-BD`
 - Migrate `SplashScreen` to Compose
 - Migrate `OnboardingScreen` to Compose
+- Migrate `StainNudge` to Compose
 
 ### Features
 

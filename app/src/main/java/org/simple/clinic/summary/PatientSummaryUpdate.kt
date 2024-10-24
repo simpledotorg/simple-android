@@ -116,15 +116,7 @@ class PatientSummaryUpdate(
         hasStatinsPrescribedAlready.not() &&
         isPatientEligibleForStatin
 
-    val updatedModel = model.updateStatinInfo(
-        StatinModel(
-            canPrescribeStatin = canPrescribeStatin,
-            age = event.age,
-            hasDiabetes = hasDiabetes,
-            hasHadStroke = hasHadStroke,
-            hasHadHeartAttack = hasHadHeartAttack,
-        )
-    )
+    val updatedModel = model.updateStatinInfo(canPrescribeStatin)
     return next(updatedModel)
   }
 

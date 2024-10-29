@@ -114,6 +114,6 @@ data class QuestionnaireResponse(
       DELETE FROM QuestionnaireResponse
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
   }
 }

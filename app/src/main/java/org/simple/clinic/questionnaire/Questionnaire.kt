@@ -51,6 +51,6 @@ data class Questionnaire(
       DELETE FROM Questionnaire
       WHERE deletedAt IS NOT NULL
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
   }
 }

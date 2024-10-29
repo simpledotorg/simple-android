@@ -224,7 +224,7 @@ data class BloodPressureMeasurement(
       DELETE FROM BloodPressureMeasurement
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
 
     @Query("SELECT * FROM BloodPressureMeasurement")
     fun getAllBloodPressureMeasurements(): List<BloodPressureMeasurement>
@@ -249,7 +249,7 @@ data class BloodPressureMeasurement(
 			      WHERE P.uuid IS NULL AND BP.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeBloodPressureMeasurementWhenPatientIsNull()
+    fun purgeBloodPressureMeasurementWhenPatientIsNull(): Int
 
     @Query("""
       SELECT

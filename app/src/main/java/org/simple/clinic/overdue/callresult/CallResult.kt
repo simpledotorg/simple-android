@@ -190,7 +190,7 @@ data class CallResult(
         deletedAt IS NOT NULL
         AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
 
     @Query("""
       SELECT * 

@@ -35,6 +35,10 @@
 
 - Show statin nudge alert when statins can be prescribed
 
+### Fixes
+
+- Fix app displaying database maintenance screen often during app startup
+
 ## 2024-08-05-9175
 
 ### Internal

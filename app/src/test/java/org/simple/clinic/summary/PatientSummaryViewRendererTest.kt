@@ -795,17 +795,9 @@ class PatientSummaryViewRendererTest {
   @Test
   fun `when statin info is loaded and can prescribe statin then show the statin alert`() {
     //given
-    val statinModel = StatinModel(
-        canPrescribeStatin = true,
-        age = 40,
-        hasDiabetes = true,
-        hasHadStroke = false,
-        hasHadHeartAttack = false,
-    )
-
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .updateStatinInfo(statinModel)
+        .updateStatinInfo(true)
 
     // when
     uiRenderer.render(model)
@@ -815,24 +807,16 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
     verify(ui, times(2)).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).showStatinAlert(statinModel)
+    verify(ui).showStatinAlert()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when statin info is loaded and can not prescribe statin then hide the statin alert`() {
     //given
-    val statinModel = StatinModel(
-        canPrescribeStatin = false,
-        age = 40,
-        hasDiabetes = false,
-        hasHadStroke = false,
-        hasHadHeartAttack = false,
-    )
-
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .updateStatinInfo(statinModel)
+        .updateStatinInfo(false)
 
     // when
     uiRenderer.render(model)
@@ -877,21 +861,13 @@ class PatientSummaryViewRendererTest {
         scheduledDate = LocalDate.parse("2018-01-01")
     )
 
-    val statinModel = StatinModel(
-        canPrescribeStatin = true,
-        age = 40,
-        hasDiabetes = true,
-        hasHadStroke = false,
-        hasHadHeartAttack = false,
-    )
-
     val updatedModel = defaultModel
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
         .scheduledAppointmentLoaded(appointment)
-        .updateStatinInfo(statinModel)
+        .updateStatinInfo(true)
 
 
     val uiRenderer = PatientSummaryViewRenderer(
@@ -912,7 +888,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
-    verify(ui).showStatinAlert(statinModel)
+    verify(ui).showStatinAlert()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)

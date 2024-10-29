@@ -288,7 +288,7 @@ private fun parseSimpleTypography(
         )
         .copy(platformStyle = platformTextStyle, lineHeightStyle = lineHeightStyle),
     buttonBig =
-      parseTextAppearance(
+     parseTextAppearance(
           context,
           ta.getResourceIdOrThrow(R.styleable.SimpleThemeAttrs_textAppearanceButtonBig),
           density,

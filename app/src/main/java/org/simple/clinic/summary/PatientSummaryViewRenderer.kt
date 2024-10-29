@@ -48,7 +48,7 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
-    if (model.statin?.canPrescribeStatin == true)
+    if (model.canPrescribeStatin == true)
       return
 
     if (model.hasScheduledAppointment) {
@@ -154,8 +154,8 @@ class PatientSummaryViewRenderer(
   private fun renderStatinAlert(model: PatientSummaryModel) {
     if (model.hasStatinInfoLoaded.not()) return
 
-    if (model.statin!!.canPrescribeStatin) {
-      ui.showStatinAlert(model.statin)
+    if (model.canPrescribeStatin == true) {
+      ui.showStatinAlert()
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
     } else {
       ui.hideStatinAlert()

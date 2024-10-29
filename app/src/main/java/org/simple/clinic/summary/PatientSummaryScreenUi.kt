@@ -18,6 +18,6 @@ interface PatientSummaryScreenUi {
   fun showClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlertWithoutAnimation()
-  fun showStatinAlert(statin: StatinModel)
+  fun showStatinAlert()
   fun hideStatinAlert()
 }

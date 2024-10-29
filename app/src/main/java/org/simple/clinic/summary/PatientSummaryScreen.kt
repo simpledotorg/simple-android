@@ -12,6 +12,13 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.dynamicanimation.animation.DynamicAnimation
@@ -32,6 +39,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
@@ -61,6 +69,7 @@ import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
@@ -168,11 +177,8 @@ class PatientSummaryScreen :
   private val clinicalDecisionSupportAlertView
     get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
-  private val statinAlertView
-    get() = binding.statinAlert.rootView
-
-  private val statinAlertDescription
-    get() = binding.statinAlert.statinAlertSubtitle
+  private val statinComposeView
+    get() = binding.statinComposeView
 
   @Inject
   lateinit var router: Router
@@ -209,6 +215,8 @@ class PatientSummaryScreen :
   private val subscriptions = CompositeDisposable()
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
+
+  private var shouldShowStatinNudge by mutableStateOf(false)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -305,6 +313,18 @@ class PatientSummaryScreen :
     rootLayout.hideKeyboard()
 
     subscriptions.add(setupChildViewVisibility())
+
+    statinComposeView.apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+      setContent {
+        SimpleTheme {
+          StatinNudge(
+              isVisible = shouldShowStatinNudge,
+              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+          )
+        }
+      }
+    }
   }
 
   private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
@@ -741,39 +761,12 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showStatinAlert(statin: StatinModel) {
-    statinAlertDescription.text = buildString {
-      append("${getString(R.string.statin_alert_patient)} ")
-
-      if (statin.hasDiabetes) {
-        append(String.format(getString(R.string.statin_alert_has_diabetes), statin.age.toString()))
-
-        if (statin.hasHadHeartAttack.xor(statin.hasHadStroke)) {
-          append(" ${getString(R.string.statin_alert_and_seperator)} ")
-        }
-      }
-
-      when {
-        statin.hasHadHeartAttack && statin.hasHadStroke -> append(getCVDString(statin.hasDiabetes))
-        statin.hasHadHeartAttack -> append(getString(R.string.statin_alert_heart_attack))
-        statin.hasHadStroke -> append(getString(R.string.statin_alert_stroke))
-      }
-
-      append(".")
-    }
-    showWithAnimation(statinAlertView)
+  override fun showStatinAlert() {
+    shouldShowStatinNudge = true
   }
 
   override fun hideStatinAlert() {
-    hideWithAnimation(statinAlertView, R.id.tag_statin_alert_end_listener)
-  }
-
-  private fun getCVDString(hasDiabetes: Boolean): String {
-    return if (hasDiabetes) {
-      getString(R.string.statin_alert_cvd_with_diabetes)
-    } else {
-      getString(R.string.statin_alert_cvd)
-    }
+    shouldShowStatinNudge = false
   }
 
   private fun showWithAnimation(view: View) {

@@ -278,7 +278,7 @@ data class Appointment(
       DELETE FROM Appointment
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
 
     @Query("""
       DELETE FROM Appointment
@@ -288,7 +288,7 @@ data class Appointment(
         GROUP BY patientUuid HAVING MAX(createdAt)
       ) AND syncStatus == 'DONE'
     """)
-    fun purgeUnusedAppointments()
+    fun purgeUnusedAppointments(): Int
 
     @Query(""" SELECT * FROM Appointment """)
     fun getAllAppointments(): List<Appointment>
@@ -317,7 +317,7 @@ data class Appointment(
 			      WHERE P.uuid IS NULL AND A.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeAppointmentsWhenPatientIsNull()
+    fun purgeAppointmentsWhenPatientIsNull(): Int
 
     @Query("""
       SELECT * FROM Appointment

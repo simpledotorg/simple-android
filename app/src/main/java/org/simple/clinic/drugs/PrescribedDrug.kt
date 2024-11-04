@@ -238,7 +238,7 @@ data class PrescribedDrug(
       DELETE FROM PrescribedDrug
       WHERE isDeleted = 1 AND syncStatus == 'DONE'
     """)
-    abstract fun purgeDeleted()
+    abstract fun purgeDeleted(): Int
 
     @Query("UPDATE PrescribedDrug SET durationInDays = :durationInDays, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
     abstract fun updateDrugDuration(
@@ -310,7 +310,7 @@ data class PrescribedDrug(
 			      WHERE P.uuid IS NULL AND PD.syncStatus == 'DONE'
 		    )
     """)
-    abstract fun purgePrescribedDrugWhenPatientIsNull()
+    abstract fun purgePrescribedDrugWhenPatientIsNull(): Int
 
     @Query("""
       SELECT COUNT(uuid)

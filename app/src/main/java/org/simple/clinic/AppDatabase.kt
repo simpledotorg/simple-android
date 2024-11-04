@@ -221,9 +221,12 @@ abstract class AppDatabase : RoomDatabase() {
 
   fun prune(now: Instant) {
     optimizeWithAnalytics(PurgeDeleted) {
-      purge(now)
+      val numberOfPurgedRecords = purge(now)
+
       try {
-        vacuumDatabase()
+        if (numberOfPurgedRecords > 0) {
+          vacuumDatabase()
+        }
       } catch (e: Exception) {
         // Vacuuming is an optimization that's unlikely to fail. But if it
         // does, we can ignore it and just report the exception and let
@@ -234,71 +237,71 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun purge(now: Instant) {
-    runInTransaction {
-      purgeUnnecessaryPatients(now)
-      purgeUnnecessaryBloodPressures()
-      purgeUnnecessaryBloodSugars()
-      purgeUnnecessaryAppointments()
-      purgeUnnecessaryMedicalHistories()
-      purgeUnnecessaryPrescriptions()
-      purgeUnnecessaryCallResults()
-      purgeUnnecessaryQuestionnaireResponses()
+  fun purge(now: Instant): Int {
+    return runInTransaction<Int> {
+      purgeUnnecessaryPatients(now) +
+          purgeUnnecessaryBloodPressures() +
+          purgeUnnecessaryBloodSugars() +
+          purgeUnnecessaryAppointments() +
+          purgeUnnecessaryMedicalHistories() +
+          purgeUnnecessaryPrescriptions() +
+          purgeUnnecessaryCallResults() +
+          purgeUnnecessaryQuestionnaireResponses()
     }
   }
 
-  private fun purgeUnnecessaryPrescriptions() {
-    with(prescriptionDao()) {
-      purgeDeleted()
-      purgePrescribedDrugWhenPatientIsNull()
+  private fun purgeUnnecessaryPrescriptions(): Int {
+    return with(prescriptionDao()) {
+      purgeDeleted() +
+          purgePrescribedDrugWhenPatientIsNull()
     }
   }
 
-  private fun purgeUnnecessaryMedicalHistories() {
-    with(medicalHistoryDao()) {
-      purgeDeleted()
-      purgeMedicalHistoryWhenPatientIsNull()
+  private fun purgeUnnecessaryMedicalHistories(): Int {
+    return with(medicalHistoryDao()) {
+      purgeDeleted() +
+          purgeMedicalHistoryWhenPatientIsNull()
     }
   }
 
-  private fun purgeUnnecessaryAppointments() {
-    with(appointmentDao()) {
-      purgeDeleted()
-      purgeUnusedAppointments()
-      purgeAppointmentsWhenPatientIsNull()
+  private fun purgeUnnecessaryAppointments(): Int {
+    return with(appointmentDao()) {
+      purgeDeleted() +
+          purgeUnusedAppointments() +
+          purgeAppointmentsWhenPatientIsNull()
     }
   }
 
-  private fun purgeUnnecessaryBloodSugars() {
-    with(bloodSugarDao()) {
-      purgeDeleted()
-      purgeBloodSugarMeasurementWhenPatientIsNull()
+  private fun purgeUnnecessaryBloodSugars(): Int {
+    return with(bloodSugarDao()) {
+      purgeDeleted() +
+          purgeBloodSugarMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun purgeUnnecessaryBloodPressures() {
-    with(bloodPressureDao()) {
-      purgeDeleted()
-      purgeBloodPressureMeasurementWhenPatientIsNull()
+  private fun purgeUnnecessaryBloodPressures(): Int {
+    return with(bloodPressureDao()) {
+      purgeDeleted() +
+          purgeBloodPressureMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun purgeUnnecessaryPatients(now: Instant) {
-    with(patientDao()) {
-      purgeDeleted()
-      purgeDeletedPhoneNumbers()
-      purgeDeletedBusinessIds()
-      purgePatientAfterRetentionTime(now)
+  private fun purgeUnnecessaryPatients(now: Instant): Int {
+    return with(patientDao()) {
+      purgeDeleted() +
+          purgeDeletedPhoneNumbers() +
+          purgeDeletedBusinessIds() +
+          purgePatientAfterRetentionTime(now)
     }
   }
 
-  private fun purgeUnnecessaryCallResults() {
-    callResultDao().purgeDeleted()
+  private fun purgeUnnecessaryCallResults(): Int {
+    return callResultDao().purgeDeleted()
   }
 
-  private fun purgeUnnecessaryQuestionnaireResponses() {
-    questionnaireDao().purgeDeleted()
-    questionnaireResponseDao().purgeDeleted()
+  private fun purgeUnnecessaryQuestionnaireResponses(): Int {
+    return questionnaireDao().purgeDeleted() +
+        questionnaireResponseDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

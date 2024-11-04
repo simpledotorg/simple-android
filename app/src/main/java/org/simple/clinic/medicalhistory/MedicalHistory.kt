@@ -169,7 +169,7 @@ data class MedicalHistory(
       DELETE FROM MedicalHistory
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    fun purgeDeleted(): Int
 
     @Query(""" SELECT * FROM MedicalHistory """)
     fun getAllMedicalHistories(): List<MedicalHistory>
@@ -194,6 +194,6 @@ data class MedicalHistory(
 			      WHERE P.uuid IS NULL AND MH.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeMedicalHistoryWhenPatientIsNull()
+    fun purgeMedicalHistoryWhenPatientIsNull(): Int
   }
 }

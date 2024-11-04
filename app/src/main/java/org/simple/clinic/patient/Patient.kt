@@ -381,7 +381,7 @@ data class Patient(
         WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
       )
     """)
-    abstract fun purgeDeleted()
+    abstract fun purgeDeleted(): Int
 
     @Query("""
       DELETE FROM PatientPhoneNumber
@@ -391,7 +391,7 @@ data class Patient(
         WHERE P.syncStatus == 'DONE' AND PPN.deletedAt IS NOT NULL
       )
     """)
-    abstract fun purgeDeletedPhoneNumbers()
+    abstract fun purgeDeletedPhoneNumbers(): Int
 
     @Query("""
       DELETE FROM BusinessId
@@ -401,7 +401,7 @@ data class Patient(
         WHERE P.syncStatus == 'DONE' AND BI.deletedAt IS NOT NULL
       )
     """)
-    abstract fun purgeDeletedBusinessIds()
+    abstract fun purgeDeletedBusinessIds(): Int
 
     // This depends on the foreign key references between address, patient
     // phone numbers, and business IDs to cascade the deletes.
@@ -433,7 +433,7 @@ data class Patient(
         AND retainUntil < :now
         AND syncStatus == 'DONE'
     """)
-    abstract fun purgePatientAfterRetentionTime(now: Instant)
+    abstract fun purgePatientAfterRetentionTime(now: Instant): Int
 
     @Transaction
     @Query("""

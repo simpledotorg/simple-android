@@ -65,7 +65,7 @@
   <string name="patiententry_state">Estado</string>
   <string name="patiententry_region">Región</string>
   <string name="patiententry_doornumber_streetname">Número de casa, Nombre de calle</string>
-  <string name="patiententry_division_area">Provincia y área</string>
+  <string name="patiententry_division_area">Provincia y area</string>
   <string name="patiententry_save_patient">Siguiente</string>
   <string name="patiententry_error_empty_fullname">Ingrese el nombre completo del paciente</string>
   <string name="patiententry_error_empty_gender">Elija el género del paciente</string>
@@ -85,7 +85,7 @@
   <string name="patiententry_consent_sms_reminders">Recordatorios por SMS</string>
   <string name="patiententry_age_exceeds_max_limit_error">La edad no puede ser más de 120</string>
   <string name="patiententry_age_exceeds_min_limit_error">La edad no puede ser 0</string>
-  <string name="patiententry_town_area">Pueblo / Área</string>
+  <string name="patiententry_town_area">Pueblo / Area</string>
   <string name="patiententry_province">Provincia</string>
 
   <string name="patientedit_save_patient">Guardar</string>
@@ -260,8 +260,9 @@
   <string name="overdue_no_patients">No hay pacientes atrasados</string>
   <string name="overdue_empty_desc">Podrá llamar a los pacientes que no acudan a sus visitas programadas para seguimiento de lectura de presión arterial</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_appointment_overdue_days" tools:ignore="MissingQuantity">
+  <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s día de atraso</item>
+    <item quantity="many">%s días de atraso</item>
     <item quantity="other">%s días de atraso</item>
   </plurals>
   <string name="overdue_list_item_village">Ciudad</string>
@@ -295,16 +296,19 @@
   <string name="scheduleappointment_not_now">No ahora</string>
   <string name="scheduleappointment_done">listo</string>
   <string name="scheduleappointment_next">Siguiente</string>
-  <plurals name="scheduleappointment_appointment_in_days" tools:ignore="MissingQuantity">
+  <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s día</item>
+    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_weeks" tools:ignore="MissingQuantity">
+  <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s semana</item>
+    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_months" tools:ignore="MissingQuantity">
+  <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s mes</item>
+    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
 
@@ -427,7 +431,7 @@
   <string name="changelanguage_done">Listo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Por favor espere…</string>
+  <string name="placeholder_loading_title">Por favor espere...</string>
   <string name="placeholder_loading_message">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
   <!-- Select Country Screen -->
@@ -518,8 +522,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marcar paciente como \"accedió a visitar\"</string>
-  <string name="contactpatient_remind_call_later">Recordar llamar después…</string>
-  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados…</string>
+  <string name="contactpatient_remind_call_later">Recordar llamar después...</string>
+  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados...</string>
   <string name="contactpatient_result_of_call">Resultado de la llamada</string>
   <string name="contactpatient_call">Llamada</string>
   <string name="contactpatient_call_normal">Normal</string>
@@ -530,16 +534,19 @@
   <string name="contactpatient_change">Cambiar</string>
   <string name="contactpatient_done">Listo</string>
   <string name="contactpatient_result">Resultado</string>
-  <plurals name="contactpatient_days" tools:ignore="MissingQuantity">
+  <plurals name="contactpatient_days">
     <item quantity="one">%s día</item>
+    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="contactpatient_weeks" tools:ignore="MissingQuantity">
+  <plurals name="contactpatient_weeks">
     <item quantity="one">%s semana</item>
+    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="contactpatient_months" tools:ignore="MissingQuantity">
+  <plurals name="contactpatient_months">
     <item quantity="one">%s mes</item>
+    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Seleccione una razón</string>
@@ -649,8 +656,9 @@
   <string name="view_teleconsult_medicines_add">Agregar</string>
   <string name="view_teleconsult_medicines_edit">Editar</string>
   <string name="view_teleconsult_medicines_required_error">Agregue por lo menos un medicamento</string>
-  <plurals name="list_item_teleconsult_medicine_duration" tools:ignore="MissingQuantity">
+  <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s día</item>
+    <item quantity="many">%1$s días</item>
     <item quantity="other">%1$s días</item>
   </plurals>
 
@@ -792,12 +800,14 @@
   <string name="next_appointment_none">Ninguno</string>
   <string name="next_appointment_appointment_at_facility">en %s</string>
   <string name="next_appointment_today">Hoy</string>
-  <plurals name="next_appointment_plurals" tools:ignore="MissingQuantity">
+  <plurals name="next_appointment_plurals">
     <item quantity="one">%d día</item>
+    <item quantity="many">%d días</item>
     <item quantity="other">%d días</item>
   </plurals>
-  <plurals name="next_appointment_overdue_plurals" tools:ignore="MissingQuantity">
+  <plurals name="next_appointment_overdue_plurals">
     <item quantity="one">%d día de atraso</item>
+    <item quantity="many">%d días de atraso</item>
     <item quantity="other">%d días de atraso</item>
   </plurals>
 
@@ -893,15 +903,17 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">Reporte de pruebas mensual</string>
   <string name="monthly_screening_reports">Reportes de pruebas mensual</string>
-  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Reporte mensual de existencias de medicamentos</string>
-  <string name="monthly_drug_stock_reports">Reportes mensuales de existencias de medicamentos</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Reporte mensual de suministros</string>
   <string name="monthly_supplies_reports">Reportes mensuales de suministros</string>
   <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string>
-</resources>
+
+  <string name="change_patient_facility">Cambiar</string>
+
+  <string name="diabetes_warning_dialog_negative_button">Ahora no</string>
+
+  <string name="htn_warning_dialog_negative_button">Ahora no</string>
+
+  </resources>

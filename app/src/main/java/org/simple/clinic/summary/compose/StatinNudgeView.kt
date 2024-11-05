@@ -1,6 +1,9 @@
 package org.simple.clinic.summary.compose
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +38,11 @@ fun StatinNudge(
 ) {
   AnimatedVisibility(
       visible = isVisible,
+      enter = expandVertically(
+          animationSpec = tween(500),
+          expandFrom = Alignment.Top
+      ),
+      exit = shrinkVertically(animationSpec = tween(500))
   ) {
     Card(
         modifier = modifier
@@ -100,22 +108,22 @@ fun RiskProgressBar() {
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              val widthPerSegment = size.width / riskColors.size
+            val widthPerSegment = size.width / riskColors.size
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(2 * widthPerSegment, 0f),
-                  end = Offset(2 * widthPerSegment, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(size.width, 0f),
-                  end = Offset(size.width, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(2 * widthPerSegment, 0f),
+                end = Offset(2 * widthPerSegment, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(size.width, 0f),
+                end = Offset(size.width, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {

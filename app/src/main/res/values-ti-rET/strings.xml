@@ -893,15 +893,17 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">ወርሓዊ ጸብጻብ መጻረዪ</string>
   <string name="monthly_screening_reports">ወርሓዊ ጸብጻባት መጻረዪ</string>
-  <string name="monthly_screening_reports_screening_report">%1$s ጸብጻብ መጻረዪ</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">ወርሓዊ ጸብጻብ መኽዘን መድሓኒት</string>
-  <string name="monthly_drug_stock_reports">ወርሓዊ ጸብጻባት መኽዘን መድሓኒት</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$sታት ጸብጻብ መኽዘን መድሓኒት</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">%1$s ጸብጻብ መጻረዪ</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$sታት ጸብጻብ መኽዘን መድሓኒት</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሓዊ ጸብጻብ ቀረባት</string>
   <string name="monthly_supplies_reports">ወርሓዊ ጸብጻባት ቀረባት</string>
   <string name="monthly_supplies_report_supplies_report">%1$sታት ጸብጻብ ቀረባት </string>
-</resources>
+
+  <string name="change_patient_facility">ለውጢ</string>
+
+  <string name="diabetes_warning_dialog_negative_button">ሕዚ ኣይኮነን</string>
+
+  <string name="htn_warning_dialog_negative_button">ሕዚ ኣይኮነን</string>
+
+  </resources>

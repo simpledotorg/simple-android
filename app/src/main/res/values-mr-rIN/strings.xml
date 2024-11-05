@@ -892,15 +892,17 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">मासिक छाननी अहवाल</string>
   <string name="monthly_screening_reports">मासिक तपासणी अहवाल</string>
-  <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग अहवाल</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">मासिक औषध साठ्याचा अहवाल</string>
-  <string name="monthly_drug_stock_reports">मासिक औषध साठ्याचे अहवाल</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s औषध साठ्याचा अहवाल</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग अहवाल</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s औषध साठ्याचा अहवाल</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">मासिक पुरवठ्यांचा अहवाल</string>
   <string name="monthly_supplies_reports">मासिक पुरवठ्यांचे अहवाल</string>
   <string name="monthly_supplies_report_supplies_report">%1$s पुरवठ्यांचे अहवाल</string>
-</resources>
+
+  <string name="change_patient_facility">बदला</string>
+
+  <string name="diabetes_warning_dialog_negative_button">आता नाही</string>
+
+  <string name="htn_warning_dialog_negative_button">आता नाही</string>
+
+  </resources>

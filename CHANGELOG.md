@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump AGP to v8.7.1
+- Bump AGP to v8.7.2
 - Bump Dagger to v2.52
 - Bump Lint to v31.6.0
 - Bump Sentry Gradle plugin to v4.11.0

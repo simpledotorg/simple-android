@@ -24,12 +24,12 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.common.ui.util.htmlToAnnotatedString
+
 
 @Composable
 fun StatinNudge(
@@ -76,13 +76,7 @@ fun StatinNudge(
         RiskProgressBar()
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = buildAnnotatedString {
-              append(stringResource(R.string.statin_alert_refer_to_doctor_for))
-              append(" ")
-              withStyle(style = SimpleTheme.typography.body2Bold.toSpanStyle()) {
-                append(stringResource(R.string.statin_alert_statin_medicine))
-              }
-            },
+            text = htmlToAnnotatedString(stringResource(R.string.statin_alert_refer_to_doctor)),
             color = SimpleTheme.colors.material.error,
             style = SimpleTheme.typography.material.body2,
         )

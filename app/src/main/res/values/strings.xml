@@ -1085,6 +1085,6 @@ The Simple app contains private health information of patients (“Data”).\n\n
 
   <!-- Statin Alerts -->
   <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
-  <string name="statin_alert_refer_to_doctor">Refer to doctor for <![CDATA[<b>statin medicine</b>]]></string>
+  <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
 
 </resources>

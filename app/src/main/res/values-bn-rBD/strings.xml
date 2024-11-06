@@ -918,5 +918,5 @@
 
   <!-- Statin Alerts -->
   <string name="statin_alert_at_risk_patient">রোগী ঝুঁকিতে আছেন </string>
-  <string name="statin_alert_refer_to_doctor"><![CDATA[<b>স্ট্যাটিন ওষুধের</b>]]> জন্য ডাক্তারের কাছে পাঠান</string>
+  <string name="statin_alert_refer_to_doctor">&lt;b&gt;স্ট্যাটিন ওষুধের&lt;/b&gt; জন্য ডাক্তারের কাছে পাঠান</string>
 </resources>

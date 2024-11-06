@@ -10,9 +10,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 
-fun String.toAnnotatedString(): AnnotatedString {
-    return getSpannedText(this).toAnnotatedString()
-}
+fun String.toAnnotatedString() = getSpannedText(this).toAnnotatedString()
 
 private fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
     val spanned = this@toAnnotatedString
@@ -23,6 +21,7 @@ private fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString 
         when (span) {
             is StyleSpan -> when (span.style) {
                 Typeface.BOLD -> addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
+                else -> {}
             }
         }
     }

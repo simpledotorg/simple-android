@@ -1,6 +1,9 @@
 package org.simple.clinic.summary.compose
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +24,12 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.common.ui.util.toAnnotatedString
+
 
 @Composable
 fun StatinNudge(
@@ -35,6 +38,11 @@ fun StatinNudge(
 ) {
   AnimatedVisibility(
       visible = isVisible,
+      enter = expandVertically(
+          animationSpec = tween(500),
+          expandFrom = Alignment.Top
+      ),
+      exit = shrinkVertically(animationSpec = tween(500))
   ) {
     Card(
         modifier = modifier
@@ -68,13 +76,7 @@ fun StatinNudge(
         RiskProgressBar()
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = buildAnnotatedString {
-              append(stringResource(R.string.statin_alert_refer_to_doctor_for))
-              append(" ")
-              withStyle(style = SimpleTheme.typography.body2Bold.toSpanStyle()) {
-                append(stringResource(R.string.statin_alert_statin_medicine))
-              }
-            },
+            text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
             color = SimpleTheme.colors.material.error,
             style = SimpleTheme.typography.material.body2,
         )
@@ -100,22 +102,22 @@ fun RiskProgressBar() {
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              val widthPerSegment = size.width / riskColors.size
+            val widthPerSegment = size.width / riskColors.size
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(2 * widthPerSegment, 0f),
-                  end = Offset(2 * widthPerSegment, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(size.width, 0f),
-                  end = Offset(size.width, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(2 * widthPerSegment, 0f),
+                end = Offset(2 * widthPerSegment, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(size.width, 0f),
+                end = Offset(size.width, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {

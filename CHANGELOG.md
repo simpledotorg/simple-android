@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump AGP to v8.7.1
+- Bump AGP to v8.7.2
 - Bump Dagger to v2.52
 - Bump Lint to v31.6.0
 - Bump Sentry Gradle plugin to v4.11.0
@@ -17,7 +17,7 @@
 - Bump AndroidX Test Runner to v1.6.2
 - Bump AndroidX Work to v2.9.1
 - Bump MLKit Barcode Scanning to v18.3.1
-- Bump Gradle to v8.10
+- Bump Gradle to v8.10.2
 - Bump Firebase Analytics to v22.1.0
 - Bump desugar JDK library to v2.1.1
 - Bump AndroidX ViewModel to v2.8.5

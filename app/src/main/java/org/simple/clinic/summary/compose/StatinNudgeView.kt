@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
-import org.simple.clinic.common.ui.util.htmlToAnnotatedString
+import org.simple.clinic.common.ui.util.toAnnotatedString
 
 
 @Composable
@@ -76,7 +76,7 @@ fun StatinNudge(
         RiskProgressBar()
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = htmlToAnnotatedString(stringResource(R.string.statin_alert_refer_to_doctor)),
+            text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
             color = SimpleTheme.colors.material.error,
             style = SimpleTheme.typography.material.body2,
         )

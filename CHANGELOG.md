@@ -17,7 +17,7 @@
 - Bump AndroidX Test Runner to v1.6.2
 - Bump AndroidX Work to v2.9.1
 - Bump MLKit Barcode Scanning to v18.3.1
-- Bump Gradle to v8.10
+- Bump Gradle to v8.10.2
 - Bump Firebase Analytics to v22.1.0
 - Bump desugar JDK library to v2.1.1
 - Bump AndroidX ViewModel to v2.8.5

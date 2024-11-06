@@ -18,11 +18,8 @@ private fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString 
     getSpans(0, spanned.length, Any::class.java).forEach { span ->
         val start = getSpanStart(span)
         val end = getSpanEnd(span)
-        when (span) {
-            is StyleSpan -> when (span.style) {
-                Typeface.BOLD -> addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
-                else -> {}
-            }
+        if (span is StyleSpan && span.style == Typeface.BOLD) {
+            addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
         }
     }
 }

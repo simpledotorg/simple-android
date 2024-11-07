@@ -13,22 +13,22 @@ import androidx.compose.ui.text.font.FontWeight
 fun String.toAnnotatedString() = getSpannedText(this).toAnnotatedString()
 
 private fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
-    val spanned = this@toAnnotatedString
-    append(spanned.toString())
-    getSpans(0, spanned.length, Any::class.java).forEach { span ->
-        val start = getSpanStart(span)
-        val end = getSpanEnd(span)
-        if (span is StyleSpan && span.style == Typeface.BOLD) {
-            addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
-        }
+  val spanned = this@toAnnotatedString
+  append(spanned.toString())
+  getSpans(0, spanned.length, Any::class.java).forEach { span ->
+    val start = getSpanStart(span)
+    val end = getSpanEnd(span)
+    if (span is StyleSpan && span.style == Typeface.BOLD) {
+      addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
     }
+  }
 }
 
 private fun getSpannedText(text: String): Spanned {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
-    } else {
-        Html.fromHtml(text)
-    }
+  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
+  } else {
+    Html.fromHtml(text)
+  }
 }
 

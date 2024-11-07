@@ -102,22 +102,22 @@ fun RiskProgressBar() {
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              val widthPerSegment = size.width / riskColors.size
+            val widthPerSegment = size.width / riskColors.size
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(2 * widthPerSegment, 0f),
-                  end = Offset(2 * widthPerSegment, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(size.width, 0f),
-                  end = Offset(size.width, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(2 * widthPerSegment, 0f),
+                end = Offset(2 * widthPerSegment, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(size.width, 0f),
+                end = Offset(size.width, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {

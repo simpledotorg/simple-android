@@ -30,6 +30,7 @@
 - Migrate `SplashScreen` to Compose
 - Migrate `OnboardingScreen` to Compose
 - Migrate `StainNudge` to Compose
+- Run database maintenance as a background worker 
 
 ### Features
 

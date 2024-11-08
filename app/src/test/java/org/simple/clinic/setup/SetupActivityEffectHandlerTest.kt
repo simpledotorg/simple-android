@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.DATABASE_NAME
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.purge.PurgeScheduler
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
@@ -20,7 +21,6 @@ import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 import java.util.Optional
@@ -32,27 +32,25 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
-  private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
   private val loadV1Country = mock<LoadV1Country>()
   private val databaseEncryptor = mock<DatabaseEncryptor>()
+  private val purgeScheduler = mock<PurgeScheduler>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
       userDao = userDao,
       appConfigRepository = appConfigRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      appDatabase = appDatabase,
       clock = clock,
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
-      userClock = userClock,
       loadV1Country = loadV1Country,
       databaseEncryptor = databaseEncryptor,
+      purgeScheduler = purgeScheduler,
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -145,12 +143,12 @@ class SetupActivityEffectHandlerTest {
   }
 
   @Test
-  fun `when the run database maintenance effect is received, the database must be pruned`() {
+  fun `when the run database maintenance effect is received, the database must be purged`() {
     // when
     testCase.dispatch(RunDatabaseMaintenance)
 
     // then
-    verify(appDatabase).prune(Instant.now(userClock))
+    verify(purgeScheduler).run()
     verify(databaseMaintenanceRunAtPreference).set(Optional.of(Instant.now(clock)))
     testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
     verifyNoInteractions(uiActions)

@@ -8,17 +8,16 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.DATABASE_NAME
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
+import org.simple.clinic.purge.PurgeScheduler
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
@@ -30,14 +29,13 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val userDao: User.RoomDao,
     private val appConfigRepository: AppConfigRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val appDatabase: AppDatabase,
     private val clock: UtcClock,
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
-    private val userClock: UserClock,
     private val loadV1Country: LoadV1Country,
     private val databaseEncryptor: DatabaseEncryptor,
+    private val purgeScheduler: PurgeScheduler,
 ) {
 
   @AssistedFactory
@@ -128,7 +126,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appDatabase.prune(now = Instant.now(userClock)) }
+          .doOnNext { purgeScheduler.run() }
           .doOnNext { databaseMaintenanceRunAt.set(Optional.of(Instant.now(clock))) }
           .map { DatabaseMaintenanceCompleted }
     }

@@ -1,7 +1,6 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -252,38 +251,6 @@ class SetupActivityUpdateTest {
             hasNoModel(),
             hasEffects(CheckIfAppCanRun)
         ))
-  }
-
-  @Test
-  fun `when device has minimum required memory, then encrypt the existing database`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(MinimumMemoryChecked(hasMinimumMemory = true))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ExecuteDatabaseEncryption)
-        ))
-  }
-
-  @Test
-  fun `when device doesn't have minimum required memory, then check if app can run`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(MinimumMemoryChecked(hasMinimumMemory = false))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CheckIfAppCanRun)
-        ))
-  }
-
-  private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
-    return UserDetailsFetched(
-        hasUserCompletedOnboarding = true,
-        loggedInUser = Optional.of(user),
-        userSelectedCountry = Optional.empty(),
-        userSelectedCountryV1 = Optional.empty(),
-        currentDeployment = Optional.empty()
-    )
   }
 
   private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {

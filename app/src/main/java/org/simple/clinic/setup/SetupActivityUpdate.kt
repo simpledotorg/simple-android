@@ -32,15 +32,6 @@ class SetupActivityUpdate(
       is CountryAndDeploymentSaved -> dispatch(DeleteStoredCountryV1)
       is StoredCountryV1Deleted -> dispatch(GoToMainActivity)
       DatabaseEncryptionFinished -> dispatch(CheckIfAppCanRun)
-      is MinimumMemoryChecked -> minimumMemoryChecked(event)
-    }
-  }
-
-  private fun minimumMemoryChecked(event: MinimumMemoryChecked): Next<SetupActivityModel, SetupActivityEffect> {
-    return if (event.hasMinimumMemory) {
-      dispatch(ExecuteDatabaseEncryption)
-    } else {
-      dispatch(CheckIfAppCanRun)
     }
   }
 

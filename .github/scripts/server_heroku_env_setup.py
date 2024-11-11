@@ -32,6 +32,7 @@ heroku_api_token = sys.argv[3]
 
 server_vars_map['SIMPLE_SERVER_HOST'] = '{app_name}.herokuapp.com'.format(app_name = heroku_app_name)
 server_vars_map['SIMPLE_SERVER_ENV'] = 'android_review'
+server_vars_map['RAILS_ENV'] = 'test'
 
 print('Setting Heroku config variables: {var_names}'.format(var_names = list(server_vars_map.keys())))
 

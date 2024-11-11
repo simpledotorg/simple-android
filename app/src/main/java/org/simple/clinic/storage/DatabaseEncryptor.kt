@@ -11,7 +11,9 @@ import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SQLiteStatement
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.DatabaseEncryptor.State.ENCRYPTED
+import org.simple.clinic.storage.DatabaseEncryptor.State.SKIPPED
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Encrypted
+import org.simple.clinic.util.MinimumMemoryChecker
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -21,7 +23,8 @@ import javax.inject.Inject
 @AppScope
 class DatabaseEncryptor @Inject constructor(
     private val appContext: Application,
-    @SharedPreferencesMode(Encrypted) private val sharedPreferences: SharedPreferences
+    @SharedPreferencesMode(Encrypted) private val sharedPreferences: SharedPreferences,
+    private val memoryChecker: MinimumMemoryChecker,
 ) {
 
   companion object {
@@ -29,7 +32,7 @@ class DatabaseEncryptor @Inject constructor(
   }
 
   enum class State {
-    DOES_NOT_EXIST, UNENCRYPTED, ENCRYPTED
+    DOES_NOT_EXIST, UNENCRYPTED, ENCRYPTED, SKIPPED
   }
 
   val passphrase: ByteArray get() = getSecurePassphrase() ?: generateSecurePassphrase()
@@ -110,6 +113,10 @@ class DatabaseEncryptor @Inject constructor(
    */
   @VisibleForTesting
   fun databaseState(databaseName: String): State {
+    if (!canEncryptDatabase()) {
+      return SKIPPED
+    }
+
     val databasePath = appContext.getDatabasePath(databaseName)
     if (databasePath.exists()) {
       var db: SQLiteDatabase? = null
@@ -125,6 +132,10 @@ class DatabaseEncryptor @Inject constructor(
       }
     }
     return State.DOES_NOT_EXIST
+  }
+
+  private fun canEncryptDatabase(): Boolean {
+    return memoryChecker.hasMinimumRequiredMemory()
   }
 
   private fun getSecurePassphrase(): ByteArray? {

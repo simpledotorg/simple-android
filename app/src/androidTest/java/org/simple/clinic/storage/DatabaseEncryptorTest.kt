@@ -5,16 +5,20 @@ import androidx.room.Room
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.Moshi
 import net.sqlcipher.database.SupportFactory
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.FakeMinimumMemoryChecker
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.storage.DatabaseEncryptor.State.DOES_NOT_EXIST
 import org.simple.clinic.storage.DatabaseEncryptor.State.ENCRYPTED
+import org.simple.clinic.storage.DatabaseEncryptor.State.SKIPPED
 import org.simple.clinic.storage.DatabaseEncryptor.State.UNENCRYPTED
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.MinimumMemoryChecker
 import org.simple.sharedTestCode.TestData
 import java.time.Instant
 import java.util.UUID
@@ -31,6 +35,9 @@ class DatabaseEncryptorTest {
   @Inject
   lateinit var moshi: Moshi
 
+  @Inject
+  lateinit var minimumMemoryChecker: MinimumMemoryChecker
+
   companion object {
     private const val DB_NAME = "simple_test.db"
   }
@@ -39,6 +46,11 @@ class DatabaseEncryptorTest {
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     appContext.deleteDatabase(DB_NAME)
+  }
+
+  @After
+  fun tearDown() {
+    (minimumMemoryChecker as FakeMinimumMemoryChecker).hasMinMemory = true
   }
 
   @Test
@@ -89,5 +101,17 @@ class DatabaseEncryptorTest {
 
     assertThat(encryptedUser).isNotNull()
     assertThat(encryptedUser).isEqualTo(expectedUser)
+  }
+
+  @Test
+  fun if_device_doesnt_have_min_req_memory_then_skip_database_encryption() {
+    // given
+    (minimumMemoryChecker as FakeMinimumMemoryChecker).hasMinMemory = false
+
+    // when
+    databaseEncryptor.execute(databaseName = DB_NAME)
+
+    // then
+    assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(SKIPPED)
   }
 }

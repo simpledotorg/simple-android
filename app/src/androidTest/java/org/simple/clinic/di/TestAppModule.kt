@@ -5,6 +5,7 @@ import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.FakeMinimumMemoryChecker
 import org.simple.clinic.NoopSmsListenerOtp
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.Country
@@ -18,6 +19,7 @@ import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
+import org.simple.clinic.util.MinimumMemoryChecker
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.sharedTestCode.TestData
@@ -76,4 +78,10 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun provideLoginOtpSmsListener(): LoginOtpSmsListener = NoopSmsListenerOtp()
+
+  @Provides
+  @AppScope
+  fun providesMinimumMemoryChecker(): MinimumMemoryChecker {
+    return FakeMinimumMemoryChecker()
+  }
 }

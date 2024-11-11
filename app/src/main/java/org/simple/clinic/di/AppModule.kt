@@ -34,7 +34,6 @@ import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
 import org.simple.clinic.registration.RegistrationModule
-import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
 import org.simple.clinic.security.di.PinVerificationModule
@@ -159,10 +158,7 @@ class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  fun providesMinimumMemoryChecker(
-      appContext: Application,
-      configReader: ConfigReader
-  ): MinimumMemoryChecker = RealMinimumMemoryChecker(appContext)
+  fun providesMinimumMemoryChecker(appContext: Application): MinimumMemoryChecker = RealMinimumMemoryChecker(appContext)
 
   @Provides
   @TypedPreference(DataProtectionConsent)

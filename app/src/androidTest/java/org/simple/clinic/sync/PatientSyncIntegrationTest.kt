@@ -2,14 +2,13 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
@@ -20,13 +19,15 @@ import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.unsafeLazy
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
+@Category(SyncTests::class)
 class PatientSyncIntegrationTest {
 
   @Inject
@@ -99,7 +100,7 @@ class PatientSyncIntegrationTest {
     // given
     val totalNumberOfRecords = batchSize * 2 + 1
     val records = (1..totalNumberOfRecords).map {
-      val patientUuid = UUID.randomUUID();
+      val patientUuid = UUID.randomUUID()
       val identifier = Identifier(value = UUID.randomUUID().toString(), type = BpPassport)
 
       TestData.patientProfile(
@@ -136,7 +137,7 @@ class PatientSyncIntegrationTest {
   fun sync_pending_records_should_not_be_overwritten_by_server_records() {
     // given
     val records = (1..batchSize).map {
-      val patientUuid = UUID.randomUUID();
+      val patientUuid = UUID.randomUUID()
       val identifier = Identifier(value = UUID.randomUUID().toString(), type = BpPassport)
 
       TestData.patientProfile(

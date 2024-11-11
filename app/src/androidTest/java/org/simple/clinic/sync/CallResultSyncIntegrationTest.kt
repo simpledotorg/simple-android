@@ -6,6 +6,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
@@ -33,6 +34,7 @@ import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 
+@Category(SyncTests::class)
 class CallResultSyncIntegrationTest {
 
   @Inject
@@ -102,7 +104,7 @@ class CallResultSyncIntegrationTest {
     val totalNumberOfRecords = batchSize * 2 + 1
     val appointment = TestData.appointment(uuid = UUID.fromString("3e3d0977-e6f2-460f-8146-a7eae42a8cce"))
     val records = (1..totalNumberOfRecords).map {
-      randomCallResult(currentUser, appointment, testUtcClock, SyncStatus.PENDING)
+      randomCallResult(currentUser, appointment, testUtcClock, PENDING)
     }
     assertThat(records).containsNoDuplicates()
 
@@ -127,7 +129,7 @@ class CallResultSyncIntegrationTest {
     val totalNumberOfRecords = batchSize * 2 + 1
     val appointment = TestData.appointment(uuid = UUID.fromString("3e3d0977-e6f2-460f-8146-a7eae42a8cce"))
     val records = (1..totalNumberOfRecords).map {
-      randomCallResult(currentUser, appointment, testUtcClock, SyncStatus.PENDING)
+      randomCallResult(currentUser, appointment, testUtcClock, PENDING)
     }
     assertThat(records).containsNoDuplicates()
 

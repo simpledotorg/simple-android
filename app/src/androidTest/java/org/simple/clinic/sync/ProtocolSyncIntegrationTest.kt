@@ -2,10 +2,10 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
@@ -21,6 +21,7 @@ import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
+@Category(SyncTests::class)
 class ProtocolSyncIntegrationTest {
 
   @Inject

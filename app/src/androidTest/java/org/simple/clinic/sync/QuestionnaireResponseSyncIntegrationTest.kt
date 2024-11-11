@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
@@ -26,6 +27,7 @@ import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
+@Category(SyncTests::class)
 @Ignore("the review env doesn't contain any data")
 class QuestionnaireResponseSyncIntegrationTest {
 

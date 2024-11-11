@@ -1,10 +1,10 @@
 package org.simple.clinic.sync
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.reports.ReportsRepository
@@ -16,7 +16,7 @@ import org.simple.clinic.storage.text.TextStore
 import org.simple.sharedTestCode.util.Rules
 import javax.inject.Inject
 
-
+@Category(SyncTests::class)
 class ReportsSyncIntegrationTest {
 
   @Inject

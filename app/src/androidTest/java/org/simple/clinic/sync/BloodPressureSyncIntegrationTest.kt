@@ -2,14 +2,13 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.categories.Category
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.sync.BloodPressureSync
@@ -19,13 +18,15 @@ import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.unsafeLazy
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
+@Category(SyncTests::class)
 class BloodPressureSyncIntegrationTest {
 
   @Inject

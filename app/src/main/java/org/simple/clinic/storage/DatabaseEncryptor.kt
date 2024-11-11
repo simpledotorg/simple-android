@@ -6,7 +6,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SQLiteStatement
 import org.simple.clinic.di.AppScope
@@ -37,8 +36,11 @@ class DatabaseEncryptor @Inject constructor(
 
   val passphrase: ByteArray get() = getSecurePassphrase() ?: generateSecurePassphrase()
 
-  private val databaseEncryptionState = BehaviorSubject.create<State>()
-  val isDatabaseEncrypted: Observable<Boolean> = databaseEncryptionState
+  private val _databaseEncryptionState = BehaviorSubject.create<State>()
+  val databaseEncryptionState: Observable<State> = _databaseEncryptionState
+      .distinctUntilChanged()
+
+  val isDatabaseEncrypted: Observable<Boolean> = _databaseEncryptionState
       .map { it == ENCRYPTED }
       .distinctUntilChanged()
 
@@ -48,11 +50,11 @@ class DatabaseEncryptor @Inject constructor(
 
   fun execute(databaseName: String) {
     val databaseState = databaseState(databaseName)
-    databaseEncryptionState.onNext(databaseState)
+    _databaseEncryptionState.onNext(databaseState)
 
     if (databaseState == State.UNENCRYPTED) {
       encrypt(databaseName)
-      databaseEncryptionState.onNext(ENCRYPTED)
+      _databaseEncryptionState.onNext(ENCRYPTED)
     }
   }
 

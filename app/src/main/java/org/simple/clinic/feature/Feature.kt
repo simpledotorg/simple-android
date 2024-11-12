@@ -30,7 +30,6 @@ enum class Feature(
   MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1"),
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
-  PatientLineListDownload(false, "patient_line_list_download_v2"),
   PatientReassignment(false, "patient_reassignment_v0"),
   PatientStatinNudge(false, "patient_statin_nudge_v0")
 }

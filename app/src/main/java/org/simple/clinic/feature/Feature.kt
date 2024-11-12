@@ -22,7 +22,6 @@ enum class Feature(
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
   VillageTypeAhead(false, "village_type_ahead"),
-  IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListDownloadAndShare(true, "download_and_share_overdue_list"),
   OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),

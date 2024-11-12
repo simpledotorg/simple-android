@@ -25,7 +25,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val isIndianNHIDSupportEnabled: Boolean,
     private var isOnlinePatientLookupEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
@@ -221,11 +220,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (isIndianNHIDSupportEnabled) {
-      searchPatientWithNhid(model, event)
-    } else {
-      noChange()
-    }
+    return searchPatientWithNhid(model, event)
   }
 
   private fun searchPatientWithNhid(

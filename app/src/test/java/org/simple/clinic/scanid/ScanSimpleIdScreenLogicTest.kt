@@ -1,15 +1,14 @@
 package org.simple.clinic.scanid
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
 import com.spotify.mobius.Init
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
@@ -18,6 +17,7 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRe
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
 
 class ScanSimpleIdScreenLogicTest {
 
@@ -144,7 +144,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(isIndianNHIDSupportEnabled = true, isOnlinePatientLookupEnabled = true),
+        update = ScanSimpleIdUpdate(isOnlinePatientLookupEnabled = true),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen),
         modelUpdateListener = { /* no-op */ }

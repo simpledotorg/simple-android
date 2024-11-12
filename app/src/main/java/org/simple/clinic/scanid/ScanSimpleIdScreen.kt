@@ -35,7 +35,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
@@ -143,7 +142,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID), features.isEnabled(Feature.OnlinePatientLookup))
+  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(Feature.OnlinePatientLookup))
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
 

@@ -42,16 +42,12 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
   private val isChangeLanguageFeatureEnabled by unsafeLazy {
     features.isEnabled(Feature.ChangeLanguage)
   }
-  private val isLogoutUserFeatureEnabled by unsafeLazy {
-    features.isEnabled(Feature.LogoutUser)
-  }
 
   private val viewEffectHandler by unsafeLazy { SettingsViewEffectHandler(this) }
   private val viewModel by mobiusViewModels(
       defaultModel = {
         SettingsModel.default(
             isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
-            isLogoutUserFeatureEnabled = isLogoutUserFeatureEnabled
         )
       },
       init = { SettingsInit() },

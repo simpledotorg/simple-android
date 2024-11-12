@@ -33,7 +33,6 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.PatientEntryAlternateIdViewBinding
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.navigation.v2.Router
@@ -262,7 +261,7 @@ class PatientEntryScreen : BaseScreen<
 
   override fun defaultModel() = PatientEntryModel.DEFAULT
 
-  override fun createInit() = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead))
+  override fun createInit() = PatientEntryInit()
 
   override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
 
@@ -294,10 +293,7 @@ class PatientEntryScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     backButton.setOnClickListener { router.pop() }
-
-    if (features.isEnabled(Feature.VillageTypeAhead)) {
-      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
-    }
+    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -484,6 +480,7 @@ class PatientEntryScreen : BaseScreen<
       SriLankaNationalId,
       SriLankaPersonalHealthNumber,
       EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
+
       IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
       else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
     }

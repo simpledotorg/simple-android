@@ -21,7 +21,6 @@ enum class Feature(
    * can run to verify the fix.
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
-  VillageTypeAhead(false, "village_type_ahead"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),

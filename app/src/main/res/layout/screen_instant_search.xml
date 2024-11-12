@@ -59,10 +59,8 @@
           android:contentDescription="@null"
           android:padding="@dimen/spacing_16"
           android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
-          android:visibility="gone"
           app:srcCompat="@drawable/ic_qr_code_scanner"
-          app:tint="?attr/colorPrimary"
-          tools:visibility="visible" />
+          app:tint="?attr/colorPrimary"/>
 
       </LinearLayout>
 

@@ -23,7 +23,6 @@ enum class Feature(
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
   OverdueCount(true, "overdue_count"),
   VillageTypeAhead(false, "village_type_ahead"),
-  InstantSearchQrCode(true, "instant_search_qr_code"),
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListDownloadAndShare(true, "download_and_share_overdue_list"),

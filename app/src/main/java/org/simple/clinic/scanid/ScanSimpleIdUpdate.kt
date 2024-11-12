@@ -25,7 +25,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private var isOnlinePatientLookupEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
   override fun update(
@@ -122,7 +121,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patients.isEmpty()) {
-      searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
+      searchPatientOnlineWhenOnlinePatientLookupEnabled(event)
     } else {
       when (model.openedFrom) {
         is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
@@ -136,14 +135,8 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun searchPatientOnlineWhenOnlinePatientLookupEnabled(
       event: PatientSearchByIdentifierCompleted,
-      model: ScanSimpleIdModel
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val effect = if (isOnlinePatientLookupEnabled) {
-      OnlinePatientLookupWithIdentifier(event.identifier)
-    } else {
-      checkIfOpenedFromEditPatient(model, event.identifier)
-    }
-    return dispatch(effect)
+    return dispatch(OnlinePatientLookupWithIdentifier(event.identifier))
   }
 
   private fun checkIfOpenedFromEditPatient(

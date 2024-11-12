@@ -144,7 +144,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(isOnlinePatientLookupEnabled = true),
+        update = ScanSimpleIdUpdate(),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen),
         modelUpdateListener = { /* no-op */ }

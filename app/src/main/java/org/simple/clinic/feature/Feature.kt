@@ -22,7 +22,6 @@ enum class Feature(
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
   VillageTypeAhead(false, "village_type_ahead"),
-  OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),
   NextAppointment(false, "next_appointment_v1"),

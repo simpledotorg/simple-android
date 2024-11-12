@@ -142,7 +142,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(Feature.OnlinePatientLookup))
+  override fun createUpdate() = ScanSimpleIdUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
 

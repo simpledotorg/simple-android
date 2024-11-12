@@ -11,9 +11,9 @@ jobs:
     services:
       postgres:
         image: postgres:14.3-alpine
-        environment:
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=password
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
         ports:
           - "5432:5432"
         options: >-
@@ -33,14 +33,14 @@ jobs:
         depends_on:
           - redis
           - postgres
-        environment:
-          SIMPLE_SERVER_DATABASE_HOST=postgres
-          SIMPLE_SERVER_DATABASE_USERNAME=postgres
-          SIMPLE_SERVER_DATABASE_PASSWORD=password
-          SIMPLE_SERVER_HOST_PROTOCOL=https
-          CALL_SESSION_REDIS_HOST=redis
-          RAILS_CACHE_REDIS_URL=redis://
-          SIDEKIQ_REDIS_HOST=redis
+        env:
+          SIMPLE_SERVER_DATABASE_HOST: postgres
+          SIMPLE_SERVER_DATABASE_USERNAME: postgres
+          SIMPLE_SERVER_DATABASE_PASSWORD: password
+          SIMPLE_SERVER_HOST_PROTOCOL: https
+          CALL_SESSION_REDIS_HOST: redis
+          RAILS_CACHE_REDIS_URL: redis://
+          SIDEKIQ_REDIS_HOST: redis
     env:
       AVD_API_LEVEL: 34
       AVD_ARCH: x86_64

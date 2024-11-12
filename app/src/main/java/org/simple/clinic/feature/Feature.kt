@@ -8,7 +8,6 @@ enum class Feature(
 ) {
   EditBloodSugar(true),
   NotifyAppUpdateAvailable(false, "appupdate_enabled"),
-  DeletePatient(true, "delete_patient_feature_enabled"),
   SecureCalling(false, "phonenumbermasker_masking_enabled"),
 
   /**

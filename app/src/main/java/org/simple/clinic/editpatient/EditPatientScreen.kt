@@ -48,7 +48,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
-import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -409,8 +408,6 @@ class EditPatientScreen : BaseScreen<
     showOrHideInputFields(inputFields)
     setInputFieldsHint(inputFields)
     showOrHideGenderRadioButtons(inputFields)
-
-    deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {

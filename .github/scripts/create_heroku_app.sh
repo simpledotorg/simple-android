@@ -23,4 +23,4 @@ fi
 
 echo "heroku_app_name=${herokuAppName}" >> "$GITHUB_OUTPUT"
 echo "heroku_app_url=$(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')" >> "$GITHUB_OUTPUT"
-echo "heroku_app_exists=${serverAppAlreadyExists}" >> "$GITHUB_OUTPUT"
+echo "heroku_app_exists=${serverAppAlreadyExists}" >> "$GITHUB_OUTPUT" 

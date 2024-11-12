@@ -48,7 +48,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
-import org.simple.clinic.feature.Feature.AddingHealthIDsFromEditPatient
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
@@ -234,9 +233,6 @@ class EditPatientScreen : BaseScreen<
   private val bpPassportsContainer
     get() = binding.bpPassportsContainer
 
-  private val bpPassportsLabel
-    get() = binding.bpPassportsLabel
-
   private val alternateIdLabel
     get() = binding.alternateIdLabel
 
@@ -338,7 +334,6 @@ class EditPatientScreen : BaseScreen<
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
       isUserCountryIndia = country.isoCountryCode == Country.INDIA,
-      isAddingHealthIDsFromEditPatientEnabled = features.isEnabled(AddingHealthIDsFromEditPatient)
   )
 
   override fun createInit() = EditPatientInit(
@@ -447,22 +442,6 @@ class EditPatientScreen : BaseScreen<
   override fun showIndiaNHIDLabel() {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
-  }
-
-  override fun showBPPassportButton() {
-    addBpPassportButton.visibility = VISIBLE
-  }
-
-  override fun showBpPassportLabel() {
-    bpPassportsLabel.visibility = VISIBLE
-  }
-
-  override fun hideBpPassportLabel() {
-    bpPassportsLabel.visibility = GONE
-  }
-
-  override fun hideBpPassportButton() {
-    addBpPassportButton.visibility = GONE
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

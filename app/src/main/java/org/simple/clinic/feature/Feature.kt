@@ -25,7 +25,6 @@ enum class Feature(
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),
   NextAppointment(false, "next_appointment_v1"),
-  AddingHealthIDsFromEditPatient(false, "adding_health_ids_from_edit_patient"),
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   PatientReassignment(false, "patient_reassignment_v0"),

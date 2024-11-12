@@ -24,14 +24,13 @@ class EditPatientInitTest {
   fun `when screen is created, then load initial data`() {
     val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
     val defaultModel = EditPatientModel.from(
-      patient,
-      patientAddress,
-      patientPhoneNumber,
-      dateOfBirthFormat,
-      bangladeshNationalId,
-      EditPatientState.NOT_SAVING_PATIENT,
-      false,
-      false
+        patient,
+        patientAddress,
+        patientPhoneNumber,
+        dateOfBirthFormat,
+        bangladeshNationalId,
+        EditPatientState.NOT_SAVING_PATIENT,
+        false,
     )
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
@@ -48,14 +47,13 @@ class EditPatientInitTest {
   fun `when screen is created and village type ahead is not enabled, then do not fetch colony or villages`() {
     val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
     val defaultModel = EditPatientModel.from(
-      patient,
-      patientAddress,
-      patientPhoneNumber,
-      dateOfBirthFormat,
-      bangladeshNationalId,
-      EditPatientState.NOT_SAVING_PATIENT,
-      false,
-      false
+        patient,
+        patientAddress,
+        patientPhoneNumber,
+        dateOfBirthFormat,
+        bangladeshNationalId,
+        EditPatientState.NOT_SAVING_PATIENT,
+        false,
     )
     val initSpec = InitSpec(EditPatientInit(patient = patient,
         isVillageTypeAheadEnabled = false))
@@ -74,14 +72,13 @@ class EditPatientInitTest {
     val colonyOrVillages = listOf("Colony1", "Colony2", "Colony3", "Colony4")
 
     val updatedVillageOrColonyNamesModel = EditPatientModel.from(
-      patient,
-      patientAddress,
-      patientPhoneNumber,
-      dateOfBirthFormat,
-      bangladeshNationalId,
-      EditPatientState.NOT_SAVING_PATIENT,
-      false,
-      false
+        patient,
+        patientAddress,
+        patientPhoneNumber,
+        dateOfBirthFormat,
+        bangladeshNationalId,
+        EditPatientState.NOT_SAVING_PATIENT,
+        false,
     ).updateColonyOrVillagesList(colonyOrVillages)
 
     initSpec.whenInit(updatedVillageOrColonyNamesModel).then(assertThatFirst(

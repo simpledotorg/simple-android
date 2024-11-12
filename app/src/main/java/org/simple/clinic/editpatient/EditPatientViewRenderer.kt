@@ -45,27 +45,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
         model.canAddNHID
     )
 
-    handleBpPassportButtonAndLabelVisibility(model)
     displayBpPassports(model)
-  }
-
-  private fun handleBpPassportButtonAndLabelVisibility(model: EditPatientModel) {
-    if (model.isAddingHealthIDsFromEditPatientEnabled) {
-      ui.showBPPassportButton()
-      ui.showBpPassportLabel()
-    } else {
-      ui.hideBpPassportButton()
-      val hasBpPassports = !model.bpPassports.isNullOrEmpty()
-      handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
-    }
-  }
-
-  private fun handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports: Boolean) {
-    if (hasBpPassports) {
-      ui.showBpPassportLabel()
-    } else {
-      ui.hideBpPassportLabel()
-    }
   }
 
   private fun displayNewlyAddedNHID(alternativeId: String) {
@@ -79,8 +59,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   }
 
   private fun displayBpPassports(model: EditPatientModel) {
-    val newlyAddedBpPassports = model.ongoingEntry.bpPassports ?.map { BPPassportListItem(identifierValue = it.displayValue(), isHighlighted = true) } .orEmpty()
-    val identifiers = model.bpPassports ?.map { BPPassportListItem(identifierValue = it.identifier.displayValue(), isHighlighted = false) } .orEmpty()
+    val newlyAddedBpPassports = model.ongoingEntry.bpPassports?.map { BPPassportListItem(identifierValue = it.displayValue(), isHighlighted = true) }.orEmpty()
+    val identifiers = model.bpPassports?.map { BPPassportListItem(identifierValue = it.identifier.displayValue(), isHighlighted = false) }.orEmpty()
 
     ui.displayBpPassports(bpPassports = identifiers + newlyAddedBpPassports)
   }
@@ -146,6 +126,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       EthiopiaMedicalRecordNumber,
       SriLankaNationalId,
       SriLankaPersonalHealthNumber -> ui.setAlternateIdTextField(ongoingEntry.alternativeId)
+
       IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType), false)
       Identifier.IdentifierType.BpPassport,
       is Identifier.IdentifierType.Unknown -> throw IllegalArgumentException("Unknown alternative id: $alternateId")

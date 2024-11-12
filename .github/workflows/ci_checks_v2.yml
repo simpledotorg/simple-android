@@ -1,0 +1,127 @@
+name: CI V2
+on:
+  pull_request:
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
+jobs:
+  integration-test:
+    runs-on:
+      - ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14.3-alpine
+        environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=password
+        expose:
+          - "5432"
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready"]
+          interval: 1s
+          timeout: 5s
+          retries: 10
+      redis:
+        image: redis:5-alpine
+        expose:
+          - "6379"
+      server:
+        image: simpledotorg/server:latest
+        command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
+        expose:
+          - "3000"
+        ports:
+          - "3000:3000"
+        depends_on:
+          - redis
+          - postgres
+        environment:
+          SIMPLE_SERVER_DATABASE_HOST=postgres
+          SIMPLE_SERVER_DATABASE_USERNAME=postgres
+          SIMPLE_SERVER_DATABASE_PASSWORD=password
+          SIMPLE_SERVER_HOST_PROTOCOL=https
+          CALL_SESSION_REDIS_HOST=redis
+          RAILS_CACHE_REDIS_URL=redis://
+          SIDEKIQ_REDIS_HOST=redis
+    env:
+      AVD_API_LEVEL: 34
+      AVD_ARCH: x86_64
+    steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout Android source
+        uses: actions/checkout@v4
+
+      - name: Cache AVD
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}-${{ env.AVD_ARCH }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          disk-size: 8G
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Build QA Test Artifacts
+        id: build-instrumented-tests
+        env:
+          SIMPLE_SERVER_HOST=http://server:3000
+        run: |
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}api/ assembleQaDebug assembleQaDebugAndroidTest
+
+      # - name: Upload artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: test-artifacts
+      #     path: app/build/outputs/apk
+
+      - name: QA Android Tests
+        id: run-instrumented-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          disk-size: 8G
+          script: |
+            adb root
+            mkdir -p app/build/outputs/test-artifacts
+            adb install app/build/outputs/apk/qa/debug/app-qa-debug.apk 
+            adb install app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk
+            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >app/build/outputs/test-artifacts/logs.txt 2>app/build/outputs/test-artifacts/logs.txt
+            cat app/build/outputs/test-artifacts/logs.txt
+            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ app/build/outputs/test-artifacts/ || true
+            adb uninstall org.simple.clinic.qa.debug
+            adb uninstall org.simple.clinic.qa.debug.test
+            ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
+
+      - name: Upload failed test artifacts
+        if: always() && steps.run-instrumented-tests.outcome != 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-test-artifacts
+          path: app/build/outputs/test-artifacts

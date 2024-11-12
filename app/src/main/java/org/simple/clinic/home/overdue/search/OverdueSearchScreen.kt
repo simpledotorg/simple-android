@@ -177,7 +177,7 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun uiRenderer() = OverdueSearchUiRenderer(
       ui = this,
-      isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
+      isOverdueSelectAndDownloadEnabled = country.isoCountryCode == Country.INDIA
   )
 
   override fun viewEffectHandler() = OverdueSearchViewEffectHandler(this)
@@ -268,7 +268,7 @@ class OverdueSearchScreen : BaseScreen<
             appointments = overdueSearchResults,
             selectedOverdueAppointments = selectedOverdueAppointments,
             clock = userClock,
-            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
+            isOverdueSelectAndDownloadEnabled = country.isoCountryCode == Country.INDIA
         )
     )
   }

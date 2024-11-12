@@ -27,7 +27,6 @@ jobs:
           - "6379:6379"
       server:
         image: simpledotorg/server:latest
-        command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
         ports:
           - "3000:3000"
         env:
@@ -38,6 +37,8 @@ jobs:
           CALL_SESSION_REDIS_HOST: redis
           RAILS_CACHE_REDIS_URL: redis://
           SIDEKIQ_REDIS_HOST: redis
+        options: >
+          --entrypoint bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
     env:
       AVD_API_LEVEL: 34
       AVD_ARCH: x86_64

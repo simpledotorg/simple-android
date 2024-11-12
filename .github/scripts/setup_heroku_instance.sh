@@ -16,7 +16,7 @@ if [ ${serverAppAlreadyExists} = false ]; then
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey "$decodedHerokuEnvProperties"
 
   heroku labs:enable user-env-compile
-  heroku stack:set --app=$herokuAppName heroku-24
+  heroku stack:set --app=$herokuAppName heroku-20
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-redis" heroku-redis:mini
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:mini
   heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs

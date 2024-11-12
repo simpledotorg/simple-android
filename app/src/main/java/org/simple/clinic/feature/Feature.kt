@@ -21,7 +21,6 @@ enum class Feature(
    * can run to verify the fix.
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
-  OverdueCount(true, "overdue_count"),
   VillageTypeAhead(false, "village_type_ahead"),
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),

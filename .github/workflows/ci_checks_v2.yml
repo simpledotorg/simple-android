@@ -82,7 +82,7 @@ jobs:
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
         env:
-          SIMPLE_SERVER_HOST=http://server:3000
+          SIMPLE_SERVER_HOST: http://server:3000
         run: |
           ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}api/ assembleQaDebug assembleQaDebugAndroidTest
 

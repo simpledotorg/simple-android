@@ -31,7 +31,6 @@ import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import org.simple.clinic.util.clamp
-import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
 import java.io.IOException
@@ -80,8 +79,11 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent.inject(this)
 
     databaseEncryptor
-        .isDatabaseEncrypted
-        .filterTrue()
+        .databaseEncryptionState
+        .filter {
+          it == DatabaseEncryptor.State.SKIPPED ||
+              it == DatabaseEncryptor.State.ENCRYPTED
+        }
         .subscribeOn(schedulersProvider.ui())
         .subscribe {
           updateInfrastructureUserDetails.track()

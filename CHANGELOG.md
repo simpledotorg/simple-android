@@ -30,6 +30,8 @@
 - Migrate `SplashScreen` to Compose
 - Migrate `OnboardingScreen` to Compose
 - Migrate `StainNudge` to Compose
+- Run database maintenance as a background worker 
+- Update `google-services.json` file for all environments.
 
 ### Features
 
@@ -38,6 +40,7 @@
 ### Fixes
 
 - Fix app displaying database maintenance screen often during app startup
+- Fix app not closing all screens when user is unauthorized on certain devices
 
 ## 2024-08-05-9175
 

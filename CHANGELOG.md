@@ -32,6 +32,7 @@
 - Migrate `StainNudge` to Compose
 - Run database maintenance as a background worker 
 - Update `google-services.json` file for all environments.
+- Use heroku 24 on review apps
 
 ### Features
 

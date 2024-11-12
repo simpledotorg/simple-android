@@ -194,8 +194,7 @@ class ScanSimpleIdScreen : BaseScreen<
     val googlePlayServicesAvailability = googleApiAvailability.isGooglePlayServicesAvailable(requireContext())
     val isGooglePlayServicesAvailable = googlePlayServicesAvailability == ConnectionResult.SUCCESS
 
-    val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
-    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled && isGooglePlayServicesAvailable) {
+    val qrCodeAnalyzer = if (isGooglePlayServicesAvailable) {
       MLKitQrCodeAnalyzer(bitmapUtils, ::qrCodeScanned, mlKitUnavailable = {
         setQrCodeAnalyzer(analyzer, ZxingQrCodeAnalyzer(::qrCodeScanned))
       })

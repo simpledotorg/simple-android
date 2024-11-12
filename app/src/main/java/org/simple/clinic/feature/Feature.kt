@@ -21,7 +21,6 @@ enum class Feature(
    * can run to verify the fix.
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
-  MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner"),
   OverdueCount(true, "overdue_count"),
   VillageTypeAhead(false, "village_type_ahead"),
   InstantSearchQrCode(true, "instant_search_qr_code"),

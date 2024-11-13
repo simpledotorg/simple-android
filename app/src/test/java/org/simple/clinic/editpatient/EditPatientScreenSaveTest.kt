@@ -1,13 +1,5 @@
 package org.simple.clinic.editpatient
 
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.inOrder
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -16,7 +8,14 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
 import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
@@ -40,16 +39,17 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -971,9 +971,8 @@ class EditPatientScreenSaveTest {
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false),
-        init = EditPatientInit(patient = patient,
-            isVillageTypeAheadEnabled = true),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false),
+        init = EditPatientInit(patient = patient),
         update = EditPatientUpdate(
             numberValidator = numberValidator,
             dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),

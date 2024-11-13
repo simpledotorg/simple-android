@@ -1,15 +1,14 @@
 package org.simple.clinic.editpatient
 
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -17,6 +16,7 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
@@ -44,7 +44,7 @@ class EditPatientScreenCreatedTest {
     // given
     val (patient, address, phoneNumber) = patientFormTestParams
     val model = EditPatientModel
-        .from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false)
+        .from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false)
 
     // when
     viewRenderer.render(model)

@@ -248,16 +248,13 @@ private fun SettingsList(
       }
     }
 
-    // Logout
-    if (model.isLogoutUserFeatureEnabled) {
-      item {
-        LogoutButton(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .testTag("SETTINGS_LOGOUT_BUTTON"),
-            logout = logoutButtonClick
-        )
-      }
+    item {
+      LogoutButton(
+          modifier = Modifier
+              .padding(top = 16.dp)
+              .testTag("SETTINGS_LOGOUT_BUTTON"),
+          logout = logoutButtonClick
+      )
     }
   }
 }
@@ -348,7 +345,6 @@ private val previewSettingsModel = SettingsModel(
     isUserLoggingOut = null,
     isDatabaseEncrypted = true,
     isChangeLanguageFeatureEnabled = true,
-    isLogoutUserFeatureEnabled = true
 )
 
 @Preview

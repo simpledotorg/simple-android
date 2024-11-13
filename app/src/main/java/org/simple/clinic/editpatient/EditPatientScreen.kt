@@ -48,9 +48,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
-import org.simple.clinic.feature.Feature.AddingHealthIDsFromEditPatient
-import org.simple.clinic.feature.Feature.DeletePatient
-import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -234,9 +231,6 @@ class EditPatientScreen : BaseScreen<
   private val bpPassportsContainer
     get() = binding.bpPassportsContainer
 
-  private val bpPassportsLabel
-    get() = binding.bpPassportsLabel
-
   private val alternateIdLabel
     get() = binding.alternateIdLabel
 
@@ -338,12 +332,10 @@ class EditPatientScreen : BaseScreen<
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
       isUserCountryIndia = country.isoCountryCode == Country.INDIA,
-      isAddingHealthIDsFromEditPatientEnabled = features.isEnabled(AddingHealthIDsFromEditPatient)
   )
 
   override fun createInit() = EditPatientInit(
-      patient = screenKey.patient,
-      isVillageTypeAheadEnabled = features.isEnabled(VillageTypeAhead)
+      patient = screenKey.patient
   )
 
   override fun createUpdate() = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator)
@@ -391,9 +383,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun setAdapterWhenVillageTypeAheadIsEnabled() {
-    if (features.isEnabled(VillageTypeAhead)) {
-      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
-    }
+    colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
   }
 
   private fun handleScanIdentifierResult() {
@@ -405,6 +395,7 @@ class EditPatientScreen : BaseScreen<
           val scannedBpPassport = ScanSimpleIdScreen.readIdentifier(result)
           hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
         }
+
         ScanIndiaNationalHealthID -> {
           val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
           hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
@@ -417,8 +408,6 @@ class EditPatientScreen : BaseScreen<
     showOrHideInputFields(inputFields)
     setInputFieldsHint(inputFields)
     showOrHideGenderRadioButtons(inputFields)
-
-    deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
@@ -447,22 +436,6 @@ class EditPatientScreen : BaseScreen<
   override fun showIndiaNHIDLabel() {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
-  }
-
-  override fun showBPPassportButton() {
-    addBpPassportButton.visibility = VISIBLE
-  }
-
-  override fun showBpPassportLabel() {
-    bpPassportsLabel.visibility = VISIBLE
-  }
-
-  override fun hideBpPassportLabel() {
-    bpPassportsLabel.visibility = GONE
-  }
-
-  override fun hideBpPassportButton() {
-    addBpPassportButton.visibility = GONE
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -500,9 +473,11 @@ class EditPatientScreen : BaseScreen<
       clazz == AgeField::class.java && view.isGone -> {
         return
       }
+
       clazz == DateOfBirthField::class.java && view.isGone -> {
         return
       }
+
       else -> view.visibleOrGone(isVisible)
     }
   }

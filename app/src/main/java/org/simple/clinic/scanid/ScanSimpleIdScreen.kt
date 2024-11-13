@@ -35,7 +35,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
@@ -143,7 +142,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID), features.isEnabled(Feature.OnlinePatientLookup))
+  override fun createUpdate() = ScanSimpleIdUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
 
@@ -194,8 +193,7 @@ class ScanSimpleIdScreen : BaseScreen<
     val googlePlayServicesAvailability = googleApiAvailability.isGooglePlayServicesAvailable(requireContext())
     val isGooglePlayServicesAvailable = googlePlayServicesAvailability == ConnectionResult.SUCCESS
 
-    val isMLKitQrCodeScannerEnabled = features.isEnabled(Feature.MLKitQrCodeScanner)
-    val qrCodeAnalyzer = if (isMLKitQrCodeScannerEnabled && isGooglePlayServicesAvailable) {
+    val qrCodeAnalyzer = if (isGooglePlayServicesAvailable) {
       MLKitQrCodeAnalyzer(bitmapUtils, ::qrCodeScanned, mlKitUnavailable = {
         setQrCodeAnalyzer(analyzer, ZxingQrCodeAnalyzer(::qrCodeScanned))
       })

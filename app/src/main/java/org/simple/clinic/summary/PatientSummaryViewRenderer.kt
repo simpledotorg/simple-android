@@ -9,7 +9,6 @@ import java.time.temporal.ChronoUnit
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
-    private val isNextAppointmentFeatureEnabled: Boolean,
     private val modelUpdateCallback: PatientSummaryModelUpdateCallback,
     private val userClock: UserClock,
     private val cdssOverdueLimit: Int
@@ -90,7 +89,7 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderNextAppointmentCard(model: PatientSummaryModel) {
-    if (isNextAppointmentFeatureEnabled && model.hasPatientRegistrationData == true) {
+    if (model.hasPatientRegistrationData == true) {
       ui.showNextAppointmentCard()
     } else {
       ui.hideNextAppointmentCard()

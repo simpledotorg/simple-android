@@ -27,7 +27,6 @@ data class EditPatientModel(
     val inputFields: InputFields?,
     val bpPassports: List<BusinessId>?,
     val isUserCountryIndia: Boolean,
-    val isAddingHealthIDsFromEditPatientEnabled: Boolean
 ) : Parcelable {
   companion object {
     fun from(
@@ -38,7 +37,6 @@ data class EditPatientModel(
         bangladeshNationalId: BusinessId?,
         saveButtonState: EditPatientState?,
         isUserCountryIndia: Boolean,
-        isAddingHealthIDsFromEditPatientEnabled: Boolean
     ): EditPatientModel {
       val savedEntry = EditablePatientEntry.from(
           patient,
@@ -60,7 +58,6 @@ data class EditPatientModel(
           null,
           null,
           isUserCountryIndia,
-          isAddingHealthIDsFromEditPatientEnabled
       )
     }
   }
@@ -72,7 +69,7 @@ data class EditPatientModel(
     get() = inputFields != null
 
   val canAddNHID
-    get() = isUserCountryIndia && isAddingHealthIDsFromEditPatientEnabled && savedBangladeshNationalId == null
+    get() = isUserCountryIndia && savedBangladeshNationalId == null
 
   val currentListOfBpPassports
     get() = ongoingEntry.getCurrentListOfBpPassports()

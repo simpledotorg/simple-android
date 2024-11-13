@@ -35,7 +35,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
-import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
@@ -61,7 +60,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -202,8 +200,6 @@ class InstantSearchScreen :
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
     }
-
-    qrCodeScannerButton.visibleOrGone(features.isEnabled(InstantSearchQrCode))
 
     subscriptions.addAll(
         hideKeyboardOnSearchResultsScroll(),

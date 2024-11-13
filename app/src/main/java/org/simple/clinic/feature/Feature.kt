@@ -8,7 +8,6 @@ enum class Feature(
 ) {
   EditBloodSugar(true),
   NotifyAppUpdateAvailable(false, "appupdate_enabled"),
-  DeletePatient(true, "delete_patient_feature_enabled"),
   SecureCalling(false, "phonenumbermasker_masking_enabled"),
 
   /**
@@ -21,24 +20,10 @@ enum class Feature(
    * can run to verify the fix.
    **/
   ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
-  MLKitQrCodeScanner(true, "ml_kit_qr_code_scanner"),
-  OverdueCount(true, "overdue_count"),
-  VillageTypeAhead(false, "village_type_ahead"),
-  InstantSearchQrCode(true, "instant_search_qr_code"),
-  EthiopianCalendar(true, "ethiopian_calendar"),
-  IndiaNationalHealthID(true, "india_national_health_id"),
-  OverdueListDownloadAndShare(true, "download_and_share_overdue_list"),
-  OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),
-  NextAppointment(false, "next_appointment_v1"),
-  AddingHealthIDsFromEditPatient(false, "adding_health_ids_from_edit_patient"),
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
-  MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1"),
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
-  OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
-  PatientLineListDownload(false, "patient_line_list_download_v2"),
-  LogoutUser(false, "logout_user_v1"),
   PatientReassignment(false, "patient_reassignment_v0"),
   PatientStatinNudge(false, "patient_statin_nudge_v0")
 }

@@ -33,8 +33,6 @@ import org.simple.clinic.databinding.ListItemSearchOverduePatientButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
-import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
-import org.simple.clinic.feature.Feature.OverdueSelectAndDownload
 import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
@@ -170,7 +168,7 @@ class OverdueScreen : BaseScreen<
     get() = binding.clearSelectedOverdueAppointmentsButton
 
   private val isOverdueListDownloadAndShareEnabled by unsafeLazy {
-    features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
+    country.isoCountryCode == Country.INDIA
   }
 
   override fun defaultModel() = OverdueModel.create()
@@ -271,7 +269,7 @@ class OverdueScreen : BaseScreen<
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
         overdueListSectionStates = overdueListSectionStates,
         isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch),
-        isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
+        isOverdueSelectAndDownloadEnabled = country.isoCountryCode == Country.INDIA,
         selectedOverdueAppointments = selectedOverdueAppointments,
         isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
         locale = locale,

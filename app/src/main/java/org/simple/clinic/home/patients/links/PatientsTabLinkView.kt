@@ -14,7 +14,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.PatientsTabLinkViewBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
@@ -63,8 +62,7 @@ class PatientsTabLinkView(
   private val delegate by unsafeLazy {
     val uiRenderer = uiRendererFactory.create(
         this,
-        isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
-            && country.isoCountryCode == Country.INDIA
+        country.isoCountryCode == Country.INDIA
     )
 
     MobiusDelegate.forView(

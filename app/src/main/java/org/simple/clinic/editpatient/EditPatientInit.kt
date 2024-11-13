@@ -7,7 +7,6 @@ import org.simple.clinic.patient.Patient
 
 class EditPatientInit(
     private val patient: Patient,
-    private val isVillageTypeAheadEnabled: Boolean
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
     val effects = mutableSetOf(
@@ -15,7 +14,7 @@ class EditPatientInit(
         LoadInputFields,
     )
 
-    if (!model.hasColonyOrVillagesList && isVillageTypeAheadEnabled) {
+    if (!model.hasColonyOrVillagesList) {
       effects.add(FetchColonyOrVillagesEffect)
     }
 

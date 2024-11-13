@@ -1,18 +1,18 @@
 package org.simple.clinic.editpatient
 
+import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -46,7 +46,6 @@ class EditPatientViewRendererTest {
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.SAVING_PATIENT,
       isUserCountryIndia = false,
-      isAddingHealthIDsFromEditPatientEnabled = false
   )
 
   @Test
@@ -73,8 +72,6 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("")
-    verify(ui).hideBpPassportLabel()
-    verify(ui).hideBpPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -107,8 +104,6 @@ class EditPatientViewRendererTest {
     verify(ui).setupUi(inputFields)
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("")
-    verify(ui).hideBpPassportLabel()
-    verify(ui).hideBpPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -162,8 +157,6 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(expectedBpPassports)
     verify(ui).setAlternateIdTextField("")
-    verify(ui).showBpPassportLabel()
-    verify(ui).hideBpPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -185,7 +178,6 @@ class EditPatientViewRendererTest {
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = false,
-        isAddingHealthIDsFromEditPatientEnabled = false
     )
 
     // when
@@ -205,8 +197,6 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("1234567")
-    verify(ui).hideBpPassportLabel()
-    verify(ui).hideBpPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -228,7 +218,6 @@ class EditPatientViewRendererTest {
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = false,
-        isAddingHealthIDsFromEditPatientEnabled = false
     )
 
     // when
@@ -248,8 +237,6 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdContainer(identifier, false)
-    verify(ui).hideBpPassportLabel()
-    verify(ui).hideBpPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -266,7 +253,6 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
-        isAddingHealthIDsFromEditPatientEnabled = true
     ).updateAlternativeId(indiaNHID)
 
     // when
@@ -287,8 +273,6 @@ class EditPatientViewRendererTest {
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdContainer(identifier, true)
     verify(ui).hideAddNHIDButton()
-    verify(ui).showBPPassportButton()
-    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -303,7 +287,6 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
-        isAddingHealthIDsFromEditPatientEnabled = true
     )
 
     // when
@@ -324,8 +307,6 @@ class EditPatientViewRendererTest {
     verify(ui).displayBpPassports(emptyList())
     verify(ui).showAddNHIDButton()
     verify(ui).showIndiaNHIDLabel()
-    verify(ui).showBPPassportButton()
-    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -339,8 +320,7 @@ class EditPatientViewRendererTest {
         dateOfBirthFormatter = dateOfBirthFormat,
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
-        isAddingHealthIDsFromEditPatientEnabled = true)
+        isUserCountryIndia = false)
 
     // when
     uiRenderer.render(model)
@@ -359,8 +339,6 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).setAlternateIdTextField("")
     verify(ui).displayBpPassports(emptyList())
-    verify(ui).showBPPassportButton()
-    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 }

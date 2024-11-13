@@ -7,7 +7,7 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 
 class PatientEntryInitTest {
-  private val initSpec = InitSpec(PatientEntryInit(isVillageTypeAheadEnabled = true))
+  private val initSpec = InitSpec(PatientEntryInit())
   private val defaultModel = PatientEntryModel.DEFAULT
 
   @Test
@@ -16,18 +16,6 @@ class PatientEntryInitTest {
         hasModel(defaultModel),
         hasEffects(
             FetchPatientEntry, LoadInputFields, FetchColonyOrVillagesEffect
-        )
-    ))
-  }
-
-  @Test
-  fun `when screen is created and village type ahead is not enabled, then do not fetch colony or villages`() {
-    val initSpec = InitSpec(PatientEntryInit(isVillageTypeAheadEnabled = false))
-
-    initSpec.whenInit(defaultModel).then(assertThatFirst(
-        hasModel(defaultModel),
-        hasEffects(
-            FetchPatientEntry, LoadInputFields
         )
     ))
   }

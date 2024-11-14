@@ -8,41 +8,13 @@ jobs:
   integration-test:
     runs-on:
       - ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14.3-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-        ports:
-          - "5432:5432"
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      redis:
-        image: redis:5-alpine
-        ports:
-          - "6379:6379"
-      server:
-        image: simpledotorg/server:latest
-        ports:
-          - "3000:3000"
-        env:
-          SIMPLE_SERVER_DATABASE_HOST: postgres
-          SIMPLE_SERVER_DATABASE_USERNAME: postgres
-          SIMPLE_SERVER_DATABASE_PASSWORD: password
-          SIMPLE_SERVER_HOST_PROTOCOL: https
-          CALL_SESSION_REDIS_HOST: redis
-          RAILS_CACHE_REDIS_URL: redis://
-          SIDEKIQ_REDIS_HOST: redis
-        options: >
-          --entrypoint /home/app/bin/docker-entrypoint "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
     env:
       AVD_API_LEVEL: 34
       AVD_ARCH: x86_64
     steps:
+      - name: Start Simple Service
+        run: |
+          docker compose -f ../docker/simple-server.compose.yml up -d
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -115,6 +87,9 @@ jobs:
             adb uninstall org.simple.clinic.qa.debug.test
             ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
 
+      - name: Stop Simple Service
+        run: |
+          docker compose -f ../docker/simple-server.compose.yml down
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v4

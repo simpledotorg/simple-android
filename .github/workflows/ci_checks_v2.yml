@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Start Simple Service
         run: |
-          docker compose -f .github/docker/simple-server.compose.yml up -d
+          docker compose -f simple-server.ci.yml up -d
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -89,7 +89,7 @@ jobs:
 
       - name: Stop Simple Service
         run: |
-          docker compose -f .github/docker/simple-server.compose.yml down
+          docker compose -f simple-server.ci.yml down
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v4

@@ -2,7 +2,7 @@ name: CI V2
 on:
   pull_request:
 concurrency:
-  group: ci-${{ github.head_ref }}
+  group: ci-v2-${{ github.head_ref }}
   cancel-in-progress: true
 jobs:
   integration-test:

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.functions.Consumer
@@ -116,7 +117,8 @@ class BloodSugarHistoryScreen : BaseScreen<
   override fun createUpdate() = BloodSugarHistoryScreenUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>) = effectHandlerFactory.create(
-      viewEffectsConsumer
+      viewEffectsConsumer = viewEffectsConsumer,
+      pagingCacheScope = { lifecycleScope }
   ).build()
 
   override fun viewEffectHandler() = BloodSugarHistoryScreenViewEffectHandler(this)

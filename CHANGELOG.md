@@ -41,6 +41,7 @@
 
 - Fix app displaying database maintenance screen often during app startup
 - Fix app not closing all screens when user is unauthorized on certain devices
+- Fix app crashing occasionally when viewing all blood sugar history
 
 ## 2024-08-05-9175
 

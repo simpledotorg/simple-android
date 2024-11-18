@@ -18,7 +18,6 @@ class SettingsScreenTest {
 
   private val defaultSettingsModel = SettingsModel.default(
       isChangeLanguageFeatureEnabled = true,
-      isLogoutUserFeatureEnabled = true
   )
 
   @Test
@@ -199,7 +198,6 @@ class SettingsScreenTest {
   fun whenChangeLanguageFeatureIsNotEnabledThenDoNotShowChangeLanguageSetting() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = false,
-        isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
       SettingsScreen(
@@ -219,7 +217,6 @@ class SettingsScreenTest {
   fun whenChangeLanguageFeatureIsEnabledThenShowChangeLanguageSetting() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
-        isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
       SettingsScreen(
@@ -239,7 +236,6 @@ class SettingsScreenTest {
   fun whenLogoutFeatureIsNotEnabledThenDoNotShowLogoutButton() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
-        isLogoutUserFeatureEnabled = false
     )
     composeRule.setContent {
       SettingsScreen(
@@ -259,7 +255,6 @@ class SettingsScreenTest {
   fun whenLogoutFeatureIsEnabledThenShowLogoutButton() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
-        isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
       SettingsScreen(

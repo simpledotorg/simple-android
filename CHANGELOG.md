@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Fixes
+
+- Fix app crashing occasionally when viewing all blood sugar history
+
+## 2024-11-11-9265
+
 ### Internal
 
 - Bump AGP to v8.7.2

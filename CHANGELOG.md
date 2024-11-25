@@ -10,6 +10,7 @@
 - Bump Fragment KTX to v1.8.5
 - Bump Compose theme adapter to v0.36.0
 - Bump Flipper to v0.273.0
+- Bump AndroidX Paging to v3.3.4
 
 ### Fixes
 

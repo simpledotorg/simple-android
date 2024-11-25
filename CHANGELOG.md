@@ -14,6 +14,7 @@
 - Bump Facebook Soloader to v0.12.1
 - Bump AndroidX ViewModel to v2.8.7
 - Bump AndroidX Lifecycle to v2.8.7
+- Bump Gradle to v8.11.1
 
 ### Fixes
 

@@ -231,27 +231,7 @@ android {
     }
   }
 
-  // We don"t obfuscate (only minify) using proguard. Gradle plugin 3.2.0 (and greater?) generates
-  // an empty mappings.txt file. This caused an issue where the CI deploy to play store task tries
-  // to upload the empty mapping file, which causes the Play Store api to complain.
-  val deleteProguardMappings = tasks.create<Delete>("deleteProguardMappings") {
-    delete(fileTree(layout.buildDirectory).matching {
-      include("outputs/mapping/**/mapping.txt")
-    })
-  }
-
   afterEvaluate {
-    val assembleReleaseTasks = setOf(
-        "assembleStagingRelease",
-        "assembleSandboxRelease",
-        "assembleProductionRelease",
-        "assembleSecurityRelease"
-    )
-
-    assembleReleaseTasks.forEach { buildType ->
-      tasks.findByName(buildType)?.finalizedBy(deleteProguardMappings)
-    }
-
     val kspTasks = mapOf(
         "kspQaDebugKotlin" to "qaDebug",
         "kspSandboxReleaseKotlin" to "sandboxRelease",

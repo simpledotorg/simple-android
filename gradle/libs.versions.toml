@@ -184,7 +184,7 @@ sentry-android = "io.sentry:sentry-android:7.14.0"
 
 signaturepad = "com.github.gcacace:signature-pad:1.3.1"
 
-soloader = "com.facebook.soloader:soloader:0.11.0"
+soloader = "com.facebook.soloader:soloader:0.12.1"
 
 sqlite-android = "com.github.requery:sqlite-android:3.45.0"
 

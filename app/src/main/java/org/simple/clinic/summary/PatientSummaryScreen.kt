@@ -86,6 +86,7 @@ import org.simple.clinic.widgets.spring
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -406,8 +407,10 @@ class PatientSummaryScreen :
   private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
   private fun backClicks(): Observable<UiEvent> {
-    return backButton.clicks()
+    return backButton
+        .clicks()
         .mergeWith(hardwareBackClicks)
+        .throttleFirst(500, TimeUnit.MILLISECONDS)
         .map {
           PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
         }

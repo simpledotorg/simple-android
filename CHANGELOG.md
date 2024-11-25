@@ -13,6 +13,7 @@
 - Bump AndroidX Paging to v3.3.4
 - Bump Facebook Soloader to v0.12.1
 - Bump AndroidX ViewModel to v2.8.7
+- Bump AndroidX Lifecycle to v2.8.7
 
 ### Fixes
 

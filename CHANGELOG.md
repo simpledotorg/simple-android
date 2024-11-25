@@ -7,6 +7,7 @@
 - Bump Kotlin to v2.0.21
 - Bump KSP to v2.0.21-1.0.28
 - Bump desugar JDK library to v2.1.3
+- Bump Fragment KTX to v1.8.5
 
 ### Fixes
 

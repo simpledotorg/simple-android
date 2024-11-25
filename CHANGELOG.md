@@ -20,6 +20,7 @@
 - Bump asm to v9.7.1
 - Bump AndroidX CameraX to v1.4.0
 - Bump AndroidX Annotation to v1.9.1
+- Upload generated mapping file to Sentry
 
 ### Fixes
 

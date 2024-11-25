@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump Kotlin to v2.0.21
+
 ### Fixes
 
 - Fix app crashing occasionally when viewing all blood sugar history

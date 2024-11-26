@@ -16,6 +16,7 @@
 - Bump AndroidX Lifecycle to v2.8.7
 - Bump Gradle to v8.11.1
 - Throttle back button clicks in `PatientSummaryScreen` to handle multiple rapid presses
+- Bump Firebase remote config v22.0.1
 
 ### Fixes
 

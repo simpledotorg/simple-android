@@ -23,6 +23,7 @@
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
 - Bump Lottie Compose to v6.6.0
+- Bump Sentry Android to v7.18.0
 
 ### Fixes
 

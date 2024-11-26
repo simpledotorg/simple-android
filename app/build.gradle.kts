@@ -21,13 +21,14 @@ sentry {
   val sentryOrg: String by project
   val sentryProject: String by project
   val sentryAuthToken: String by project
+  val sentryUploadProguard: String by project
 
   org = sentryOrg
   projectName = sentryProject
   authToken = sentryAuthToken
 
   includeProguardMapping.set(true)
-  autoUploadProguardMapping.set(true)
+  autoUploadProguardMapping.set(sentryUploadProguard.toBooleanStrict())
 
   // We are using our own instrumentation tooling for Room queries
   // Look at [ADR 013: SQL Performance Profiling (v2)]

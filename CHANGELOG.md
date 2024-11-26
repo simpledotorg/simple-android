@@ -17,6 +17,7 @@
 - Bump Gradle to v8.11.1
 - Throttle back button clicks in `PatientSummaryScreen` to handle multiple rapid presses
 - Bump Firebase remote config v22.0.1
+- Bump asm to v9.7.1
 
 ### Fixes
 

@@ -18,6 +18,7 @@
 - Throttle back button clicks in `PatientSummaryScreen` to handle multiple rapid presses
 - Bump Firebase remote config v22.0.1
 - Bump asm to v9.7.1
+- Bump AndroidX CameraX to v1.4.0
 
 ### Fixes
 

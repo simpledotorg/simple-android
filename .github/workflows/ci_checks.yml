@@ -311,6 +311,7 @@ jobs:
           ./gradlew \
           -PrunProguard=true \
           -PdefaultProguardFile=proguard-android.txt \
+          -PsentryUploadProguard=false \
           bundle${{ matrix.buildType }}Release
 
   verify_room_schemas:

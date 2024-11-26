@@ -22,6 +22,7 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
+- Bump Lottie Compose to v6.6.0
 
 ### Fixes
 

@@ -12,10 +12,6 @@ jobs:
       AVD_API_LEVEL: 34
       AVD_ARCH: x86_64
     steps:
-      - name: Start Simple Service
-        run: |
-          ls -al
-          docker compose -f ".github/docker/simple-server.ci.yml" up -d
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -24,6 +20,11 @@ jobs:
 
       - name: Checkout Android source
         uses: actions/checkout@v4
+
+      - name: Start Simple Service
+        run: |
+          ls -al
+          docker compose -f ".github/docker/simple-server.ci.yml" up -d
 
       - name: Cache AVD
         uses: actions/cache@v4

@@ -293,6 +293,11 @@ jobs:
 
   verify_release_bundles:
     runs-on: [ ubuntu-latest ]
+    env:
+      TERM: dumb
+      ORG_GRADLE_PROJECT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
     strategy:
       matrix:
         buildType: [ 'Production' ]

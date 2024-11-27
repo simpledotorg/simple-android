@@ -1,0 +1,74 @@
+name: Build staging app bundle
+
+on:
+  workflow_dispatch:
+    inputs:
+      tramline-input:
+        description: "Tramline input"
+        required: false
+
+jobs:
+  build:
+    runs-on: [ ubuntu-latest ]
+    env:
+      TERM: dumb
+      ORG_GRADLE_PROJECT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+    steps:
+      - name: Configure Tramline
+        id: tramline
+        uses: tramlinehq/deploy-action@v0.1.7
+        with:
+          input: ${{ github.event.inputs.tramline-input }}
+
+      - name: Setup version code and name
+        id: version_code_and_name
+        run: |
+          VERSION_NAME=${{ steps.tramline.outputs.version_name:-"1.0.0" }}
+          VERSION_CODE=${{ steps.tramline.outputs.version_code:-"1" }}
+
+          echo "ORG_GRADLE_PROJECT_VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "ORG_GRADLE_PROJECT_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+
+
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: zulu
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Decrypt secrets
+        run: gpg --batch --yes --quiet --decrypt --passphrase=${{ secrets.KEYSTORE_PASSPHRASE }} --output release/simple.store release/simple.gpg
+
+      - name: Build release bundle
+        run: |
+          ./gradlew
+          -PrunProguard=true
+          -PmanifestEndpoint=$MANIFEST_ENDPOINT_STAGING
+          -PandroidNdkVersion=$NDK_VERSION
+          -PsentryDsn=${{ secrets.SENTRY_DSN }}
+          -PsentryEnvironment=staging
+          -PdatadogApplicationId=${{ secrets.DATADOG_APPLICATION_ID }}
+          -PdatadogClientToken=${{ secrets.DATADOG_CLIENT_TOKEN }}
+          -PdatadogEnvironment=staging
+          -PsentryOrg=$SENTRY_ORG
+          -PsentryProject=$SENTRY_PROJECT
+          -PsentryAuthToken=${{ secrets.SENTRY_AUTH_TOKEN }}
+          bundleStagingRelease
+
+      - name: Upload release bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: release.aab
+          path: app/build/outputs/bundle/stagingRelease/app-staging-release.aab
+
+      - name: Clean secrets
+        run: |
+          rm -f release/simple.store
+          

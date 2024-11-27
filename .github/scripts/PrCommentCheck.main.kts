@@ -7,7 +7,7 @@ val storyRegex = Regex("https:\\/\\/app.shortcut.com\\/simpledotorg\\/story\\/[0
 
 println("Checking PR description!")
 
-if (prDescription.contains(storyRegex)) {
+if (storyRegex.containsMatchIn(prDescription)) {
   println("PR description contains a valid story link.")
   exitProcess(0)
 } else {

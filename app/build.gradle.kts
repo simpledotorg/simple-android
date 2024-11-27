@@ -106,6 +106,15 @@ android {
     }
   }
 
+  signingConfigs {
+    create("release") {
+      storeFile = file("$rootDir/release/simple.store")
+      storePassword = "${project.properties["KEYSTORE_PASSWORD"]}"
+      keyAlias = "${project.properties["KEY_ALIAS"]}"
+      keyPassword = "${project.properties["KEY_PASSWORD"]}"
+    }
+  }
+
   buildTypes {
     getByName("debug") {
       applicationIdSuffix = ".debug"
@@ -120,8 +129,10 @@ android {
       isDebuggable = false
       isMinifyEnabled = runProguard.toBoolean()
       isShrinkResources = runProguard.toBoolean()
-      if (maestroTests.toBoolean()) {
-        signingConfig = getByName("debug").signingConfig
+      signingConfig = if (maestroTests.toBoolean()) {
+        getByName("debug").signingConfig
+      } else {
+        signingConfigs.getByName("release")
       }
     }
   }

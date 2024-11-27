@@ -56,15 +56,9 @@ jobs:
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
         env:
-          SIMPLE_SERVER_HOST: http://server:3000
+          SIMPLE_SERVER_HOST: http://localhost:8420
         run: |
           ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}/api/ assembleQaDebug assembleQaDebugAndroidTest
-
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: test-artifacts
-      #     path: app/build/outputs/apk
 
       - name: QA Android Tests
         id: run-instrumented-tests
@@ -90,7 +84,7 @@ jobs:
 
       - name: Stop Simple Service
         run: |
-          docker compose -f simple-server.ci.yml down
+          docker compose -f ".github/docker/simple-server.compose.yml" down
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v4

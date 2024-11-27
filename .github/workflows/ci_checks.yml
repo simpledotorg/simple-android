@@ -306,6 +306,9 @@ jobs:
           java-version: 17
           cache: 'gradle'
 
+      - name: Decrypt secrets
+        run: gpg --batch --yes --quiet --decrypt --passphrase=${{ secrets.KEYSTORE_PASSPHRASE }} --output release/simple.store release/simple.gpg
+
       - name: Build ${{ matrix.buildType }} Release bundle
         run: |
           ./gradlew \
@@ -313,6 +316,10 @@ jobs:
           -PdefaultProguardFile=proguard-android.txt \
           -PsentryUploadProguard=false \
           bundle${{ matrix.buildType }}Release
+
+      - name: Clean secrets
+        run: |
+          rm -f release/simple.store
 
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]

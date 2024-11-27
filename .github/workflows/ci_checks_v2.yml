@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Start Simple Service
         run: |
+          ls -al
           docker compose -f ".github/docker/simple-server.ci.yml" up -d
       - name: Enable KVM group perms
         run: |

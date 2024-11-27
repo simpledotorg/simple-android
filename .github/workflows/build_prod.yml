@@ -25,8 +25,8 @@ jobs:
       - name: Setup version code and name
         id: version_code_and_name
         run: |
-          VERSION_NAME=${{ steps.tramline.outputs.version_name:-"1.0.0" }}
-          VERSION_CODE=${{ steps.tramline.outputs.version_code:-"1" }}
+          VERSION_NAME=${{ steps.tramline.outputs.version_name }}
+          VERSION_CODE=${{ steps.tramline.outputs.version_code }}
 
           echo "ORG_GRADLE_PROJECT_VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           echo "ORG_GRADLE_PROJECT_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV

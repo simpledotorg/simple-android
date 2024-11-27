@@ -23,7 +23,6 @@ jobs:
 
       - name: Start Simple Service
         run: |
-          ls -al
           docker compose -f ".github/docker/simple-server.compose.yml" up -d
 
       - name: Cache AVD
@@ -59,7 +58,7 @@ jobs:
         env:
           SIMPLE_SERVER_HOST: http://server:3000
         run: |
-          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}api/ assembleQaDebug assembleQaDebugAndroidTest
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}/api/ assembleQaDebug assembleQaDebugAndroidTest
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v4

@@ -4,6 +4,35 @@
 
 ### Internal
 
+- Bump Kotlin to v2.0.21
+- Bump KSP to v2.0.21-1.0.28
+- Bump desugar JDK library to v2.1.3
+- Bump Fragment KTX to v1.8.5
+- Bump Compose theme adapter to v0.36.0
+- Bump Flipper to v0.273.0
+- Bump AndroidX Paging to v3.3.4
+- Bump Facebook Soloader to v0.12.1
+- Bump AndroidX ViewModel to v2.8.7
+- Bump AndroidX Lifecycle to v2.8.7
+- Bump Gradle to v8.11.1
+- Throttle back button clicks in `PatientSummaryScreen` to handle multiple rapid presses
+- Bump Firebase remote config v22.0.1
+- Bump asm to v9.7.1
+- Bump AndroidX CameraX to v1.4.0
+- Bump AndroidX Annotation to v1.9.1
+- Upload generated mapping file to Sentry
+- Bump ConstraintLayout to v2.2.0
+- Bump Lottie Compose to v6.6.0
+- Bump Sentry Android to v7.18.0
+
+### Fixes
+
+- Fix app crashing occasionally when viewing all blood sugar history
+
+## 2024-11-11-9265
+
+### Internal
+
 - Bump AGP to v8.7.2
 - Bump Dagger to v2.52
 - Bump Lint to v31.6.0

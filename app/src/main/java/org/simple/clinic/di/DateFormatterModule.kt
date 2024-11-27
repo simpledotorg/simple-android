@@ -5,18 +5,15 @@ import dagger.Provides
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FileDateTime
+import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
+import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.MonthName
 import org.simple.clinic.di.DateFormatter.Type.OverdueCsvTitleDateTime
 import org.simple.clinic.di.DateFormatter.Type.OverduePatientRegistrationDate
-import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
-import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import java.time.chrono.Chronology
-import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Named
@@ -25,12 +22,8 @@ import javax.inject.Named
 class DateFormatterModule {
 
   @Provides
-  fun providesChronology(country: Country, features: Features): Chronology {
-    return if (features.isEnabled(Feature.EthiopianCalendar)) {
-      country.chronology
-    } else {
-      IsoChronology.INSTANCE
-    }
+  fun providesChronology(country: Country): Chronology {
+    return country.chronology
   }
 
   @Provides

@@ -8,6 +8,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemPagingSource
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
@@ -25,13 +26,15 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     private val pagingSourceFactory: BloodSugarHistoryListItemPagingSource.Factory,
     private val config: BloodSugarSummaryConfig,
     private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
-    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>,
+    @Assisted private val pagingCacheScope: () -> CoroutineScope
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
+        viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>,
+        pagingCacheScope: () -> CoroutineScope,
     ): BloodSugarHistoryScreenEffectHandler
   }
 
@@ -59,6 +62,7 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
                       source = pagingSource,
                   )
                 },
+                cacheScope = pagingCacheScope.invoke(),
             )
           }
           .map(::BloodSugarHistoryLoaded)

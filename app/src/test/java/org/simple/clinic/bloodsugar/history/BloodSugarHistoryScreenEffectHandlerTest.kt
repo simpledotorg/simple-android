@@ -3,6 +3,7 @@ package org.simple.clinic.bloodsugar.history
 import androidx.paging.PagingData
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
+import kotlinx.coroutines.test.TestScope
 import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -37,6 +38,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   private val viewEffectHandler = BloodSugarHistoryScreenViewEffectHandler(uiActions)
   private val pagerFactory = mock<PagerFactory>()
   private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference> = mock()
+  private val pagingCacheScope = TestScope()
   private val effectHandler = BloodSugarHistoryScreenEffectHandler(
       patientRepository,
       bloodSugarRepository,
@@ -48,7 +50,8 @@ class BloodSugarHistoryScreenEffectHandlerTest {
           numberOfBloodSugarsToDisplay = 0,
       ),
       bloodSugarUnitPreference = bloodSugarUnitPreference,
-      viewEffectHandler::handle
+      viewEffectsConsumer = viewEffectHandler::handle,
+      pagingCacheScope = { pagingCacheScope }
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -139,7 +142,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
         pageSize = eq(25),
         enablePlaceholders = eq(false),
         initialKey = eq(null),
-        cacheScope = eq(null),
+        cacheScope = eq(pagingCacheScope),
     )) doReturn Observable.just(bloodSugars)
 
     // when

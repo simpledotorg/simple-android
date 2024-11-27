@@ -14,10 +14,9 @@ class SettingsUpdateTest {
 
   private val defaultModel = SettingsModel.default(
       isChangeLanguageFeatureEnabled = true,
-      isLogoutUserFeatureEnabled = true
   )
 
-  private val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsUpdate())
+  private val spec = UpdateSpec(SettingsUpdate())
 
   @Test
   fun `when the user details are loaded, the ui must be updated`() {

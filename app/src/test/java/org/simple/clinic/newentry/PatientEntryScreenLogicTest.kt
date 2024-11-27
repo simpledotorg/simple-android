@@ -1,6 +1,15 @@
 package org.simple.clinic.newentry
 
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doReturn
@@ -11,15 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -72,8 +72,6 @@ class PatientEntryScreenLogicTest {
   private lateinit var fixture: MobiusTestFixture<PatientEntryModel, PatientEntryEvent, PatientEntryEffect>
   private val reporter = MockAnalyticsReporter()
 
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   private lateinit var errorConsumer: (Throwable) -> Unit
@@ -101,7 +99,7 @@ class PatientEntryScreenLogicTest {
     fixture = MobiusTestFixture(
         uiEvents,
         PatientEntryModel.DEFAULT,
-        PatientEntryInit(isVillageTypeAheadEnabled = true),
+        PatientEntryInit(),
         PatientEntryUpdate(numberValidator, dobValidator, ageValidator),
         effectHandler.build(),
         PatientEntryUiRenderer(ui)::render

@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -26,7 +25,6 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -78,7 +76,6 @@ class PatientSummaryScreenLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val viewRenderer = PatientSummaryViewRenderer(
       ui = ui,
-      isNextAppointmentFeatureEnabled = false,
       modelUpdateCallback = { /* no-op */ },
       userClock = TestUserClock(LocalDate.parse("2018-01-01")),
       cdssOverdueLimit = 2
@@ -98,7 +95,7 @@ class PatientSummaryScreenLogicTest {
         .toInstant()
 
     whenever(bpRepository.isNewestBpEntryHigh(patientUuid)) doReturn Observable.just(true)
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
     whenever(bpRepository.hasBPRecordedToday(patientUuid, today)) doReturn Observable.just(true)
@@ -220,8 +217,8 @@ class PatientSummaryScreenLogicTest {
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
         country = TestData.country(),
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
+        currentUser = { user },
+        currentFacility = { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),

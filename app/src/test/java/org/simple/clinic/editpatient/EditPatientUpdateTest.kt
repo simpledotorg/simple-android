@@ -59,7 +59,6 @@ class EditPatientUpdateTest {
     bangladeshNationalId = null,
     saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
     isUserCountryIndia = false,
-    isAddingHealthIDsFromEditPatientEnabled = false
   )
 
   @Test

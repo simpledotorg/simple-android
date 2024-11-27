@@ -7,13 +7,13 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -32,10 +32,7 @@ class ScanSimpleIdUpdateTest {
      }
      """
 
-  private val spec = UpdateSpec(ScanSimpleIdUpdate(
-      isIndianNHIDSupportEnabled = true,
-      isOnlinePatientLookupEnabled = true
-  ))
+  private val spec = UpdateSpec(ScanSimpleIdUpdate())
 
   private val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
 
@@ -344,25 +341,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is not found and lookup patient online is disabled, then open patient search`() {
-    val spec = UpdateSpec(ScanSimpleIdUpdate(
-        isIndianNHIDSupportEnabled = true,
-        isOnlinePatientLookupEnabled = false
-    ))
-
-    val patients = emptyList<Patient>()
-    val identifier = Identifier("0486cdb8-b617-41bf-9b9f-4a89434c68cf", BpPassport)
-
-    spec
-        .given(defaultModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenPatientSearch(additionalIdentifier = identifier, initialSearchQuery = null, patientPrefillInfo = null))
-        ))
-  }
-
-  @Test
   fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID, then parse the json into object`() {
     val scannedId = "12341234123412"
     val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
@@ -407,27 +385,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when patient is not found, screen is opened from edit patient and online patient lookup is disabled, then go back to edit patient screen`() {
-    val spec = UpdateSpec(ScanSimpleIdUpdate(
-        isIndianNHIDSupportEnabled = true,
-        isOnlinePatientLookupEnabled = false
-    ))
-
-    val patients = emptyList<Patient>()
-    val identifier = Identifier("0486cdb8-b617-41bf-9b9f-4a89434c68cf", BpPassport)
-
-    val openedToAddNHIDModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
-
-    spec
-        .given(openedToAddNHIDModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoBackToEditPatientScreen(identifier))
-        ))
-  }
-
-  @Test
   fun `when online patient lookup is completed, screen is opened from edit patient and patient is not found, then go back to edit patient screen`() {
     val identifier = TestData.identifier(value = "12341234123412", type = IndiaNationalHealthId)
     val openedToAddNHIDModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
@@ -457,25 +414,6 @@ class ScanSimpleIdUpdateTest {
                 .clearInvalidQrCodeError()
                 .searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
-        ))
-  }
-
-  @Test
-  fun `when the screen is opened from bp passport button from edit patient screen and online patient lookup is disabled, then go back to edit patient screen`() {
-    val spec = UpdateSpec(ScanSimpleIdUpdate(
-        isIndianNHIDSupportEnabled = false,
-        isOnlinePatientLookupEnabled = false
-    ))
-
-    val patients = emptyList<Patient>()
-    val identifier = Identifier("d5a706f9-34a7-4218-b97a-cb873e1ba867", BpPassport)
-
-    spec
-        .given(openedToAddBpPassportModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoBackToEditPatientScreen(identifier))
         ))
   }
 
@@ -535,7 +473,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when scanned qr code is invalid and screen is opened from edit patient screen, then show scanned qr code error with invalid qr code state`(){
+  fun `when scanned qr code is invalid and screen is opened from edit patient screen, then show scanned qr code error with invalid qr code state`() {
     spec
         .given(openedToAddBpPassportModel)
         .whenEvent(InvalidQrCode)

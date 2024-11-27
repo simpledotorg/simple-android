@@ -63,7 +63,6 @@ class PatientSummaryViewRendererTest {
 
   private val uiRenderer = PatientSummaryViewRenderer(
       ui = ui,
-      isNextAppointmentFeatureEnabled = false,
       modelUpdateCallback = { /* no-op */ },
       userClock = TestUserClock(LocalDate.parse("2018-01-01")),
       cdssOverdueLimit = 2
@@ -379,12 +378,11 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when patient registration data is present and next appointment feature is enabled, then show the next appointment card`() {
+  fun `when patient registration data, then show the next appointment card`() {
     // given
     val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = true,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -395,27 +393,6 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when patient registration data is present and next appointment feature is disabled, then hide the next appointment card`() {
-    // given
-    val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
-    val uiRenderer = PatientSummaryViewRenderer(
-        ui = ui,
-        isNextAppointmentFeatureEnabled = false,
-        modelUpdateCallback = { /* no-op */ },
-        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
-        cdssOverdueLimit = 2
-    )
-
-    // when
-    uiRenderer.render(modelWithPatientRegistrationData)
-
-    // then
-    verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
@@ -469,7 +446,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -486,7 +462,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -524,7 +500,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -541,7 +516,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -579,7 +554,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -596,7 +570,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -649,7 +623,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -663,7 +636,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
@@ -710,7 +683,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -727,7 +699,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -771,7 +743,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-08")),
         cdssOverdueLimit = 2
@@ -788,7 +759,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -872,7 +843,6 @@ class PatientSummaryViewRendererTest {
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
-        isNextAppointmentFeatureEnabled = false,
         modelUpdateCallback = { /* no-op */ },
         userClock = TestUserClock(LocalDate.parse("2018-01-01")),
         cdssOverdueLimit = 2
@@ -890,7 +860,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).showStatinAlert()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideNextAppointmentCard()
+    verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 }

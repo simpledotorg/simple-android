@@ -60,6 +60,12 @@ jobs:
         run: |
           ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}/api/ assembleQaDebug assembleQaDebugAndroidTest
 
+      - name: Ensure the Simple Server is running
+        id: ensure-healthy-simple
+        env:
+          SIMPLE_SERVER_HOST: http://localhost:8420
+        run: ../scripts/wait_for_simple_server.sh ${{ env.SIMPLE_SERVER_HOST }}/api/manifest.json 200
+
       - name: QA Android Tests
         id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2

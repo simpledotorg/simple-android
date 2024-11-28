@@ -11,6 +11,87 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verify_changelog_updated:
+    runs-on: [ ubuntu-latest ]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Verify CHANGELOG was updated
+        run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
+
+  verify_pr_description:
+    runs-on: [ ubuntu-latest ]
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify PR description
+        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
+
+  verify_room_schemas:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Verify existing Room schemas are not modified
+        run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
+
+  verify_release_bundles:
+    runs-on: [ ubuntu-latest ]
+    env:
+      TERM: dumb
+      ORG_GRADLE_PROJECT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+    strategy:
+      matrix:
+        buildType: [ 'Production' ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Decrypt secrets
+        run: gpg --batch --yes --quiet --decrypt --passphrase=${{ secrets.KEYSTORE_PASSPHRASE }} --output release/simple.store release/simple.gpg
+
+      - name: Build ${{ matrix.buildType }} Release bundle
+        run: |
+          ./gradlew \
+          -PrunProguard=true \
+          -PdefaultProguardFile=proguard-android.txt \
+          -PsentryUploadProguard=false \
+          bundle${{ matrix.buildType }}Release
+
+      - name: Clean secrets
+        run: |
+          rm -f release/simple.store
+
+
+
+
   qa_lint:
     runs-on: [ ubuntu-latest ]
     steps:
@@ -140,6 +221,8 @@ jobs:
         run: |
           docker compose -f ".github/docker/simple-server.compose.yml" down
 
+
+
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
     steps:
@@ -154,85 +237,6 @@ jobs:
 
       - name: Mobius Migration Tests
         run: ./gradlew :mobius-migration:test
-
-  verify_release_bundles:
-    runs-on: [ ubuntu-latest ]
-    env:
-      TERM: dumb
-      ORG_GRADLE_PROJECT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      ORG_GRADLE_PROJECT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-    strategy:
-      matrix:
-        buildType: [ 'Production' ]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Decrypt secrets
-        run: gpg --batch --yes --quiet --decrypt --passphrase=${{ secrets.KEYSTORE_PASSPHRASE }} --output release/simple.store release/simple.gpg
-
-      - name: Build ${{ matrix.buildType }} Release bundle
-        run: |
-          ./gradlew \
-          -PrunProguard=true \
-          -PdefaultProguardFile=proguard-android.txt \
-          -PsentryUploadProguard=false \
-          bundle${{ matrix.buildType }}Release
-
-      - name: Clean secrets
-        run: |
-          rm -f release/simple.store
-
-
-  verify_room_schemas:
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@v4
-        with:
-          ref: master
-          path: master
-
-      - name: Checkout current
-        uses: actions/checkout@v4
-        with:
-          path: current
-
-      - name: Verify existing Room schemas are not modified
-        run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
-
-  verify_pr_description:
-    runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify PR description
-        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
-
-  verify_changelog_updated:
-    runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@v4
-        with:
-          ref: master
-          path: master
-
-      - name: Checkout current
-        uses: actions/checkout@v4
-        with:
-          path: current
-
-      - name: Verify CHANGELOG was updated
-        run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
 
   fix_strings_ellipsise:
     runs-on: [ ubuntu-latest ]

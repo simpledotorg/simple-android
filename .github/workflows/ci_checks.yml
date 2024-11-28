@@ -41,34 +41,6 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  build_qa_android_tests_apk:
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Build QA Test Artifacts
-        id: build-instrumented-tests
-        env:
-          SIMPLE_SERVER_HOST: http://localhost:8420
-        run: |
-          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=$SIMPLE_SERVER_HOST/api/ assembleQaDebug assembleQaDebugAndroidTest
-
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-artifacts
-          path: app/build/outputs/apk
-
   qa_android_tests:
     needs: [ build_qa_android_tests_apk ]
     runs-on: [ ubuntu-latest ]
@@ -86,6 +58,10 @@ jobs:
 
       - name: Checkout Android source
         uses: actions/checkout@v4
+
+      - name: Start Simple Docker server
+        run: |
+          docker compose -f ".github/docker/simple-server.compose.yml" up -d
 
       - name: Cache AVD
         uses: actions/cache@v4
@@ -124,6 +100,13 @@ jobs:
           name: test-artifacts
           path: app/build/outputs/apk
 
+      - name: Build QA Test Artifacts
+        id: build-instrumented-tests
+        env:
+          SIMPLE_SERVER_HOST: http://localhost:8420
+        run: |
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=$SIMPLE_SERVER_HOST/api/ assembleQaDebug assembleQaDebugAndroidTest
+
       - name: QA Android Tests
         id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -146,13 +129,16 @@ jobs:
             adb uninstall org.simple.clinic.qa.debug.test
             ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
 
-
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v4
         with:
           name: failed-test-artifacts
           path: app/build/outputs/test-artifacts
+
+      - name: Stop Simple Docker server
+        run: |
+          docker compose -f ".github/docker/simple-server.compose.yml" down
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

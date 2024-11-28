@@ -1,4 +1,4 @@
-name: Build staging app bundle
+name: Build sandbox app bundle
 
 on:
   workflow_dispatch:

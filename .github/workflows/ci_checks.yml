@@ -174,12 +174,6 @@ jobs:
       - name: Create build directory
         run: mkdir app/build
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: test-artifacts
-          path: app/build/outputs/apk
-
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
         env:

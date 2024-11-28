@@ -5,13 +5,6 @@ on:
     branches:
       - release/*
   pull_request:
-  workflow_dispatch:
-    inputs:
-      simple_server_branch:
-        required: false
-        type: string
-        default: master
-  workflow_call:
 
 concurrency:
   group: ci-${{ github.head_ref }}
@@ -48,118 +41,7 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  generate_server_app_name:
-    runs-on: [ ubuntu-latest ]
-    outputs:
-      heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-
-      - name: Generate server app name
-        id: generate-server-app-name
-        run: .github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
-
-  create_server_on_heroku:
-    needs: generate_server_app_name
-    runs-on: [ ubuntu-latest ]
-    outputs:
-      heroku_app_name: ${{ steps.create-server-on-heroku.outputs.heroku_app_name }}
-      heroku_app_url: ${{ steps.create-server-on-heroku.outputs.heroku_app_url }}
-      heroku_app_exists: ${{ steps.create-server-on-heroku.outputs.heroku_app_exists }}
-    env:
-      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-        with:
-          path: android-app
-
-      - name: Checkout Server source
-        uses: actions/checkout@v4
-        with:
-          repository: simpledotorg/simple-server
-          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
-          path: server-app
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
-
-      - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
-
-      - name: Create server on Heroku
-        id: create-server-on-heroku
-        run: |
-          android-app/.github/scripts/create_heroku_app.sh \
-          ${{ needs.generate_server_app_name.outputs.heroku_app_name }} \
-          server-app
-
-  deploy_server_on_heroku:
-    needs: [create_server_on_heroku]
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
-    outputs:
-      heroku_app_name: ${{ steps.start-simple-server.outputs.heroku_app_name }}
-    env:
-      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-        with:
-          path: android-app
-
-      - name: Checkout server app source
-        uses: actions/checkout@v4
-        with:
-          repository: simpledotorg/simple-server
-          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
-          path: server-app
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
-
-      - name: Create node dependency hash
-        id: create_node_modules_hash
-        run: android-app/.github/scripts/compute_node_dependency_hash.sh
-
-      - name: Cache node modules
-        id: node-dependency-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            package-lock.json
-          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
-
-      - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
-
-      - name: Install Heroku Buildpacks registry
-        run: heroku plugins:install buildpack-registry
-
-      - name: Install heroku buildpacks plugin
-        run: heroku plugins:install buildpacks
-
-      - name: Deploy the server on Heroku
-        id: start-simple-server
-        run: |
-          android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ needs.create_server_on_heroku.outputs.heroku_app_name }} \
-          ${{ env.HEROKU_API_KEY }} \
-          ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
-          server-app \
-          android-app \
-          ${{ needs.create_server_on_heroku.outputs.heroku_app_exists }} \
-          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
-
-
   build_qa_android_tests_apk:
-    needs: create_server_on_heroku
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 60
     steps:
@@ -175,8 +57,11 @@ jobs:
 
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
+        env:
+          SIMPLE_SERVER_HOST: http://localhost:8420
         run: |
-          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ needs.create_server_on_heroku.outputs.heroku_app_url }}api/ assembleQaDebug assembleQaDebugAndroidTest
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=$SIMPLE_SERVER_HOST/api/ assembleQaDebug assembleQaDebugAndroidTest
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -184,10 +69,8 @@ jobs:
           name: test-artifacts
           path: app/build/outputs/apk
 
-  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
-  # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
-    needs: [ deploy_server_on_heroku, build_qa_android_tests_apk ]
+    needs: [ build_qa_android_tests_apk ]
     runs-on: [ ubuntu-latest ]
     timeout-minutes: 60
     env:
@@ -199,6 +82,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+
 
       - name: Checkout Android source
         uses: actions/checkout@v4
@@ -262,19 +146,13 @@ jobs:
             adb uninstall org.simple.clinic.qa.debug.test
             ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
 
+
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v4
         with:
           name: failed-test-artifacts
           path: app/build/outputs/test-artifacts
-
-      - name: Teardown Heroku instance
-        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
-        run: |
-          heroku apps:destroy \
-          --app=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }} \
-          --confirm=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }}
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
@@ -325,6 +203,7 @@ jobs:
       - name: Clean secrets
         run: |
           rm -f release/simple.store
+
 
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]

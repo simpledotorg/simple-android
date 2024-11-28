@@ -33,6 +33,8 @@ services:
       RAILS_CACHE_REDIS_URL: redis://
       SIDEKIQ_REDIS_HOST: redis
 
-networks:
-  default:
-    driver: host
+# networks:
+#   default:
+#     driver: bridge
+#     driver_opts:
+#       com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

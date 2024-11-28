@@ -56,19 +56,19 @@ jobs:
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
         env:
-          SIMPLE_SERVER_HOST: http://localhost:8420
+          SIMPLE_SERVER_HOST: http://127.0.0.1:8420
         run: |
           ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ env.SIMPLE_SERVER_HOST }}/api/ assembleQaDebug assembleQaDebugAndroidTest
 
       # - name: Check connectivity to server container
       #   run: |
-      #     curl -I http://localhost:8420
+      #     curl -I http://127.0.0.1:8420
       #     docker exec -it $(docker ps -q -f name=server) curl -I http://server:3000
 
       - name: Ensure the Simple Server is running
         id: ensure-healthy-simple
         env:
-          SIMPLE_SERVER_HOST: http://localhost:8420
+          SIMPLE_SERVER_HOST: http://127.0.0.1:8420
         run: .github/scripts/wait_for_simple_server.sh ${{ env.SIMPLE_SERVER_HOST }}/api/manifest.json 200
 
       - name: QA Android Tests

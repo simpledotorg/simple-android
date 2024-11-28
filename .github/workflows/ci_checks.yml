@@ -143,6 +143,18 @@ jobs:
         run: |
           docker compose -f ".github/docker/simple-server.compose.yml" up -d
 
+      - name: Get Docker server IP address
+        run: |
+          IP_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' simple-server)
+          echo "Docker container IP address is: $IP_ADDRESS"
+          echo "DOCKER_IP=$IP_ADDRESS" >> $GITHUB_ENV
+
+
+      - name: Replace IP address in network security config
+        run: |
+          sed -i "s/localhost/$DOCKER_IP/g" app/src/main/res/xml/network_config.xml
+          cat src/main/res/xml/network_config.xml
+
       - name: Cache AVD
         uses: actions/cache@v4
         id: avd-cache
@@ -176,10 +188,8 @@ jobs:
 
       - name: Build QA Test Artifacts
         id: build-instrumented-tests
-        env:
-          SIMPLE_SERVER_HOST: http://localhost:8420
         run: |
-          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=$SIMPLE_SERVER_HOST/api/ assembleQaDebug assembleQaDebugAndroidTest
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=http://$DOCKER_IP:8420/api/ assembleQaDebug assembleQaDebugAndroidTest
 
       - name: QA Android Tests
         id: run-instrumented-tests

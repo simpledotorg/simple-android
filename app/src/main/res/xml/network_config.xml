@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
   <domain-config cleartextTrafficPermitted="true">
-    <!--We use this local host and port for our integration tests in CI-->
+    <!-- We replace the localhost with Docker container IP address during CI -->
     <domain includeSubdomains="true">localhost</domain>
   </domain-config>
 </network-security-config>

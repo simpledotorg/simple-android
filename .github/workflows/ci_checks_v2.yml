@@ -66,6 +66,11 @@ jobs:
           SIMPLE_SERVER_HOST: http://localhost:8420
         run: .github/scripts/wait_for_simple_server.sh ${{ env.SIMPLE_SERVER_HOST }}/api/manifest.json 200
 
+      - name: Check connectivity to server container
+        run: |
+          curl -I http://localhost:8420
+          docker exec -it $(docker ps -q -f name=server) curl -I http://server:3000
+
       - name: QA Android Tests
         id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2

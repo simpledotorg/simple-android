@@ -143,12 +143,14 @@ jobs:
         run: |
           docker compose -f ".github/docker/simple-server.compose.yml" up -d
 
+      - name: Wait for Docker server to be available
+        run: .github/scripts/wait_for_docker_server.sh
+
       - name: Get Docker server IP address
         run: |
           IP_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' simple-server)
           echo "Docker container IP address is: $IP_ADDRESS"
           echo "DOCKER_IP=$IP_ADDRESS" >> $GITHUB_ENV
-
 
       - name: Replace IP address in network security config
         run: |

@@ -6,7 +6,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.Answer.*
+import org.simple.clinic.patient.Answer.Unanswered
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAgeDetails
@@ -137,6 +137,8 @@ class LookupPatientOnline @Inject constructor(
           hasHadStroke = response.medicalHistory.hasHadStroke,
           hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,
           diagnosedWithDiabetes = response.medicalHistory.hasDiabetes,
+          isSmoker = Answer.Unanswered,
+          cholesterolReading = null,
           syncStatus = SyncStatus.DONE,
           createdAt = response.medicalHistory.createdAt,
           updatedAt = response.medicalHistory.updatedAt,

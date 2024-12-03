@@ -19,7 +19,8 @@ data class OngoingMedicalHistoryEntry(
     val diagnosedWithHypertension: Answer = Unanswered,
     val isOnHypertensionTreatment: Answer = Unanswered,
     val isOnDiabetesTreatment: Answer = Unanswered,
-    val hasDiabetes: Answer = Unanswered
+    val hasDiabetes: Answer = Unanswered,
+    val isSmoker: Answer = Unanswered,
 ) : Parcelable {
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): OngoingMedicalHistoryEntry {

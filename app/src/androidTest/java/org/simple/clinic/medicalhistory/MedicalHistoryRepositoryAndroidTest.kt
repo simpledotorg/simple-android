@@ -53,7 +53,9 @@ class MedicalHistoryRepositoryAndroidTest {
         hasHadHeartAttack = Yes,
         hasHadStroke = Yes,
         hasHadKidneyDisease = Yes,
-        hasDiabetes = No)
+        hasDiabetes = No,
+        isSmoker = No,
+        )
 
     repository.save(
         uuid = UUID.fromString("d33a3dfc-3da9-43a9-a543-095232c55597"),
@@ -67,6 +69,7 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(savedHistory.hasHadStroke).isEqualTo(Yes)
     assertThat(savedHistory.hasHadKidneyDisease).isEqualTo(Yes)
     assertThat(savedHistory.diagnosedWithDiabetes).isEqualTo(No)
+    assertThat(savedHistory.isSmoker).isEqualTo(No)
     assertThat(savedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
 
@@ -119,6 +122,8 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithDiabetes).isEqualTo(Unanswered)
+    assertThat(emptyHistory.isSmoker).isEqualTo(Unanswered)
+    assertThat(emptyHistory.cholesterolReading).isEqualTo(null)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 
@@ -178,6 +183,8 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithHypertension).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithDiabetes).isEqualTo(Unanswered)
+    assertThat(emptyHistory.isSmoker).isEqualTo(Unanswered)
+    assertThat(emptyHistory.cholesterolReading).isEqualTo(null)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 }

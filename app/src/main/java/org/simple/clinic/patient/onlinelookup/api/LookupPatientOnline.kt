@@ -4,6 +4,7 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.CholesterolReading
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Answer.Unanswered
@@ -137,8 +138,8 @@ class LookupPatientOnline @Inject constructor(
           hasHadStroke = response.medicalHistory.hasHadStroke,
           hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,
           diagnosedWithDiabetes = response.medicalHistory.hasDiabetes,
-          isSmoker = Answer.Unanswered,
-          cholesterolReading = null,
+          isSmoker = response.medicalHistory.isSmoker,
+          cholesterolReading = CholesterolReading(response.medicalHistory.cholesterolValue.toString()),
           syncStatus = SyncStatus.DONE,
           createdAt = response.medicalHistory.createdAt,
           updatedAt = response.medicalHistory.updatedAt,

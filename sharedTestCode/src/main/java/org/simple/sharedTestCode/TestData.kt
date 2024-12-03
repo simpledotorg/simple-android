@@ -788,6 +788,8 @@ object TestData {
       isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoker: Answer = randomMedicalHistoryAnswer(),
+      cholesterolReading: CholesterolReading? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -803,6 +805,8 @@ object TestData {
         hasHadKidneyDisease = hasHadKidneyDisease,
         hasDiabetes = hasDiabetes,
         hasHypertension = diagnosedWithHypertension,
+        isSmoker = isSmoker,
+        cholesterolValue = cholesterolReading?.value?.toFloatOrNull(),
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

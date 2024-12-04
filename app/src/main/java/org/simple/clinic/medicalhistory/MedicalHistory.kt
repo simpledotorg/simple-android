@@ -22,6 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
@@ -80,6 +81,7 @@ data class MedicalHistory(
       DiagnosedWithDiabetes -> copy(diagnosedWithDiabetes = answer)
       is IsOnHypertensionTreatment -> copy(isOnHypertensionTreatment = answer)
       IsOnDiabetesTreatment -> copy(isOnDiabetesTreatment = answer)
+      IsSmoker -> copy(isSmoker = answer)
     }
   }
 

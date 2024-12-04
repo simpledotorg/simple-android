@@ -5,6 +5,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
@@ -32,6 +33,14 @@ class NewMedicalHistoryUiRenderer(
         ui.hideDiabetesDiagnosisView()
         ui.showDiabetesHistorySection()
         ui.renderAnswerForQuestion(DiagnosedWithDiabetes, hasDiabetes)
+      }
+
+      if (model.showIsSmokerQuestion) {
+        ui.showCurrentSmokerQuestion()
+        ui.renderAnswerForQuestion(IsSmoker, isSmoker)
+
+      } else {
+        ui.hideCurrentSmokerQuestion()
       }
     }
 

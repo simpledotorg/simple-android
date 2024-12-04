@@ -21,6 +21,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
@@ -30,6 +32,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
@@ -68,6 +71,9 @@ class NewMedicalHistoryScreen : BaseScreen<
   @Inject
   lateinit var country: Country
 
+  @Inject
+  lateinit var features: Features
+
   private val toolbar
     get() = binding.toolbar
 
@@ -95,9 +101,18 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val diabetesDiagnosis
     get() = binding.diabetesDiagnosis
 
+  private val currentSmokerQuestionContainer
+    get() = binding.currentSmokerQuestionContainer
+
+  private val currentSmokerQuestionView
+    get() = binding.currentSmokerQuestionView
+
   private val hotEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
-  override fun defaultModel() = NewMedicalHistoryModel.default(country)
+  override fun defaultModel() = NewMedicalHistoryModel.default(
+      country = country,
+      showIsSmokerQuestion = features.isEnabled(Feature.PatientStatinNudge)
+  )
 
   override fun bindView(
       layoutInflater: LayoutInflater,
@@ -158,6 +173,7 @@ class NewMedicalHistoryScreen : BaseScreen<
       HasHadAStroke -> strokeQuestionView
       HasHadAKidneyDisease -> kidneyDiseaseQuestionView
       DiagnosedWithDiabetes -> diabetesQuestionView
+      IsSmoker -> currentSmokerQuestionView
       else -> null
     }
 
@@ -238,6 +254,15 @@ class NewMedicalHistoryScreen : BaseScreen<
   override fun hideDiabetesTreatmentQuestion() {
     diabetesDiagnosis.hideTreatmentQuestion()
     diabetesDiagnosis.clearTreatmentChipGroup()
+  }
+
+  override fun showCurrentSmokerQuestion() {
+    currentSmokerQuestionContainer.visibility = VISIBLE
+    currentSmokerQuestionView.hideDivider()
+  }
+
+  override fun hideCurrentSmokerQuestion() {
+    currentSmokerQuestionContainer.visibility = GONE
   }
 
   override fun showOngoingHypertensionTreatmentErrorDialog() {

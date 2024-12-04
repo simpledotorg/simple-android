@@ -31,6 +31,10 @@
 
 - Fix app crashing occasionally when viewing all blood sugar history
 
+### Features
+
+- Add Current smoker question to patient enrolment and summary screen for statin nudge facilities
+
 ## 2024-11-11-9265
 
 ### Internal

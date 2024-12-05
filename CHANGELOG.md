@@ -25,10 +25,15 @@
 - Bump Lottie Compose to v6.6.0
 - Bump Sentry Android to v7.18.0
 - Bump AGP to v8.7.3
+- Add `isSmoker` and `cholesterol_value` in `MedicalHistory` table
 
 ### Fixes
 
 - Fix app crashing occasionally when viewing all blood sugar history
+
+### Features
+
+- Add Current smoker question to patient enrolment and summary screen for statin nudge facilities
 
 ## 2024-11-11-9265
 

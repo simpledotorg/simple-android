@@ -30,6 +30,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.CholesterolReading
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
@@ -750,6 +751,8 @@ object TestData {
       isOnHypertensionTreatment: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoker: Answer = randomMedicalHistoryAnswer(),
+      cholesterolReading: CholesterolReading? = null,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -765,6 +768,8 @@ object TestData {
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
         diagnosedWithDiabetes = hasDiabetes,
+        isSmoker = isSmoker,
+        cholesterolReading = cholesterolReading,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -783,6 +788,8 @@ object TestData {
       isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoker: Answer = randomMedicalHistoryAnswer(),
+      cholesterolReading: CholesterolReading? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -798,6 +805,8 @@ object TestData {
         hasHadKidneyDisease = hasHadKidneyDisease,
         hasDiabetes = hasDiabetes,
         hasHypertension = diagnosedWithHypertension,
+        isSmoker = isSmoker,
+        cholesterolValue = cholesterolReading?.value?.toFloatOrNull(),
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

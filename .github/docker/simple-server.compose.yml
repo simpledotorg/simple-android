@@ -15,8 +15,12 @@ services:
       - "6379"
 
   server:
-    container_name: simple-server
-    image: simpledotorg/server:latest
+    build:
+      context: https://github.com/simpledotorg/simple-server.git
+      dockerfile: ./.docker/dev.Dockerfile
+    image: simple-server:latest
+    volumes:
+      - .:/myapp
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
     expose:
       - "3000"

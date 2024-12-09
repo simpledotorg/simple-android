@@ -63,6 +63,8 @@ import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
@@ -1641,5 +1643,28 @@ object TestData {
         "monthly_screening_reports.gender" to "Male",
         "monthly_screening_reports.is_smoking" to true,
     )
+  }
+
+  fun patientAttribute(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      userUuid: UUID = UUID.randomUUID(),
+      reading: BMIReading,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): PatientAttribute {
+    return PatientAttribute(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        userUuid = userUuid,
+        reading = reading,
+        timestamps = Timestamps(
+            createdAt, updatedAt, deletedAt
+        ),
+        syncStatus = syncStatus
+    )
+
   }
 }

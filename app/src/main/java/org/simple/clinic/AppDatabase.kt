@@ -201,6 +201,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun questionnaireResponseDao(): QuestionnaireResponse.RoomDao
 
+  abstract fun patientAttributeDao(): PatientAttribute.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -218,6 +220,7 @@ abstract class AppDatabase : RoomDatabase() {
       callResultDao().clear()
       questionnaireDao().clear()
       questionnaireResponseDao().clear()
+      patientAttributeDao().clear()
     }
   }
 

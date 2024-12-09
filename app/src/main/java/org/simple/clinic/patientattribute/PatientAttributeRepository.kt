@@ -76,4 +76,8 @@ class PatientAttributeRepository @Inject constructor(
   fun getPatientAttributeImmediate(patientUuid: UUID): PatientAttribute? {
     return dao.patientAttributeImmediate(patientUuid)
   }
+
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientAttribute> {
+    return dao.recordsWithSyncStatus(syncStatus)
+  }
 }

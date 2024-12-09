@@ -1,0 +1,47 @@
+package org.simple.clinic.patientattribute
+
+import com.google.common.truth.Truth.assertThat
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.RuleChain
+import org.simple.clinic.TestClinicApp
+import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
+import javax.inject.Inject
+
+class PatientAttributeRepositoryAndroidTest {
+
+  @Inject
+  lateinit var repository: PatientAttributeRepository
+
+  @Inject
+  lateinit var testData: TestData
+
+  @get:Rule
+  val rules: RuleChain = Rules
+      .global()
+      .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
+
+  @Before
+  fun setup() {
+    TestClinicApp.appComponent().inject(this)
+  }
+
+  @Test
+  fun saving_a_patient_attribute_should_work_correctly() {
+    //given
+    val bmiReading = BMIReading(height = "177", weight = "64")
+    val patientAttribute = testData.patientAttribute(reading = bmiReading)
+
+    //when
+    repository.save(listOf(patientAttribute))
+
+    //then
+    val savedPatientAttribute = repository.getPatientAttribute(patientAttribute.patientUuid)
+    assertThat(savedPatientAttribute).isEqualTo(patientAttribute)
+  }
+}

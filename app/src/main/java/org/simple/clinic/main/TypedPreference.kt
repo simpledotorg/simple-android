@@ -23,5 +23,6 @@ annotation class TypedPreference(val value: Type) {
     LastQuestionnairePullToken,
     LastQuestionnaireResponsePullToken,
     DataProtectionConsent,
+    LastPatientAttributePullToken,
   }
 }

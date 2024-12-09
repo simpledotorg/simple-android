@@ -67,6 +67,9 @@ data class PatientAttribute(
     @Query("SELECT COUNT(uuid) FROM PatientAttribute WHERE syncStatus = :syncStatus")
     fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
+    @Query("SELECT * FROM PatientAttribute WHERE syncStatus = :status")
+    fun recordsWithSyncStatus(status: SyncStatus): List<PatientAttribute>
+
     @Query("""
       SELECT * FROM PatientAttribute
       WHERE syncStatus = :syncStatus

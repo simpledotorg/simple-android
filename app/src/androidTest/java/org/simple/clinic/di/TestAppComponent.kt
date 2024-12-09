@@ -64,6 +64,7 @@ import org.simple.clinic.sync.BloodSugarSyncIntegrationTest
 import org.simple.clinic.sync.CallResultSyncIntegrationTest
 import org.simple.clinic.sync.HelpSyncIntegrationTest
 import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
+import org.simple.clinic.sync.PatientAttributeSyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
 import org.simple.clinic.sync.ProtocolSyncIntegrationTest
@@ -164,4 +165,5 @@ interface TestAppComponent {
   fun inject(target: QuestionnaireResponseSyncIntegrationTest)
   fun inject(target: DatabaseEncryptorTest)
   fun inject(target: PatientAttributeRepositoryAndroidTest)
+  fun inject(target: PatientAttributeSyncIntegrationTest)
 }

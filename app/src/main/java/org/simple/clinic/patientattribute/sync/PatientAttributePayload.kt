@@ -9,16 +9,17 @@ import org.simple.clinic.storage.Timestamps
 import java.time.Instant
 import java.util.UUID
 
-@JsonClass(generateAdapter = false)
+@JsonClass(generateAdapter = true)
 data class PatientAttributePayload(
+
     @Json(name = "id")
     val uuid: UUID,
 
     @Json(name = "height")
-    val height: Float,
+    val height: String,
 
     @Json(name = "weight")
-    val weight: Float,
+    val weight: String,
 
     @Json(name = "patient_id")
     val patientUuid: UUID,
@@ -41,8 +42,8 @@ data class PatientAttributePayload(
       patientUuid = patientUuid,
       userUuid = userUuid,
       reading = BMIReading(
-          height = height.toString(),
-          weight = weight.toString()
+          height = height,
+          weight = weight
       ),
       timestamps = Timestamps(
           createdAt = createdAt,

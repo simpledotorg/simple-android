@@ -36,6 +36,7 @@ import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.download.PatientLineListCsvGeneratorTest
 import org.simple.clinic.patient.download.PatientLineListDownloaderTest
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrationTest
+import org.simple.clinic.patientattribute.PatientAttributeRepositoryAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -162,4 +163,5 @@ interface TestAppComponent {
   fun inject(target: QuestionnaireResponseRepositoryAndroidTest)
   fun inject(target: QuestionnaireResponseSyncIntegrationTest)
   fun inject(target: DatabaseEncryptorTest)
+  fun inject(target: PatientAttributeRepositoryAndroidTest)
 }

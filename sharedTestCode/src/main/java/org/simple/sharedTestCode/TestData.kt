@@ -15,6 +15,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.contactpatient.ContactPatientProfile
+import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Answer.Yes
 import org.simple.clinic.drugs.search.Drug
@@ -1670,6 +1671,25 @@ object TestData {
         ),
         syncStatus = syncStatus
     )
+  }
 
+  fun cvdRisk(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      riskScore: String,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): CVDRisk {
+    return CVDRisk(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        riskScore = riskScore,
+        timestamps = Timestamps(
+            createdAt, updatedAt, deletedAt
+        ),
+        syncStatus = syncStatus
+    )
   }
 }

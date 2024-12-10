@@ -26,8 +26,6 @@ import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.questionnaire.di.QuestionnaireModule
-import org.simple.clinic.questionnaireresponse.di.QuestionnaireResponseModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
@@ -38,9 +36,13 @@ import org.simple.clinic.overdue.download.di.OverdueListDownloadModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
+import org.simple.clinic.patientattribute.PatientAttributeModule
+import org.simple.clinic.patientattribute.sync.PatientAttributeSync
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.questionnaire.di.QuestionnaireModule
 import org.simple.clinic.questionnaire.sync.QuestionnaireSync
+import org.simple.clinic.questionnaireresponse.di.QuestionnaireResponseModule
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
@@ -68,7 +70,8 @@ import javax.inject.Named
   CallResultModule::class,
   OverdueListDownloadModule::class,
   QuestionnaireModule::class,
-  QuestionnaireResponseModule::class
+  QuestionnaireResponseModule::class,
+  PatientAttributeModule::class,
 ])
 class SyncModule {
 
@@ -91,6 +94,7 @@ class SyncModule {
       callResultSync: CallResultSync,
       questionnaireSync: QuestionnaireSync,
       questionnaireResponseSync: QuestionnaireResponseSync,
+      patientAttributeSync: PatientAttributeSync
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 
@@ -98,7 +102,7 @@ class SyncModule {
         questionnaireSync, questionnaireResponseSync, protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
-        teleconsultRecordSync, drugSync
+        teleconsultRecordSync, drugSync, patientAttributeSync
     ) + optionalSyncs
   }
 

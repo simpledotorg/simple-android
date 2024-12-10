@@ -18,6 +18,7 @@ import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemPagingSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemPagingSourceTest
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
+import org.simple.clinic.cvdrisk.CVDRiskRepositoryAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.search.DrugRepositoryAndroidTest
 import org.simple.clinic.drugs.search.sync.DrugSyncIntegrationTest
@@ -166,4 +167,5 @@ interface TestAppComponent {
   fun inject(target: DatabaseEncryptorTest)
   fun inject(target: PatientAttributeRepositoryAndroidTest)
   fun inject(target: PatientAttributeSyncIntegrationTest)
+  fun inject(target: CVDRiskRepositoryAndroidTest)
 }

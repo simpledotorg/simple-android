@@ -10,6 +10,7 @@ import org.simple.clinic.bloodsugar.sync.BloodSugarSync
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.di.BloodPressureModule
 import org.simple.clinic.bp.sync.BloodPressureSync
+import org.simple.clinic.cvdrisk.CVDRiskModule
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugModule
@@ -72,6 +73,7 @@ import javax.inject.Named
   QuestionnaireModule::class,
   QuestionnaireResponseModule::class,
   PatientAttributeModule::class,
+  CVDRiskModule::class
 ])
 class SyncModule {
 

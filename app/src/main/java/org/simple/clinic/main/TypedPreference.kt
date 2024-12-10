@@ -24,5 +24,6 @@ annotation class TypedPreference(val value: Type) {
     LastQuestionnaireResponsePullToken,
     DataProtectionConsent,
     LastPatientAttributePullToken,
+    LastCVDRiskPullToken,
   }
 }

@@ -27,6 +27,7 @@
 - Bump AGP to v8.7.3
 - Add `isSmoker` and `cholesterol_value` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
+- Add `CVDRisk` sync resource
 
 ### Fixes
 

@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
@@ -24,6 +23,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Answer
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -31,6 +31,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
@@ -55,6 +56,7 @@ class PatientSummaryEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val cvdRiskRepository = mock<CVDRiskRepository>()
+  private val patientAttributeRepository = mock<PatientAttributeRepository>()
   private val dataSync = mock<DataSync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
@@ -73,6 +75,8 @@ class PatientSummaryEffectHandlerTest {
       htnPrescriptions = listOf("amlodipine"),
       diabetesPrescriptions = listOf("metformin")
   )
+  private val cvdRiskCalculationSheet = TestData.cvdRiskCalculationSheet()
+
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
       userClock = userClock,
@@ -94,7 +98,9 @@ class PatientSummaryEffectHandlerTest {
       cdssPilotFacilities = { emptyList() },
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
       cvdRiskRepository = cvdRiskRepository,
-      viewEffectsConsumer = viewEffectHandler::handle
+      viewEffectsConsumer = viewEffectHandler::handle,
+      cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+      patientAttributeRepository = patientAttributeRepository,
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -138,7 +144,9 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        cvdRiskRepository = cvdRiskRepository
+        cvdRiskRepository = cvdRiskRepository,
+        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -190,8 +198,8 @@ class PatientSummaryEffectHandlerTest {
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
         country = bangladesh,
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
+        currentUser = { user },
+        currentFacility = { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
@@ -199,7 +207,9 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
-        cvdRiskRepository = cvdRiskRepository
+        cvdRiskRepository = cvdRiskRepository,
+        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
@@ -629,7 +639,9 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { cdssPilotFacilities },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         cvdRiskRepository = cvdRiskRepository,
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
 
@@ -815,7 +827,9 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        cvdRiskRepository = cvdRiskRepository
+        cvdRiskRepository = cvdRiskRepository,
+        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val assignedFacilityId = UUID.fromString("079784fd-de89-4499-9371-f8ae64f26f70")
@@ -877,6 +891,44 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadCVDRisk(patientUuid))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk))
+    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk.riskScore))
+  }
+
+  @Test
+  fun `when calculate cvd risk effect is received, then calculate cvd risk`() {
+    //given
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        gender = Gender.Male,
+        status = PatientStatus.Active,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 40,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null,
+        )
+    )
+    val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
+    val bloodPressure = TestData.bloodPressureMeasurement(
+        UUID.fromString("3e8c246f-91b9-4f8c-81fe-91b67ac0a2d5"),
+        systolic = 130,
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure)
+
+
+    whenever(bloodPressureRepository.newestMeasurementsForPatient(patientUuid = patientUuid, limit = 1)) doReturn Observable.just(bloodPressures)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )) doReturn medicalHistory
+    whenever(patientAttributeRepository.getPatientAttributeImmediate(
+        patientUuid = patientUuid,
+    )) doReturn null
+
+    //when
+    testCase.dispatch(CalculateCVDRisk(patient = patient))
+
+    //then
+    testCase.assertOutgoingEvents(CVDRiskCalculated("6 - 8"))
   }
 }

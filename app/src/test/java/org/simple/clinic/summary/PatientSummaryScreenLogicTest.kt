@@ -29,6 +29,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
@@ -59,6 +60,7 @@ class PatientSummaryScreenLogicTest {
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val cvdRiskRepository = mock<CVDRiskRepository>()
+  private val patientAttributeRepository = mock<PatientAttributeRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val assignedFacilityUuid = UUID.fromString("1cc402ff-e1a6-4f4c-8494-b7d6ed0228fa")
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
@@ -229,6 +231,8 @@ class PatientSummaryScreenLogicTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
         cvdRiskRepository = cvdRiskRepository,
+        cvdRiskCalculationSheet = { TestData.cvdRiskCalculationSheet() },
+        patientAttributeRepository = patientAttributeRepository
     )
 
     testFixture = MobiusTestFixture(

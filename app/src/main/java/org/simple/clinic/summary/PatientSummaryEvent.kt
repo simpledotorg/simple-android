@@ -151,3 +151,7 @@ data class StatinPrescriptionCheckInfoLoaded(
 data class CVDRiskLoaded(
    val risk: String?
 ) : PatientSummaryEvent()
+
+data class CVDRiskCalculated(
+    val risk: String?
+): PatientSummaryEvent()

@@ -12,6 +12,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
@@ -53,6 +54,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val cvdRiskRepository: CVDRiskRepository,
     private val country: Country,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
@@ -94,6 +96,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
+        .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
         .build()
   }
 
@@ -139,6 +142,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           }
     }
   }
+
+  private fun loadCVDRisk(): ObservableTransformer<LoadCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
+            CVDRiskLoaded(cvdRisk?.riskScore)
+          }
+    }
+  }
+
+
 
   private fun markHypertension(patientUuid: UUID) {
     val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(

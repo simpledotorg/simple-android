@@ -58,6 +58,8 @@ data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffe
 
 data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
 
+data class LoadCVDRisk(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

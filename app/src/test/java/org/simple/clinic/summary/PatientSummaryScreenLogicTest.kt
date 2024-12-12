@@ -17,6 +17,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -57,6 +58,7 @@ class PatientSummaryScreenLogicTest {
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val cvdRiskRepository = mock<CVDRiskRepository>()
   private val patientUuid = UUID.fromString("d2fe1916-b76a-4bb6-b7e5-e107f00c3163")
   private val assignedFacilityUuid = UUID.fromString("1cc402ff-e1a6-4f4c-8494-b7d6ed0228fa")
   private val user = TestData.loggedInUser(UUID.fromString("3002c0e2-01ce-4053-833c-bc6f3aa3e3d4"))
@@ -225,7 +227,8 @@ class PatientSummaryScreenLogicTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        cvdRiskRepository = cvdRiskRepository,
     )
 
     testFixture = MobiusTestFixture(

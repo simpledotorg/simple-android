@@ -95,6 +95,7 @@ class PatientSummaryUpdate(
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
+      is CVDRiskLoaded -> cvdRiskLoaded(event, model)
     }
   }
 
@@ -118,6 +119,21 @@ class PatientSummaryUpdate(
 
     val updatedModel = model.updateStatinInfo(canPrescribeStatin)
     return next(updatedModel)
+  }
+
+  private fun cvdRiskLoaded(
+      event: CVDRiskLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val cvdRisk = event.risk
+    return if (cvdRisk != null) {
+      //load statin
+      noChange()
+
+    } else {
+      noChange()
+      //calculate cvd risk
+    }
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {

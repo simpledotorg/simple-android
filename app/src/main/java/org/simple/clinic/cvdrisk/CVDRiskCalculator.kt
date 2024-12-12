@@ -65,7 +65,11 @@ object CVDRiskCalculator {
     return when {
       risks.isEmpty() -> null
       risks.size == 1 -> risks.first().toString()
-      else -> "${risks.minOrNull()} - ${risks.maxOrNull()}"
+      else -> formatRange(risks.minOrNull(), risks.maxOrNull())
     }
+  }
+
+  fun formatRange(min: Int?, max: Int?): String {
+    return "$min - $max"
   }
 }

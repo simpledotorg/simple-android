@@ -1,6 +1,6 @@
 package org.simple.clinic.cvdrisk
 
-import org.simple.clinic.patient.Answer
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
 
 object CVDRiskCalculator {

@@ -12,6 +12,8 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
+import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -25,6 +27,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
@@ -55,6 +58,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val cvdRiskRepository: CVDRiskRepository,
+    private val patientAttributeRepository: PatientAttributeRepository,
     private val country: Country,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
@@ -64,6 +68,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
+    private val cvdRiskCalculationSheet: Provider<CVDRiskCalculationSheet>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -97,6 +102,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
         .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
+        .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
         .build()
   }
 
@@ -154,7 +160,48 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
+  private fun calculateCVDRisk(): ObservableTransformer<CalculateCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .flatMap { effect ->
+            val patient = effect.patient
+            bloodPressureRepository
+                .newestMeasurementsForPatient(patient.uuid, 1)
+                .map {
+                  Pair(patient, it.first())
+                }
+          }
+          .map { (patient, bloodPressure) ->
+            val sheet = cvdRiskCalculationSheet.get()
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patient.uuid
+            )
 
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                patientUuid = patient.uuid
+            )
+
+            val risk = CVDRiskCalculator.calculateCvdRisk(
+                cvdRiskData = sheet,
+                gender = patient.gender,
+                age = patient.ageDetails.estimateAge(userClock),
+                sbp = bloodPressure.reading.systolic,
+                isSmoker = medicalHistory.isSmoker,
+                bmi = patientAttribute?.reading?.calculateBMI(),
+            )
+            if (risk != null) {
+              cvdRiskRepository.save(
+                  riskScore = risk,
+                  patientUuid = patient.uuid,
+                  uuid = uuidGenerator.v4()
+              )
+            }
+            CVDRiskCalculated(risk)
+          }
+    }
+  }
 
   private fun markHypertension(patientUuid: UUID) {
     val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(

@@ -13,6 +13,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -53,6 +54,7 @@ class PatientSummaryEffectHandlerTest {
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
+  private val cvdRiskRepository = mock<CVDRiskRepository>()
   private val dataSync = mock<DataSync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
@@ -83,14 +85,15 @@ class PatientSummaryEffectHandlerTest {
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
       country = TestData.country(),
-      currentUser = Lazy { user },
-      currentFacility = Lazy { facility },
+      currentUser = { user },
+      currentFacility = { facility },
       uuidGenerator = uuidGenerator,
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
       prescriptionRepository = prescriptionRepository,
       cdssPilotFacilities = { emptyList() },
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+      cvdRiskRepository = cvdRiskRepository,
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -126,8 +129,8 @@ class PatientSummaryEffectHandlerTest {
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
         country = bangladesh,
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
+        currentUser = { user },
+        currentFacility = { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
@@ -135,6 +138,7 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+        cvdRiskRepository = cvdRiskRepository
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -194,7 +198,8 @@ class PatientSummaryEffectHandlerTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        cvdRiskRepository = cvdRiskRepository
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
@@ -623,6 +628,7 @@ class PatientSummaryEffectHandlerTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { cdssPilotFacilities },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+        cvdRiskRepository = cvdRiskRepository,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -800,8 +806,8 @@ class PatientSummaryEffectHandlerTest {
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
         country = bangladesh,
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
+        currentUser = { user },
+        currentFacility = { facility },
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
@@ -809,6 +815,7 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+        cvdRiskRepository = cvdRiskRepository
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val assignedFacilityId = UUID.fromString("079784fd-de89-4499-9371-f8ae64f26f70")
@@ -858,5 +865,18 @@ class PatientSummaryEffectHandlerTest {
     ))
 
     verifyNoInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load cvd risk effect is received, then load cvd risk`() {
+    //given
+    val cvdRisk = TestData.cvdRisk(riskScore = "27")
+    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn cvdRisk
+
+    //when
+    testCase.dispatch(LoadCVDRisk(patientUuid))
+
+    //then
+    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk))
   }
 }

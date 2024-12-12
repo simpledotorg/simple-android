@@ -11,7 +11,7 @@ object CVDRiskCalculator {
       age: Int,
       sbp: Int,
       isSmoker: Answer = Answer.Unanswered,
-      bmi: Double? = null
+      bmi: Int? = null
   ): String? {
     if (cvdRiskData == null) return null
 
@@ -49,10 +49,10 @@ object CVDRiskCalculator {
     val bmiRangeList = if (bmi != null) {
       listOf(
           when (bmi) {
-            in Double.MIN_VALUE..19.9 -> "20-"
-            in 20.0..24.9 -> "20 - 24"
-            in 25.0..29.9 -> "25 - 29"
-            in 30.0..34.9 -> "30 - 35"
+            in Int.MIN_VALUE..19 -> "20-"
+            in 20..24 -> "20 - 24"
+            in 25..29 -> "25 - 29"
+            in 30..34 -> "30 - 35"
             else -> "35+"
           }
       )
@@ -65,7 +65,11 @@ object CVDRiskCalculator {
     return when {
       risks.isEmpty() -> null
       risks.size == 1 -> risks.first().toString()
-      else -> "${risks.minOrNull()} - ${risks.maxOrNull()}"
+      else -> formatRange(risks.minOrNull(), risks.maxOrNull())
     }
+  }
+
+  fun formatRange(min: Int?, max: Int?): String {
+    return "$min - $max"
   }
 }

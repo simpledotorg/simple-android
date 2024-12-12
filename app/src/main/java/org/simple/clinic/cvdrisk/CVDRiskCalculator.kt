@@ -72,4 +72,14 @@ object CVDRiskCalculator {
   fun formatRange(min: Int?, max: Int?): String {
     return "$min - $max"
   }
+
+  fun getMinRange(risk: String): Int {
+    val range = risk.split("-").map { it.trim().toInt() }
+    return range.min()
+  }
+
+  fun getMaxRange(risk: String): Int {
+    val range = risk.split("-").map { it.trim().toInt() }
+    return range.max()
+  }
 }

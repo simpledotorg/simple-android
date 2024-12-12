@@ -62,6 +62,8 @@ data class LoadCVDRisk(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
+data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

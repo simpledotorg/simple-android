@@ -96,7 +96,7 @@ class PatientSummaryUpdate(
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
       is CVDRiskLoaded -> cvdRiskLoaded(event, model)
-      is CVDRiskCalculated -> cvdRiskCalculated(event, model)
+      is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
     }
   }
@@ -129,22 +129,10 @@ class PatientSummaryUpdate(
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val cvdRisk = event.risk
     return if (cvdRisk != null) {
-      //load statin
-      noChange()
-
+      dispatch(LoadStatinInfo(model.patientUuid))
     } else {
-      noChange()
-      //calculate cvd risk
+     dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
     }
-  }
-
-  private fun cvdRiskCalculated(
-      event: CVDRiskCalculated,
-      model: PatientSummaryModel
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val cvdRisk = event.risk
-    //load statin nudge info
-    return noChange()
   }
 
   private fun statinInfoLoaded(
@@ -152,7 +140,7 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val statinInfo = event.statinInfo
-    //load statin nudge info
+    //update model with statin info
     return noChange()
   }
 

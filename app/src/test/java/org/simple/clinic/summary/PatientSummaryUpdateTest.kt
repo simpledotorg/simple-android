@@ -2134,6 +2134,44 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when cvd risk is loaded and risk score is not null, then load statin info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskLoaded(
+            risk = "27"
+        ))
+        .then(assertThatNext(
+            hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is loaded and risk score is null, then calculate cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+    updateSpec
+        .given(model)
+        .whenEvent(CVDRiskLoaded(
+            risk = null
+        ))
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is calculated, then load statin info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskCalculated(
+            risk = null
+        ))
+        .then(assertThatNext(
+            hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

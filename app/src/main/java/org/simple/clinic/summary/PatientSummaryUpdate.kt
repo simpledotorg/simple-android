@@ -97,6 +97,7 @@ class PatientSummaryUpdate(
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
       is CVDRiskLoaded -> cvdRiskLoaded(event, model)
       is CVDRiskCalculated -> cvdRiskCalculated(event, model)
+      is StatinInfoLoaded -> statinInfoLoaded(event, model)
     }
   }
 
@@ -142,6 +143,15 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val cvdRisk = event.risk
+    //load statin nudge info
+    return noChange()
+  }
+
+  private fun statinInfoLoaded(
+      event: StatinInfoLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val statinInfo = event.statinInfo
     //load statin nudge info
     return noChange()
   }

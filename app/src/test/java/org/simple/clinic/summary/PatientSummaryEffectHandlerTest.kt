@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskRepository
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -31,6 +32,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -930,5 +932,33 @@ class PatientSummaryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(CVDRiskCalculated("6 - 8"))
+  }
+
+  @Test
+  fun `when load statin info effect is received, then load statin info`() {
+    //given
+    val bmiReading = BMIReading(height = 177f, weight = 53f)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        defaultHistoryUuid = uuidGenerator.v4(),
+        patientUuid = patientUuid
+    )) doReturn
+        TestData.medicalHistory(isSmoking = Yes)
+
+    whenever(patientAttributeRepository.getPatientAttributeImmediate(patientUuid)) doReturn
+        TestData.patientAttribute(reading = bmiReading)
+
+    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
+        TestData.cvdRisk(riskScore = "27")
+
+    //when
+    testCase.dispatch(LoadStatinInfo(patientUuid))
+
+    //then
+    testCase.assertOutgoingEvents(StatinInfoLoaded(StatinInfo(
+        canPrescribeStatin = true,
+        cvdRisk = "27",
+        isSmoker = Yes,
+        bmiReading = bmiReading
+    )))
   }
 }

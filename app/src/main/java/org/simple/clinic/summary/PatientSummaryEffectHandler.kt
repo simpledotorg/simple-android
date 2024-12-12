@@ -16,6 +16,8 @@ import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRepository
+import org.simple.clinic.cvdrisk.CVDRiskUtil
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
@@ -104,6 +106,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
         .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
+        .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
         .build()
   }
 
@@ -204,6 +207,29 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
               )
             }
             CVDRiskCalculated(risk)
+          }
+    }
+  }
+
+  private fun loadStatinInfo(): ObservableTransformer<LoadStatinInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val patientUuid = effect.patientUuid
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patientUuid
+            )
+            val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
+            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
+            val canPrescribeStatin = cvdRisk?.riskScore?.let { CVDRiskUtil.getMaxRisk(it) > 10 } ?: false
+            StatinInfoLoaded(StatinInfo(
+                canPrescribeStatin = canPrescribeStatin,
+                cvdRisk = cvdRisk?.riskScore,
+                isSmoker = medicalHistory.isSmoking,
+                bmiReading = bmiReading?.bmiReading
+            ))
           }
     }
   }

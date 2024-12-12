@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
@@ -154,4 +155,8 @@ data class CVDRiskLoaded(
 
 data class CVDRiskCalculated(
     val risk: String?
+): PatientSummaryEvent()
+
+data class StatinInfoLoaded(
+    val statinInfo: StatinInfo?
 ): PatientSummaryEvent()

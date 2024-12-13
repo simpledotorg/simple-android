@@ -218,7 +218,7 @@ class PatientSummaryScreen :
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
-  private var shouldShowStatinNudge by mutableStateOf(false)
+  private var statinInfo by mutableStateOf<StatinInfo?>(null)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -320,7 +320,7 @@ class PatientSummaryScreen :
       setContent {
         SimpleTheme {
           StatinNudge(
-              isVisible = shouldShowStatinNudge,
+              statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
           )
         }
@@ -764,12 +764,8 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showStatinAlert(statinInfo: StatinInfo) {
-    shouldShowStatinNudge = true
-  }
-
-  override fun hideStatinAlert() {
-    shouldShowStatinNudge = false
+  override fun updateStatinAlert(statinInfo: StatinInfo) {
+    this.statinInfo = statinInfo
   }
 
   private fun showWithAnimation(view: View) {

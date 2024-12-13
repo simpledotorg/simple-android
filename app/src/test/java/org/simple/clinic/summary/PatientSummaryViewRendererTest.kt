@@ -124,7 +124,6 @@ class PatientSummaryViewRendererTest {
         facility = facility
     )
 
-
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
     // when
@@ -765,7 +764,7 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when statin info is loaded and can prescribe statin then show the statin alert`() {
+  fun `when statin info is loaded then update the statin alert`() {
     //given
     val statinInfo = StatinInfo(canPrescribeStatin = true)
     val model = defaultModel
@@ -780,27 +779,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
     verify(ui, times(2)).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).showStatinAlert(statinInfo)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when statin info is loaded and can not prescribe statin then hide the statin alert`() {
-    //given
-    val statinInfo = StatinInfo(canPrescribeStatin = false)
-    val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .updateStatinInfo(statinInfo)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).hideDiabetesView()
-    verify(ui).hideTeleconsultButton()
-    verify(ui).hideNextAppointmentCard()
-    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideStatinAlert()
+    verify(ui).updateStatinAlert(statinInfo)
     verifyNoMoreInteractions(ui)
   }
 
@@ -843,7 +822,6 @@ class PatientSummaryViewRendererTest {
         .scheduledAppointmentLoaded(appointment)
         .updateStatinInfo(StatinInfo(canPrescribeStatin = true))
 
-
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
         modelUpdateCallback = { /* no-op */ },
@@ -861,7 +839,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
-    verify(ui).showStatinAlert(StatinInfo(canPrescribeStatin = true))
+    verify(ui).updateStatinAlert(StatinInfo(canPrescribeStatin = true))
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)

@@ -152,12 +152,10 @@ class PatientSummaryViewRenderer(
 
   private fun renderStatinAlert(model: PatientSummaryModel) {
     if (model.hasStatinInfoLoaded.not()) return
+    ui.updateStatinAlert(model.statinInfo!!)
 
-    if (model.statinInfo?.canPrescribeStatin == true) {
-      ui.showStatinAlert(model.statinInfo)
+    if (model.statinInfo.canPrescribeStatin) {
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
-    } else {
-      ui.hideStatinAlert()
     }
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.PatientStatus
@@ -27,7 +28,7 @@ data class PatientSummaryModel(
     val hasPrescribedDrugsChangedToday: Boolean?,
     val scheduledAppointment: ParcelableOptional<Appointment>?,
     val hasShownDiagnosisWarningDialog: Boolean,
-    val canPrescribeStatin: Boolean?,
+    val statinInfo: StatinInfo?,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -46,7 +47,7 @@ data class PatientSummaryModel(
           hasPrescribedDrugsChangedToday = null,
           scheduledAppointment = null,
           hasShownDiagnosisWarningDialog = false,
-          canPrescribeStatin = null,
+          statinInfo = null,
       )
     }
   }
@@ -82,7 +83,7 @@ data class PatientSummaryModel(
     get() = scheduledAppointment != null && scheduledAppointment.isPresent()
 
   val hasStatinInfoLoaded: Boolean
-    get() = canPrescribeStatin != null
+    get() = statinInfo != null
 
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
@@ -128,7 +129,7 @@ data class PatientSummaryModel(
     return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 
-  fun updateStatinInfo(canPrescribeStatin: Boolean): PatientSummaryModel {
-    return copy(canPrescribeStatin = canPrescribeStatin)
+  fun updateStatinInfo(statinInfo: StatinInfo?): PatientSummaryModel {
+    return copy(statinInfo = statinInfo)
   }
 }

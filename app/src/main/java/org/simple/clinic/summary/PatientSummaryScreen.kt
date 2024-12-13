@@ -41,6 +41,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreen
@@ -763,7 +764,7 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showStatinAlert() {
+  override fun showStatinAlert(statinInfo: StatinInfo) {
     shouldShowStatinNudge = true
   }
 

@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
@@ -2108,7 +2109,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when statin prescription check info is loaded and can prescribe statin, then update the state`() {
+  fun `when statin prescription check info is loaded and can prescribe statin, then load cvd risk`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
@@ -2129,7 +2130,34 @@ class PatientSummaryUpdateTest {
             ),
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(true)),
+            hasEffects(LoadCVDRisk(defaultModel.patientUuid)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and cannot prescribe statin, then update the state`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 50,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
             hasNoEffects()
         ))
   }
@@ -2169,6 +2197,22 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when statin info is loaded, then update the state`() {
+    val statinInfo = StatinInfo(
+        canPrescribeStatin = true
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinInfoLoaded(
+            statinInfo = statinInfo
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(statinInfo)),
+            hasNoEffects()
         ))
   }
 

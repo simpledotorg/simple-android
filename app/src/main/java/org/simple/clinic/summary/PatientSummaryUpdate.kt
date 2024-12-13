@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -119,8 +120,12 @@ class PatientSummaryUpdate(
         hasStatinsPrescribedAlready.not() &&
         isPatientEligibleForStatin
 
-    val updatedModel = model.updateStatinInfo(canPrescribeStatin)
-    return next(updatedModel)
+    if (canPrescribeStatin) {
+     return dispatch(LoadCVDRisk(model.patientUuid))
+    } else {
+      val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = false))
+      return next(updatedModel)
+    }
   }
 
   private fun cvdRiskLoaded(
@@ -139,9 +144,7 @@ class PatientSummaryUpdate(
       event: StatinInfoLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val statinInfo = event.statinInfo
-    //update model with statin info
-    return noChange()
+    return next(model.updateStatinInfo(event.statinInfo))
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {

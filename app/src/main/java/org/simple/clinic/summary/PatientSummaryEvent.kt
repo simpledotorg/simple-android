@@ -161,6 +161,8 @@ data class StatinInfoLoaded(
     val statinInfo: StatinInfo
 ) : PatientSummaryEvent()
 
+data object AddSmokingClicked : PatientSummaryEvent()
+
 data class SmokingStatusAnswered(
     val isSmoker: Answer
 ) : PatientSummaryEvent()
@@ -168,3 +170,5 @@ data class SmokingStatusAnswered(
 data object SmokingStatusUpdated : PatientSummaryEvent()
 
 data object BMIReadingAdded : PatientSummaryEvent()
+
+data object AddBMIClicked : PatientSummaryEvent()

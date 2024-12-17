@@ -99,6 +99,7 @@ class PatientSummaryUpdate(
       is CVDRiskLoaded -> cvdRiskLoaded(event, model)
       is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
+      is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
     }
   }
 

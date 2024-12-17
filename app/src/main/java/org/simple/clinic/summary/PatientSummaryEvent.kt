@@ -5,6 +5,7 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
@@ -160,3 +161,6 @@ data class CVDRiskCalculated(
 data class StatinInfoLoaded(
     val statinInfo: StatinInfo
 ): PatientSummaryEvent()
+data class SmokingStatusAnswered(
+    val isSmoker: Answer
+) : PatientSummaryEvent()

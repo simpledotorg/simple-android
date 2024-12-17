@@ -2270,6 +2270,18 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when smoking is answered, then update the smoking status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SmokingStatusAnswered(
+            isSmoker = No
+        ))
+        .then(assertThatNext(
+            hasEffects(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No)),
+            hasNoModel()
+        ))
+  }
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

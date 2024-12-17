@@ -2282,6 +2282,21 @@ class PatientSummaryUpdateTest {
             hasNoModel()
         ))
   }
+
+  @Test
+  fun `when smoking status is updated, then calculate the cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SmokingStatusUpdated)
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

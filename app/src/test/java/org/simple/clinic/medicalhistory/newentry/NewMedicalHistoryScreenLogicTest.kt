@@ -1,12 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.inOrder
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
@@ -14,6 +7,13 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -25,6 +25,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -121,6 +122,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnDiabetesTreatment, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -145,7 +147,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadKidneyDisease = Yes,
               diagnosedWithHypertension = No,
               hasDiabetes = Yes,
-              isOnDiabetesTreatment = Yes
+              isOnDiabetesTreatment = Yes,
+              isSmoker = Yes,
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -209,7 +212,9 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadKidneyDisease = Unanswered,
               diagnosedWithHypertension = Yes,
               hasDiabetes = Unanswered,
-              isOnHypertensionTreatment = Yes))
+              isOnHypertensionTreatment = Yes,
+              isSmoker = Unanswered,
+          ))
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
@@ -248,6 +253,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAStroke, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, Yes))
 
     // Updated answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Yes))
@@ -256,6 +262,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnHypertensionTreatment(Country.INDIA), Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, No))
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -281,7 +288,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadKidneyDisease = No,
               diagnosedWithHypertension = Yes,
               hasDiabetes = No,
-              isOnHypertensionTreatment = Yes
+              isOnHypertensionTreatment = Yes,
+              isSmoker = No,
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -313,7 +321,7 @@ class NewMedicalHistoryScreenLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel.default(country),
+        defaultModel = NewMedicalHistoryModel.default(country, true),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = effectHandler,

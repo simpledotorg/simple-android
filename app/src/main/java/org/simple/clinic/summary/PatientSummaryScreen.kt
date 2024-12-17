@@ -728,6 +728,10 @@ class PatientSummaryScreen :
     // show smoking dialog
   }
 
+  override fun openBMIEntrySheet(patientUuid: UUID) {
+    //TODO("Not yet implemented")
+  }
+
   override fun openSelectFacilitySheet() {
     router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }

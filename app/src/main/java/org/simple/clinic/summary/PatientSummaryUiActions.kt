@@ -41,4 +41,5 @@ interface PatientSummaryUiActions {
   fun showDiabetesDiagnosisWarning()
   fun showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning: Boolean)
   fun showSmokingStatusDialog()
+  fun openBMIEntrySheet(patientUuid: UUID)
 }

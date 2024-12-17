@@ -724,6 +724,10 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun showSmokingStatusDialog() {
+    // show smoking dialog
+  }
+
   override fun openSelectFacilitySheet() {
     router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }

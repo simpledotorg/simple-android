@@ -38,6 +38,7 @@ class PatientSummaryViewEffectHandler(
       )
       ShowDiabetesDiagnosisWarning -> uiActions.showDiabetesDiagnosisWarning()
       is ShowHypertensionDiagnosisWarning -> uiActions.showHypertensionDiagnosisWarning(viewEffect.continueToDiabetesDiagnosisWarning)
+      is ShowSmokingStatusDialog -> uiActions.showSmokingStatusDialog()
     }.exhaustive()
   }
 }

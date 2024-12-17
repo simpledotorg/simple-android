@@ -2217,6 +2217,17 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when add smoking button is clicked, then show the smoking status dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddSmokingClicked)
+        .then(assertThatNext(
+            hasEffects(ShowSmokingStatusDialog),
+            hasNoModel()
+        ))
+  }
+
+  @Test
   fun `when smoking is answered, then update the smoking status`() {
     updateSpec
         .given(defaultModel)
@@ -2239,6 +2250,20 @@ class PatientSummaryUpdateTest {
         .whenEvent(SmokingStatusUpdated)
         .then(assertThatNext(
             hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when add bmi button is clicked, then open the bmi entry sheet`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AddBMIClicked)
+        .then(assertThatNext(
+            hasEffects(OpenBMIEntrySheet(model.patientUuid)),
             hasNoModel()
         ))
   }

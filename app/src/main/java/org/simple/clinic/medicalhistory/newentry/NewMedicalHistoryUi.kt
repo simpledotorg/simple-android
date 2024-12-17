@@ -17,4 +17,6 @@ interface NewMedicalHistoryUi {
   fun hideHypertensionTreatmentQuestion()
   fun showDiabetesTreatmentQuestion(answer: Answer)
   fun hideDiabetesTreatmentQuestion()
+  fun showCurrentSmokerQuestion()
+  fun hideCurrentSmokerQuestion()
 }

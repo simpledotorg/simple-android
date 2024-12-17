@@ -989,4 +989,16 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(SmokingStatusUpdated)
   }
+
+  @Test
+  fun `when open BMI entry sheet view effect is received, then open the BMI entry sheet`() {
+    // when
+    testCase.dispatch(OpenBMIEntrySheet(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openBMIEntrySheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

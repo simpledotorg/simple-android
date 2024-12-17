@@ -2297,6 +2297,20 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when BMI reading is added, then calculate the cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingAdded)
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

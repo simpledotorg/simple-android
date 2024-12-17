@@ -962,4 +962,16 @@ class PatientSummaryEffectHandlerTest {
         bmiReading = bmiReading
     )))
   }
+
+  @Test
+  fun `when show smoking status dialog view effect is received, then show the smoking status dialog`() {
+    // when
+    testCase.dispatch(ShowSmokingStatusDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showSmokingStatusDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

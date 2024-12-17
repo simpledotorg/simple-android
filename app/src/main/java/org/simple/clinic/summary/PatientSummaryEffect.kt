@@ -64,6 +64,8 @@ data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
 data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
+data class UpdateSmokingStatus(val patientId: UUID, val isSmoker: org.simple.clinic.medicalhistory.Answer) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

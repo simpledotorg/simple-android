@@ -974,4 +974,19 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showSmokingStatusDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when update smoking status effect is received, then update the smoking status`() {
+    //given
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+      defaultHistoryUuid = uuidGenerator.v4(),
+      patientUuid = patientUuid
+    )) doReturn
+        TestData.medicalHistory(isSmoker = Yes)
+    //when
+    testCase.dispatch(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No))
+
+    // then
+    testCase.assertOutgoingEvents(SmokingStatusUpdated)
+  }
 }

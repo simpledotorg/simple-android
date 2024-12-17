@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
@@ -21,6 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
@@ -54,6 +56,11 @@ data class MedicalHistory(
     @ColumnInfo(name = "hasDiabetes")
     val diagnosedWithDiabetes: Answer,
 
+    val isSmoker: Answer,
+
+    @Embedded(prefix = "cholesterol_")
+    val cholesterolReading: CholesterolReading?,
+
     val syncStatus: SyncStatus,
 
     val createdAt: Instant,
@@ -74,6 +81,7 @@ data class MedicalHistory(
       DiagnosedWithDiabetes -> copy(diagnosedWithDiabetes = answer)
       is IsOnHypertensionTreatment -> copy(isOnHypertensionTreatment = answer)
       IsOnDiabetesTreatment -> copy(isOnDiabetesTreatment = answer)
+      IsSmoker -> copy(isSmoker = answer)
     }
   }
 

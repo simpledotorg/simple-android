@@ -99,6 +99,33 @@
 
       </com.google.android.material.card.MaterialCardView>
 
+      <com.google.android.material.card.MaterialCardView
+        android:id="@+id/currentSmokerQuestionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:layout_marginEnd="@dimen/spacing_16"
+          android:orientation="vertical"
+          android:paddingVertical="@dimen/spacing_8">
+
+          <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+            android:id="@+id/currentSmokerQuestionView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+      </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
 
   </ScrollView>

@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 
 @Parcelize
 data class OngoingMedicalHistoryEntry(
@@ -19,7 +20,8 @@ data class OngoingMedicalHistoryEntry(
     val diagnosedWithHypertension: Answer = Unanswered,
     val isOnHypertensionTreatment: Answer = Unanswered,
     val isOnDiabetesTreatment: Answer = Unanswered,
-    val hasDiabetes: Answer = Unanswered
+    val hasDiabetes: Answer = Unanswered,
+    val isSmoker: Answer = Unanswered,
 ) : Parcelable {
 
   fun answerChanged(question: MedicalHistoryQuestion, answer: Answer): OngoingMedicalHistoryEntry {
@@ -31,6 +33,7 @@ data class OngoingMedicalHistoryEntry(
       DiagnosedWithDiabetes -> copy(hasDiabetes = answer)
       is IsOnHypertensionTreatment -> copy(isOnHypertensionTreatment = answer)
       IsOnDiabetesTreatment -> copy(isOnDiabetesTreatment = answer)
+      IsSmoker -> copy(isSmoker = answer)
     }
   }
 }

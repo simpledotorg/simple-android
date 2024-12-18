@@ -1097,4 +1097,11 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="bmi_entry_height_in_cm">Height (cm)</string>
   <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
   <string name="bmi_x">BMI: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
+  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
+  <string name="smoking_status_dialog_option_no">Not a smoker</string>
+  <string name="smoking_status_dialog_title_positive_button">Done</string>
+  <string name="smoking_status_dialog_title_negative_button">Cancel</string>
 </resources>

@@ -52,6 +52,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpec
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -725,7 +726,25 @@ class PatientSummaryScreen :
   }
 
   override fun showSmokingStatusDialog() {
-    // show smoking dialog
+    val options = arrayOf(
+        getString(R.string.smoking_status_dialog_option_yes),
+        getString(R.string.smoking_status_dialog_option_no))
+    var selectedOption = -1
+
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.smoking_status_dialog_title)
+        .setSingleChoiceItems(options, selectedOption) { _, indexSelected ->
+          selectedOption = indexSelected
+        }
+        .setPositiveButton(R.string.smoking_status_dialog_title_positive_button) { _, _ ->
+          when (selectedOption) {
+            0 -> hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
+            1 -> hotEvents.onNext(SmokingStatusAnswered(Answer.No))
+            else -> {}
+          }
+        }
+        .setNegativeButton(R.string.smoking_status_dialog_title_negative_button, null)
+        .show()
   }
 
   override fun openBMIEntrySheet(patientUuid: UUID) {

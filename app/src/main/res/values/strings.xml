@@ -1092,4 +1092,10 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">Database maintenance in progress. This will only take a minute.</string>
 
+  <!-- Add Smoking Status Dialog -->
+  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
+  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
+  <string name="smoking_status_dialog_option_no">Not a smoker</string>
+  <string name="smoking_status_dialog_title_positive_button">Done</string>
+  <string name="smoking_status_dialog_title_negative_button">Cancel</string>
 </resources>

@@ -8,3 +8,5 @@ data object SaveClicked : BMIEntryEvent() {
   override val analyticsName = "BMI Entry:Save Clicked"
 }
 
+
+data object BMISaved : BMIEntryEvent()

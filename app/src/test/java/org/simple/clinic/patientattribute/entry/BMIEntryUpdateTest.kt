@@ -28,4 +28,15 @@ class BMIEntryUpdateTest {
             hasEffects(CreateNewBMIEntry(defaultModel.patientUUID, BMIReading(height = defaultModel.height, weight = defaultModel.weight)))
         ))
   }
+
+  @Test
+  fun `when bmi is saved, then close the sheet`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(BMISaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet)
+        ))
+  }
 }

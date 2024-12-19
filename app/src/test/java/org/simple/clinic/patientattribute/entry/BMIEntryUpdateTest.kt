@@ -100,4 +100,15 @@ class BMIEntryUpdateTest {
             hasEffects(ChangeFocusToHeight)
         ))
   }
+
+  @Test
+  fun `when back button is pressed, then close the sheet`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(BackPressed)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet)
+        ))
+  }
 }

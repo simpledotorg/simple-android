@@ -12,8 +12,34 @@ class BMIEntryUpdate : Update<BMIEntryModel, BMIEntryEvent, BMIEntryEffect> {
       event: BMIEntryEvent
   ): Next<BMIEntryModel, BMIEntryEffect> {
     return when (event) {
+      is HeightChanged -> onHeightChanged(model, event)
+      is WeightChanged -> next(model.weightChanged(event.weight))
+      is WeightBackspaceClicked -> onWeightBackSpaceClicked(model)
       is SaveClicked -> dispatch(CreateNewBMIEntry(model.patientUUID, BMIReading(height = model.height, weight = model.weight)))
       is BMISaved -> dispatch(CloseSheet)
+    }
+  }
+
+  private fun onHeightChanged(
+      model: BMIEntryModel,
+      event: HeightChanged
+  ): Next<BMIEntryModel, BMIEntryEffect> {
+    val updatedHeightModel = model.heightChanged(event.height)
+    return if (event.height.length == 3) {
+      next(updatedHeightModel, ChangeFocusToWeight)
+    } else {
+      next(updatedHeightModel)
+    }
+  }
+
+  private fun onWeightBackSpaceClicked(
+      model: BMIEntryModel
+  ): Next<BMIEntryModel, BMIEntryEffect> {
+    return if (model.weight.isNotEmpty()) {
+      next(model.deleteWeightLastDigit())
+    } else {
+      val deleteWeightLastDigitModel = model.deleteWeightLastDigit()
+      next(deleteWeightLastDigitModel, ChangeFocusToHeight)
     }
   }
 }

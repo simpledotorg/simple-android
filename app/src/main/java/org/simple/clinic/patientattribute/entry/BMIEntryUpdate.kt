@@ -13,6 +13,7 @@ class BMIEntryUpdate : Update<BMIEntryModel, BMIEntryEvent, BMIEntryEffect> {
   ): Next<BMIEntryModel, BMIEntryEffect> {
     return when (event) {
       is SaveClicked -> dispatch(CreateNewBMIEntry(model.patientUUID, BMIReading(height = model.height, weight = model.weight)))
+      is BMISaved -> dispatch(CloseSheet)
     }
   }
 }

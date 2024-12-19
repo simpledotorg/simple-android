@@ -35,7 +35,9 @@ import org.simple.clinic.util.toAnnotatedString
 @Composable
 fun StatinNudge(
     statinInfo: StatinInfo?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    addSmokingClick: () -> Unit,
+    addBMIClick: () -> Unit,
 ) {
   if (statinInfo != null) {
     AnimatedVisibility(
@@ -146,6 +148,6 @@ fun RiskProgressBar() {
 @Composable
 fun StatinNudgePreview() {
   SimpleTheme {
-    StatinNudge(StatinInfo(canPrescribeStatin = true))
+    StatinNudge(StatinInfo(canPrescribeStatin = true), addSmokingClick = {}, addBMIClick = {})
   }
 }

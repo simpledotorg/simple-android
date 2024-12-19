@@ -3,6 +3,7 @@ package org.simple.clinic.patientattribute.entry
 import org.junit.After
 import org.junit.Test
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.verify
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -45,5 +46,15 @@ class BMIEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(BMISaved)
+  }
+
+  @Test
+  fun `when close sheet view effect is received, then close sheet`() {
+    //when
+    testCase.dispatch(CloseSheet)
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).closeSheet()
   }
 }

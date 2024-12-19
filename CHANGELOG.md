@@ -28,6 +28,7 @@
 - Add `isSmoker` and `cholesterol_value` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
 - Add `CVDRisk` sync resource
+- Add `BMIEntrySheet`
 
 ### Fixes
 
@@ -67,7 +68,7 @@
 - Migrate `SplashScreen` to Compose
 - Migrate `OnboardingScreen` to Compose
 - Migrate `StainNudge` to Compose
-- Run database maintenance as a background worker 
+- Run database maintenance as a background worker
 - Update `google-services.json` file for all environments.
 
 ### Features

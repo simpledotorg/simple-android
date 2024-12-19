@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:animateLayoutChanges="true"
+  android:orientation="vertical"
+  tools:background="?attr/colorSurface"
+  tools:context=".bp.entry.BloodPressureEntrySheet"
+  tools:layout_gravity="bottom">
+
+  <LinearLayout
+    android:id="@+id/bloodpressureentry_flipper_bp_entry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/spacing_12">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_marginTop="24dp"
+      android:layout_height="wrap_content">
+
+      <ImageButton
+        android:id="@+id/backImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="@dimen/spacing_8"
+        app:srcCompat="@drawable/ic_arrow_back_24dp"
+        app:tint="?attr/colorPrimary"
+        tools:ignore="ContentDescription" />
+
+      <TextView
+        android:id="@+id/enterBMITitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:lines="1"
+        android:text="@string/bmi_entry_sheet_title_enter_bmi"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnSurface"
+        android:visibility="gone"
+        tools:ignore="UnusedAttribute"
+        tools:visibility="visible" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/bmiEntryLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_12"
+      app:layout_optimizationLevel="direct|barrier">
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/heightTextFieldLayout"
+        style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/bmi_entry_height_weight_separator"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/heightEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:imeOptions="actionDone"
+          android:importantForAutofill="no"
+          android:inputType="number"
+          tools:ignore="UnusedAttribute"
+          tools:text="120">
+
+          <requestFocus />
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <TextView
+        android:id="@+id/bmi_entry_height_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:gravity="center_horizontal"
+        android:labelFor="@+id/systolicEditText"
+        android:text="@string/bmi_entry_height_in_cm"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67"
+        app:layout_constraintEnd_toEndOf="@+id/heightTextFieldLayout"
+        app:layout_constraintStart_toStartOf="@+id/heightTextFieldLayout"
+        app:layout_constraintTop_toBottomOf="@+id/heightTextFieldLayout" />
+
+      <TextView
+        android:id="@+id/bmi_entry_height_weight_separator"
+        style="@style/Widget.Simple.MeasurementInputSeparator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/heightTextFieldLayout"
+        app:layout_constraintEnd_toStartOf="@+id/weightTextFieldLayout"
+        app:layout_constraintStart_toEndOf="@+id/heightTextFieldLayout"
+        app:layout_constraintTop_toTopOf="@+id/heightTextFieldLayout" />
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/weightTextFieldLayout"
+        style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bmi_entry_height_weight_separator"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <org.simple.clinic.widgets.EditTextWithBackspaceListener
+          android:id="@+id/weightEditText"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:imeOptions="actionDone"
+          android:importantForAutofill="no"
+          android:inputType="number"
+          tools:ignore="UnusedAttribute"
+          tools:text="80" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+      <TextView
+        android:id="@+id/bmi_entry_weight_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:labelFor="@id/diastolicEditText"
+        android:text="@string/bmi_entry_weight_in_kg"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67"
+        app:layout_constraintEnd_toEndOf="@+id/weightTextFieldLayout"
+        app:layout_constraintStart_toStartOf="@+id/weightTextFieldLayout"
+        app:layout_constraintTop_toBottomOf="@+id/weightTextFieldLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/bmiTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:textAppearance="?attr/textAppearanceBody1"
+      android:textColor="@color/color_on_surface_67"
+      android:background="@drawable/background_bmi"
+      tools:text="BMI:32" />
+
+  </LinearLayout>
+
+</org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>

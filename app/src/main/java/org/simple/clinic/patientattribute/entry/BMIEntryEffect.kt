@@ -9,3 +9,6 @@ data class CreateNewBMIEntry(
     val patientUUID: UUID,
     val reading: BMIReading
 ) : BMIEntryEffect()
+sealed class BMIEntryViewEffect : BMIEntryEffect()
+
+data object CloseSheet : BMIEntryViewEffect()

@@ -29,6 +29,7 @@ class BMIEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BMIEntryEffect, BMIEntryEvent>()
         .addTransformer(CreateNewBMIEntry::class.java, createNewBMIEntry())
+        .addAction(CloseSheet::class.java, ui::closeSheet, schedulersProvider.ui())
         .build()
   }
 

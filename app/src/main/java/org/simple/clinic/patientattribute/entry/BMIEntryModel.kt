@@ -10,11 +10,11 @@ data class BMIEntryModel(
     val height: String = "",
     val weight: String = ""
 ) : Parcelable {
-  companion object {
-    fun default(patientUUID: UUID) = BMIEntryModel(
-        patientUUID = patientUUID,
-    )
-  }
+    companion object {
+        fun default(patientUUID: UUID) = BMIEntryModel(
+            patientUUID = patientUUID,
+        )
+    }
 
     fun heightChanged(height: String): BMIEntryModel =
         copy(height = height)

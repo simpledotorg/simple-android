@@ -58,6 +58,7 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
@@ -167,7 +168,8 @@ interface TheActivityComponent :
     PatientsTabLinkView.Injector,
     MonthlyReportsScreen.Injector,
     MonthlyReportCompleteScreen.Injector,
-    ReassignPatientSheet.Injector {
+    ReassignPatientSheet.Injector,
+    BMIEntrySheet.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

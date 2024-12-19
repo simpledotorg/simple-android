@@ -18,5 +18,8 @@ data object SaveClicked : BMIEntryEvent() {
   override val analyticsName = "BMI Entry:Save Clicked"
 }
 
+data object BackPressed : BMIEntryEvent() {
+  override val analyticsName = "BMI Entry::Back Pressed"
+}
 
 data object BMISaved : BMIEntryEvent()

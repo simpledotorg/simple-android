@@ -16,6 +16,7 @@ class BMIEntryUpdate : Update<BMIEntryModel, BMIEntryEvent, BMIEntryEffect> {
       is WeightChanged -> next(model.weightChanged(event.weight))
       is WeightBackspaceClicked -> onWeightBackSpaceClicked(model)
       is SaveClicked -> dispatch(CreateNewBMIEntry(model.patientUUID, BMIReading(height = model.height, weight = model.weight)))
+      is BackPressed -> dispatch(CloseSheet)
       is BMISaved -> dispatch(CloseSheet)
     }
   }

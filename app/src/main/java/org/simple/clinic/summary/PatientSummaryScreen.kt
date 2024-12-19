@@ -65,6 +65,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
@@ -301,6 +302,7 @@ class PatientSummaryScreen :
         ScreenRequest.ScheduleAppointmentSheet,
         ScreenRequest.SelectFacility,
         ScreenRequest.ReassignPatientWarningSheet,
+        ScreenRequest.BMIEntrySheet
     ) { requestKey, result ->
       if (result is Succeeded) {
         handleScreenResult(requestKey, result)
@@ -322,7 +324,9 @@ class PatientSummaryScreen :
         SimpleTheme {
           StatinNudge(
               statinInfo = statinInfo,
-              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+              addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
+              addBMIClick = { additionalEvents.notify(AddBMIClicked)  }
           )
         }
       }
@@ -349,6 +353,10 @@ class PatientSummaryScreen :
             sheetOpenedFrom = sheetClosed.sheetOpenedFrom,
             sheetClosedFrom = sheetClosed.sheetClosedFrom
         ))
+      }
+
+      is ScreenRequest.BMIEntrySheet -> {
+        additionalEvents.notify(BMIReadingAdded)
       }
     }
   }
@@ -748,7 +756,7 @@ class PatientSummaryScreen :
   }
 
   override fun openBMIEntrySheet(patientUuid: UUID) {
-    //TODO("Not yet implemented")
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
   }
 
   override fun openSelectFacilitySheet() {
@@ -890,5 +898,8 @@ class PatientSummaryScreen :
 
     @Parcelize
     data object ReassignPatientWarningSheet : ScreenRequest()
+
+    @Parcelize
+    data object BMIEntrySheet : ScreenRequest()
   }
 }

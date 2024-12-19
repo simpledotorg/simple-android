@@ -57,4 +57,24 @@ class BMIEntryEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(ui).closeSheet()
   }
+
+  @Test
+  fun `when change focus to height view effect is received, then change the focus to height`() {
+    //when
+    testCase.dispatch(ChangeFocusToHeight)
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).changeFocusToHeight()
+  }
+
+  @Test
+  fun `when change focus to weight view effect is received, then change the focus to weight`() {
+    //when
+    testCase.dispatch(ChangeFocusToWeight)
+
+    //then
+    testCase.assertNoOutgoingEvents()
+    verify(ui).changeFocusToWeight()
+  }
 }

@@ -30,6 +30,8 @@ class BMIEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BMIEntryEffect, BMIEntryEvent>()
         .addTransformer(CreateNewBMIEntry::class.java, createNewBMIEntry())
         .addAction(CloseSheet::class.java, ui::closeSheet, schedulersProvider.ui())
+        .addAction(ChangeFocusToHeight::class.java, ui::changeFocusToHeight, schedulersProvider.ui())
+        .addAction(ChangeFocusToWeight::class.java, ui::changeFocusToWeight, schedulersProvider.ui())
         .build()
   }
 

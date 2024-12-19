@@ -28,58 +28,61 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.util.toAnnotatedString
 
 
 @Composable
 fun StatinNudge(
-    isVisible: Boolean,
+    statinInfo: StatinInfo?,
     modifier: Modifier = Modifier
 ) {
-  AnimatedVisibility(
-      visible = isVisible,
-      enter = expandVertically(
-          animationSpec = tween(500),
-          expandFrom = Alignment.Top
-      ),
-      exit = shrinkVertically(animationSpec = tween(500))
-  ) {
-    Card(
-        modifier = modifier
+  if (statinInfo != null) {
+    AnimatedVisibility(
+        visible = statinInfo.canPrescribeStatin,
+        enter = expandVertically(
+            animationSpec = tween(500),
+            expandFrom = Alignment.Top
+        ),
+        exit = shrinkVertically(animationSpec = tween(500))
     ) {
-      Column(
-          modifier = Modifier
-              .padding(16.dp),
-          horizontalAlignment = Alignment.CenterHorizontally
+      Card(
+          modifier = modifier
       ) {
-        Row {
-          Box(
-              modifier = Modifier
-                  .weight(2f)
-          )
-          Column(
-              modifier = Modifier
-                  .weight(3f),
-              horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-            Text(
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Row {
+            Box(
                 modifier = Modifier
-                    .background(SimpleTheme.colors.material.error, shape = RoundedCornerShape(50))
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                style = SimpleTheme.typography.material.button,
-                color = SimpleTheme.colors.onToolbarPrimary,
-                text = stringResource(R.string.statin_alert_at_risk_patient)
+                    .weight(2f)
             )
+            Column(
+                modifier = Modifier
+                    .weight(3f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+              Text(
+                  modifier = Modifier
+                      .background(SimpleTheme.colors.material.error, shape = RoundedCornerShape(50))
+                      .padding(horizontal = 8.dp, vertical = 4.dp),
+                  style = SimpleTheme.typography.material.button,
+                  color = SimpleTheme.colors.onToolbarPrimary,
+                  text = stringResource(R.string.statin_alert_at_risk_patient)
+              )
+            }
           }
+          Spacer(modifier = Modifier.height(4.dp))
+          RiskProgressBar()
+          Spacer(modifier = Modifier.height(16.dp))
+          Text(
+              text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
+              color = SimpleTheme.colors.material.error,
+              style = SimpleTheme.typography.material.body2,
+          )
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        RiskProgressBar()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
-            color = SimpleTheme.colors.material.error,
-            style = SimpleTheme.typography.material.body2,
-        )
       }
     }
   }
@@ -102,22 +105,22 @@ fun RiskProgressBar() {
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-            drawContent()
+              drawContent()
 
-            val widthPerSegment = size.width / riskColors.size
+              val widthPerSegment = size.width / riskColors.size
 
-            drawLine(
-                color = indicatorColor,
-                start = Offset(2 * widthPerSegment, 0f),
-                end = Offset(2 * widthPerSegment, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
-            drawLine(
-                color = indicatorColor,
-                start = Offset(size.width, 0f),
-                end = Offset(size.width, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
+              drawLine(
+                  color = indicatorColor,
+                  start = Offset(2 * widthPerSegment, 0f),
+                  end = Offset(2 * widthPerSegment, size.height),
+                  strokeWidth = 2.dp.toPx()
+              )
+              drawLine(
+                  color = indicatorColor,
+                  start = Offset(size.width, 0f),
+                  end = Offset(size.width, size.height),
+                  strokeWidth = 2.dp.toPx()
+              )
           },
       contentAlignment = Alignment.Center,
   ) {
@@ -143,6 +146,6 @@ fun RiskProgressBar() {
 @Composable
 fun StatinNudgePreview() {
   SimpleTheme {
-    StatinNudge(true)
+    StatinNudge(StatinInfo(canPrescribeStatin = true))
   }
 }

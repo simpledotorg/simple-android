@@ -15,6 +15,11 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.contactpatient.ContactPatientProfile
+import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.CVDRiskCalculationGenderSheet
+import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
+import org.simple.clinic.cvdrisk.RiskEntry
+import org.simple.clinic.cvdrisk.SmokingData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Answer.Yes
 import org.simple.clinic.drugs.search.Drug
@@ -30,6 +35,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.CholesterolReading
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
@@ -63,6 +69,8 @@ import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
@@ -750,6 +758,8 @@ object TestData {
       isOnHypertensionTreatment: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoker: Answer = randomMedicalHistoryAnswer(),
+      cholesterolReading: CholesterolReading? = null,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -765,6 +775,8 @@ object TestData {
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
         diagnosedWithDiabetes = hasDiabetes,
+        isSmoker = isSmoker,
+        cholesterolReading = cholesterolReading,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -783,6 +795,8 @@ object TestData {
       isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoker: Answer = randomMedicalHistoryAnswer(),
+      cholesterolReading: CholesterolReading? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -798,6 +812,8 @@ object TestData {
         hasHadKidneyDisease = hasHadKidneyDisease,
         hasDiabetes = hasDiabetes,
         hasHypertension = diagnosedWithHypertension,
+        isSmoker = isSmoker,
+        cholesterolValue = cholesterolReading?.value?.toFloatOrNull(),
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)
@@ -1636,6 +1652,129 @@ object TestData {
         "monthly_screening_reports.blood_pressure_checks_female" to 1800.0,
         "monthly_screening_reports.gender" to "Male",
         "monthly_screening_reports.is_smoking" to true,
+    )
+  }
+
+  fun patientAttribute(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      userUuid: UUID = UUID.randomUUID(),
+      reading: BMIReading,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): PatientAttribute {
+    return PatientAttribute(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        userUuid = userUuid,
+        reading = reading,
+        timestamps = Timestamps(
+            createdAt, updatedAt, deletedAt
+        ),
+        syncStatus = syncStatus
+    )
+  }
+
+  fun cvdRisk(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      riskScore: String,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): CVDRisk {
+    return CVDRisk(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        riskScore = riskScore,
+        timestamps = Timestamps(
+            createdAt, updatedAt, deletedAt
+        ),
+        syncStatus = syncStatus
+    )
+  }
+
+  fun cvdRiskCalculationSheet(): CVDRiskCalculationSheet {
+    val smokingDataWomen = SmokingData(
+        age40to44 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 11),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 9),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 5),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 6),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 6)
+        ),
+        age45to49 = null,
+        age50to54 = null,
+        age55to59 = null,
+        age60to64 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 21),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 18),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 12),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 13),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 14)
+        ),
+        age65to69 = null,
+        age70to74 = null
+    )
+
+    val nonSmokingDataWomen = SmokingData(
+        age40to44 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 5),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 4),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 2),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 2),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 2)
+        ),
+        age45to49 = null,
+        age50to54 = null,
+        age55to59 = null,
+        age60to64 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 13),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 11),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 7),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 8),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 8)
+        ),
+        age65to69 = null,
+        age70to74 = null
+    )
+
+    val womenGenderData = CVDRiskCalculationGenderSheet(
+        smoking = smokingDataWomen,
+        nonSmoking = nonSmokingDataWomen
+    )
+
+    val smokingDataMen = smokingDataWomen.copy(
+        age40to44 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 10),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 9),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 6),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 7),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 8)
+        )
+    )
+
+    val nonSmokingDataMen = nonSmokingDataWomen.copy(
+        age40to44 = listOf(
+            RiskEntry(sbp = "180+", bmi = "20-", risk = 5),
+            RiskEntry(sbp = "160 - 179", bmi = "20 - 24", risk = 5),
+            RiskEntry(sbp = "120 - 139", bmi = "25 - 29", risk = 3),
+            RiskEntry(sbp = "120 - 139", bmi = "30 - 35", risk = 3),
+            RiskEntry(sbp = "120 - 139", bmi = "35+", risk = 4)
+        )
+    )
+
+    val menGenderData = CVDRiskCalculationGenderSheet(
+        smoking = smokingDataMen,
+        nonSmoking = nonSmokingDataMen
+    )
+
+    return CVDRiskCalculationSheet(
+        women = womenGenderData,
+        men = menGenderData
     )
   }
 }

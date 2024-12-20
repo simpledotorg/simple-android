@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
@@ -37,6 +38,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdFts
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
@@ -100,12 +102,14 @@ import org.simple.clinic.patient.Answer as PatientAnswer
       BusinessIdFts::class,
       PatientAddressFts::class,
       Questionnaire::class,
-      QuestionnaireResponse::class
+      QuestionnaireResponse::class,
+      PatientAttribute::class,
+      CVDRisk::class
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 115,
+    version = 118,
     exportSchema = true
 )
 @TypeConverters(
@@ -199,6 +203,10 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun questionnaireResponseDao(): QuestionnaireResponse.RoomDao
 
+  abstract fun patientAttributeDao(): PatientAttribute.RoomDao
+
+  abstract fun cvdRiskDao(): CVDRisk.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -216,6 +224,8 @@ abstract class AppDatabase : RoomDatabase() {
       callResultDao().clear()
       questionnaireDao().clear()
       questionnaireResponseDao().clear()
+      patientAttributeDao().clear()
+      cvdRiskDao().clear()
     }
   }
 

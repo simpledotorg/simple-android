@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,9 +27,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.simple.clinic.R
+import org.simple.clinic.common.ui.components.FilledButton
+import org.simple.clinic.common.ui.theme.SimpleInverseTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.cvdrisk.StatinInfo
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
 
 
@@ -84,6 +89,7 @@ fun StatinNudge(
               color = SimpleTheme.colors.material.error,
               style = SimpleTheme.typography.material.body2,
           )
+          StainNudgeAddButtons(Modifier.padding(top = 16.dp), statinInfo, addSmokingClick, addBMIClick)
         }
       }
     }
@@ -107,22 +113,22 @@ fun RiskProgressBar() {
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              val widthPerSegment = size.width / riskColors.size
+            val widthPerSegment = size.width / riskColors.size
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(2 * widthPerSegment, 0f),
-                  end = Offset(2 * widthPerSegment, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(size.width, 0f),
-                  end = Offset(size.width, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(2 * widthPerSegment, 0f),
+                end = Offset(2 * widthPerSegment, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(size.width, 0f),
+                end = Offset(size.width, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {
@@ -139,6 +145,54 @@ fun RiskProgressBar() {
                 .fillMaxHeight()
                 .background(color),
         )
+      }
+    }
+  }
+}
+
+@Composable
+fun StainNudgeAddButtons(
+    modifier: Modifier,
+    statinInfo: StatinInfo,
+    addSmokingClick: () -> Unit,
+    addBMIClick: () -> Unit,
+) {
+  if (statinInfo.cvdRisk != null) {
+    SimpleInverseTheme {
+      Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+      ) {
+        if (statinInfo.isSmoker == Answer.Unanswered) {
+          FilledButton(
+              modifier = modifier
+                  .height(36.dp)
+                  .fillMaxWidth()
+                  .weight(1f)
+                  .clip(RoundedCornerShape(50)),
+              onClick = { addSmokingClick.invoke() }
+          ) {
+            Text(
+                text = stringResource(R.string.statin_alert_add_smoking),
+                fontSize = 14.sp,
+            )
+          }
+        }
+        if (statinInfo.bmiReading == null) {
+          FilledButton(
+              modifier = modifier
+                  .height(36.dp)
+                  .fillMaxWidth()
+                  .weight(1f)
+                  .clip(RoundedCornerShape(50)),
+              onClick = { addBMIClick.invoke() }
+          ) {
+            Text(
+                text = stringResource(R.string.statin_alert_add_bmi),
+                fontSize = 14.sp,
+            )
+          }
+        }
       }
     }
   }

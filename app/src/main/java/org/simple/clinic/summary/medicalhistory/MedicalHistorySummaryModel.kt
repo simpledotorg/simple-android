@@ -13,12 +13,14 @@ import java.util.UUID
 data class MedicalHistorySummaryModel(
     val patientUuid: UUID,
     val medicalHistory: MedicalHistory? = null,
-    val currentFacility: Facility? = null
+    val currentFacility: Facility? = null,
+    val showIsSmokerQuestion: Boolean,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
-    fun create(patientUuid: UUID): MedicalHistorySummaryModel = MedicalHistorySummaryModel(
-        patientUuid = patientUuid
+    fun create(patientUuid: UUID, showIsSmokerQuestion: Boolean): MedicalHistorySummaryModel = MedicalHistorySummaryModel(
+        patientUuid = patientUuid,
+        showIsSmokerQuestion = showIsSmokerQuestion
     )
   }
 

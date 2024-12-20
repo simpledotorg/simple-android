@@ -12,6 +12,8 @@ import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.MedicalhistorySummaryViewBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -20,6 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -59,6 +62,12 @@ class MedicalHistorySummaryView(
   private val diagnosisViewContainer
     get() = binding!!.diagnosisViewContainer
 
+  private val currentSmokerQuestionView
+    get() = binding!!.currentSmokerQuestionView
+
+  private val currentSmokerQuestionContainer
+    get() = binding!!.currentSmokerQuestionContainer
+
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
 
   @Inject
@@ -69,6 +78,9 @@ class MedicalHistorySummaryView(
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
+  lateinit var features: Features
 
   init {
     val layoutInflater = LayoutInflater.from(context)
@@ -93,7 +105,10 @@ class MedicalHistorySummaryView(
   private val delegate by unsafeLazy {
     MobiusDelegate.forView(
         events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(screenKey.patientUuid),
+        defaultModel = MedicalHistorySummaryModel.create(
+            patientUuid = screenKey.patientUuid,
+            showIsSmokerQuestion = features.isEnabled(Feature.PatientStatinNudge)
+        ),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
         effectHandler = effectHandler.build(),
@@ -143,6 +158,7 @@ class MedicalHistorySummaryView(
     strokeQuestionView.render(HasHadAStroke, medicalHistory.hasHadStroke, ::answerToggled)
     kidneyDiseaseQuestionView.render(HasHadAKidneyDisease, medicalHistory.hasHadKidneyDisease, ::answerToggled)
     diabetesQuestionView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+    currentSmokerQuestionView.render(IsSmoker, medicalHistory.isSmoker, ::answerToggled)
   }
 
   private fun renderDiagnosis(medicalHistory: MedicalHistory) {
@@ -168,6 +184,15 @@ class MedicalHistorySummaryView(
   override fun hideDiabetesHistorySection() {
     diabetesQuestionView.visibility = GONE
     kidneyDiseaseQuestionView.hideDivider()
+  }
+
+  override fun showCurrentSmokerQuestion() {
+    currentSmokerQuestionContainer.visibility = VISIBLE
+    currentSmokerQuestionView.hideDivider()
+  }
+
+  override fun hideCurrentSmokerQuestion() {
+    currentSmokerQuestionContainer.visibility = GONE
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

@@ -397,6 +397,7 @@
   <string name="medicalhistory_question_is_on_hypertension_treatment">Did patient take BP medicines any time in the last month? (Required)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment_sri_lanka" translatable="false">Is patient starting Simple treatment protocol for Hypertension? (Required)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Did patient take diabetes medicines any time in the last month? (Required)</string>
+  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>
@@ -1091,4 +1092,9 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">Database maintenance in progress. This will only take a minute.</string>
 
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">Height (cm)</string>
+  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
+  <string name="bmi_x">BMI: %s</string>
 </resources>

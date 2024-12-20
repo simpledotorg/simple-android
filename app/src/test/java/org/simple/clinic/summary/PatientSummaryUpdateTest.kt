@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
@@ -2108,7 +2109,61 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when statin prescription check info is loaded and can prescribe statin, then update the state`() {
+  fun `when statin prescription check info is loaded and person is below 40, then update the state with false`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 39,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and person is above 74, then update the state`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 75,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and has history of cvd or diabetes, then update the state`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
@@ -2129,7 +2184,88 @@ class PatientSummaryUpdateTest {
             ),
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(true)),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and is eligible for cvd risk, then load cvd risk`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 50,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadCVDRisk(defaultModel.patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is loaded and risk score is not null, then load statin info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskLoaded(
+            risk = "27"
+        ))
+        .then(assertThatNext(
+            hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is loaded and risk score is null, then calculate cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+    updateSpec
+        .given(model)
+        .whenEvent(CVDRiskLoaded(
+            risk = null
+        ))
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is calculated, then load statin info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskCalculated(
+            risk = null
+        ))
+        .then(assertThatNext(
+            hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when statin info is loaded, then update the state`() {
+    val statinInfo = StatinInfo(
+        canPrescribeStatin = true
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinInfoLoaded(
+            statinInfo = statinInfo
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(statinInfo)),
             hasNoEffects()
         ))
   }

@@ -750,6 +750,7 @@ object TestData {
       isOnHypertensionTreatment: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoking: Answer = randomMedicalHistoryAnswer(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -765,6 +766,7 @@ object TestData {
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
         diagnosedWithDiabetes = hasDiabetes,
+        isSmoking = isSmoking,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -783,6 +785,7 @@ object TestData {
       isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
       isOnDiabetesTreatment: Answer = randomMedicalHistoryAnswer(),
       hasDiabetes: Answer = randomMedicalHistoryAnswer(),
+      isSmoking: Answer = randomMedicalHistoryAnswer(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -798,6 +801,7 @@ object TestData {
         hasHadKidneyDisease = hasHadKidneyDisease,
         hasDiabetes = hasDiabetes,
         hasHypertension = diagnosedWithHypertension,
+        isSmoking = isSmoking,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

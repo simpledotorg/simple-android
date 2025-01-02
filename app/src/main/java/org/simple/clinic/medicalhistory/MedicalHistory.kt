@@ -54,6 +54,8 @@ data class MedicalHistory(
     @ColumnInfo(name = "hasDiabetes")
     val diagnosedWithDiabetes: Answer,
 
+    val isSmoking: Answer,
+
     val syncStatus: SyncStatus,
 
     val createdAt: Instant,

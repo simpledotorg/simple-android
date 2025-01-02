@@ -211,6 +211,14 @@ jobs:
           name: failed-test-artifacts
           path: app/build/outputs/test-artifacts
 
+      - name: Print Docker logs
+        run: |
+          for container_id in $(docker ps -q); do
+            echo "Logs for container $container_id:"
+            docker logs $container_id
+            echo "===================================="
+          done
+
       - name: Stop Simple Docker server
         run: |
           docker compose -f ".github/docker/simple-server.compose.yml" down

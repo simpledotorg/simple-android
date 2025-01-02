@@ -25,7 +25,7 @@
 - Bump Lottie Compose to v6.6.0
 - Bump Sentry Android to v7.18.0
 - Bump AGP to v8.7.3
-- Add `smoking` in `MedicalHistory` table
+- Add `isSmoking` in `MedicalHistory` table
 
 ### Fixes
 

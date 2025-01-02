@@ -12,7 +12,7 @@ class Migration_116 @Inject constructor() : Migration(115, 116) {
     db.inTransaction {
       execSQL("""
         ALTER TABLE "MedicalHistory"
-        ADD COLUMN "smoking" TEXT NOT NULL DEFAULT "unknown"
+        ADD COLUMN "isSmoking" TEXT NOT NULL DEFAULT "unknown"
     """.trimIndent())
     }
   }

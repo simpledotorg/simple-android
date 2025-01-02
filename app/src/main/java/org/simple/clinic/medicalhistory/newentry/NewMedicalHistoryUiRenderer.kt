@@ -14,36 +14,49 @@ class NewMedicalHistoryUiRenderer(
 
   override fun render(model: NewMedicalHistoryModel) {
     if (model.hasLoadedPatientEntry) {
-      ui.setPatientName(model.ongoingPatientEntry!!.personalDetails!!.fullName)
+      renderPatientName(model)
     }
 
+    renderMedicalHistoryQuestions(model)
+
+    if (model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled) {
+      renderDiabetesManagementEnabled(model)
+    } else {
+      renderDiabetesManagementDisabled(model)
+    }
+
+    renderSmokingQuestion(model)
+
+    renderNextButton(model)
+  }
+
+  private fun renderPatientName(model: NewMedicalHistoryModel) {
+    ui.setPatientName(model.ongoingPatientEntry!!.personalDetails!!.fullName)
+  }
+
+  private fun renderMedicalHistoryQuestions(model: NewMedicalHistoryModel) {
     with(model.ongoingMedicalHistoryEntry) {
       ui.renderAnswerForQuestion(HasHadAHeartAttack, hasHadHeartAttack)
       ui.renderAnswerForQuestion(HasHadAKidneyDisease, hasHadKidneyDisease)
       ui.renderAnswerForQuestion(HasHadAStroke, hasHadStroke)
       ui.renderDiagnosisAnswer(DiagnosedWithHypertension, diagnosedWithHypertension)
       renderHypertensionTreatmentQuestion(model)
-
-      if (model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled) {
-        ui.showDiabetesDiagnosisView()
-        ui.hideDiabetesHistorySection()
-        ui.renderDiagnosisAnswer(DiagnosedWithDiabetes, hasDiabetes)
-        renderDiabetesTreatmentQuestion(model)
-      } else {
-        ui.hideDiabetesDiagnosisView()
-        ui.showDiabetesHistorySection()
-        ui.renderAnswerForQuestion(DiagnosedWithDiabetes, hasDiabetes)
-      }
-
-      if (model.showIsSmokingQuestion) {
-        ui.showCurrentSmokerQuestion()
-        ui.renderAnswerForQuestion(IsSmoking, isSmoking)
-      } else {
-        ui.hideCurrentSmokerQuestion()
-      }
     }
+  }
 
-    renderNextButton(model)
+  private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
+    if (model.showOngoingHypertensionTreatment) {
+      ui.showHypertensionTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment)
+    } else {
+      ui.hideHypertensionTreatmentQuestion()
+    }
+  }
+
+  private fun renderDiabetesManagementEnabled(model: NewMedicalHistoryModel) {
+    ui.showDiabetesDiagnosisView()
+    ui.hideDiabetesHistorySection()
+    ui.renderDiagnosisAnswer(DiagnosedWithDiabetes, model.ongoingMedicalHistoryEntry.hasDiabetes)
+    renderDiabetesTreatmentQuestion(model)
   }
 
   private fun renderDiabetesTreatmentQuestion(model: NewMedicalHistoryModel) {
@@ -54,11 +67,18 @@ class NewMedicalHistoryUiRenderer(
     }
   }
 
-  private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
-    if (model.showOngoingHypertensionTreatment) {
-      ui.showHypertensionTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment)
+  private fun renderDiabetesManagementDisabled(model: NewMedicalHistoryModel) {
+    ui.hideDiabetesDiagnosisView()
+    ui.showDiabetesHistorySection()
+    ui.renderAnswerForQuestion(DiagnosedWithDiabetes, model.ongoingMedicalHistoryEntry.hasDiabetes)
+  }
+
+  private fun renderSmokingQuestion(model: NewMedicalHistoryModel) {
+    if (model.showIsSmokingQuestion) {
+      ui.showCurrentSmokerQuestion()
+      ui.renderAnswerForQuestion(IsSmoking, model.ongoingMedicalHistoryEntry.isSmoking)
     } else {
-      ui.hideHypertensionTreatmentQuestion()
+      ui.hideCurrentSmokerQuestion()
     }
   }
 

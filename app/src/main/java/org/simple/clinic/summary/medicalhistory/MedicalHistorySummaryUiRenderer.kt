@@ -23,7 +23,7 @@ class MedicalHistorySummaryUiRenderer(
       diabetesManagementFlagChangedCallback.pass(model.currentFacility!!.config.diabetesManagementEnabled, ::toggleDiabetesManagementUi)
     }
 
-    smokerQuestionVisibilityChangedCallback.pass(model.showIsSmokerQuestion) { show ->
+    smokerQuestionVisibilityChangedCallback.pass(model.showIsSmokingQuestion) { show ->
       if (show) {
         ui.showCurrentSmokerQuestion()
       } else {

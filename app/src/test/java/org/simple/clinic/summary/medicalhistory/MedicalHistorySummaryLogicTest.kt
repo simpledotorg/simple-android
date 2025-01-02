@@ -28,7 +28,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -116,7 +116,7 @@ class MedicalHistorySummaryLogicTest {
         hasHadStroke = Unanswered,
         hasHadKidneyDisease = Unanswered,
         hasDiabetes = Unanswered,
-        isSmoker = Unanswered,
+        isSmoking = Unanswered,
         updatedAt = Instant.parse("2017-12-31T00:00:00Z")
     )
     val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
@@ -267,13 +267,13 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the is smoker answer is changed, do not clear the diagnosis error`() {
     // given
-    val updatedMedicalHistory = medicalHistory.answered(IsSmoker, Yes)
+    val updatedMedicalHistory = medicalHistory.answered(IsSmoking, Yes)
 
     whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled, showCurrentSmokerQuestion = true)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(IsSmoker, Yes))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(IsSmoking, Yes))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
@@ -326,7 +326,7 @@ class MedicalHistorySummaryLogicTest {
         HasHadAHeartAttack,
         HasHadAStroke,
         HasHadAKidneyDisease,
-        IsSmoker,
+        IsSmoking,
     )
     return questions
         .map { question -> listOf(question, randomMedicalHistoryAnswer()) }

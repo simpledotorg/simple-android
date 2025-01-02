@@ -22,7 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -107,7 +107,7 @@ class MedicalHistorySummaryView(
         events = events.ofType(),
         defaultModel = MedicalHistorySummaryModel.create(
             patientUuid = screenKey.patientUuid,
-            showIsSmokerQuestion = features.isEnabled(Feature.PatientStatinNudge)
+            showIsSmokingQuestion = features.isEnabled(Feature.PatientStatinNudge)
         ),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
@@ -158,7 +158,7 @@ class MedicalHistorySummaryView(
     strokeQuestionView.render(HasHadAStroke, medicalHistory.hasHadStroke, ::answerToggled)
     kidneyDiseaseQuestionView.render(HasHadAKidneyDisease, medicalHistory.hasHadKidneyDisease, ::answerToggled)
     diabetesQuestionView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
-    currentSmokerQuestionView.render(IsSmoker, medicalHistory.isSmoker, ::answerToggled)
+    currentSmokerQuestionView.render(IsSmoking, medicalHistory.isSmoking, ::answerToggled)
   }
 
   private fun renderDiagnosis(medicalHistory: MedicalHistory) {

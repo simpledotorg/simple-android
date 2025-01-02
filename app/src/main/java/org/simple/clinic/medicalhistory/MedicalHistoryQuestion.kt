@@ -22,5 +22,5 @@ sealed class MedicalHistoryQuestion(
   )
 
   object IsOnDiabetesTreatment : MedicalHistoryQuestion(R.string.medicalhistory_question_is_on_diabetes_treatment)
-  data object IsSmoker : MedicalHistoryQuestion(R.string.medicalhistory_question_is_current_smoker)
+  data object IsSmoking : MedicalHistoryQuestion(R.string.medicalhistory_question_is_current_smoker)
 }

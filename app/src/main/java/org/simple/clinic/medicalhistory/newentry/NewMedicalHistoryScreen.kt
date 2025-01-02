@@ -32,7 +32,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
@@ -111,7 +111,7 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun defaultModel() = NewMedicalHistoryModel.default(
       country = country,
-      showIsSmokerQuestion = features.isEnabled(Feature.PatientStatinNudge)
+      showIsSmokingQuestion = features.isEnabled(Feature.PatientStatinNudge)
   )
 
   override fun bindView(
@@ -173,7 +173,7 @@ class NewMedicalHistoryScreen : BaseScreen<
       HasHadAStroke -> strokeQuestionView
       HasHadAKidneyDisease -> kidneyDiseaseQuestionView
       DiagnosedWithDiabetes -> diabetesQuestionView
-      IsSmoker -> currentSmokerQuestionView
+      IsSmoking -> currentSmokerQuestionView
       else -> null
     }
 

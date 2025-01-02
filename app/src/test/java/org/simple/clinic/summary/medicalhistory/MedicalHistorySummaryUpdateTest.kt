@@ -25,7 +25,7 @@ class MedicalHistorySummaryUpdateTest {
         isOnHypertensionTreatment = Answer.No,
         isOnDiabetesTreatment = Answer.No,
         hasDiabetes = Answer.No,
-        isSmoker = Answer.No
+        isSmoking = Answer.No
     )
     val medicalHistoryLoadedModel = MedicalHistorySummaryModel
         .create(patientUuid, true)

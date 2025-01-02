@@ -1,6 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -25,7 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -122,7 +121,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnDiabetesTreatment, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoking, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -148,7 +147,7 @@ class NewMedicalHistoryScreenLogicTest {
               diagnosedWithHypertension = No,
               hasDiabetes = Yes,
               isOnDiabetesTreatment = Yes,
-              isSmoker = Yes,
+              isSmoking = Yes,
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -213,7 +212,7 @@ class NewMedicalHistoryScreenLogicTest {
               diagnosedWithHypertension = Yes,
               hasDiabetes = Unanswered,
               isOnHypertensionTreatment = Yes,
-              isSmoker = Unanswered,
+              isSmoking = Unanswered,
           ))
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
@@ -253,7 +252,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAStroke, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoking, Yes))
 
     // Updated answers
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Yes))
@@ -262,7 +261,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnHypertensionTreatment(Country.INDIA), Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoker, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsSmoking, No))
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -289,7 +288,7 @@ class NewMedicalHistoryScreenLogicTest {
               diagnosedWithHypertension = Yes,
               hasDiabetes = No,
               isOnHypertensionTreatment = Yes,
-              isSmoker = No,
+              isSmoking = No,
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -310,8 +309,8 @@ class NewMedicalHistoryScreenLogicTest {
         patientRepository = patientRepository,
         medicalHistoryRepository = medicalHistoryRepository,
         dataSync = mock(),
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
+        currentUser = { user },
+        currentFacility = { facility },
         uuidGenerator = uuidGenerator,
         dateOfBirthFormatter = dateOfBirthFormatter,
         viewEffectsConsumer = viewEffectHandler::handle

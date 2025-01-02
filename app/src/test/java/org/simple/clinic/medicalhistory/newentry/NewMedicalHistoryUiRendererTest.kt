@@ -14,7 +14,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoker
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
@@ -279,7 +279,7 @@ class NewMedicalHistoryUiRendererTest {
         .answerChanged(HasHadAHeartAttack, Yes)
         .answerChanged(HasHadAStroke, No)
         .answerChanged(HasHadAKidneyDisease, Unanswered)
-        .answerChanged(IsSmoker, No)
+        .answerChanged(IsSmoking, No)
 
     // when
     uiRenderer.render(model)
@@ -295,7 +295,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).showCurrentSmokerQuestion()
-    verify(ui).renderAnswerForQuestion(IsSmoker, No)
+    verify(ui).renderAnswerForQuestion(IsSmoking, No)
     verifyNoMoreInteractions(ui)
   }
 

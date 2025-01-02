@@ -24,13 +24,15 @@ class MedicalHistorySummaryUpdateTest {
         diagnosedWithHypertension = Answer.No,
         isOnHypertensionTreatment = Answer.No,
         isOnDiabetesTreatment = Answer.No,
-        hasDiabetes = Answer.No
+        hasDiabetes = Answer.No,
+        isSmoking = Answer.No
     )
     val medicalHistoryLoadedModel = MedicalHistorySummaryModel
-        .create(patientUuid)
+        .create(patientUuid, true)
         .medicalHistoryLoaded(medicalHistory)
 
-    val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithHypertension, Answer.Yes)
+    val updatedMedicalHistory = medicalHistory
+        .answered(DiagnosedWithHypertension, Answer.Yes)
 
     UpdateSpec(MedicalHistorySummaryUpdate())
         .given(medicalHistoryLoadedModel)

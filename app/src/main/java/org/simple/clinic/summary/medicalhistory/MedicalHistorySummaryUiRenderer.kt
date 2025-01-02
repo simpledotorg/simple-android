@@ -12,6 +12,8 @@ class MedicalHistorySummaryUiRenderer(
 
   private val diabetesManagementFlagChangedCallback = ValueChangedCallback<Boolean>()
 
+  private val smokerQuestionVisibilityChangedCallback = ValueChangedCallback<Boolean>()
+
   override fun render(model: MedicalHistorySummaryModel) {
     if (model.hasLoadedMedicalHistory) {
       medicalHistoryChangedCallback.pass(model.medicalHistory!!, ui::populateMedicalHistory)
@@ -19,6 +21,14 @@ class MedicalHistorySummaryUiRenderer(
 
     if (model.hasLoadedCurrentFacility) {
       diabetesManagementFlagChangedCallback.pass(model.currentFacility!!.config.diabetesManagementEnabled, ::toggleDiabetesManagementUi)
+    }
+
+    smokerQuestionVisibilityChangedCallback.pass(model.showIsSmokingQuestion) { show ->
+      if (show) {
+        ui.showCurrentSmokerQuestion()
+      } else {
+        ui.hideCurrentSmokerQuestion()
+      }
     }
   }
 

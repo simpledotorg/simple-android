@@ -1,11 +1,5 @@
 package org.simple.clinic.summary.medicalhistory
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
-import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -14,6 +8,11 @@ import junitparams.Parameters
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
@@ -29,9 +28,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.simple.sharedTestCode.TestData
@@ -100,6 +99,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).showDiabetesHistorySection()
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -116,6 +116,7 @@ class MedicalHistorySummaryLogicTest {
         hasHadStroke = Unanswered,
         hasHadKidneyDisease = Unanswered,
         hasDiabetes = Unanswered,
+        isSmoking = Unanswered,
         updatedAt = Instant.parse("2017-12-31T00:00:00Z")
     )
     val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
@@ -124,7 +125,7 @@ class MedicalHistorySummaryLogicTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
-    setupController()
+    setupController(showCurrentSmokerQuestion = true)
     events.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     // then
@@ -143,6 +144,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -158,6 +160,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
     verify(ui).showDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -177,6 +180,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -196,6 +200,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -215,6 +220,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -234,6 +240,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -253,6 +260,59 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the is smoker answer is changed, do not clear the diagnosis error`() {
+    // given
+    val updatedMedicalHistory = medicalHistory.answered(IsSmoking, Yes)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(facility = facilityWithDiabetesManagementEnabled, showCurrentSmokerQuestion = true)
+    events.onNext(SummaryMedicalHistoryAnswerToggled(IsSmoking, Yes))
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
+    verify(ui).showDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).showCurrentSmokerQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when show current smoker question is disabled, then hide the show current smoker question view`() {
+    // given
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(showCurrentSmokerQuestion = false)
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).hideDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).hideCurrentSmokerQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when show current smoker question is enabled, then show the show current smoker question view`() {
+    // given
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(showCurrentSmokerQuestion = true)
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).hideDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).showCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -265,14 +325,18 @@ class MedicalHistorySummaryLogicTest {
         IsOnDiabetesTreatment,
         HasHadAHeartAttack,
         HasHadAStroke,
-        HasHadAKidneyDisease
+        HasHadAKidneyDisease,
+        IsSmoking,
     )
     return questions
         .map { question -> listOf(question, randomMedicalHistoryAnswer()) }
         .toList()
   }
 
-  private fun setupController(facility: Facility = facilityWithDiabetesManagementDisabled) {
+  private fun setupController(
+      facility: Facility = facilityWithDiabetesManagementDisabled,
+      showCurrentSmokerQuestion: Boolean = false,
+  ) {
     val effectHandler = MedicalHistorySummaryEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         medicalHistoryRepository = medicalHistoryRepository,
@@ -284,7 +348,7 @@ class MedicalHistorySummaryLogicTest {
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
     testFixture = MobiusTestFixture(
         events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(patientUuid),
+        defaultModel = MedicalHistorySummaryModel.create(patientUuid, showCurrentSmokerQuestion),
         init = MedicalHistorySummaryInit(),
         update = MedicalHistorySummaryUpdate(),
         effectHandler = effectHandler.build(),

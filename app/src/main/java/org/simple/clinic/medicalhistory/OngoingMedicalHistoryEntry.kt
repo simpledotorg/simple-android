@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 
 @Parcelize
 data class OngoingMedicalHistoryEntry(
@@ -32,6 +33,7 @@ data class OngoingMedicalHistoryEntry(
       DiagnosedWithDiabetes -> copy(hasDiabetes = answer)
       is IsOnHypertensionTreatment -> copy(isOnHypertensionTreatment = answer)
       IsOnDiabetesTreatment -> copy(isOnDiabetesTreatment = answer)
+      IsSmoking -> copy(isSmoking = answer)
     }
   }
 }

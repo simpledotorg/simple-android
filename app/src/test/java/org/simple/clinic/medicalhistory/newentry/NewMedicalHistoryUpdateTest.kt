@@ -26,7 +26,7 @@ import java.util.UUID
 class NewMedicalHistoryUpdateTest {
 
   private val country = TestData.country(isoCountryCode = Country.INDIA)
-  private val defaultModel = NewMedicalHistoryModel.default(country)
+  private val defaultModel = NewMedicalHistoryModel.default(country, false)
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
       facilityConfig = FacilityConfig(
@@ -224,7 +224,7 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is not india, then register patient`() {
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
-    val model = NewMedicalHistoryModel.default(country = bangladesh)
+    val model = NewMedicalHistoryModel.default(country = bangladesh, false)
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DiagnosedWithHypertension, Yes)

@@ -109,20 +109,12 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <LinearLayout
+        <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+          android:id="@+id/currentSmokerQuestionView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_16"
-          android:layout_marginEnd="@dimen/spacing_16"
-          android:orientation="vertical"
-          android:paddingVertical="@dimen/spacing_8">
-
-          <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-            android:id="@+id/currentSmokerQuestionView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        </LinearLayout>
+          android:paddingHorizontal="@dimen/spacing_16"
+          android:paddingVertical="@dimen/spacing_8" />
 
       </com.google.android.material.card.MaterialCardView>
 

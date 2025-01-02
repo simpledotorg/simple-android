@@ -26,6 +26,7 @@
 - Bump Sentry Android to v7.18.0
 - Bump AGP to v8.7.3
 - Add `isSmoking` in `MedicalHistory` table
+- Add `PatientAttribute` sync resource
 
 ### Fixes
 

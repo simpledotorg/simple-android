@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 116,
-    "identityHash": "4f70e89473cdd45c30292bb593e7e079",
+    "identityHash": "4d87daae99e737822fae64172616bc75",
     "entities": [
       {
         "tableName": "Patient",
@@ -903,7 +903,7 @@
       },
       {
         "tableName": "MedicalHistory",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `diagnosedWithHypertension` TEXT NOT NULL, `isOnHypertensionTreatment` TEXT NOT NULL, `isOnDiabetesTreatment` TEXT NOT NULL, `hasHadHeartAttack` TEXT NOT NULL, `hasHadStroke` TEXT NOT NULL, `hasHadKidneyDisease` TEXT NOT NULL, `hasDiabetes` TEXT NOT NULL, `isSmoker` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, `cholesterol_value` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `diagnosedWithHypertension` TEXT NOT NULL, `isOnHypertensionTreatment` TEXT NOT NULL, `isOnDiabetesTreatment` TEXT NOT NULL, `hasHadHeartAttack` TEXT NOT NULL, `hasHadStroke` TEXT NOT NULL, `hasHadKidneyDisease` TEXT NOT NULL, `hasDiabetes` TEXT NOT NULL, `smoking` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -960,8 +960,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "isSmoker",
-            "columnName": "isSmoker",
+            "fieldPath": "smoking",
+            "columnName": "smoking",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -986,12 +986,6 @@
           {
             "fieldPath": "deletedAt",
             "columnName": "deletedAt",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "cholesterolReading.value",
-            "columnName": "cholesterol_value",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -2177,7 +2171,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f70e89473cdd45c30292bb593e7e079')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4d87daae99e737822fae64172616bc75')"
     ]
   }
 }

@@ -49,8 +49,7 @@ class MedicalHistorySync @Inject constructor(
                 hasHadKidneyDisease = hasHadKidneyDisease,
                 hasDiabetes = diagnosedWithDiabetes,
                 hasHypertension = diagnosedWithHypertension,
-                isSmoker = isSmoker,
-                cholesterolValue = cholesterolReading?.value?.toFloatOrNull(),
+                smoking = smoking,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt)

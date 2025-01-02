@@ -6,7 +6,7 @@ import org.simple.clinic.assertColumns
 class Migration116AndroidTest : BaseDatabaseMigrationTest(115, 116) {
 
   @Test
-  fun is_smoker_and_cholesterol_value_should_be_added_to_medical_history_table() {
+  fun smoking_should_be_added_to_medical_history_table() {
     before.assertColumns("MedicalHistory", setOf(
         "uuid",
         "patientUuid",
@@ -33,8 +33,7 @@ class Migration116AndroidTest : BaseDatabaseMigrationTest(115, 116) {
         "hasHadStroke",
         "hasHadKidneyDisease",
         "hasDiabetes",
-        "isSmoker",
-        "cholesterol_value",
+        "smoking",
         "syncStatus",
         "createdAt",
         "updatedAt",

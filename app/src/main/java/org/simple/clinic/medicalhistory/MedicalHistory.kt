@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
@@ -55,10 +54,7 @@ data class MedicalHistory(
     @ColumnInfo(name = "hasDiabetes")
     val diagnosedWithDiabetes: Answer,
 
-    val isSmoker: Answer,
-
-    @Embedded(prefix = "cholesterol_")
-    val cholesterolReading: CholesterolReading?,
+    val smoking: Answer,
 
     val syncStatus: SyncStatus,
 

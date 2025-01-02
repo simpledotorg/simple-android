@@ -1,21 +1,20 @@
 package org.simple.clinic.medicalhistory
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.UtcClock
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
 import java.time.Instant
 import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
@@ -54,8 +53,8 @@ class MedicalHistoryRepositoryAndroidTest {
         hasHadStroke = Yes,
         hasHadKidneyDisease = Yes,
         hasDiabetes = No,
-        isSmoker = No,
-        )
+        smoking = No,
+    )
 
     repository.save(
         uuid = UUID.fromString("d33a3dfc-3da9-43a9-a543-095232c55597"),
@@ -69,7 +68,7 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(savedHistory.hasHadStroke).isEqualTo(Yes)
     assertThat(savedHistory.hasHadKidneyDisease).isEqualTo(Yes)
     assertThat(savedHistory.diagnosedWithDiabetes).isEqualTo(No)
-    assertThat(savedHistory.isSmoker).isEqualTo(No)
+    assertThat(savedHistory.smoking).isEqualTo(No)
     assertThat(savedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
 
@@ -122,8 +121,7 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithDiabetes).isEqualTo(Unanswered)
-    assertThat(emptyHistory.isSmoker).isEqualTo(Unanswered)
-    assertThat(emptyHistory.cholesterolReading).isEqualTo(null)
+    assertThat(emptyHistory.smoking).isEqualTo(Unanswered)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 
@@ -183,8 +181,7 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithHypertension).isEqualTo(Unanswered)
     assertThat(emptyHistory.diagnosedWithDiabetes).isEqualTo(Unanswered)
-    assertThat(emptyHistory.isSmoker).isEqualTo(Unanswered)
-    assertThat(emptyHistory.cholesterolReading).isEqualTo(null)
+    assertThat(emptyHistory.smoking).isEqualTo(Unanswered)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 }

@@ -28,6 +28,7 @@
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
 - Add `CVDRisk` sync resource
+- Update PR comment check regex to optionally verify full shortcut story link
 
 ### Fixes
 

@@ -16,10 +16,10 @@ data class PatientAttributePayload(
     val uuid: UUID,
 
     @Json(name = "height")
-    val height: String,
+    val height: Float,
 
     @Json(name = "weight")
-    val weight: String,
+    val weight: Float,
 
     @Json(name = "patient_id")
     val patientUuid: UUID,
@@ -42,8 +42,8 @@ data class PatientAttributePayload(
       patientUuid = patientUuid,
       userUuid = userUuid,
       bmiReading = BMIReading(
-          height = height.toFloat(),
-          weight = weight.toFloat()
+          height = height,
+          weight = weight
       ),
       timestamps = Timestamps(
           createdAt = createdAt,

@@ -7,15 +7,20 @@ object CVDRiskCalculator {
 
   fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): String? {
     with(cvdRiskInput) {
-      if (cvdRiskData == null) return null
+      val riskEntries = getRiskEntries(cvdRiskInput) ?: return null
 
-      val genderData = getGenderData(cvdRiskData, gender) ?: return null
-      val smokingDataList = getSmokingDataList(genderData, isSmoker)
-      val ageRange = getAgeRange(smokingDataList, age) ?: return null
       val sbpRange = getSBPRange(sbp)
       val bmiRangeList = getBMIRangeList(bmi)
-      val risks = getRiskValues(ageRange, sbpRange, bmiRangeList)
+      val risks = riskEntries.filter { it.sbp == sbpRange && it.bmi in bmiRangeList }.map { it.risk }
       return formatRisk(risks)
+    }
+  }
+
+  private fun getRiskEntries(cvdRiskInput: CVDRiskInput): List<RiskEntry>? {
+    with(cvdRiskInput) {
+      val genderData = cvdRiskData?.let { getGenderData(it, gender) }
+      val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
+      return smokingDataList?.let { getAgeRange(smokingDataList, age) }
     }
   }
 
@@ -70,10 +75,6 @@ object CVDRiskCalculator {
       in 30.0..34.9 -> "30 - 35"
       else -> "35+"
     }
-  }
-
-  private fun getRiskValues(ageRange: List<RiskEntry>, sbpRange: String, bmiRangeList: List<String>): List<Int> {
-    return ageRange.filter { it.sbp == sbpRange && it.bmi in bmiRangeList }.map { it.risk }
   }
 
   private fun formatRisk(risks: List<Int>): String? {

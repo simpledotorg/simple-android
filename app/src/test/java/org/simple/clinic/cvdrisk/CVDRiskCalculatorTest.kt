@@ -2,7 +2,7 @@ package org.simple.clinic.cvdrisk
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.simple.clinic.patient.Answer
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.sharedTestCode.TestData
 
@@ -12,7 +12,7 @@ class CVDRiskCalculatorTest {
 
   @Test
   fun `should return exact risk for matching data`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Female,
         age = 40,
@@ -20,12 +20,14 @@ class CVDRiskCalculatorTest {
         isSmoker = Answer.Yes,
         bmi = 27.0
     )
+
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("5", risk)
   }
 
   @Test
   fun `should return risk range when bmi is not specified`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Female,
         age = 40,
@@ -33,12 +35,13 @@ class CVDRiskCalculatorTest {
         isSmoker = Answer.Yes,
         bmi = null
     )
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("5 - 6", risk)
   }
 
   @Test
   fun `should return null when no matching data`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 80,
@@ -46,12 +49,13 @@ class CVDRiskCalculatorTest {
         isSmoker = Answer.Yes,
         bmi = 40.0
     )
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals(null, risk)
   }
 
   @Test
   fun `should handle nonsmoking data correctly`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
@@ -59,12 +63,13 @@ class CVDRiskCalculatorTest {
         isSmoker = Answer.No,
         bmi = 27.0
     )
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("3", risk)
   }
 
   @Test
   fun `should return risk range when smoking is unanswered`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
@@ -72,17 +77,19 @@ class CVDRiskCalculatorTest {
         isSmoker = Answer.Unanswered,
         bmi = 27.0
     )
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("3 - 6", risk)
   }
 
   @Test
   fun `should return risk range when bmi and smoking is not specified`() {
-    val risk = CVDRiskCalculator.calculateCvdRisk(
+    val cvdRiskInput = CVDRiskInput(
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
         sbp = 125,
     )
+    val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("3 - 8", risk)
   }
 }

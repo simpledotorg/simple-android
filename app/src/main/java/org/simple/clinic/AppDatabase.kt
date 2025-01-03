@@ -37,6 +37,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdFts
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.OptimizationType.PurgeDeleted
@@ -100,12 +101,13 @@ import org.simple.clinic.patient.Answer as PatientAnswer
       BusinessIdFts::class,
       PatientAddressFts::class,
       Questionnaire::class,
-      QuestionnaireResponse::class
+      QuestionnaireResponse::class,
+      PatientAttribute::class,
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 116,
+    version = 117,
     exportSchema = true
 )
 @TypeConverters(
@@ -199,6 +201,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun questionnaireResponseDao(): QuestionnaireResponse.RoomDao
 
+  abstract fun patientAttributeDao(): PatientAttribute.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -216,6 +220,7 @@ abstract class AppDatabase : RoomDatabase() {
       callResultDao().clear()
       questionnaireDao().clear()
       questionnaireResponseDao().clear()
+      patientAttributeDao().clear()
     }
   }
 

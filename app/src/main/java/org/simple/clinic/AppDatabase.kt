@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
@@ -103,11 +104,12 @@ import org.simple.clinic.patient.Answer as PatientAnswer
       Questionnaire::class,
       QuestionnaireResponse::class,
       PatientAttribute::class,
+      CVDRisk::class
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 117,
+    version = 118,
     exportSchema = true
 )
 @TypeConverters(
@@ -203,6 +205,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun patientAttributeDao(): PatientAttribute.RoomDao
 
+  abstract fun cvdRiskDao(): CVDRisk.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -221,6 +225,7 @@ abstract class AppDatabase : RoomDatabase() {
       questionnaireDao().clear()
       questionnaireResponseDao().clear()
       patientAttributeDao().clear()
+      cvdRiskDao().clear()
     }
   }
 

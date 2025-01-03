@@ -10,6 +10,8 @@ import org.simple.clinic.bloodsugar.sync.BloodSugarSync
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.di.BloodPressureModule
 import org.simple.clinic.bp.sync.BloodPressureSync
+import org.simple.clinic.cvdrisk.CVDRiskModule
+import org.simple.clinic.cvdrisk.sync.CVDRiskSync
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugModule
@@ -72,6 +74,7 @@ import javax.inject.Named
   QuestionnaireModule::class,
   QuestionnaireResponseModule::class,
   PatientAttributeModule::class,
+  CVDRiskModule::class
 ])
 class SyncModule {
 
@@ -94,7 +97,8 @@ class SyncModule {
       callResultSync: CallResultSync,
       questionnaireSync: QuestionnaireSync,
       questionnaireResponseSync: QuestionnaireResponseSync,
-      patientAttributeSync: PatientAttributeSync
+      patientAttributeSync: PatientAttributeSync,
+      cvdRiskSync: CVDRiskSync,
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 
@@ -102,7 +106,7 @@ class SyncModule {
         questionnaireSync, questionnaireResponseSync, protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
-        teleconsultRecordSync, drugSync, patientAttributeSync
+        teleconsultRecordSync, drugSync, patientAttributeSync, cvdRiskSync
     ) + optionalSyncs
   }
 

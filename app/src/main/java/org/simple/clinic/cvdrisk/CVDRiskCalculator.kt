@@ -5,23 +5,16 @@ import org.simple.clinic.patient.Gender
 
 object CVDRiskCalculator {
 
-  fun calculateCvdRisk(
-      cvdRiskInput: CVDRiskInput
-  ): String? {
+  fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): String? {
     with(cvdRiskInput) {
       if (cvdRiskData == null) return null
 
       val genderData = getGenderData(cvdRiskData, gender) ?: return null
       val smokingDataList = getSmokingDataList(genderData, isSmoker)
       val ageRange = getAgeRange(smokingDataList, age) ?: return null
-
       val sbpRange = getSBPRange(sbp)
       val bmiRangeList = getBMIRangeList(bmi)
-
-      val risks = ageRange
-          .filter { it.sbp == sbpRange && it.bmi in bmiRangeList }
-          .map { it.risk }
-
+      val risks = getRiskValues(ageRange, sbpRange, bmiRangeList)
       return formatRisk(risks)
     }
   }
@@ -38,15 +31,22 @@ object CVDRiskCalculator {
     else -> listOf(genderData.nonSmoking, genderData.smoking)
   }
 
-  private fun getAgeRange(smokingDataList: List<SmokingData>, age: Int): List<RiskEntry>? = when (age) {
-    in 40..44 -> smokingDataList.mapNotNull { it.age40to44 }.flatten()
-    in 45..49 -> smokingDataList.mapNotNull { it.age45to49 }.flatten()
-    in 50..54 -> smokingDataList.mapNotNull { it.age50to54 }.flatten()
-    in 55..59 -> smokingDataList.mapNotNull { it.age55to59 }.flatten()
-    in 60..64 -> smokingDataList.mapNotNull { it.age60to64 }.flatten()
-    in 65..69 -> smokingDataList.mapNotNull { it.age65to69 }.flatten()
-    in 70..74 -> smokingDataList.mapNotNull { it.age70to74 }.flatten()
-    else -> null
+  private fun getAgeRange(smokingDataList: List<SmokingData>, age: Int): List<RiskEntry>? {
+    val ageToRiskMapping = mapOf(
+        40..44 to { data: SmokingData -> data.age40to44 },
+        45..49 to { data: SmokingData -> data.age45to49 },
+        50..54 to { data: SmokingData -> data.age50to54 },
+        55..59 to { data: SmokingData -> data.age55to59 },
+        60..64 to { data: SmokingData -> data.age60to64 },
+        65..69 to { data: SmokingData -> data.age65to69 },
+        70..74 to { data: SmokingData -> data.age70to74 }
+    )
+
+    val riskExtractor = ageToRiskMapping.entries
+        .firstOrNull { age in it.key }
+        ?.value ?: return null
+
+    return smokingDataList.mapNotNull(riskExtractor).flatten()
   }
 
   private fun getSBPRange(sbp: Int) = when (sbp) {
@@ -57,23 +57,30 @@ object CVDRiskCalculator {
     else -> "180+"
   }
 
-  private fun getBMIRangeList(bmi: Double?) = if (bmi != null) {
-    listOf(
-        when (bmi) {
-          in Double.MIN_VALUE..19.9 -> "20-"
-          in 20.0..24.9 -> "20 - 24"
-          in 25.0..29.9 -> "25 - 29"
-          in 30.0..34.9 -> "30 - 35"
-          else -> "35+"
-        }
-    )
-  } else {
-    listOf("20-", "20 - 24", "25 - 29", "30 - 35", "35+")
+  private fun getBMIRangeList(bmi: Double?): List<String> {
+    return bmi?.let { listOf(getBMIRange(it)) }
+        ?: listOf("20-", "20 - 24", "25 - 29", "30 - 35", "35+")
   }
 
-  private fun formatRisk(risks: List<Int>): String? = when {
-    risks.isEmpty() -> null
-    risks.size == 1 -> risks.first().toString()
-    else -> "${risks.minOrNull()} - ${risks.maxOrNull()}"
+  private fun getBMIRange(bmi: Double): String {
+    return when (bmi) {
+      in Double.MIN_VALUE..19.9 -> "20-"
+      in 20.0..24.9 -> "20 - 24"
+      in 25.0..29.9 -> "25 - 29"
+      in 30.0..34.9 -> "30 - 35"
+      else -> "35+"
+    }
+  }
+
+  private fun getRiskValues(ageRange: List<RiskEntry>, sbpRange: String, bmiRangeList: List<String>): List<Int> {
+    return ageRange.filter { it.sbp == sbpRange && it.bmi in bmiRangeList }.map { it.risk }
+  }
+
+  private fun formatRisk(risks: List<Int>): String? {
+    return when {
+      risks.isEmpty() -> null
+      risks.size == 1 -> risks.first().toString()
+      else -> "${risks.minOrNull()} - ${risks.maxOrNull()}"
+    }
   }
 }

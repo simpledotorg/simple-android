@@ -33,7 +33,7 @@ data class PatientAttribute(
     val userUuid: UUID,
 
     @Embedded
-    val reading: BMIReading,
+    val bmiReading: BMIReading,
 
     @Embedded
     val timestamps: Timestamps,

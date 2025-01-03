@@ -105,8 +105,8 @@ class PatientAttributeSyncIntegrationTest {
           patientUuid = patientUuid,
           userUuid = userUuid,
           reading = BMIReading(
-              height = "177.0",
-              weight = "68.0"
+              height = 177f,
+              weight = 68f
           ),
           syncStatus = SyncStatus.PENDING,
       )
@@ -136,8 +136,8 @@ class PatientAttributeSyncIntegrationTest {
           patientUuid = patientUuid,
           userUuid = userUuid,
           reading = BMIReading(
-              height = "177",
-              weight = "68"
+              height = 177f,
+              weight = 68f
           ),
           syncStatus = SyncStatus.PENDING,
       )
@@ -148,7 +148,7 @@ class PatientAttributeSyncIntegrationTest {
     sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
-    val modifiedRecord = records[1].withReading(BMIReading(height = "182", weight = "78"))
+    val modifiedRecord = records[1].withReading(BMIReading(height = 182f, weight = 78f))
     repository.save(listOf(modifiedRecord))
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
@@ -169,9 +169,9 @@ class PatientAttributeSyncIntegrationTest {
 
   private fun PatientAttribute.syncCompleted(): PatientAttribute = copy(syncStatus = SyncStatus.DONE)
 
-  private fun PatientAttribute.withReading(reading: BMIReading): PatientAttribute {
+  private fun PatientAttribute.withReading(bmiReading: BMIReading): PatientAttribute {
     return copy(
-        reading = reading.copy(height = reading.height, weight = reading.weight),
+        bmiReading = bmiReading.copy(height = bmiReading.height, weight = bmiReading.weight),
         syncStatus = SyncStatus.PENDING,
         timestamps = timestamps.copy(updatedAt = timestamps.updatedAt.plusMillis(1))
     )

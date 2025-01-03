@@ -41,9 +41,9 @@ data class PatientAttributePayload(
       uuid = uuid,
       patientUuid = patientUuid,
       userUuid = userUuid,
-      reading = BMIReading(
-          height = height,
-          weight = weight
+      bmiReading = BMIReading(
+          height = height.toFloat(),
+          weight = weight.toFloat()
       ),
       timestamps = Timestamps(
           createdAt = createdAt,

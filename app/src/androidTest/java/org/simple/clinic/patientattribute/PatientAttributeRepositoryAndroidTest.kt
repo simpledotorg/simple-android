@@ -35,12 +35,12 @@ class PatientAttributeRepositoryAndroidTest {
   @Test
   fun saving_a_patient_attribute_should_work_correctly() {
     //given
-    val bmiReading = BMIReading(height = "177", weight = "64")
+    val bmiReading = BMIReading(height = 177f, weight = 64f)
     val patientAttribute = testData.patientAttribute(reading = bmiReading)
 
     //when
     repository.save(
-        reading = patientAttribute.reading,
+        bmiReading = patientAttribute.bmiReading,
         patientUuid = patientAttribute.patientUuid,
         loggedInUserUuid = patientAttribute.userUuid,
         uuid = patientAttribute.uuid
@@ -48,7 +48,7 @@ class PatientAttributeRepositoryAndroidTest {
 
     //then
     val savedPatientAttribute = repository.getPatientAttributeImmediate(patientAttribute.patientUuid)!!
-    assertThat(savedPatientAttribute.reading).isEqualTo(patientAttribute.reading)
+    assertThat(savedPatientAttribute.bmiReading).isEqualTo(patientAttribute.bmiReading)
     assertThat(savedPatientAttribute.patientUuid).isEqualTo(patientAttribute.patientUuid)
     assertThat(savedPatientAttribute.userUuid).isEqualTo(patientAttribute.userUuid)
     assertThat(savedPatientAttribute.uuid).isEqualTo(patientAttribute.uuid)

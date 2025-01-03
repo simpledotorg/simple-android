@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 117,
-    "identityHash": "c7c0a757d4b32165ae6b15e7a40eb523",
+    "identityHash": "44292de9d5773c28b1b893fd8c95dc9b",
     "entities": [
       {
         "tableName": "Patient",
@@ -2164,7 +2164,7 @@
       },
       {
         "tableName": "PatientAttribute",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `height` TEXT NOT NULL, `weight` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `patientUuid` TEXT NOT NULL, `userUuid` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `height` REAL NOT NULL, `weight` REAL NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -2191,15 +2191,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "reading.height",
+            "fieldPath": "bmiReading.height",
             "columnName": "height",
-            "affinity": "TEXT",
+            "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "reading.weight",
+            "fieldPath": "bmiReading.weight",
             "columnName": "weight",
-            "affinity": "TEXT",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -2249,7 +2249,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c7c0a757d4b32165ae6b15e7a40eb523')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '44292de9d5773c28b1b893fd8c95dc9b')"
     ]
   }
 }

@@ -1659,7 +1659,7 @@ object TestData {
         uuid = uuid,
         patientUuid = patientUuid,
         userUuid = userUuid,
-        reading = reading,
+        bmiReading = reading,
         timestamps = Timestamps(
             createdAt, updatedAt, deletedAt
         ),

@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class BMIReading(val height: String, val weight: String) : Parcelable
+data class BMIReading(val height: Float, val weight: Float) : Parcelable

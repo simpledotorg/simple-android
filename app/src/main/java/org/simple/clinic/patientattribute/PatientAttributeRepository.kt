@@ -17,7 +17,7 @@ class PatientAttributeRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<PatientAttribute, PatientAttributePayload> {
   fun save(
-      reading: BMIReading,
+      bmiReading: BMIReading,
       patientUuid: UUID,
       loggedInUserUuid: UUID,
       uuid: UUID,
@@ -26,7 +26,7 @@ class PatientAttributeRepository @Inject constructor(
         uuid = uuid,
         patientUuid = patientUuid,
         userUuid = loggedInUserUuid,
-        reading = reading,
+        bmiReading = bmiReading,
         timestamps = Timestamps.create(utcClock),
         syncStatus = PENDING
     )

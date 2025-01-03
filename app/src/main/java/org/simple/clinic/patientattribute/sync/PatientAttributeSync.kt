@@ -43,8 +43,8 @@ class PatientAttributeSync @Inject constructor(
                 uuid = uuid,
                 patientUuid = patientUuid,
                 userUuid = userUuid,
-                height = reading.height,
-                weight = reading.weight,
+                height = bmiReading.height.toString(),
+                weight = bmiReading.weight.toString(),
                 createdAt = timestamps.createdAt,
                 updatedAt = timestamps.updatedAt,
                 deletedAt = timestamps.deletedAt

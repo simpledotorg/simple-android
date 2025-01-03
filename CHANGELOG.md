@@ -27,6 +27,7 @@
 - Bump AGP to v8.7.3
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
+- Update PR comment check regex to optionally verify full shortcut story link
 
 ### Fixes
 

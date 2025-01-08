@@ -61,25 +61,25 @@ class CVDRiskCalculator @Inject constructor(
   }
 
   private fun getSystolicRange(sbp: Int) = when (sbp) {
-    in 0..119 -> "120-"
+    in 0..119 -> "< 120"
     in 120..139 -> "120 - 139"
     in 140..159 -> "140 - 159"
     in 160..179 -> "160 - 179"
-    else -> "180+"
+    else -> ">= 180"
   }
 
   private fun getBMIRangeList(bmi: Float?): List<String> {
     return bmi?.let { listOf(getBMIRange(it)) }
-        ?: listOf("20-", "20 - 24", "25 - 29", "30 - 35", "35+")
+        ?: listOf("< 20", "20 - 24", "25 - 29", "30 - 35", "> 35")
   }
 
   private fun getBMIRange(bmi: Float): String {
     return when (bmi) {
-      in 0.0..19.9 -> "20-"
+      in 0.0..19.9 -> "< 20"
       in 20.0..24.9 -> "20 - 24"
       in 25.0..29.9 -> "25 - 29"
       in 30.0..34.9 -> "30 - 35"
-      else -> "35+"
+      else -> "> 35"
     }
   }
 

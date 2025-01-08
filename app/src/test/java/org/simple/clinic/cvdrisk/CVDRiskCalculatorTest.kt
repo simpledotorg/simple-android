@@ -16,7 +16,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Female,
         age = 40,
-        sbp = 130,
+        systolic = 130,
         isSmoker = Answer.Yes,
         bmi = 27.0
     )
@@ -31,7 +31,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Female,
         age = 40,
-        sbp = 130,
+        systolic = 130,
         isSmoker = Answer.Yes,
         bmi = null
     )
@@ -45,7 +45,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 80,
-        sbp = 200,
+        systolic = 200,
         isSmoker = Answer.Yes,
         bmi = 40.0
     )
@@ -59,7 +59,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
-        sbp = 125,
+        systolic = 125,
         isSmoker = Answer.No,
         bmi = 27.0
     )
@@ -73,7 +73,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
-        sbp = 125,
+        systolic = 125,
         isSmoker = Answer.Unanswered,
         bmi = 27.0
     )
@@ -87,7 +87,7 @@ class CVDRiskCalculatorTest {
         cvdRiskData = testData,
         gender = Gender.Male,
         age = 40,
-        sbp = 125,
+        systolic = 125,
     )
     val risk = CVDRiskCalculator.calculateCvdRisk(cvdRiskInput)
     assertEquals("3 - 8", risk)

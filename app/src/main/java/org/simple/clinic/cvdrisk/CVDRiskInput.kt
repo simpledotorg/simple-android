@@ -7,7 +7,7 @@ data class CVDRiskInput(
     val cvdRiskData: CVDRiskCalculationSheet?,
     val gender: Gender,
     val age: Int,
-    val sbp: Int,
+    val systolic: Int,
     val isSmoker: Answer = Answer.Unanswered,
     val bmi: Double? = null
 )

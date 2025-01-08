@@ -30,7 +30,7 @@ data class SmokingData(
 
 @JsonClass(generateAdapter = true)
 data class RiskEntry(
-    val sbp: String,
+    @Json(name = "sbp") val systolic: String,
     val bmi: String,
     val risk: Int
 )

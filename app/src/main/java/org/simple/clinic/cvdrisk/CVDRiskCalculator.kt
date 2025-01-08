@@ -9,9 +9,9 @@ object CVDRiskCalculator {
     with(cvdRiskInput) {
       val riskEntries = getRiskEntries(cvdRiskInput) ?: return null
 
-      val sbpRange = getSBPRange(sbp)
+      val systolicRange = getSystolicRange(systolic)
       val bmiRangeList = getBMIRangeList(bmi)
-      val risks = riskEntries.filter { it.sbp == sbpRange && it.bmi in bmiRangeList }.map { it.risk }
+      val risks = riskEntries.filter { it.systolic == systolicRange && it.bmi in bmiRangeList }.map { it.risk }
       return formatRisk(risks)
     }
   }
@@ -54,8 +54,8 @@ object CVDRiskCalculator {
     return smokingDataList.mapNotNull(riskExtractor).flatten()
   }
 
-  private fun getSBPRange(sbp: Int) = when (sbp) {
-    in Int.MIN_VALUE..119 -> "120-"
+  private fun getSystolicRange(sbp: Int) = when (sbp) {
+    in 0..119 -> "120-"
     in 120..139 -> "120 - 139"
     in 140..159 -> "140 - 159"
     in 160..179 -> "160 - 179"

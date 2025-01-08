@@ -5,12 +5,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class CVDRiskCalculationSheet(
-    val women: CVDRiskCalculationGenderSheet,
-    val men: CVDRiskCalculationGenderSheet,
+    val women: CVDRiskCategory,
+    val men: CVDRiskCategory,
 )
 
 @JsonClass(generateAdapter = true)
-data class CVDRiskCalculationGenderSheet(
+data class CVDRiskCategory(
     val smoking: SmokingData,
 
     @Json(name = "nonsmoking")

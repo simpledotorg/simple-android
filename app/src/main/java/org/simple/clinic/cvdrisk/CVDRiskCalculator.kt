@@ -30,7 +30,7 @@ object CVDRiskCalculator {
     else -> null
   }
 
-  private fun getSmokingDataList(genderData: CVDRiskCalculationGenderSheet, isSmoker: Answer) = when (isSmoker) {
+  private fun getSmokingDataList(genderData: CVDRiskCategory, isSmoker: Answer) = when (isSmoker) {
     Answer.Yes -> listOf(genderData.smoking)
     Answer.No -> listOf(genderData.nonSmoking)
     else -> listOf(genderData.nonSmoking, genderData.smoking)

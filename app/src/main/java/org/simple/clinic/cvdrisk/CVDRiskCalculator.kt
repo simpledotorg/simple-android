@@ -1,9 +1,14 @@
 package org.simple.clinic.cvdrisk
 
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
+import javax.inject.Inject
 
-object CVDRiskCalculator {
+@AppScope
+class CVDRiskCalculator @Inject constructor(
+    private val cvdRiskCalculationSheet: Lazy<CVDRiskCalculationSheet>,
+) {
 
   fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): String? {
     with(cvdRiskInput) {
@@ -18,7 +23,8 @@ object CVDRiskCalculator {
 
   private fun getRiskEntries(cvdRiskInput: CVDRiskInput): List<RiskEntry>? {
     with(cvdRiskInput) {
-      val genderData = cvdRiskData?.let { getGenderData(it, gender) }
+      val sheet = cvdRiskCalculationSheet.value
+      val genderData = getGenderData(sheet, gender)
       val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
       return smokingDataList?.let { getAgeRange(smokingDataList, age) }
     }

@@ -40,7 +40,6 @@ class CVDRiskModule {
   }
 
   @Provides
-  @AppScope
   @OptIn(ExperimentalStdlibApi::class)
   fun cvdRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): CVDRiskCalculationSheet? {
     val adapter = moshi.adapter<CVDRiskCalculationSheet>()

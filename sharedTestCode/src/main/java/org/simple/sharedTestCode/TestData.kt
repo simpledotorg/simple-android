@@ -16,8 +16,8 @@ import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.cvdrisk.CVDRisk
-import org.simple.clinic.cvdrisk.CVDRiskCalculationGenderSheet
 import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
+import org.simple.clinic.cvdrisk.CVDRiskCategory
 import org.simple.clinic.cvdrisk.RiskEntry
 import org.simple.clinic.cvdrisk.SmokingData
 import org.simple.clinic.drugs.PrescribedDrug
@@ -1737,7 +1737,7 @@ object TestData {
         age70to74 = null
     )
 
-    val womenGenderData = CVDRiskCalculationGenderSheet(
+    val womenGenderData = CVDRiskCategory(
         smoking = smokingDataWomen,
         nonSmoking = nonSmokingDataWomen
     )
@@ -1762,7 +1762,7 @@ object TestData {
         )
     )
 
-    val menGenderData = CVDRiskCalculationGenderSheet(
+    val menGenderData = CVDRiskCategory(
         smoking = smokingDataMen,
         nonSmoking = nonSmokingDataMen
     )

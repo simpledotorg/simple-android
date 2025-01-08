@@ -62,14 +62,14 @@ object CVDRiskCalculator {
     else -> "180+"
   }
 
-  private fun getBMIRangeList(bmi: Double?): List<String> {
+  private fun getBMIRangeList(bmi: Float?): List<String> {
     return bmi?.let { listOf(getBMIRange(it)) }
         ?: listOf("20-", "20 - 24", "25 - 29", "30 - 35", "35+")
   }
 
-  private fun getBMIRange(bmi: Double): String {
+  private fun getBMIRange(bmi: Float): String {
     return when (bmi) {
-      in Double.MIN_VALUE..19.9 -> "20-"
+      in 0.0..19.9 -> "20-"
       in 20.0..24.9 -> "20 - 24"
       in 25.0..29.9 -> "25 - 29"
       in 30.0..34.9 -> "30 - 35"

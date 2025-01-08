@@ -9,5 +9,5 @@ data class CVDRiskInput(
     val age: Int,
     val systolic: Int,
     val isSmoker: Answer = Answer.Unanswered,
-    val bmi: Double? = null
+    val bmi: Float? = null
 )

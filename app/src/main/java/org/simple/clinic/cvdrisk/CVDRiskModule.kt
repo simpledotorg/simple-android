@@ -2,15 +2,12 @@ package org.simple.clinic.cvdrisk
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.google.gson.JsonObject
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.cvdrisk.sync.CVDRiskSyncApi
-import org.simple.clinic.di.AppScope
-import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastCVDRiskPullToken
 import org.simple.clinic.platform.crash.CrashReporter
@@ -46,7 +43,7 @@ class CVDRiskModule {
     val json = configReader.string("cvd_risk_calculation_sheet_v0", "{}")
 
     return try {
-    adapter.fromJson(json)
+      adapter.fromJson(json)
     } catch (e: Throwable) {
       CrashReporter.report(e)
       null

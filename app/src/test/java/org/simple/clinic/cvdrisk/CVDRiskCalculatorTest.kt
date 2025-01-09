@@ -10,7 +10,7 @@ class CVDRiskCalculatorTest {
 
   private val cvdRiskCalculationSheet = TestData.cvdRiskCalculationSheet()
   private val cvdRiskCalculator = CVDRiskCalculator(
-      cvdRiskCalculationSheet = lazy { cvdRiskCalculationSheet }
+      cvdRiskCalculationSheet = { cvdRiskCalculationSheet }
   )
 
   @Test

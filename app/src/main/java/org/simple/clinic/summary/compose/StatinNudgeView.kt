@@ -28,16 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.util.toAnnotatedString
 
 
 @Composable
 fun StatinNudge(
-    isVisible: Boolean,
+    statinInfo: StatinInfo,
     modifier: Modifier = Modifier
 ) {
   AnimatedVisibility(
-      visible = isVisible,
+      visible = statinInfo.canPrescribeStatin,
       enter = expandVertically(
           animationSpec = tween(500),
           expandFrom = Alignment.Top
@@ -143,6 +144,6 @@ fun RiskProgressBar() {
 @Composable
 fun StatinNudgePreview() {
   SimpleTheme {
-    StatinNudge(true)
+    StatinNudge(StatinInfo(canPrescribeStatin = true))
   }
 }

@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -95,6 +96,9 @@ class PatientSummaryUpdate(
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
+      is CVDRiskLoaded -> cvdRiskLoaded(event, model)
+      is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
+      is StatinInfoLoaded -> statinInfoLoaded(event, model)
     }
   }
 
@@ -103,21 +107,55 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val minAgeForStatin = 40
+    val maxAgeForCVDRisk = 74
     val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
     val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
     val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
 
     val hasCVD = hasHadStroke || hasHadHeartAttack
-    val isPatientEligibleForStatin = (event.age >= minAgeForStatin && hasDiabetes) || hasCVD
     val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
     val canPrescribeStatin = event.isPatientDead.not() &&
         event.assignedFacility?.facilityType.equals("UHC", ignoreCase = true) &&
         event.hasBPRecordedToday &&
-        hasStatinsPrescribedAlready.not() &&
-        isPatientEligibleForStatin
+        hasStatinsPrescribedAlready.not()
 
-    val updatedModel = model.updateStatinInfo(canPrescribeStatin)
-    return next(updatedModel)
+    return when {
+      !canPrescribeStatin || event.age < minAgeForStatin -> {
+        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = false))
+        next(updatedModel)
+      }
+
+      event.age > maxAgeForCVDRisk -> {
+        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = hasCVD || hasDiabetes))
+        next(updatedModel)
+      }
+
+      hasCVD || hasDiabetes -> {
+        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = true))
+        next(updatedModel)
+      }
+
+      else -> dispatch(LoadCVDRisk(model.patientUuid))
+    }
+  }
+
+  private fun cvdRiskLoaded(
+      event: CVDRiskLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val cvdRisk = event.risk
+    return if (cvdRisk != null) {
+      dispatch(LoadStatinInfo(model.patientUuid))
+    } else {
+      dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+    }
+  }
+
+  private fun statinInfoLoaded(
+      event: StatinInfoLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return next(model.updateStatinInfo(event.statinInfo))
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {

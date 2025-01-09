@@ -1695,21 +1695,21 @@ object TestData {
   fun cvdRiskCalculationSheet(): CVDRiskCalculationSheet {
     val smokingDataWomen = SmokingData(
         age40to44 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 11),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 5),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 6)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
         ),
         age45to49 = null,
         age50to54 = null,
         age55to59 = null,
         age60to64 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 21),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 21),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 18),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 12),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 13),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 14)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 14)
         ),
         age65to69 = null,
         age70to74 = null
@@ -1717,21 +1717,21 @@ object TestData {
 
     val nonSmokingDataWomen = SmokingData(
         age40to44 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 5),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 2)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
         ),
         age45to49 = null,
         age50to54 = null,
         age55to59 = null,
         age60to64 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 13),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 13),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 11),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 7),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 8),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 8)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         ),
         age65to69 = null,
         age70to74 = null
@@ -1744,21 +1744,21 @@ object TestData {
 
     val smokingDataMen = smokingDataWomen.copy(
         age40to44 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 10),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 10),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 6),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 7),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 8)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         )
     )
 
     val nonSmokingDataMen = nonSmokingDataWomen.copy(
         age40to44 = listOf(
-            RiskEntry(systolic = "180+", bmi = "20-", risk = 5),
+            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 5),
             RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 3),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 3),
-            RiskEntry(systolic = "120 - 139", bmi = "35+", risk = 4)
+            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 4)
         )
     )
 

@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.cvdrisk.StatinInfo
+
 interface PatientSummaryScreenUi {
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
   fun showEditButton()
@@ -18,6 +20,5 @@ interface PatientSummaryScreenUi {
   fun showClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlertWithoutAnimation()
-  fun showStatinAlert()
-  fun hideStatinAlert()
+  fun updateStatinAlert(statinInfo: StatinInfo)
 }

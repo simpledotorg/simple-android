@@ -12,6 +12,11 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskCalculator
+import org.simple.clinic.cvdrisk.CVDRiskInput
+import org.simple.clinic.cvdrisk.CVDRiskRepository
+import org.simple.clinic.cvdrisk.CVDRiskUtil
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
@@ -24,6 +29,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
@@ -53,6 +59,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val cvdRiskRepository: CVDRiskRepository,
+    private val patientAttributeRepository: PatientAttributeRepository,
     private val country: Country,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
@@ -62,6 +70,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
+    private val cvdRiskCalculator: CVDRiskCalculator,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -94,6 +103,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
+        .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
+        .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
+        .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
         .build()
   }
 
@@ -136,6 +148,87 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 medicalHistory = medicalHistory,
                 prescriptions = prescriptions
             )
+          }
+    }
+  }
+
+  private fun loadCVDRisk(): ObservableTransformer<LoadCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
+            CVDRiskLoaded(cvdRisk?.riskScore)
+          }
+    }
+  }
+
+  private fun calculateCVDRisk(): ObservableTransformer<CalculateCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .flatMap { effect ->
+            val patient = effect.patient
+            bloodPressureRepository
+                .newestMeasurementsForPatient(patient.uuid, 1)
+                .map {
+                  Pair(patient, it.firstOrNull())
+                }
+          }
+          .map { (patient, bloodPressure) ->
+            if (bloodPressure == null) {
+              return@map CVDRiskCalculated(null)
+            }
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patient.uuid
+            )
+
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                patientUuid = patient.uuid
+            )
+
+            val risk = cvdRiskCalculator.calculateCvdRisk(
+                CVDRiskInput(
+                    gender = patient.gender,
+                    age = patient.ageDetails.estimateAge(userClock),
+                    systolic = bloodPressure.reading.systolic,
+                    isSmoker = medicalHistory.isSmoking,
+                    bmi = patientAttribute?.bmiReading?.calculateBMI(),
+                )
+            )
+
+            if (risk != null) {
+              cvdRiskRepository.save(
+                  riskScore = risk,
+                  patientUuid = patient.uuid,
+                  uuid = uuidGenerator.v4()
+              )
+            }
+            CVDRiskCalculated(risk)
+          }
+    }
+  }
+
+  private fun loadStatinInfo(): ObservableTransformer<LoadStatinInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val patientUuid = effect.patientUuid
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patientUuid
+            )
+            val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
+            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
+            val canPrescribeStatin = cvdRisk?.riskScore?.let { CVDRiskUtil.getMaxRisk(it) > 10 } ?: false
+            StatinInfoLoaded(StatinInfo(
+                canPrescribeStatin = canPrescribeStatin,
+                cvdRisk = cvdRisk?.riskScore,
+                isSmoker = medicalHistory.isSmoking,
+                bmiReading = bmiReading?.bmiReading
+            ))
           }
     }
   }

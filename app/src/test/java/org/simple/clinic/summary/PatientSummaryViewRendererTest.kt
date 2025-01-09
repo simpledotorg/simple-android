@@ -5,6 +5,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
@@ -122,7 +123,6 @@ class PatientSummaryViewRendererTest {
         alternativeId = bangladeshNationalId,
         facility = facility
     )
-
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -764,11 +764,12 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when statin info is loaded and can prescribe statin then show the statin alert`() {
+  fun `when statin info is loaded then update the statin alert`() {
     //given
+    val statinInfo = StatinInfo(canPrescribeStatin = true)
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .updateStatinInfo(true)
+        .updateStatinInfo(statinInfo)
 
     // when
     uiRenderer.render(model)
@@ -778,26 +779,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
     verify(ui, times(2)).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).showStatinAlert()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when statin info is loaded and can not prescribe statin then hide the statin alert`() {
-    //given
-    val model = defaultModel
-        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .updateStatinInfo(false)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).hideDiabetesView()
-    verify(ui).hideTeleconsultButton()
-    verify(ui).hideNextAppointmentCard()
-    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideStatinAlert()
+    verify(ui).updateStatinAlert(statinInfo)
     verifyNoMoreInteractions(ui)
   }
 
@@ -838,8 +820,7 @@ class PatientSummaryViewRendererTest {
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
         .scheduledAppointmentLoaded(appointment)
-        .updateStatinInfo(true)
-
+        .updateStatinInfo(StatinInfo(canPrescribeStatin = true))
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -858,7 +839,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
-    verify(ui).showStatinAlert()
+    verify(ui).updateStatinAlert(StatinInfo(canPrescribeStatin = true))
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)

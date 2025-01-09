@@ -41,6 +41,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.editpatient.EditPatientScreen
@@ -217,7 +218,7 @@ class PatientSummaryScreen :
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
-  private var shouldShowStatinNudge by mutableStateOf(false)
+  private var statinInfo by mutableStateOf(StatinInfo.default())
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -319,7 +320,7 @@ class PatientSummaryScreen :
       setContent {
         SimpleTheme {
           StatinNudge(
-              isVisible = shouldShowStatinNudge,
+              statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
           )
         }
@@ -763,12 +764,8 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showStatinAlert() {
-    shouldShowStatinNudge = true
-  }
-
-  override fun hideStatinAlert() {
-    shouldShowStatinNudge = false
+  override fun updateStatinAlert(statinInfo: StatinInfo) {
+    this.statinInfo = statinInfo
   }
 
   private fun showWithAnimation(view: View) {

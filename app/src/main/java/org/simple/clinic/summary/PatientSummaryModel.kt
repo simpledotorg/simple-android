@@ -129,7 +129,7 @@ data class PatientSummaryModel(
     return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 
-  fun updateStatinInfo(statinInfo: StatinInfo?): PatientSummaryModel {
+  fun updateStatinInfo(statinInfo: StatinInfo): PatientSummaryModel {
     return copy(statinInfo = statinInfo)
   }
 }

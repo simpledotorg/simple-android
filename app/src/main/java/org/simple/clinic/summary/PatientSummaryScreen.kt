@@ -218,7 +218,7 @@ class PatientSummaryScreen :
 
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
-  private var statinInfo by mutableStateOf<StatinInfo?>(null)
+  private var statinInfo by mutableStateOf(StatinInfo.default())
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)

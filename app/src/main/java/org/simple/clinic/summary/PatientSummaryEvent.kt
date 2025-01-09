@@ -158,5 +158,5 @@ data class CVDRiskCalculated(
 ): PatientSummaryEvent()
 
 data class StatinInfoLoaded(
-    val statinInfo: StatinInfo?
+    val statinInfo: StatinInfo
 ): PatientSummaryEvent()

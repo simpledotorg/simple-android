@@ -26,7 +26,7 @@ jobs:
         run: |
           docker compose -f ".github/docker/simple-server.compose.yml" up -d
           sleep 2
-          docker compose exec server bundle exec rails routes
+          docker compose -f ".github/docker/simple-server.compose.yml" exec server bundle exec rails routes
           
 
       - name: Cache AVD

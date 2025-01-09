@@ -176,6 +176,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 }
           }
           .map { (patient, bloodPressure) ->
+            if (bloodPressure == null) {
+              return@map CVDRiskCalculated(null)
+            }
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
@@ -185,17 +188,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patient.uuid
             )
 
-            val risk = bloodPressure?.let {
-              cvdRiskCalculator.calculateCvdRisk(
-                  CVDRiskInput(
-                      gender = patient.gender,
-                      age = patient.ageDetails.estimateAge(userClock),
-                      systolic = bloodPressure.reading.systolic,
-                      isSmoker = medicalHistory.isSmoking,
-                      bmi = patientAttribute?.bmiReading?.calculateBMI(),
-                  )
-              )
-            }
+            val risk = cvdRiskCalculator.calculateCvdRisk(
+                CVDRiskInput(
+                    gender = patient.gender,
+                    age = patient.ageDetails.estimateAge(userClock),
+                    systolic = bloodPressure.reading.systolic,
+                    isSmoker = medicalHistory.isSmoking,
+                    bmi = patientAttribute?.bmiReading?.calculateBMI(),
+                )
+            )
+
             if (risk != null) {
               cvdRiskRepository.save(
                   riskScore = risk,

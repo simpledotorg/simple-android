@@ -35,8 +35,13 @@ services:
       CALL_SESSION_REDIS_HOST: redis
       RAILS_CACHE_REDIS_URL: redis://
       SIDEKIQ_REDIS_HOST: redis
+    networks:
+      - simple-network
+      - default
 
 networks:
+  simple-network:
+    driver: bridge
   default:
     driver: bridge
     driver_opts:

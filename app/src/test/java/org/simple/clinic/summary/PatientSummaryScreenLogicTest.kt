@@ -17,6 +17,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -231,7 +232,7 @@ class PatientSummaryScreenLogicTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculationSheet = { TestData.cvdRiskCalculationSheet() },
+        cvdRiskCalculator = CVDRiskCalculator({ TestData.cvdRiskCalculationSheet() }),
         patientAttributeRepository = patientAttributeRepository
     )
 

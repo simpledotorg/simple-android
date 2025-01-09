@@ -12,6 +12,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -77,7 +78,7 @@ class PatientSummaryEffectHandlerTest {
       htnPrescriptions = listOf("amlodipine"),
       diabetesPrescriptions = listOf("metformin")
   )
-  private val cvdRiskCalculationSheet = TestData.cvdRiskCalculationSheet()
+  private val cvdRiskCalculator = CVDRiskCalculator({ TestData.cvdRiskCalculationSheet() })
 
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
@@ -101,7 +102,7 @@ class PatientSummaryEffectHandlerTest {
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
       cvdRiskRepository = cvdRiskRepository,
       viewEffectsConsumer = viewEffectHandler::handle,
-      cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+      cvdRiskCalculator = cvdRiskCalculator,
       patientAttributeRepository = patientAttributeRepository,
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -147,7 +148,7 @@ class PatientSummaryEffectHandlerTest {
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        cvdRiskCalculator = cvdRiskCalculator,
         patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -210,7 +211,7 @@ class PatientSummaryEffectHandlerTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        cvdRiskCalculator = cvdRiskCalculator,
         patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -642,7 +643,7 @@ class PatientSummaryEffectHandlerTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         cvdRiskRepository = cvdRiskRepository,
         viewEffectsConsumer = viewEffectHandler::handle,
-        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        cvdRiskCalculator = cvdRiskCalculator,
         patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -830,7 +831,7 @@ class PatientSummaryEffectHandlerTest {
         viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculationSheet = { cvdRiskCalculationSheet },
+        cvdRiskCalculator = cvdRiskCalculator,
         patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())

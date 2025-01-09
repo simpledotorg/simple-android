@@ -12,7 +12,6 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRepository
@@ -71,7 +70,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
-    private val cvdRiskCalculationSheet: Lazy<CVDRiskCalculationSheet>,
+    private val cvdRiskCalculator: CVDRiskCalculator,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -186,8 +185,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patient.uuid
             )
 
-            val cvdRiskCalculationSheet = cvdRiskCalculationSheet.get()
-            val cvdRiskCalculator = CVDRiskCalculator(lazy { cvdRiskCalculationSheet })
             val risk = bloodPressure?.let {
               cvdRiskCalculator.calculateCvdRisk(
                   CVDRiskInput(

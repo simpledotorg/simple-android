@@ -3,7 +3,7 @@
 import kotlin.system.exitProcess
 
 val prDescription = args.firstOrNull().orEmpty()
-val storyRegex = Regex("https:\\/\\/app.shortcut.com\\/simpledotorg\\/story\\/[0-9]+\$")
+val storyRegex = Regex("https:\\/\\/app.shortcut.com\\/simpledotorg\\/story\\/[0-9]+(?:\\/.*)?\$")
 
 println("Checking PR description!")
 

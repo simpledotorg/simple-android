@@ -22,12 +22,13 @@ class BMIEntryUpdateTest {
 
   @Test
   fun `when the save button is clicked, then save the bmi`() {
+    val model = defaultModel.weightChanged("63").heightChanged("177")
     spec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CreateNewBMIEntry(defaultModel.patientUUID, BMIReading(height = defaultModel.height.toFloat(), weight = defaultModel.weight.toFloat())))
+            hasEffects(CreateNewBMIEntry(model.patientUUID, BMIReading(height = model.height.toFloat(), weight = model.weight.toFloat())))
         ))
   }
 

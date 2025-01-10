@@ -27,7 +27,7 @@ class BMIEntryUpdateTest {
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CreateNewBMIEntry(defaultModel.patientUUID, BMIReading(height = defaultModel.height, weight = defaultModel.weight)))
+            hasEffects(CreateNewBMIEntry(defaultModel.patientUUID, BMIReading(height = defaultModel.height.toFloat(), weight = defaultModel.weight.toFloat())))
         ))
   }
 

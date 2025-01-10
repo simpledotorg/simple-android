@@ -41,7 +41,7 @@ class BMIEntryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { createNewBMIEntry ->
             patientAttributeRepository.save(
-                reading = createNewBMIEntry.reading,
+                bmiReading = createNewBMIEntry.reading,
                 patientUuid = createNewBMIEntry.patientUUID,
                 loggedInUserUuid = currentUser.get().uuid,
                 uuid = uuidGenerator.v4(),

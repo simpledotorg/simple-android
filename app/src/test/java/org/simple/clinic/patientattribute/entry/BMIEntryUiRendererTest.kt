@@ -27,13 +27,13 @@ class BMIEntryUiRendererTest {
   @Test
   fun `when the height and weight are entered, then show bmi`() {
     //given
-    val height = "177"
-    val weight = "68"
+    val height = 177f
+    val weight = 68f
     val reading = BMIReading(height, weight)
     val bmi = reading.calculateBMI().toString()
 
     // when
-    uiRenderer.render(defaultModel.heightChanged(height).weightChanged(weight))
+    uiRenderer.render(defaultModel.heightChanged(height.toString()).weightChanged(weight.toString()))
 
     // then
     verify(ui).showBMI(bmi)

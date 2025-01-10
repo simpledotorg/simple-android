@@ -10,8 +10,8 @@ class BMIEntryUiRenderer(
   override fun render(model: BMIEntryModel) {
     if (model.height.isNotEmpty() && model.weight.isNotEmpty()) {
       val bmi = BMIReading(
-          height = model.height,
-          weight = model.weight
+          height = model.height.toFloat(),
+          weight = model.weight.toFloat()
       ).calculateBMI()
 
       ui.showBMI(bmi.toString())

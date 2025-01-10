@@ -40,7 +40,7 @@ class BMIEntryEffectHandlerTest {
   fun `when create bmi entry is received, then bmi should be saved`() {
     //when
     testCase.dispatch(CreateNewBMIEntry(
-        reading = BMIReading(height = "177", weight = "63"),
+        reading = BMIReading(height = 177f, weight = 63f),
         patientUUID = UUID.randomUUID()
     ))
 

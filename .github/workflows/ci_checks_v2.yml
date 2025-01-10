@@ -97,8 +97,10 @@ jobs:
             ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
 
       - name: Stop Simple Service
+        if: ${{ always() }}
+        continue-on-error: true
         run: |
-          docker compose -f ".github/docker/simple-server.compose.yml" logs server
+          docker compose -f ".github/docker/simple-server.compose.yml" logs --no-color server
           docker compose -f ".github/docker/simple-server.compose.yml" down
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'

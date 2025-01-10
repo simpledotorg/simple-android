@@ -4,13 +4,9 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class BMIEntryEvent : UiEvent
 
-data class HeightChanged(val height: String) : BMIEntryEvent() {
-  override val analyticsName = "BMI Entry:Height Changed"
-}
+data class HeightChanged(val height: String) : BMIEntryEvent()
 
-data class WeightChanged(val weight: String) : BMIEntryEvent() {
-  override val analyticsName = "BMI Entry:Weight Changed"
-}
+data class WeightChanged(val weight: String) : BMIEntryEvent()
 
 data object WeightBackspaceClicked : BMIEntryEvent()
 

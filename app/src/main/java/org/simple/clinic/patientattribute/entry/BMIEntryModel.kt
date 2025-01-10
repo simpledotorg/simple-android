@@ -10,23 +10,23 @@ data class BMIEntryModel(
     val height: String = "",
     val weight: String = ""
 ) : Parcelable {
-    companion object {
-        fun default(patientUUID: UUID) = BMIEntryModel(
-            patientUUID = patientUUID,
-        )
-    }
+  companion object {
+    fun default(patientUUID: UUID) = BMIEntryModel(
+        patientUUID = patientUUID,
+    )
+  }
 
-    fun heightChanged(height: String): BMIEntryModel =
-        copy(height = height)
+  fun heightChanged(height: String): BMIEntryModel =
+      copy(height = height)
 
-    fun weightChanged(weight: String): BMIEntryModel =
-        copy(weight = weight)
+  fun weightChanged(weight: String): BMIEntryModel =
+      copy(weight = weight)
 
-    fun deleteWeightLastDigit(): BMIEntryModel = if (weight.isNotEmpty())
-        copy(weight = weight.unsafeDropLastChar())
-    else
-        this
+  fun deleteWeightLastDigit(): BMIEntryModel = if (weight.isNotEmpty())
+    copy(weight = weight.unsafeDropLastChar())
+  else
+    this
 
-    private fun String.unsafeDropLastChar(): String =
-        this.substring(0, this.length - 1)
+  private fun String.unsafeDropLastChar(): String =
+      this.substring(0, this.length - 1)
 }

@@ -1092,4 +1092,9 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">Database maintenance in progress. This will only take a minute.</string>
 
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">Height (cm)</string>
+  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
+  <string name="bmi_x">BMI: %s</string>
 </resources>

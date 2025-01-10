@@ -79,7 +79,6 @@ fun StatinNudge(
                 text = stringResource(R.string.statin_alert_at_risk_patient)
             )
           }
-          StainNudgeAddButtons(Modifier.padding(top = 16.dp), statinInfo, addSmokingClick, addBMIClick)
         }
         Spacer(modifier = Modifier.height(4.dp))
         RiskProgressBar()
@@ -89,6 +88,7 @@ fun StatinNudge(
             color = SimpleTheme.colors.material.error,
             style = SimpleTheme.typography.material.body2,
         )
+        StainNudgeAddButtons(Modifier.padding(top = 16.dp), statinInfo, addSmokingClick, addBMIClick)
       }
     }
   }

@@ -244,7 +244,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 defaultHistoryUuid = uuidGenerator.v4()
             )
             val updatedMedicalHistory = medicalHistory.answered(
-                question = MedicalHistoryQuestion.IsSmoker,
+                question = MedicalHistoryQuestion.IsSmoking,
                 answer = effect.isSmoker
             )
 

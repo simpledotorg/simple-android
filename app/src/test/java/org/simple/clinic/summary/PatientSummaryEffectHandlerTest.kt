@@ -982,7 +982,7 @@ class PatientSummaryEffectHandlerTest {
       defaultHistoryUuid = uuidGenerator.v4(),
       patientUuid = patientUuid
     )) doReturn
-        TestData.medicalHistory(isSmoker = Yes)
+        TestData.medicalHistory(isSmoking = Yes)
     //when
     testCase.dispatch(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No))
 

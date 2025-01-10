@@ -27,7 +27,6 @@ jobs:
           docker compose -f ".github/docker/simple-server.compose.yml" up -d
           sleep 2
           docker compose -f ".github/docker/simple-server.compose.yml" exec server bundle exec rails routes
-          
 
       - name: Cache AVD
         uses: actions/cache@v4
@@ -99,6 +98,7 @@ jobs:
 
       - name: Stop Simple Service
         run: |
+          docker compose -f ".github/docker/simple-server.compose.yml" logs server
           docker compose -f ".github/docker/simple-server.compose.yml" down
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'

@@ -962,4 +962,43 @@ class PatientSummaryEffectHandlerTest {
         bmiReading = bmiReading
     )))
   }
+
+  @Test
+  fun `when show smoking status dialog view effect is received, then show the smoking status dialog`() {
+    // when
+    testCase.dispatch(ShowSmokingStatusDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showSmokingStatusDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when update smoking status effect is received, then update the smoking status`() {
+    //given
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+      defaultHistoryUuid = uuidGenerator.v4(),
+      patientUuid = patientUuid
+    )) doReturn
+        TestData.medicalHistory(isSmoking = Yes)
+    //when
+    testCase.dispatch(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No))
+
+    // then
+    testCase.assertOutgoingEvents(SmokingStatusUpdated)
+  }
+
+  @Test
+  fun `when open BMI entry sheet view effect is received, then open the BMI entry sheet`() {
+    // when
+    testCase.dispatch(OpenBMIEntrySheet(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openBMIEntrySheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -52,6 +52,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpec
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -64,6 +65,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
@@ -300,6 +302,7 @@ class PatientSummaryScreen :
         ScreenRequest.ScheduleAppointmentSheet,
         ScreenRequest.SelectFacility,
         ScreenRequest.ReassignPatientWarningSheet,
+        ScreenRequest.BMIEntrySheet
     ) { requestKey, result ->
       if (result is Succeeded) {
         handleScreenResult(requestKey, result)
@@ -321,7 +324,9 @@ class PatientSummaryScreen :
         SimpleTheme {
           StatinNudge(
               statinInfo = statinInfo,
-              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp)
+              modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+              addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
+              addBMIClick = { additionalEvents.notify(AddBMIClicked)  }
           )
         }
       }
@@ -348,6 +353,10 @@ class PatientSummaryScreen :
             sheetOpenedFrom = sheetClosed.sheetOpenedFrom,
             sheetClosedFrom = sheetClosed.sheetClosedFrom
         ))
+      }
+
+      is ScreenRequest.BMIEntrySheet -> {
+        additionalEvents.notify(BMIReadingAdded)
       }
     }
   }
@@ -724,6 +733,32 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun showSmokingStatusDialog() {
+    val options = arrayOf(
+        getString(R.string.smoking_status_dialog_option_yes),
+        getString(R.string.smoking_status_dialog_option_no))
+    var selectedOption = -1
+
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.smoking_status_dialog_title)
+        .setSingleChoiceItems(options, selectedOption) { _, indexSelected ->
+          selectedOption = indexSelected
+        }
+        .setPositiveButton(R.string.smoking_status_dialog_title_positive_button) { _, _ ->
+          when (selectedOption) {
+            0 -> hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
+            1 -> hotEvents.onNext(SmokingStatusAnswered(Answer.No))
+            else -> {}
+          }
+        }
+        .setNegativeButton(R.string.smoking_status_dialog_title_negative_button, null)
+        .show()
+  }
+
+  override fun openBMIEntrySheet(patientUuid: UUID) {
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
+  }
+
   override fun openSelectFacilitySheet() {
     router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }
@@ -863,5 +898,8 @@ class PatientSummaryScreen :
 
     @Parcelize
     data object ReassignPatientWarningSheet : ScreenRequest()
+
+    @Parcelize
+    data object BMIEntrySheet : ScreenRequest()
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Answer
+import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -64,6 +65,8 @@ data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
 data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
+data class UpdateSmokingStatus(val patientId: UUID, val isSmoker: MedicalHistoryAnswer) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(
@@ -122,3 +125,7 @@ data class ShowReassignPatientWarningSheet(
 data object ShowDiabetesDiagnosisWarning : PatientSummaryViewEffect()
 
 data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryViewEffect()
+
+data object ShowSmokingStatusDialog : PatientSummaryViewEffect()
+
+data class OpenBMIEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()

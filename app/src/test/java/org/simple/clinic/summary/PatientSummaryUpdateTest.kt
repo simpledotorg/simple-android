@@ -2270,6 +2270,72 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when add smoking button is clicked, then show the smoking status dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddSmokingClicked)
+        .then(assertThatNext(
+            hasEffects(ShowSmokingStatusDialog),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when smoking is answered, then update the smoking status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SmokingStatusAnswered(
+            isSmoker = No
+        ))
+        .then(assertThatNext(
+            hasEffects(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when smoking status is updated, then calculate the cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SmokingStatusUpdated)
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when add bmi button is clicked, then open the bmi entry sheet`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AddBMIClicked)
+        .then(assertThatNext(
+            hasEffects(OpenBMIEntrySheet(model.patientUuid)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when BMI reading is added, then calculate the cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingAdded)
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

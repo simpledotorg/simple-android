@@ -37,6 +37,9 @@ interface PatientSummaryUiActions {
       currentFacility: Facility,
       sheetOpenedFrom: ReassignPatientSheetOpenedFrom
   )
+
   fun showDiabetesDiagnosisWarning()
   fun showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning: Boolean)
+  fun showSmokingStatusDialog()
+  fun openBMIEntrySheet(patientUuid: UUID)
 }

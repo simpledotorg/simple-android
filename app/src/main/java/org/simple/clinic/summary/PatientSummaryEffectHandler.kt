@@ -106,6 +106,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
+        .addTransformer(UpdateSmokingStatus::class.java, updateSmokingStatus())
         .build()
   }
 
@@ -230,6 +231,25 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 bmiReading = bmiReading?.bmiReading
             ))
           }
+    }
+  }
+
+  private fun updateSmokingStatus(): ObservableTransformer<UpdateSmokingStatus, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                patientUuid = effect.patientId,
+                defaultHistoryUuid = uuidGenerator.v4()
+            )
+            val updatedMedicalHistory = medicalHistory.answered(
+                question = MedicalHistoryQuestion.IsSmoking,
+                answer = effect.isSmoker
+            )
+
+            medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
+          }.map { SmokingStatusUpdated }
     }
   }
 

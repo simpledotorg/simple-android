@@ -1,10 +1,10 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
@@ -150,13 +150,25 @@ data class StatinPrescriptionCheckInfoLoaded(
 ) : PatientSummaryEvent()
 
 data class CVDRiskLoaded(
-   val risk: String?
+    val risk: String?
 ) : PatientSummaryEvent()
 
 data class CVDRiskCalculated(
     val risk: String?
-): PatientSummaryEvent()
+) : PatientSummaryEvent()
 
 data class StatinInfoLoaded(
     val statinInfo: StatinInfo
-): PatientSummaryEvent()
+) : PatientSummaryEvent()
+
+data object AddSmokingClicked : PatientSummaryEvent()
+
+data class SmokingStatusAnswered(
+    val isSmoker: Answer
+) : PatientSummaryEvent()
+
+data object SmokingStatusUpdated : PatientSummaryEvent()
+
+data object BMIReadingAdded : PatientSummaryEvent()
+
+data object AddBMIClicked : PatientSummaryEvent()

@@ -88,7 +88,14 @@ fun StatinNudge(
             color = SimpleTheme.colors.material.error,
             style = SimpleTheme.typography.material.body2,
         )
-        StainNudgeAddButtons(Modifier.padding(top = 16.dp), statinInfo, addSmokingClick, addBMIClick)
+        if (statinInfo.cvdRisk != null) {
+          StainNudgeAddButtons(
+              modifier = Modifier.padding(top = 16.dp),
+              statinInfo = statinInfo,
+              addSmokingClick = addSmokingClick,
+              addBMIClick = addBMIClick
+          )
+        }
       }
     }
   }
@@ -155,41 +162,39 @@ fun StainNudgeAddButtons(
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
 ) {
-  if (statinInfo.cvdRisk != null) {
-    SimpleInverseTheme {
-      Row(
-          modifier = Modifier.fillMaxWidth(),
-          horizontalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        if (statinInfo.isSmoker == Answer.Unanswered) {
-          FilledButton(
-              modifier = modifier
-                  .height(36.dp)
-                  .fillMaxWidth()
-                  .weight(1f)
-                  .clip(RoundedCornerShape(50)),
-              onClick = { addSmokingClick.invoke() }
-          ) {
-            Text(
-                text = stringResource(R.string.statin_alert_add_smoking),
-                fontSize = 14.sp,
-            )
-          }
+  SimpleInverseTheme {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      if (statinInfo.isSmoker == Answer.Unanswered) {
+        FilledButton(
+            modifier = modifier
+                .height(36.dp)
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(50)),
+            onClick = { addSmokingClick.invoke() }
+        ) {
+          Text(
+              text = stringResource(R.string.statin_alert_add_smoking),
+              fontSize = 14.sp,
+          )
         }
-        if (statinInfo.bmiReading == null) {
-          FilledButton(
-              modifier = modifier
-                  .height(36.dp)
-                  .fillMaxWidth()
-                  .weight(1f)
-                  .clip(RoundedCornerShape(50)),
-              onClick = { addBMIClick.invoke() }
-          ) {
-            Text(
-                text = stringResource(R.string.statin_alert_add_bmi),
-                fontSize = 14.sp,
-            )
-          }
+      }
+      if (statinInfo.bmiReading == null) {
+        FilledButton(
+            modifier = modifier
+                .height(36.dp)
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(50)),
+            onClick = { addBMIClick.invoke() }
+        ) {
+          Text(
+              text = stringResource(R.string.statin_alert_add_bmi),
+              fontSize = 14.sp,
+          )
         }
       }
     }

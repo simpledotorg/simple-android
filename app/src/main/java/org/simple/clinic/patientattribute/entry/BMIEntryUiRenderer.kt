@@ -2,7 +2,6 @@ package org.simple.clinic.patientattribute.entry
 
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patientattribute.BMIReading
-import java.util.Locale
 
 class BMIEntryUiRenderer(
     val ui: BMIEntryUi
@@ -15,8 +14,7 @@ class BMIEntryUiRenderer(
           weight = model.weight.toFloat()
       ).calculateBMI()
 
-      val formattedBmi = String.format(Locale.US, "%.2f", bmi)
-      ui.showBMI(formattedBmi)
+      ui.showBMI(bmi.toString())
     } else {
       ui.hideBMI()
     }

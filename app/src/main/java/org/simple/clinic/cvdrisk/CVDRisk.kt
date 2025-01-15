@@ -30,7 +30,8 @@ data class CVDRisk(
 
     val patientUuid: UUID,
 
-    val riskScore: String,
+    @Embedded
+    val riskScore: CVDRiskRange,
 
     @Embedded
     val timestamps: Timestamps,

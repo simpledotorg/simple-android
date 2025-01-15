@@ -9,6 +9,7 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
@@ -109,7 +110,7 @@ import org.simple.clinic.patient.Answer as PatientAnswer
     views = [
       PatientSearchResult::class
     ],
-    version = 118,
+    version = 119,
     exportSchema = true
 )
 @TypeConverters(
@@ -145,7 +146,8 @@ import org.simple.clinic.patient.Answer as PatientAnswer
     BaseComponentData.RoomTypeConverter::class,
     InputFieldType.RoomTypeConverter::class,
     MapRoomTypeConverter::class,
-    PatientAnswer.RoomTypeConverter::class
+    PatientAnswer.RoomTypeConverter::class,
+    CVDRiskRange.RoomTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
 

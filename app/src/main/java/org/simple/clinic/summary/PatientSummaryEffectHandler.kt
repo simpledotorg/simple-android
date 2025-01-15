@@ -15,7 +15,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRepository
-import org.simple.clinic.cvdrisk.CVDRiskUtil
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -223,7 +222,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             )
             val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
             val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-            val canPrescribeStatin = cvdRisk?.riskScore?.let { CVDRiskUtil.getMaxRisk(it) > 10 } ?: false
+            val canPrescribeStatin = cvdRisk?.riskScore?.let { it.max > 10 } ?: false
             StatinInfoLoaded(StatinInfo(
                 canPrescribeStatin = canPrescribeStatin,
                 cvdRisk = cvdRisk?.riskScore,

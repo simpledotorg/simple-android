@@ -8,6 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.simple.clinic.ContactType
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
@@ -94,6 +95,7 @@ class NetworkModule {
         .add(MapWithAnyValueTypeMoshiAdapter())
         .add(InputFieldViewType.MoshiTypeAdapter())
         .add(PatientAnswer.MoshiTypeAdapter())
+        .add(CVDRiskRange.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

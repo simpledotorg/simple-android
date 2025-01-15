@@ -11,7 +11,7 @@ class CVDRiskCalculator @Inject constructor(
     private val cvdRiskCalculationSheet: Lazy<CVDRiskCalculationSheet?>,
 ) {
 
-  fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): String? {
+  fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
       val riskEntries = getRiskEntries(cvdRiskInput) ?: return null
 
@@ -84,11 +84,11 @@ class CVDRiskCalculator @Inject constructor(
     }
   }
 
-  private fun formatRisk(risks: List<Int>): String? {
+  private fun formatRisk(risks: List<Int>): CVDRiskRange? {
     return when {
       risks.isEmpty() -> null
-      risks.size == 1 -> risks.first().toString()
-      else -> "${risks.minOrNull()} - ${risks.maxOrNull()}"
+      risks.size == 1 -> CVDRiskRange(risks.first(), risks.first())
+      else -> CVDRiskRange(risks.min(), risks.max())
     }
   }
 }

@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -887,7 +888,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when load cvd risk effect is received, then load cvd risk`() {
     //given
-    val cvdRisk = TestData.cvdRisk(riskScore = "27")
+    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
     whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn cvdRisk
 
     //when
@@ -932,7 +933,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(CalculateCVDRisk(patient = patient))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskCalculated("6 - 8"))
+    testCase.assertOutgoingEvents(CVDRiskCalculated(CVDRiskRange(6, 8)))
   }
 
   @Test
@@ -949,7 +950,7 @@ class PatientSummaryEffectHandlerTest {
         TestData.patientAttribute(reading = bmiReading)
 
     whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
-        TestData.cvdRisk(riskScore = "27")
+        TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
 
     //when
     testCase.dispatch(LoadStatinInfo(patientUuid))
@@ -957,7 +958,7 @@ class PatientSummaryEffectHandlerTest {
     //then
     testCase.assertOutgoingEvents(StatinInfoLoaded(StatinInfo(
         canPrescribeStatin = true,
-        cvdRisk = "27",
+        cvdRisk = CVDRiskRange(27, 27),
         isSmoker = Yes,
         bmiReading = bmiReading
     )))
@@ -979,8 +980,8 @@ class PatientSummaryEffectHandlerTest {
   fun `when update smoking status effect is received, then update the smoking status`() {
     //given
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-      defaultHistoryUuid = uuidGenerator.v4(),
-      patientUuid = patientUuid
+        defaultHistoryUuid = uuidGenerator.v4(),
+        patientUuid = patientUuid
     )) doReturn
         TestData.medicalHistory(isSmoking = Yes)
     //when

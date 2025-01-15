@@ -10,7 +10,7 @@
 - Bump Fragment KTX to v1.8.5
 - Bump Compose theme adapter to v0.36.0
 - Bump Flipper to v0.273.0
-- Bump AndroidX Paging to v3.3.4
+- Bump AndroidX Paging to v3.3.5
 - Bump Facebook Soloader to v0.12.1
 - Bump AndroidX ViewModel to v2.8.7
 - Bump AndroidX Lifecycle to v2.8.7

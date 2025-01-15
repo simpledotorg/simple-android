@@ -35,7 +35,7 @@ class CVDRiskRepositoryAndroidTest {
   @Test
   fun saving_a_cvd_risk_should_work_correctly() {
     //given
-    val cvdRisk = testData.cvdRisk(riskScore = "17")
+    val cvdRisk = testData.cvdRisk(riskScore = CVDRiskRange(17, 24))
 
     //when
     repository.save(

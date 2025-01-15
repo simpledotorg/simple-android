@@ -9,6 +9,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.sync.CVDRiskSync
 import org.simple.clinic.cvdrisk.sync.CVDRiskSyncApi
@@ -95,7 +96,7 @@ class CVDRiskSyncIntegrationTest {
     val records = (1..totalNumberOfRecords).map {
       TestData.cvdRisk(
           patientUuid = patientUuid,
-          riskScore = "17",
+          riskScore = CVDRiskRange(17, 17),
           syncStatus = SyncStatus.PENDING,
       )
     }
@@ -122,7 +123,7 @@ class CVDRiskSyncIntegrationTest {
     val records = (1..batchSize).map {
       TestData.cvdRisk(
           patientUuid = patientUuid,
-          riskScore = "17",
+          riskScore = CVDRiskRange(17, 17),
           syncStatus = SyncStatus.PENDING,
       )
     }
@@ -132,7 +133,7 @@ class CVDRiskSyncIntegrationTest {
     sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
-    val modifiedRecord = records[1].withScore("21")
+    val modifiedRecord = records[1].withScore(CVDRiskRange(21, 21))
     repository.save(listOf(modifiedRecord))
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
@@ -153,7 +154,7 @@ class CVDRiskSyncIntegrationTest {
 
   private fun CVDRisk.syncCompleted(): CVDRisk = copy(syncStatus = SyncStatus.DONE)
 
-  private fun CVDRisk.withScore(riskScore: String): CVDRisk {
+  private fun CVDRisk.withScore(riskScore: CVDRiskRange): CVDRisk {
     return copy(
         riskScore = riskScore,
         syncStatus = SyncStatus.PENDING,

@@ -17,7 +17,7 @@ class CVDRiskRepository @Inject constructor(
     private val utcClock: UtcClock
 ) : SynceableRepository<CVDRisk, CVDRiskPayload> {
   fun save(
-      riskScore: String,
+      riskScore: CVDRiskRange,
       patientUuid: UUID,
       uuid: UUID,
   ) {

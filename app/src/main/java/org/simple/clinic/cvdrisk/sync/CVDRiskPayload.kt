@@ -3,6 +3,7 @@ package org.simple.clinic.cvdrisk.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.time.Instant
@@ -18,7 +19,7 @@ data class CVDRiskPayload(
     val patientUuid: UUID,
 
     @Json(name = "risk_score")
-    val riskScore: String,
+    val riskScore: CVDRiskRange,
 
     @Json(name = "created_at")
     val createdAt: Instant,

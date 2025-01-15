@@ -8,7 +8,7 @@ import org.simple.clinic.patientattribute.BMIReading
 @Parcelize
 data class StatinInfo(
     val canPrescribeStatin: Boolean,
-    val cvdRisk: String? = null,
+    val cvdRisk: CVDRiskRange? = null,
     val isSmoker: Answer = Answer.Unanswered,
     val bmiReading: BMIReading? = null,
 ) : Parcelable {

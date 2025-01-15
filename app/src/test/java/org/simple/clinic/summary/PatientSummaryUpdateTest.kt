@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityConfig
@@ -2221,7 +2222,7 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(defaultModel)
         .whenEvent(CVDRiskLoaded(
-            risk = "27"
+            risk = CVDRiskRange(27, 27)
         ))
         .then(assertThatNext(
             hasEffects(LoadStatinInfo(patientUuid))

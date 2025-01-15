@@ -24,7 +24,7 @@ class CVDRiskCalculatorTest {
     )
 
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals("5", risk)
+    assertEquals(CVDRiskRange(5, 5), risk)
   }
 
   @Test
@@ -37,7 +37,7 @@ class CVDRiskCalculatorTest {
         bmi = null
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals("5 - 6", risk)
+    assertEquals(CVDRiskRange(5, 6), risk)
   }
 
   @Test
@@ -63,7 +63,7 @@ class CVDRiskCalculatorTest {
         bmi = 27f
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals("3", risk)
+    assertEquals(CVDRiskRange(3, 3), risk)
   }
 
   @Test
@@ -76,7 +76,7 @@ class CVDRiskCalculatorTest {
         bmi = 27f
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals("3 - 6", risk)
+    assertEquals(CVDRiskRange(3, 6), risk)
   }
 
   @Test
@@ -87,7 +87,7 @@ class CVDRiskCalculatorTest {
         systolic = 125,
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals("3 - 8", risk)
+    assertEquals(CVDRiskRange(3, 8), risk)
   }
 }
 

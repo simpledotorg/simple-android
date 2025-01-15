@@ -18,6 +18,7 @@ import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
 import org.simple.clinic.cvdrisk.CVDRiskCategory
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.RiskEntry
 import org.simple.clinic.cvdrisk.SmokingData
 import org.simple.clinic.drugs.PrescribedDrug
@@ -1675,7 +1676,7 @@ object TestData {
   fun cvdRisk(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      riskScore: String,
+      riskScore: CVDRiskRange,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

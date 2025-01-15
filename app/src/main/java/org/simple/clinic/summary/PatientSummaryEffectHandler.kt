@@ -223,7 +223,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             )
             val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
             val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-            val canPrescribeStatin = cvdRisk?.riskScore?.let { CVDRiskUtil.getMaxRisk(it) > 10 } ?: false
+            val canPrescribeStatin = cvdRisk?.riskScore?.let { it.max > 10 } ?: false
             StatinInfoLoaded(StatinInfo(
                 canPrescribeStatin = canPrescribeStatin,
                 cvdRisk = cvdRisk?.riskScore,

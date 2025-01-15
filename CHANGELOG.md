@@ -38,6 +38,7 @@
 - Bump AndroidX Camera View to v1.4.1
 - Bump Coroutines to v1.10.1
 - Bump Lint to v31.8.0
+- Bump eclipse jgit to v7.1.0.202411261347-r
 
 ### Fixes
 

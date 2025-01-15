@@ -32,6 +32,7 @@
 - Add `BMIEntrySheet`
 - Bump Firebase Analytics to v22.1.2
 - Bump RootBeer to 0.1.1
+- Update `CVDRisk` table `riskScore` to range from string
 
 ### Fixes
 

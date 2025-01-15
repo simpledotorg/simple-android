@@ -36,6 +36,7 @@
 - Bump Mobius to v2.1.1
 - Bump Sentry Gradle plugin to v4.14.1
 - Bump AndroidX Camera View to v1.4.1
+- Bump Coroutines to v1.10.1
 
 ### Fixes
 

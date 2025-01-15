@@ -15,7 +15,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRepository
-import org.simple.clinic.cvdrisk.CVDRiskUtil
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository

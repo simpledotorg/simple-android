@@ -35,6 +35,7 @@
 - Update `CVDRisk` table `riskScore` to range from string
 - Bump Mobius to v2.1.1
 - Bump Sentry Gradle plugin to v4.14.1
+- Bump AndroidX Camera View to v1.4.1
 
 ### Fixes
 

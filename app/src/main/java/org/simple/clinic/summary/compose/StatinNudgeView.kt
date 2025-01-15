@@ -7,6 +7,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.theme.SimpleInverseTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
@@ -55,46 +58,46 @@ fun StatinNudge(
     Card(
         modifier = modifier
     ) {
-      Column(
-          modifier = Modifier
-              .padding(16.dp),
-          horizontalAlignment = Alignment.CenterHorizontally
+      BoxWithConstraints(
+          modifier = Modifier.padding(16.dp)
       ) {
-        Row {
-          Box(
+        val size = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
+        val (startOffset, endOffset) = getOffsets(statinInfo.cvdRisk, size)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          Text(
               modifier = Modifier
-                  .weight(2f)
+                  .background(SimpleTheme.colors.material.error, shape = RoundedCornerShape(50))
+                  .padding(horizontal = 8.dp, vertical = 4.dp),
+              style = SimpleTheme.typography.material.button,
+              color = SimpleTheme.colors.onToolbarPrimary,
+              text = stringResource(R.string.statin_alert_at_risk_patient)
           )
-          Column(
-              modifier = Modifier
-                  .weight(3f),
-              horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-            Text(
-                modifier = Modifier
-                    .background(SimpleTheme.colors.material.error, shape = RoundedCornerShape(50))
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                style = SimpleTheme.typography.material.button,
-                color = SimpleTheme.colors.onToolbarPrimary,
-                text = stringResource(R.string.statin_alert_at_risk_patient)
+          Spacer(modifier = Modifier.height(4.dp))
+          RiskProgressBar(
+              startOffset = startOffset,
+              endOffset = endOffset
+          )
+          Spacer(modifier = Modifier.height(16.dp))
+          Text(
+              text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
+              color = SimpleTheme.colors.material.error,
+              style = SimpleTheme.typography.material.body2,
+          )
+          Text(
+              text = "${statinInfo.cvdRisk?.min} - ${statinInfo.cvdRisk?.max}",
+              color = SimpleTheme.colors.material.error,
+              style = SimpleTheme.typography.material.body2,
+          )
+          if (statinInfo.cvdRisk != null) {
+            StainNudgeAddButtons(
+                modifier = Modifier.padding(top = 16.dp),
+                statinInfo = statinInfo,
+                addSmokingClick = addSmokingClick,
+                addBMIClick = addBMIClick
             )
           }
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        RiskProgressBar()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
-            color = SimpleTheme.colors.material.error,
-            style = SimpleTheme.typography.material.body2,
-        )
-        if (statinInfo.cvdRisk != null) {
-          StainNudgeAddButtons(
-              modifier = Modifier.padding(top = 16.dp),
-              statinInfo = statinInfo,
-              addSmokingClick = addSmokingClick,
-              addBMIClick = addBMIClick
-          )
         }
       }
     }
@@ -102,7 +105,10 @@ fun StatinNudge(
 }
 
 @Composable
-fun RiskProgressBar() {
+fun RiskProgressBar(
+    startOffset: Float,
+    endOffset: Float
+) {
   val riskColors = listOf(
       Color(0xFF00B849), // Very Low
       Color(0xFFFFC800), // Low
@@ -120,18 +126,16 @@ fun RiskProgressBar() {
           .drawWithContent {
             drawContent()
 
-            val widthPerSegment = size.width / riskColors.size
-
             drawLine(
                 color = indicatorColor,
-                start = Offset(2 * widthPerSegment, 0f),
-                end = Offset(2 * widthPerSegment, size.height),
+                start = Offset(startOffset, 0f),
+                end = Offset(startOffset, size.height),
                 strokeWidth = 2.dp.toPx()
             )
             drawLine(
                 color = indicatorColor,
-                start = Offset(size.width, 0f),
-                end = Offset(size.width, size.height),
+                start = Offset(endOffset, 0f),
+                end = Offset(endOffset, size.height),
                 strokeWidth = 2.dp.toPx()
             )
           },
@@ -199,6 +203,44 @@ fun StainNudgeAddButtons(
       }
     }
   }
+}
+
+fun getOffsets(cvdRiskRange: CVDRiskRange?, size: Size): Pair<Float, Float> {
+  val riskRanges = listOf(
+      0..4,    // Very Low
+      5..9,    // Low
+      10..19,  // Medium
+      20..29,  // High
+      30..33 // Very High
+  )
+
+  val startRatio: Float
+  val endRatio: Float
+
+  if (cvdRiskRange != null) {
+    startRatio = riskRanges.findSegmentRatio(cvdRiskRange.min)
+    endRatio = riskRanges.findSegmentRatio(cvdRiskRange.max)
+  } else {
+    startRatio = riskRanges.findSegmentRatio(10)
+    endRatio = 1f
+  }
+
+  val startOffset = startRatio * size.width
+  val endOffset = endRatio * size.width
+
+  return Pair(startOffset, endOffset)
+}
+
+fun List<IntRange>.findSegmentRatio(value: Int): Float {
+  var accumulatedRatio = 0f
+  forEach { range ->
+    if (value in range) {
+      val rangeFraction = (value - range.first).toFloat() / (range.last - range.first)
+      return accumulatedRatio + rangeFraction / size
+    }
+    accumulatedRatio += 1f / size
+  }
+  return 1f
 }
 
 @Preview

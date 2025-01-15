@@ -34,6 +34,7 @@
 - Bump RootBeer to 0.1.1
 - Update `CVDRisk` table `riskScore` to range from string
 - Bump Mobius to v2.1.1
+- Bump Sentry Gradle plugin to v4.14.1
 
 ### Fixes
 

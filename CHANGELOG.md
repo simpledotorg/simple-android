@@ -31,6 +31,7 @@
 - Update PR comment check regex to optionally verify full shortcut story link
 - Add `BMIEntrySheet`
 - Bump Firebase Analytics to v22.1.2
+- Bump RootBeer to 0.1.1
 
 ### Fixes
 

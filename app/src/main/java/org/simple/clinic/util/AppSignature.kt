@@ -40,13 +40,14 @@ class AppSignature(private val context: Context) {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       signaturesV28(packageManager, packageName)
     } else {
-      packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures.toList()
+      @Suppress("DEPRECATION")
+      packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures.orEmpty().toList()
     }
   }
 
   @TargetApi(Build.VERSION_CODES.P)
   private fun signaturesV28(packageManager: PackageManager, packageName: String): List<Signature> {
-    val signingInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo
+    val signingInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo ?: return emptyList()
 
     val signatures = if (signingInfo.hasMultipleSigners()) {
       signingInfo.apkContentsSigners

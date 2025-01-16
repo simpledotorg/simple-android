@@ -55,6 +55,7 @@
 ### Features
 
 - Add Current smoker question to patient enrolment and summary screen for statin nudge facilities
+- Update Statin nudge to show CVD risk
 
 ## 2024-11-11-9265
 

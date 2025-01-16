@@ -131,12 +131,12 @@ class PatientSummaryUpdate(
       }
 
       event.age > maxAgeForCVDRisk -> {
-        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = hasCVD || hasDiabetes))
+        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = hasCVD || hasDiabetes, hasCVD = hasCVD))
         next(updatedModel)
       }
 
       hasCVD || hasDiabetes -> {
-        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = true))
+        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = hasCVD))
         next(updatedModel)
       }
 

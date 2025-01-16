@@ -8,10 +8,11 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class SimpleColors(
-  val toolbarPrimary: Color = Color.Unspecified,
-  val toolbarPrimaryVariant: Color = Color.Unspecified,
-  val onToolbarPrimary: Color = Color.Unspecified,
-  val material: Colors = lightColors(),
+    val toolbarPrimary: Color = Color.Unspecified,
+    val toolbarPrimaryVariant: Color = Color.Unspecified,
+    val onToolbarPrimary: Color = Color.Unspecified,
+    val material: Colors = lightColors(),
+    val onSurface67: Color = material.onSurface.copy(alpha = 0.67f)
 )
 
 internal val LocalSimpleColors = staticCompositionLocalOf { SimpleColors() }

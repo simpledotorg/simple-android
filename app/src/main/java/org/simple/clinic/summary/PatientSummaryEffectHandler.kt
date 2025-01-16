@@ -227,7 +227,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 canPrescribeStatin = canPrescribeStatin,
                 cvdRisk = cvdRisk?.riskScore,
                 isSmoker = medicalHistory.isSmoking,
-                bmiReading = bmiReading?.bmiReading
+                bmiReading = bmiReading?.bmiReading,
             ))
           }
     }

@@ -75,6 +75,7 @@ fun StatinNudge(
               startOffset = startOffset,
               endOffset = endOffset,
               cvdRiskRange = statinInfo.cvdRisk,
+              hasCVD = statinInfo.hasCVD,
               parentWidth = constraints.maxWidth,
           )
           Spacer(modifier = Modifier.height(12.dp))
@@ -103,6 +104,7 @@ fun RiskText(
     startOffset: Float,
     endOffset: Float,
     cvdRiskRange: CVDRiskRange?,
+    hasCVD: Boolean,
     parentWidth: Int,
     parentPadding: Float = 16f
 ) {
@@ -115,6 +117,7 @@ fun RiskText(
   }
 
   val riskText = when {
+    hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
     cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
     cvdRiskRange.min > 10 -> stringResource(R.string.statin_alert_high_risk_patient_x, riskPercentage)
     else -> stringResource(R.string.statin_alert_medium_high_risk_patient_x, riskPercentage)
@@ -251,7 +254,7 @@ fun DescriptionText(
 
   val textColor = when {
     statinInfo.cvdRisk == null -> SimpleTheme.colors.material.error
-    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> Color(0XFF6C737A)
+    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> SimpleTheme.colors.onSurface67
     else -> SimpleTheme.colors.material.error
   }
 

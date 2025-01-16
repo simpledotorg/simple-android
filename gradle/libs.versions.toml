@@ -16,7 +16,7 @@ dagger = "2.55"
 
 flipper = "0.273.0"
 
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 
 ktlint = "0.36.0"
 
@@ -42,7 +42,7 @@ androidx-compose-bom = "2023.07.00-alpha02"
 
 composeThemeAdapter = "0.36.0"
 
-ksp = "2.0.21-1.0.28"
+ksp = "2.1.0-1.0.29"
 
 sqlCipher = "4.5.4"
 

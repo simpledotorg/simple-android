@@ -4,8 +4,6 @@
 
 ### Internal
 
-- Bump Kotlin to v2.0.21
-- Bump KSP to v2.0.21-1.0.28
 - Bump desugar JDK library to v2.1.4
 - Bump Fragment KTX to v1.8.5
 - Bump Compose theme adapter to v0.36.0
@@ -45,6 +43,8 @@
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
 - Bump AndroidX RecyclerView to v1.4.0
+- Bump Kotlin to v2.1.0
+- Bump KSP to v2.1.0-1.0.29
 
 ### Fixes
 

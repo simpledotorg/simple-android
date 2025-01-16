@@ -14,7 +14,6 @@
 - Bump Facebook Soloader to v0.12.1
 - Bump AndroidX ViewModel to v2.8.7
 - Bump AndroidX Lifecycle to v2.8.7
-- Bump Gradle to v8.11.1
 - Throttle back button clicks in `PatientSummaryScreen` to handle multiple rapid presses
 - Bump Firebase remote config v22.0.1
 - Bump asm to v9.7.1
@@ -41,6 +40,7 @@
 - Bump AndroidX Work to v2.10.0
 - Bump Lottie Compose to v6.6.2
 - Bump Moshi to v1.15.2
+- Bump Gradle to v8.12
 
 ### Fixes
 

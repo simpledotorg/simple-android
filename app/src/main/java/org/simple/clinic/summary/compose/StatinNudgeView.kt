@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -26,8 +27,12 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.simple.clinic.R
@@ -38,7 +43,6 @@ import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
-
 
 @Composable
 fun StatinNudge(
@@ -61,20 +65,18 @@ fun StatinNudge(
       BoxWithConstraints(
           modifier = Modifier.padding(16.dp)
       ) {
+        val constraints = constraints
         val size = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
         val (startOffset, endOffset) = getOffsets(statinInfo.cvdRisk, size)
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          Text(
-              modifier = Modifier
-                  .background(SimpleTheme.colors.material.error, shape = RoundedCornerShape(50))
-                  .padding(horizontal = 8.dp, vertical = 4.dp),
-              style = SimpleTheme.typography.material.button,
-              color = SimpleTheme.colors.onToolbarPrimary,
-              text = stringResource(R.string.statin_alert_at_risk_patient)
+
+        Column {
+          RiskText(
+              startOffset = startOffset,
+              endOffset = endOffset,
+              cvdRiskRange = statinInfo.cvdRisk,
+              parentWidth = constraints.maxWidth,
           )
-          Spacer(modifier = Modifier.height(4.dp))
+          Spacer(modifier = Modifier.height(12.dp))
           RiskProgressBar(
               startOffset = startOffset,
               endOffset = endOffset
@@ -82,11 +84,6 @@ fun StatinNudge(
           Spacer(modifier = Modifier.height(16.dp))
           Text(
               text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
-              color = SimpleTheme.colors.material.error,
-              style = SimpleTheme.typography.material.body2,
-          )
-          Text(
-              text = "${statinInfo.cvdRisk?.min} - ${statinInfo.cvdRisk?.max}",
               color = SimpleTheme.colors.material.error,
               style = SimpleTheme.typography.material.body2,
           )
@@ -102,6 +99,62 @@ fun StatinNudge(
       }
     }
   }
+}
+
+@Composable
+fun RiskText(
+    startOffset: Float,
+    endOffset: Float,
+    cvdRiskRange: CVDRiskRange?,
+    parentWidth: Int,
+    parentPadding: Float = 16f
+) {
+  val midpoint = (startOffset + endOffset) / 2
+
+  val riskPercentage = if (cvdRiskRange?.min == cvdRiskRange?.max) {
+    "${cvdRiskRange?.min}%"
+  } else {
+    "${cvdRiskRange?.min}-${cvdRiskRange?.max}%"
+  }
+
+  val riskText = when {
+    cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
+    cvdRiskRange.min > 10 -> stringResource(R.string.statin_alert_high_risk_patient_x, riskPercentage)
+    else -> stringResource(R.string.statin_alert_medium_high_risk_patient_x, riskPercentage)
+  }
+
+  val riskColor = when {
+    cvdRiskRange == null || cvdRiskRange.min > 10 -> SimpleTheme.colors.material.error
+    else -> Color(0xFFFF7A00)
+  }
+
+  val textMeasurer = rememberTextMeasurer()
+  val textWidth = textMeasurer.measure(
+      text = AnnotatedString(riskText),
+      style = SimpleTheme.typography.material.button
+  ).size.width
+  val totalTextWidth = textWidth + with(LocalDensity.current) { 8.dp.toPx() * 2 }
+
+  val calculatedOffsetX = midpoint - (totalTextWidth / 2)
+  val clampedOffsetX = calculatedOffsetX.coerceIn(
+      0f,
+      parentWidth - totalTextWidth - parentPadding
+  )
+
+  Text(
+      modifier = Modifier
+          .offset {
+            IntOffset(
+                x = clampedOffsetX.toInt(),
+                y = 0
+            )
+          }
+          .background(riskColor, shape = RoundedCornerShape(50))
+          .padding(horizontal = 8.dp, vertical = 4.dp),
+      style = SimpleTheme.typography.material.button,
+      color = SimpleTheme.colors.onToolbarPrimary,
+      text = riskText
+  )
 }
 
 @Composable

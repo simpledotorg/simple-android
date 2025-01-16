@@ -23,7 +23,7 @@ class AppInfoHttpInterceptor @Inject constructor(
   init {
     val packageManager = application.packageManager
 
-    appVersion = packageManager.getPackageInfo(application.packageName, 0).versionName
+    appVersion = packageManager.getPackageInfo(application.packageName, 0).versionName ?: ""
   }
 
   override fun intercept(chain: Interceptor.Chain): Response {

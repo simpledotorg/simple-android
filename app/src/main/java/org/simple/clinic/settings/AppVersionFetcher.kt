@@ -9,7 +9,7 @@ class AppVersionFetcher @Inject constructor(
 ) {
 
   fun appVersion(): String {
-    return packageInfo.versionName
+    return packageInfo.versionName ?: ""
   }
 
   fun appVersionCode(): Int {

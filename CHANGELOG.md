@@ -39,6 +39,7 @@
 - Bump Coroutines to v1.10.1
 - Bump Lint to v31.8.0
 - Bump eclipse jgit to v7.1.0.202411261347-r
+- Bump AndroidX Work to v2.10.0
 
 ### Fixes
 

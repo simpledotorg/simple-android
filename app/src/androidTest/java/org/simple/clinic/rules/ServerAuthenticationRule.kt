@@ -187,9 +187,4 @@ class ServerAuthenticationRule : TestRule {
     sharedPreferences.edit().clear().commit()
     appDatabase.clearAllTables()
   }
-
-  private fun appVersion(): String {
-    val packageManager = application.packageManager
-    return packageManager.getPackageInfo(application.packageName, 0).versionName
-  }
 }

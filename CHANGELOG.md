@@ -42,6 +42,7 @@
 - Bump Moshi to v1.15.2
 - Bump Gradle to v8.12
 - Bump Dagger to v2.55
+- Bump Play Services Auth to v21.3.0
 
 ### Fixes
 

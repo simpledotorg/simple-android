@@ -161,7 +161,7 @@ okhttp-interceptor-logging = { module = "com.squareup.okhttp3:logging-intercepto
 openCsv = "com.opencsv:opencsv:5.9"
 
 play-app-update = "com.google.android.play:app-update-ktx:2.1.0"
-play-services-auth = "com.google.android.gms:play-services-auth:21.2.0"
+play-services-auth = "com.google.android.gms:play-services-auth:21.3.0"
 play-services-location = "com.google.android.gms:play-services-location:21.3.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1"
 

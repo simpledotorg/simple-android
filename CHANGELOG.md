@@ -40,6 +40,7 @@
 - Bump eclipse jgit to v7.1.0.202411261347-r
 - Bump AndroidX Work to v2.10.0
 - Bump Lottie Compose to v6.6.2
+- Bump Moshi to v1.15.2
 
 ### Fixes
 

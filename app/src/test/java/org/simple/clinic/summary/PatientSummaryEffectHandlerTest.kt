@@ -977,21 +977,6 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
-  fun `when update smoking status effect is received, then update the smoking status`() {
-    //given
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-        defaultHistoryUuid = uuidGenerator.v4(),
-        patientUuid = patientUuid
-    )) doReturn
-        TestData.medicalHistory(isSmoking = Yes)
-    //when
-    testCase.dispatch(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No))
-
-    // then
-    testCase.assertOutgoingEvents(SmokingStatusUpdated)
-  }
-
-  @Test
   fun `when open BMI entry sheet view effect is received, then open the BMI entry sheet`() {
     // when
     testCase.dispatch(OpenBMIEntrySheet(patientUuid))

@@ -168,8 +168,6 @@ data class SmokingStatusAnswered(
     val isSmoker: Answer
 ) : PatientSummaryEvent()
 
-data object SmokingStatusUpdated : PatientSummaryEvent()
-
 data object BMIReadingAdded : PatientSummaryEvent()
 
 data object AddBMIClicked : PatientSummaryEvent()

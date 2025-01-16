@@ -45,6 +45,7 @@ import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
 import javax.inject.Provider
+import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
@@ -105,7 +106,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
-        .addTransformer(UpdateSmokingStatus::class.java, updateSmokingStatus())
+        .addConsumer(UpdateSmokingStatus::class.java, { updateSmokingStatus(it.patientId, it.isSmoker) }, schedulersProvider.io())
         .build()
   }
 
@@ -175,14 +176,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                   Pair(patient, it.firstOrNull())
                 }
           }
-          .map { (patient, bloodPressure) ->
-            if (bloodPressure == null) {
-              return@map CVDRiskCalculated(null)
-            }
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+          .flatMap { (patient, bloodPressure) ->
+            val medicalHistoryObservable = medicalHistoryRepository.historyForPatientOrDefault(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
             )
+            medicalHistoryObservable.map { medicalHistory ->
+              Triple(patient, medicalHistory, bloodPressure)
+            }
+          }
+          .map { (patient, medicalHistory, bloodPressure) ->
+            if (bloodPressure == null) {
+              return@map CVDRiskCalculated(null)
+            }
 
             val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
                 patientUuid = patient.uuid
@@ -233,23 +239,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updateSmokingStatus(): ObservableTransformer<UpdateSmokingStatus, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map { effect ->
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                patientUuid = effect.patientId,
-                defaultHistoryUuid = uuidGenerator.v4()
-            )
-            val updatedMedicalHistory = medicalHistory.answered(
-                question = MedicalHistoryQuestion.IsSmoking,
-                answer = effect.isSmoker
-            )
+  private fun updateSmokingStatus(patientUuid: UUID, isSmoker: MedicalHistoryAnswer) {
+    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )
+    val updatedMedicalHistory = medicalHistory.answered(
+        question = MedicalHistoryQuestion.IsSmoking,
+        answer = isSmoker
+    )
 
-            medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
-          }.map { SmokingStatusUpdated }
-    }
+    medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
   }
 
   private fun markHypertension(patientUuid: UUID) {

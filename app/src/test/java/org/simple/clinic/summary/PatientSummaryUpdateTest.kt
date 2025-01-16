@@ -2390,20 +2390,6 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when smoking status is updated, then calculate the cvd risk`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SmokingStatusUpdated)
-        .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
-            hasNoModel()
-        ))
-  }
-
-  @Test
   fun `when add bmi button is clicked, then open the bmi entry sheet`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)

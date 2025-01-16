@@ -45,6 +45,7 @@
 - Bump AndroidX RecyclerView to v1.4.0
 - Bump Kotlin to v2.1.0
 - Bump KSP to v2.1.0-1.0.29
+- Bump Jackson Core to v2.18.2
 
 ### Fixes
 

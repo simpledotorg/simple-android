@@ -44,6 +44,7 @@
 - Bump Dagger to v2.55
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
+- Bump AndroidX RecyclerView to v1.4.0
 
 ### Fixes
 

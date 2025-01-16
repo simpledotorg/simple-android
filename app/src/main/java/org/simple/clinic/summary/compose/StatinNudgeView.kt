@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -82,11 +83,7 @@ fun StatinNudge(
               endOffset = endOffset
           )
           Spacer(modifier = Modifier.height(16.dp))
-          Text(
-              text = stringResource(R.string.statin_alert_refer_to_doctor).toAnnotatedString(),
-              color = SimpleTheme.colors.material.error,
-              style = SimpleTheme.typography.material.body2,
-          )
+          DescriptionText(statinInfo = statinInfo)
           if (statinInfo.cvdRisk != null) {
             StainNudgeAddButtons(
                 modifier = Modifier.padding(top = 16.dp),
@@ -209,6 +206,43 @@ fun RiskProgressBar(
         )
       }
     }
+  }
+}
+
+@Composable
+fun DescriptionText(
+    statinInfo: StatinInfo
+) {
+  val text = when {
+    statinInfo.cvdRisk == null -> stringResource(R.string.statin_alert_refer_to_doctor)
+    statinInfo.isSmoker == Answer.Unanswered &&
+        statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
+
+    statinInfo.isSmoker == Answer.Unanswered &&
+        statinInfo.bmiReading != null -> stringResource(R.string.statin_alert_add_smoking_info)
+
+    statinInfo.isSmoker != Answer.Unanswered &&
+        statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_bmi_info)
+
+    else -> stringResource(R.string.statin_alert_refer_to_doctor)
+  }.toAnnotatedString()
+
+  val textColor = when {
+    statinInfo.cvdRisk == null -> SimpleTheme.colors.material.error
+    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> Color(0XFF6C737A)
+    else -> SimpleTheme.colors.material.error
+  }
+
+  Box(
+      modifier = Modifier.fillMaxWidth(),
+      contentAlignment = Alignment.Center
+  ) {
+    Text(
+        text = text,
+        color = textColor,
+        style = SimpleTheme.typography.material.body2,
+        textAlign = TextAlign.Center,
+    )
   }
 }
 

@@ -22,7 +22,6 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
-- Bump Lottie Compose to v6.6.0
 - Bump Sentry Android to v7.18.0
 - Bump AGP to v8.8.0
 - Add `isSmoking` in `MedicalHistory` table
@@ -40,6 +39,7 @@
 - Bump Lint to v31.8.0
 - Bump eclipse jgit to v7.1.0.202411261347-r
 - Bump AndroidX Work to v2.10.0
+- Bump Lottie Compose to v6.6.2
 
 ### Fixes
 

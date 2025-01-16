@@ -169,7 +169,7 @@ fun RiskProgressBar(
 
   val indicatorColor = Color(0xFF2F363D)
 
-  Box(
+  BoxWithConstraints(
       modifier = Modifier
           .fillMaxWidth()
           .height(14.dp)
@@ -191,18 +191,40 @@ fun RiskProgressBar(
           },
       contentAlignment = Alignment.Center,
   ) {
+    val totalSegments = riskColors.size
+    val segmentWidthPx = constraints.maxWidth.toFloat() / totalSegments
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(4.dp)
             .clip(RoundedCornerShape(50))
     ) {
-      riskColors.forEach { color ->
+      riskColors.forEachIndexed { index, color ->
+        val segmentStartPx = index * segmentWidthPx
+        val segmentEndPx = (index + 1) * segmentWidthPx
+
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
-                .background(color),
+                .drawWithContent {
+                  drawRect(color.copy(alpha = 0.5f))
+
+                  val visibleStart = maxOf(segmentStartPx, startOffset)
+                  val visibleEnd = minOf(segmentEndPx, endOffset)
+
+                  if (visibleStart < visibleEnd) {
+                    drawRect(
+                        color = color.copy(alpha = 1.0f),
+                        topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
+                        size = Size(
+                            width = visibleEnd - visibleStart,
+                            height = size.height
+                        )
+                    )
+                  }
+                }
         )
       }
     }

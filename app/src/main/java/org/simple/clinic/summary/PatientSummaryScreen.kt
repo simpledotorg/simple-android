@@ -268,7 +268,8 @@ class PatientSummaryScreen :
   override fun createUpdate(): Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
     return PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment),
-        isPatientStatinNudgeEnabled = features.isEnabled(Feature.PatientStatinNudge),
+        isPatientStatinNudgeV1Enabled = features.isEnabled(Feature.PatientStatinNudge),
+        isPatientStatinNudgeV2Enabled = features.isEnabled(Feature.PatientStatinNudgeV2),
     )
   }
 
@@ -326,7 +327,7 @@ class PatientSummaryScreen :
               statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
               addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
-              addBMIClick = { additionalEvents.notify(AddBMIClicked)  }
+              addBMIClick = { additionalEvents.notify(AddBMIClicked) }
           )
         }
       }

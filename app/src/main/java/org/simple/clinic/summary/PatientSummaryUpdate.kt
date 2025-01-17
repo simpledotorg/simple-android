@@ -27,7 +27,8 @@ import java.util.UUID
 
 class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
-    private val isPatientStatinNudgeEnabled: Boolean,
+    private val isPatientStatinNudgeV1Enabled: Boolean,
+    private val isPatientStatinNudgeV2Enabled: Boolean,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -125,42 +126,31 @@ class PatientSummaryUpdate(
         hasStatinsPrescribedAlready.not()
 
     return when {
-      !canPrescribeStatin -> {
-        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = false))
-        next(updatedModel)
-      }
-
-      event.age < minAgeForStatin -> {
+      (hasCVD || (hasDiabetes && event.age >= minAgeForStatin)) -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = hasCVD,
+                canPrescribeStatin = canPrescribeStatin,
                 hasCVD = hasCVD
             )
         )
         next(updatedModel)
       }
 
-      event.age > maxAgeForCVDRisk -> {
+      event.age in minAgeForStatin..maxAgeForCVDRisk &&
+          canPrescribeStatin &&
+          isPatientStatinNudgeV2Enabled -> {
+        dispatch(LoadCVDRisk(model.patientUuid))
+      }
+
+      else -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = hasCVD || hasDiabetes,
-                hasCVD = hasCVD
+                canPrescribeStatin = false,
+                hasCVD = false
             )
         )
         next(updatedModel)
       }
-
-      hasCVD || hasDiabetes -> {
-        val updatedModel = model.updateStatinInfo(
-            StatinInfo(
-                canPrescribeStatin = true,
-                hasCVD = hasCVD
-            )
-        )
-        next(updatedModel)
-      }
-
-      else -> dispatch(LoadCVDRisk(model.patientUuid))
     }
   }
 
@@ -369,7 +359,7 @@ class PatientSummaryUpdate(
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
 
-    if (isPatientStatinNudgeEnabled) {
+    if (isPatientStatinNudgeV1Enabled || isPatientStatinNudgeV2Enabled) {
       effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
     }
 

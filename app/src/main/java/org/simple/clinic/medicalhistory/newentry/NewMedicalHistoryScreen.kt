@@ -111,7 +111,7 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun defaultModel() = NewMedicalHistoryModel.default(
       country = country,
-      showIsSmokingQuestion = features.isEnabled(Feature.PatientStatinNudge)
+      showIsSmokingQuestion = features.isEnabled(Feature.PatientStatinNudgeV2)
   )
 
   override fun bindView(

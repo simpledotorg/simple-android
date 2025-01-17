@@ -85,7 +85,8 @@ class PatientSummaryUpdateTest {
 
   private val updateSpec = UpdateSpec(PatientSummaryUpdate(
       isPatientReassignmentFeatureEnabled = true,
-      isPatientStatinNudgeEnabled = false,
+      isPatientStatinNudgeV1Enabled = true,
+      isPatientStatinNudgeV2Enabled = true,
   ))
 
   @Test
@@ -107,6 +108,12 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when the patient summary profile is loaded, then update the UI`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = true,
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = false,
+    ))
+
     updateSpec
         .given(defaultModel)
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
@@ -117,10 +124,28 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when the patient summary profile is loaded and statin nudge feature flag is enabled, then update the UI and load statin check info`() {
+  fun `when the patient summary profile is loaded and statin nudge v1 feature flag is enabled, then update the UI and load statin check info`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
-        isPatientStatinNudgeEnabled = true,
+        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV2Enabled = false,
+    ))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patient))
+        ))
+  }
+
+  @Test
+  fun `when the patient summary profile is loaded and statin nudge v2 feature flag is enabled, then update the UI and load statin check info`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = true,
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = true,
     ))
 
     updateSpec
@@ -1668,7 +1693,8 @@ class PatientSummaryUpdateTest {
   fun `when patient reassignment feature is disabled, and patient is not dead, and done is clicked, then load data for done click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
-        isPatientStatinNudgeEnabled = false
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1696,7 +1722,8 @@ class PatientSummaryUpdateTest {
   fun `when patient reassignment feature is disabled, and patient is not dead, and back is clicked, then load data for back click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
-        isPatientStatinNudgeEnabled = false
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = false,
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1724,7 +1751,8 @@ class PatientSummaryUpdateTest {
   fun `when patient reassignment feature is disabled and measurement warning not now is clicked, then load data for back click`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
-        isPatientStatinNudgeEnabled = false
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -2110,7 +2138,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when statin prescription check info is loaded and person is below 40, then update the state with false`() {
+  fun `when statin prescription check info is loaded and person is below 40 without cvd, then update the state with false`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
@@ -2133,6 +2161,99 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded and person is below 40 with cvd, then update the state with true`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 39,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = Yes,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded with phase1 and person is greater than or equal to 40 with diabetes, then update the state with true`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV2Enabled = false
+    ))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 40,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = Yes,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when statin prescription check info is loaded with phase2 and person is greater than or equal to 40, then load cvd risk`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV2Enabled = true
+    ))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 40,
+            isPatientDead = false,
+            hasBPRecordedToday = true,
+            assignedFacility = TestData.facility(
+                name = "UHC Simple",
+                facilityType = "UHC"
+            ),
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadCVDRisk(defaultModel.patientUuid))
         ))
   }
 
@@ -2187,33 +2308,6 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true))),
             hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when statin prescription check info is loaded and is eligible for cvd risk, then load cvd risk`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(StatinPrescriptionCheckInfoLoaded(
-            age = 50,
-            isPatientDead = false,
-            hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
-            medicalHistory = TestData.medicalHistory(
-                hasDiabetes = No,
-                hasHadStroke = No,
-                hasHadHeartAttack = No,
-            ),
-            prescriptions = listOf(
-                TestData.prescription(name = "losartin")
-            ),
-        ))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(LoadCVDRisk(defaultModel.patientUuid))
         ))
   }
 

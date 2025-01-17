@@ -25,5 +25,6 @@ enum class Feature(
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   PatientReassignment(false, "patient_reassignment_v0"),
-  PatientStatinNudge(false, "patient_statin_nudge_v0")
+  PatientStatinNudge(false, "patient_statin_nudge_v0"),
+  PatientStatinNudgeV2(false, "patient_statin_nudge_v2")
 }

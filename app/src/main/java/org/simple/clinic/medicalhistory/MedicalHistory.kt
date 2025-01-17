@@ -12,6 +12,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
@@ -152,6 +153,22 @@ data class MedicalHistory(
       LIMIT 1
     """)
     fun historyForPatientImmediate(patientUuid: PatientUuid): MedicalHistory?
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM MedicalHistory
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun hasMedicalHistoryForPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Observable<Boolean>
 
     @Query("""
         SELECT (

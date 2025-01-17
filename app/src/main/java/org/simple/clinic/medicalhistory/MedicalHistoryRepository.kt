@@ -6,6 +6,7 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
@@ -113,6 +114,16 @@ class MedicalHistoryRepository @Inject constructor(
   override fun save(records: List<MedicalHistory>) {
     dao.saveHistories(records)
   }
+
+  fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
+    return dao
+        .hasMedicalHistoryForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
+  }
+
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
     return dao.recordsWithSyncStatus(syncStatus)

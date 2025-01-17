@@ -47,6 +47,7 @@
 - Bump Jackson Core to v2.18.2
 - Bump Firebase Analytics to v22.2.0
 - Bump Open CSV to v5.10
+- Bump Datadog Gradle Plugin to v1.15.0
 
 ### Fixes
 

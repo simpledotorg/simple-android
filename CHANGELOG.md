@@ -26,7 +26,6 @@
 - Add `CVDRisk` sync resource
 - Update PR comment check regex to optionally verify full shortcut story link
 - Add `BMIEntrySheet`
-- Bump Firebase Analytics to v22.1.2
 - Bump RootBeer to 0.1.1
 - Update `CVDRisk` table `riskScore` to range from string
 - Bump Mobius to v2.1.1
@@ -46,6 +45,7 @@
 - Bump Kotlin to v2.1.0
 - Bump KSP to v2.1.0-1.0.29
 - Bump Jackson Core to v2.18.2
+- Bump Firebase Analytics to v22.2.0
 
 ### Fixes
 

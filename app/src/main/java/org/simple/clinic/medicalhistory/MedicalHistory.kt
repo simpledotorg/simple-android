@@ -163,7 +163,7 @@ data class MedicalHistory(
         FROM MedicalHistory
         WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
     """)
-    fun hasMedicalHistoryForPatientChangedSince(
+    fun hasMedicalHistoryForPatientChangedSinceImmediate(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus

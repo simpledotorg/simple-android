@@ -19,7 +19,7 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
-- Bump Sentry Android to v7.18.0
+- Bump Sentry Android to v7.20.0
 - Bump AGP to v8.8.0
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource

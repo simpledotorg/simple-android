@@ -125,18 +125,38 @@ class PatientSummaryUpdate(
         hasStatinsPrescribedAlready.not()
 
     return when {
-      !canPrescribeStatin || event.age < minAgeForStatin -> {
+      !canPrescribeStatin -> {
         val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = false))
         next(updatedModel)
       }
 
+      event.age < minAgeForStatin -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = hasCVD,
+                hasCVD = hasCVD
+            )
+        )
+        next(updatedModel)
+      }
+
       event.age > maxAgeForCVDRisk -> {
-        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = hasCVD || hasDiabetes, hasCVD = hasCVD))
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = hasCVD || hasDiabetes,
+                hasCVD = hasCVD
+            )
+        )
         next(updatedModel)
       }
 
       hasCVD || hasDiabetes -> {
-        val updatedModel = model.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = hasCVD))
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = true,
+                hasCVD = hasCVD
+            )
+        )
         next(updatedModel)
       }
 

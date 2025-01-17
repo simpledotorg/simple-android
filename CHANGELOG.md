@@ -57,6 +57,7 @@
 
 - Add Current smoker question to patient enrolment and summary screen for statin nudge facilities
 - Update Statin nudge to show CVD risk
+- Add firebase remote config `patient_statin_nudge_v2` to load CVD risk.
 
 ## 2024-11-11-9265
 

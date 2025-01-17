@@ -151,7 +151,8 @@ data class StatinPrescriptionCheckInfoLoaded(
 ) : PatientSummaryEvent()
 
 data class CVDRiskLoaded(
-    val risk: CVDRiskRange?
+    val risk: CVDRiskRange?,
+    val hasMedicalHistoryChanged: Boolean,
 ) : PatientSummaryEvent()
 
 data class CVDRiskCalculated(

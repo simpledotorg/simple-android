@@ -157,11 +157,13 @@ class PatientSummaryUpdate(
       event: CVDRiskLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val cvdRisk = event.risk
-    return if (cvdRisk != null) {
-      dispatch(LoadStatinInfo(model.patientUuid))
-    } else {
+    return if (
+        event.risk == null ||
+        event.hasMedicalHistoryChanged
+    ) {
       dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+    } else {
+      dispatch(LoadStatinInfo(model.patientUuid))
     }
   }
 

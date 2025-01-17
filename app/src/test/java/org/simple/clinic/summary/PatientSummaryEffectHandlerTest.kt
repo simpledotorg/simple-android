@@ -890,12 +890,16 @@ class PatientSummaryEffectHandlerTest {
     //given
     val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
     whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn cvdRisk
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
+        patientUuid = patientUuid,
+        instant = cvdRisk.timestamps.updatedAt
+    )) doReturn Observable.just(false)
 
     //when
     testCase.dispatch(LoadCVDRisk(patientUuid))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk.riskScore))
+    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk.riskScore, false))
   }
 
   @Test

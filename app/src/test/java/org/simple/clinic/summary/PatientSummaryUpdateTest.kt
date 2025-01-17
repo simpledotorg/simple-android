@@ -2316,7 +2316,8 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(defaultModel)
         .whenEvent(CVDRiskLoaded(
-            risk = CVDRiskRange(27, 27)
+            risk = CVDRiskRange(27, 27),
+            hasMedicalHistoryChanged = false
         ))
         .then(assertThatNext(
             hasEffects(LoadStatinInfo(patientUuid))
@@ -2330,7 +2331,23 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(model)
         .whenEvent(CVDRiskLoaded(
-            risk = null
+            risk = null,
+            hasMedicalHistoryChanged = false
+        ))
+        .then(assertThatNext(
+            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk is loaded and risk score is not null and medical history is changed, then calculate cvd risk`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+    updateSpec
+        .given(model)
+        .whenEvent(CVDRiskLoaded(
+            risk = CVDRiskRange(27, 27),
+            hasMedicalHistoryChanged = true
         ))
         .then(assertThatNext(
             hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))

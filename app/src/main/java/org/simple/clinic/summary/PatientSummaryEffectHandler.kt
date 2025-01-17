@@ -157,9 +157,26 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map {
-            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
-            CVDRiskLoaded(cvdRisk?.riskScore)
+          .flatMap { effect ->
+            val patientUuid = effect.patientUuid
+
+            //TODO FIX THIS - when cvd risk is null, how to pass instant
+            val today = LocalDate.now(userClock)
+                .atStartOfDay()
+                .atZone(userClock.zone)
+                .toInstant()
+
+            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
+
+            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
+                patientUuid = patientUuid,
+                instant = cvdRisk?.timestamps?.updatedAt ?: today
+            ).map {
+              Pair(cvdRisk, it)
+            }
+          }
+          .map { (cvdRisk, hasMedicalHistoryChanged) ->
+            CVDRiskLoaded(cvdRisk?.riskScore, hasMedicalHistoryChanged)
           }
     }
   }
@@ -168,29 +185,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
+          .map { effect ->
             val patient = effect.patient
-            bloodPressureRepository
-                .newestMeasurementsForPatient(patient.uuid, 1)
-                .map {
-                  Pair(patient, it.firstOrNull())
-                }
-          }
-          .flatMap { (patient, bloodPressure) ->
-            val medicalHistoryObservable = medicalHistoryRepository.historyForPatientOrDefault(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patient.uuid
-            )
-            medicalHistoryObservable.map { medicalHistory ->
-              Triple(patient, medicalHistory, bloodPressure)
-            }
-          }
-          .map { (patient, medicalHistory, bloodPressure) ->
-            if (bloodPressure == null) {
-              return@map CVDRiskCalculated(null)
-            }
+            val bloodPressure = bloodPressureRepository
+                .newestMeasurementsForPatientImmediate(patient.uuid, 1).first()
 
             val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                patientUuid = patient.uuid
+            )
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
             )
 

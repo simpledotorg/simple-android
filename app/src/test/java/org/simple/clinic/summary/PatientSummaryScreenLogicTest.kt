@@ -240,7 +240,11 @@ class PatientSummaryScreenLogicTest {
         events = uiEvents.ofType(),
         defaultModel = PatientSummaryModel.from(openIntention, patientUuid),
         init = PatientSummaryInit(),
-        update = PatientSummaryUpdate(isPatientReassignmentFeatureEnabled = false, isPatientStatinNudgeEnabled = false),
+        update = PatientSummaryUpdate(
+            isPatientReassignmentFeatureEnabled = false,
+            isPatientStatinNudgeV1Enabled = false,
+            isPatientStatinNudgeV2Enabled = false
+        ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )

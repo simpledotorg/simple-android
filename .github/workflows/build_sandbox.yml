@@ -50,15 +50,15 @@ jobs:
         run: |
           ./gradlew \
           -PrunProguard=true \
-          -PmanifestEndpoint=$MANIFEST_ENDPOINT_SANDBOX \
-          -PandroidNdkVersion=$NDK_VERSION \
+          -PmanifestEndpoint=${{ env.MANIFEST_ENDPOINT_SANDBOX }} \
+          -PandroidNdkVersion=${{ env.NDK_VERSION }} \
           -PsentryDsn=${{ secrets.SENTRY_DSN }} \
           -PsentryEnvironment=sandbox \
           -PdatadogApplicationId=${{ secrets.DATADOG_APPLICATION_ID }} \
           -PdatadogClientToken=${{ secrets.DATADOG_CLIENT_TOKEN }} \
           -PdatadogEnvironment=sandbox \
-          -PsentryOrg=$SENTRY_ORG \
-          -PsentryProject=$SENTRY_PROJECT \
+          -PsentryOrg=${{ env.SENTRY_ORG }} \
+          -PsentryProject=${{ env.SENTRY_PROJECT }} \
           -PsentryAuthToken=${{ secrets.SENTRY_AUTH_TOKEN }} \
           bundleSandboxRelease
 

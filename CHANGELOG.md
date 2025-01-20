@@ -49,6 +49,7 @@
 - Bump Open CSV to v5.10
 - Bump Datadog Gradle Plugin to v1.15.0
 - Fix multiline Gradle bundle commands in build workflows
+- Fix environmental variables usage in build workflows
 
 ### Fixes
 

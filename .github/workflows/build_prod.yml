@@ -51,8 +51,8 @@ jobs:
           ./gradlew \
           -PrunProguard=true \
           -PsentryUploadProguard=true \
-          -PmanifestEndpoint=MANIFEST_ENDPOINT_PRODUCTION \
-          -PandroidNdkVersion=$NDK_VERSION \
+          -PmanifestEndpoint=${{ env.MANIFEST_ENDPOINT_PRODUCTION }} \
+          -PandroidNdkVersion=${{ env.NDK_VERSION }} \
           -PsentryDsn=${{ secrets.SENTRY_DSN }} \
           -PsentryEnvironment=production \
           -PdisableScreenshot=true \
@@ -60,8 +60,8 @@ jobs:
           -PdatadogApplicationId=${{ secrets.DATADOG_APPLICATION_ID }} \
           -PdatadogClientToken=${{ secrets.DATADOG_CLIENT_TOKEN }} \
           -PdatadogEnvironment=production \
-          -PsentryOrg=$SENTRY_ORG \
-          -PsentryProject=$SENTRY_PROJECT \
+          -PsentryOrg=${{ env.SENTRY_ORG }} \
+          -PsentryProject=${{ env.SENTRY_PROJECT }} \
           -PsentryAuthToken=${{ secrets.SENTRY_AUTH_TOKEN }} \
           bundleProductionRelease
 

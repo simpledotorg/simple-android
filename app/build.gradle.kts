@@ -63,8 +63,13 @@ android {
     applicationId = "org.simple.clinic"
     minSdk = minSdkVersion
     targetSdk = targetSdkVersion
-    versionCode = 1
-    versionName = "0.1"
+
+    val versionCode = (project.properties["VERSION_CODE"] as? String)?.toInt() ?: 1
+    val versionName = (project.properties["VERSION_NAME"] as? String) ?: "0.1"
+
+    this.versionCode = versionCode
+    this.versionName = versionName
+
     multiDexEnabled = true
 
     testInstrumentationRunner = "org.simple.clinic.AndroidTestJUnitRunner"

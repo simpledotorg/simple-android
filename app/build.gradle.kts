@@ -23,6 +23,8 @@ sentry {
   val sentryAuthToken: String by project
   val sentryUploadProguard: String by project
 
+  debug = true
+
   org = sentryOrg
   projectName = sentryProject
   authToken = sentryAuthToken

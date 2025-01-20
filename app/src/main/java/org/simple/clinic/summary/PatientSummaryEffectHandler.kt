@@ -136,7 +136,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
           }
           .map { (patient, prescriptions, hasBPRecordedToday) ->
-            val assignedFacility = getAssignedFacility(patient.assignedFacilityId).toNullable()
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
@@ -146,7 +145,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 age = patient.ageDetails.estimateAge(userClock = userClock),
                 isPatientDead = patient.status == PatientStatus.Dead,
                 hasBPRecordedToday = hasBPRecordedToday,
-                assignedFacility = assignedFacility,
                 medicalHistory = medicalHistory,
                 prescriptions = prescriptions
             )

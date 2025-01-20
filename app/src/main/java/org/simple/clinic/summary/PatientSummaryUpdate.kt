@@ -120,7 +120,6 @@ class PatientSummaryUpdate(
     val hasCVD = hasHadStroke || hasHadHeartAttack
     val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
     val canPrescribeStatin = event.isPatientDead.not() &&
-        event.assignedFacility?.facilityType.equals("UHC", ignoreCase = true) &&
         event.hasBPRecordedToday &&
         hasStatinsPrescribedAlready.not()
 

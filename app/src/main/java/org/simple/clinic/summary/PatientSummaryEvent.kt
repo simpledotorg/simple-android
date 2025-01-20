@@ -145,7 +145,6 @@ data class StatinPrescriptionCheckInfoLoaded(
     val age: Int,
     val isPatientDead: Boolean,
     val hasBPRecordedToday: Boolean,
-    val assignedFacility: Facility?,
     val medicalHistory: MedicalHistory,
     val prescriptions: List<PrescribedDrug>,
 ) : PatientSummaryEvent()

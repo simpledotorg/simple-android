@@ -2145,10 +2145,6 @@ class PatientSummaryUpdateTest {
             age = 39,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
@@ -2172,10 +2168,6 @@ class PatientSummaryUpdateTest {
             age = 39,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = Yes,
@@ -2205,10 +2197,6 @@ class PatientSummaryUpdateTest {
             age = 40,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = Yes,
                 hasHadStroke = No,
@@ -2238,10 +2226,6 @@ class PatientSummaryUpdateTest {
             age = 40,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
@@ -2265,10 +2249,6 @@ class PatientSummaryUpdateTest {
             age = 75,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
@@ -2292,10 +2272,6 @@ class PatientSummaryUpdateTest {
             age = 50,
             isPatientDead = false,
             hasBPRecordedToday = true,
-            assignedFacility = TestData.facility(
-                name = "UHC Simple",
-                facilityType = "UHC"
-            ),
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = Yes,
                 hasHadStroke = No,

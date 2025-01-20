@@ -848,11 +848,6 @@ class PatientSummaryEffectHandlerTest {
         )
     )
 
-    val facility = TestData.facility(
-        uuid = assignedFacilityId,
-        name = "PHC Simple"
-    )
-
     val medicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("281f2524-8864-4b0f-859c-97952d881ccb"),
         diagnosedWithHypertension = No
@@ -862,7 +857,6 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid,
         today = Instant.parse("2018-01-01T00:00:00Z"),
     )) doReturn Observable.just(true)
-    whenever(facilityRepository.facility(assignedFacilityId)) doReturn Optional.of(facility)
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
@@ -877,7 +871,6 @@ class PatientSummaryEffectHandlerTest {
         age = 50,
         isPatientDead = false,
         hasBPRecordedToday = true,
-        assignedFacility = facility,
         medicalHistory = medicalHistory,
         prescriptions = emptyList(),
     ))

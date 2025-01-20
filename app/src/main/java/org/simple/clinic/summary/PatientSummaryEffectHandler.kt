@@ -14,6 +14,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -188,7 +189,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { effect ->
             val patient = effect.patient
             val bloodPressure = bloodPressureRepository
-                .newestMeasurementsForPatientImmediate(patient.uuid, 1).first()
+                .newestMeasurementsForPatientImmediate(patient.uuid, 1).firstOrNull()
 
             val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
                 patientUuid = patient.uuid
@@ -198,22 +199,34 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patient.uuid
             )
 
-            val risk = cvdRiskCalculator.calculateCvdRisk(
-                CVDRiskInput(
-                    gender = patient.gender,
-                    age = patient.ageDetails.estimateAge(userClock),
-                    systolic = bloodPressure.reading.systolic,
-                    isSmoker = medicalHistory.isSmoking,
-                    bmi = patientAttribute?.bmiReading?.calculateBMI(),
-                )
-            )
+            var risk: CVDRiskRange? = null
+
+            if (bloodPressure != null) {
+              risk = cvdRiskCalculator.calculateCvdRisk(
+                  CVDRiskInput(
+                      gender = patient.gender,
+                      age = patient.ageDetails.estimateAge(userClock),
+                      systolic = bloodPressure.reading.systolic,
+                      isSmoker = medicalHistory.isSmoking,
+                      bmi = patientAttribute?.bmiReading?.calculateBMI(),
+                  )
+              )
+            }
 
             if (risk != null) {
-              cvdRiskRepository.save(
-                  riskScore = risk,
-                  patientUuid = patient.uuid,
-                  uuid = uuidGenerator.v4()
-              )
+              val existingCvdRisk = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)
+              if (existingCvdRisk != null) {
+                cvdRiskRepository.save(
+                    existingCvdRisk.copy(riskScore = risk),
+                    updateTime = Instant.now(clock)
+                )
+              } else {
+                cvdRiskRepository.save(
+                    riskScore = risk,
+                    patientUuid = patient.uuid,
+                    uuid = uuidGenerator.v4()
+                )
+              }
             }
             CVDRiskCalculated(risk)
           }

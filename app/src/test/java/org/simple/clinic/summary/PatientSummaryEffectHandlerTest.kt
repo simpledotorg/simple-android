@@ -924,7 +924,7 @@ class PatientSummaryEffectHandlerTest {
     val bloodPressures = listOf(bloodPressure)
 
 
-    whenever(bloodPressureRepository.newestMeasurementsForPatient(patientUuid = patientUuid, limit = 1)) doReturn Observable.just(bloodPressures)
+    whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid = patientUuid, limit = 1)) doReturn bloodPressures
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()

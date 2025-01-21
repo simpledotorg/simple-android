@@ -2,7 +2,7 @@
 
 link="$1"
 
-story_regex="https:\/\/app.shortcut.com\/simpledotorg\/story\/[0-9]+(?:\/.*)?\$"
+story_regex="https:\/\/app.shortcut.com\/simpledotorg\/story\/[0-9]+(\/.*)?"
 
 if [[ "$link" =~ $story_regex ]]; then
   echo "PR description contains a valid story link."

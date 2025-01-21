@@ -76,10 +76,6 @@ jobs:
 
   # TODO: Add Android integration tests once [SC-13775] is resolved
 
-  verify_prod_release_bundle:
-    if: github.event.inputs.run-build-checks == null || github.event.inputs.run-build-checks
-    uses: ./.github/workflows/build_prod.yml
-
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]
     steps:

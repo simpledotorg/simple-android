@@ -10,7 +10,7 @@ on:
 
 jobs:
   ci-checks:
-    uses: .github/workflows/ci_checks.yml
+    uses: ./.github/workflows/ci_checks.yml
     with:
       run-build-checks: false
 

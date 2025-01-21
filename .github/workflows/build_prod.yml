@@ -1,6 +1,7 @@
 name: Build production app bundle
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       tramline-input:

@@ -14,7 +14,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

@@ -22,7 +22,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID

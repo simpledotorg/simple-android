@@ -14,7 +14,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID

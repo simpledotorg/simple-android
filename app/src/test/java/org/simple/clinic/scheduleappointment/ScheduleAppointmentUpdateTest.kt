@@ -16,7 +16,7 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.UUID

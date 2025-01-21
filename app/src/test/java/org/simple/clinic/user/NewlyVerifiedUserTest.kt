@@ -9,7 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import java.util.Optional
 
 @RunWith(JUnitParamsRunner::class)

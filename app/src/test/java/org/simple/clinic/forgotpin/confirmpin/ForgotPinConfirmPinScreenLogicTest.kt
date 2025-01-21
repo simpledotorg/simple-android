@@ -28,7 +28,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.resetpin.ResetUserPin
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

@@ -20,11 +20,11 @@ import org.simple.clinic.bp.entry.OpenAs.New
 import org.simple.clinic.bp.entry.OpenAs.Update
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture

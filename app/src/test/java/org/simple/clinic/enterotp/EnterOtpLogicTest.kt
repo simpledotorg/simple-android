@@ -1,6 +1,5 @@
 package org.simple.clinic.enterotp
 
-import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -33,7 +32,7 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

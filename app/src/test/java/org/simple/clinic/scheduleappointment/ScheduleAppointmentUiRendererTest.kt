@@ -11,7 +11,7 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period

@@ -4,11 +4,10 @@ import com.f2prateek.rx.preferences2.Preference
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional

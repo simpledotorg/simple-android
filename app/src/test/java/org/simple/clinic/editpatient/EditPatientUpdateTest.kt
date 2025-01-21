@@ -15,7 +15,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import java.time.LocalDate

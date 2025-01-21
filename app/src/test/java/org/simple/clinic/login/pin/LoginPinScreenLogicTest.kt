@@ -18,7 +18,7 @@ import org.simple.clinic.user.OngoingLoginEntryRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

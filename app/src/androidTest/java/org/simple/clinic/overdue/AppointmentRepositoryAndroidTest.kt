@@ -54,9 +54,9 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toUtcInstant
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

@@ -7,8 +7,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.SyncStatus
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.util.UUID
 

@@ -28,7 +28,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.plumbing.infrastructure.FakeInfrastructure
-import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -36,7 +35,7 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import java.util.Optional
 import java.util.UUID
 

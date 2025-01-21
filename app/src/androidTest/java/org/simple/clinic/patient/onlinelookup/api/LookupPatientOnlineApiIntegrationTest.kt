@@ -28,8 +28,8 @@ import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID

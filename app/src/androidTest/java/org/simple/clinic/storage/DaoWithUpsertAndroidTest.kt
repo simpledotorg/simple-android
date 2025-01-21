@@ -13,7 +13,7 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

@@ -20,7 +20,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional

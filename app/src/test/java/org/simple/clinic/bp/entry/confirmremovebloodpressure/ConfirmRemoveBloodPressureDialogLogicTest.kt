@@ -17,7 +17,7 @@ import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

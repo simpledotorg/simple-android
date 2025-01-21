@@ -11,7 +11,7 @@ import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

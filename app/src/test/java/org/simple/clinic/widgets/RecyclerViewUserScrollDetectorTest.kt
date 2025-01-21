@@ -12,7 +12,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 
 @RunWith(JUnitParamsRunner::class)
 class RecyclerViewUserScrollDetectorTest {

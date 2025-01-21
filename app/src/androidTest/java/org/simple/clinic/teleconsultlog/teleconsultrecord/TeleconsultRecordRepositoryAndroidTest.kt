@@ -1,7 +1,6 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,8 +11,8 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

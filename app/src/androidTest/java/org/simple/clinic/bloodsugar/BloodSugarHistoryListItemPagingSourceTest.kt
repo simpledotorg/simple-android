@@ -15,9 +15,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

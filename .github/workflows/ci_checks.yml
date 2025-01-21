@@ -3,6 +3,11 @@ name: CI Checks
 on:
   pull_request:
   workflow_call:
+    inputs:
+      run-build-checks:
+        default: true
+        type: boolean
+        description: True to run build checks
 
 concurrency:
   group: ci-${{ github.head_ref }}
@@ -72,7 +77,7 @@ jobs:
   # TODO: Add Android integration tests once [SC-13775] is resolved
 
   verify_prod_release_bundle:
-    if: github.event_name == 'pull_request'
+    if: github.event.inputs.run-build-checks == null || github.event.inputs.run-build-checks
     uses: .github/workflows/build_prod.yml
 
   verify_room_schemas:

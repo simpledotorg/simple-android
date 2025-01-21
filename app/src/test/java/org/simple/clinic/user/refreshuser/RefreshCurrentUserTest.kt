@@ -14,8 +14,8 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.toUser
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toUser
 import java.util.UUID
 
 class RefreshCurrentUserTest {

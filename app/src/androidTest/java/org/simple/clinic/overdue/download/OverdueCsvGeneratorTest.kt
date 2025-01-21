@@ -18,8 +18,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

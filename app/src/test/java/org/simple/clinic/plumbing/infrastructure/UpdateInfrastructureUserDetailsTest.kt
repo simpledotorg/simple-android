@@ -9,8 +9,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.Country
-import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TestSchedulersProvider

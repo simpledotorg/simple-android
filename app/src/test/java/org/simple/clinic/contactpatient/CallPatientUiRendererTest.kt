@@ -15,7 +15,7 @@ import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientStatus
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period

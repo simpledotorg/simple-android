@@ -24,7 +24,7 @@ import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.location.ScreenLocationUpdates
 import org.simple.clinic.util.Distance
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration

@@ -6,7 +6,7 @@ import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate

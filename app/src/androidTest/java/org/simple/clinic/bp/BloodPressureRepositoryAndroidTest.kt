@@ -15,9 +15,9 @@ import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
 import org.simple.clinic.util.toUtcInstant
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

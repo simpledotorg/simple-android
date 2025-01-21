@@ -43,9 +43,9 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityR
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID

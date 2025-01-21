@@ -16,7 +16,7 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFreque
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.util.UUID
 
 class CustomDrugEntryEffectHandlerTest {

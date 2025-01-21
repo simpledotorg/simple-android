@@ -22,7 +22,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.unsafeLazy
 import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject

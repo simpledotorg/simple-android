@@ -10,7 +10,7 @@ import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.registeruser.RegisterUser
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.UUID

@@ -20,7 +20,7 @@ import org.simple.clinic.storage.SharedPreferencesMode
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import org.simple.clinic.util.toNullable
 import java.util.UUID
 import javax.inject.Inject

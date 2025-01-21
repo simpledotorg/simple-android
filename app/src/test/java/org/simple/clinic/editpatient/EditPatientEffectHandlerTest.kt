@@ -39,12 +39,12 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.OpenedFrom
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

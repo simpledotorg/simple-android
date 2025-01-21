@@ -26,8 +26,8 @@ import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import org.simple.sharedTestCode.util.httpErrorResponse
-import org.simple.sharedTestCode.util.toPayload
+import org.simple.clinic.util.httpErrorResponse
+import org.simple.clinic.util.toPayload
 import java.io.IOException
 import java.util.Optional
 import java.util.UUID

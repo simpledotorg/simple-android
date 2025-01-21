@@ -1,6 +1,5 @@
 package org.simple.clinic.login.applock
 
-import com.google.common.truth.Truth.assertThat
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -12,7 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.storage.MemoryValue
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

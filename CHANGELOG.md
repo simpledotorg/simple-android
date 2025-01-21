@@ -50,6 +50,7 @@
 - Bump Datadog Gradle Plugin to v1.15.0
 - Fix multiline Gradle bundle commands in build workflows
 - Fix variables usage in build workflows
+- Migrate to using test fixtures for shared test code
 
 ### Fixes
 

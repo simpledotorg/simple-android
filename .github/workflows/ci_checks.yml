@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify PR description
-        run: .github/scripts/story_link_check.sh ${{ github.event.pull_request.body }}
+        run: .github/scripts/story_link_check.sh '${{ github.event.pull_request.body }}'
 
   verify_changelog_was_updated:
     runs-on: [ ubuntu-latest ]

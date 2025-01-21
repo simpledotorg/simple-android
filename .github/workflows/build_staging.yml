@@ -8,7 +8,12 @@ on:
         required: false
 
 jobs:
-  build:
+  ci-checks:
+    uses: .github/workflows/ci_checks.yml
+    with:
+      run-build-checks: false
+
+  build_app_bundle:
     runs-on: [ ubuntu-latest ]
     env:
       TERM: dumb

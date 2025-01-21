@@ -9,15 +9,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify_pr_description:
+  verify_pr_has_story_link:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
       - name: Verify PR description
-        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
+        run: .github/scripts/story_link_check.sh ${{ github.event.pull_request.body }}
 
-  verify_changelog_updated:
+  verify_changelog_was_updated:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:

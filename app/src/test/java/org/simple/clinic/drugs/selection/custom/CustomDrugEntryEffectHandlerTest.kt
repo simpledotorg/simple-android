@@ -8,7 +8,7 @@ import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository

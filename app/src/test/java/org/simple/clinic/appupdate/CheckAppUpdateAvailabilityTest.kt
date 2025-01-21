@@ -13,7 +13,7 @@ import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.simple.sharedTestCode.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.util.NoOpRemoteConfigService
 import org.simple.clinic.settings.AppVersionFetcher
 

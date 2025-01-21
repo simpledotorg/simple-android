@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Rules

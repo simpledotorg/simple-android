@@ -9,7 +9,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class OverdueSearchUiRendererTest {

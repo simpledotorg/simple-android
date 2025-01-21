@@ -7,7 +7,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject

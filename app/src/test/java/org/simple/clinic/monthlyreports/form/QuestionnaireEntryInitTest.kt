@@ -6,7 +6,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class QuestionnaireEntryInitTest {
   private val questionnaireType = MonthlyScreeningReports

@@ -25,7 +25,7 @@ import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHig
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

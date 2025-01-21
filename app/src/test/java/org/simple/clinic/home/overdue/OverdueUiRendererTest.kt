@@ -5,7 +5,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class OverdueUiRendererTest {

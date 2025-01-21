@@ -7,7 +7,7 @@ import org.mockito.kotlin.whenever
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.FakeCall
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.login.CurrentUserResponse
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.user.User

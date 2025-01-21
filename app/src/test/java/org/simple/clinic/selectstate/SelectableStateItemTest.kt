@@ -2,7 +2,7 @@ package org.simple.clinic.selectstate
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class SelectableStateItemTest {
 

@@ -23,7 +23,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomRemoveReason

@@ -6,7 +6,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.sync.BloodSugarPushRequest
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncApi
 import org.simple.clinic.bp.sync.BloodPressurePushRequest

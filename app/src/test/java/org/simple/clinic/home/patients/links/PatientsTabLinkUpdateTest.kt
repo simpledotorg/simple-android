@@ -8,7 +8,7 @@ import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireResponseSections
 import org.simple.clinic.questionnaire.QuestionnaireSections
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class PatientsTabLinkUpdateTest {

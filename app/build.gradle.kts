@@ -398,12 +398,12 @@ dependencies {
   implementation(projects.commonUi)
 
   val composeBom = platform(libs.androidx.compose.bom)
-  implementation(composeBom)
+  api(composeBom)
   androidTestImplementation(composeBom)
-  implementation(libs.androidx.compose.material3)
-  implementation(libs.androidx.compose.livedata)
-  implementation(libs.androidx.compose.material.iconsExtended)
-  implementation(libs.androidx.compose.ui.tooling.preview)
+  api(libs.androidx.compose.material3)
+  api(libs.androidx.compose.livedata)
+  api(libs.androidx.compose.material.iconsExtended)
+  api(libs.androidx.compose.ui.tooling.preview)
   debugImplementation(libs.androidx.compose.ui.tooling)
 
   implementation(libs.sqlCipher)

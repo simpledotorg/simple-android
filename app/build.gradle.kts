@@ -282,6 +282,10 @@ android {
       }
     }
   }
+
+  testFixtures {
+    enable = true
+  }
 }
 
 dependencies {
@@ -404,6 +408,15 @@ dependencies {
 
   implementation(libs.sqlCipher)
 
+  /** Test fixtures dependencies **/
+  testFixturesImplementation(libs.kotlin.stdlib)
+  testFixturesImplementation(libs.junit)
+  testFixturesImplementation(libs.faker)
+  testFixturesImplementation(libs.traceur)
+  testFixturesImplementation(libs.rx.java)
+  testFixturesImplementation(libs.retrofit.retrofit)
+  testFixturesImplementation(libs.okhttp.okhttp)
+
   /**
    * Unit test dependencies
    */
@@ -427,8 +440,6 @@ dependencies {
   testImplementation(libs.truth)
 
   testImplementation(libs.kotlin.reflect)
-
-  testImplementation(projects.sharedTestCode)
 
   /**
    * Android test dependencies
@@ -456,8 +467,6 @@ dependencies {
   androidTestImplementation(libs.truth)
 
   kspAndroidTest(libs.dagger.compiler)
-
-  androidTestImplementation(projects.sharedTestCode)
 
   androidTestImplementation(libs.androidx.compose.test.junit)
   debugImplementation(libs.androidx.compose.test.manifest)

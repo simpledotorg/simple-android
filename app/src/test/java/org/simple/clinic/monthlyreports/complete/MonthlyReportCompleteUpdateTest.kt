@@ -3,7 +3,7 @@ package org.simple.clinic.monthlyreports.complete
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class MonthlyReportCompleteUpdateTest {
 

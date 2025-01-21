@@ -1,8 +1,6 @@
-package org.simple.sharedTestCode
+package org.simple.clinic
 
 import io.bloco.faker.Faker
-import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
-import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.appconfig.State
@@ -115,13 +113,13 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
-import org.simple.sharedTestCode.util.randomDeletedReason
-import org.simple.sharedTestCode.util.randomGender
-import org.simple.sharedTestCode.util.randomMedicalHistoryAnswer
-import org.simple.sharedTestCode.util.randomOfEnum
-import org.simple.sharedTestCode.util.randomPatientPhoneNumberType
-import org.simple.sharedTestCode.util.randomTeleconsultRecordAnswer
-import org.simple.sharedTestCode.util.randomTeleconsultationType
+import org.simple.clinic.util.randomDeletedReason
+import org.simple.clinic.util.randomGender
+import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.randomOfEnum
+import org.simple.clinic.util.randomPatientPhoneNumberType
+import org.simple.clinic.util.randomTeleconsultRecordAnswer
+import org.simple.clinic.util.randomTeleconsultationType
 import java.net.URI
 import java.time.Instant
 import java.time.LocalDate

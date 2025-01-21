@@ -20,8 +20,8 @@ import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID

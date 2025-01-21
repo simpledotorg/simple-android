@@ -8,9 +8,9 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.util.UUID
 
 class MedicalHistorySummaryEffectHandlerTest {

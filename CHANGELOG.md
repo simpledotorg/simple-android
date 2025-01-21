@@ -51,6 +51,7 @@
 - Fix multiline Gradle bundle commands in build workflows
 - Fix variables usage in build workflows
 - Add display name to `ImageView#src` lint fix
+- Migrate to using test fixtures for shared test code
 
 ### Fixes
 

@@ -11,8 +11,8 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.storage.SharedPreferencesMode
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.TestData
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

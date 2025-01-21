@@ -43,12 +43,11 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import java.util.Locale.ENGLISH
 import java.util.Optional
 import java.util.UUID

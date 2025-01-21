@@ -11,8 +11,8 @@ import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUtcClock
 import java.net.URI
 import java.time.Duration
 import java.time.Instant

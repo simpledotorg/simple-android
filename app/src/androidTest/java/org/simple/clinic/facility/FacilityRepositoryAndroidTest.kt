@@ -1,17 +1,16 @@
 package org.simple.clinic.facility
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

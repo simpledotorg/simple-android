@@ -4,9 +4,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC

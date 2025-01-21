@@ -1,7 +1,6 @@
 package org.simple.clinic.sync
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,7 +14,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoAp
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
 class TeleconsultationSyncIntegrationTest {

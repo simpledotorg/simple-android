@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class CVDRiskCalculatorTest {
 

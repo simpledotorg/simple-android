@@ -31,6 +31,5 @@ include(
     ":simple-platform",
     ":simple-visuals",
     ":lint",
-    ":sharedTestCode",
     ":common-ui"
 )

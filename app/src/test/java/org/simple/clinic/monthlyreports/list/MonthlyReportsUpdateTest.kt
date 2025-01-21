@@ -4,7 +4,7 @@ import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class MonthlyReportsUpdateTest {

@@ -78,7 +78,7 @@ jobs:
 
   verify_prod_release_bundle:
     if: github.event.inputs.run-build-checks == null || github.event.inputs.run-build-checks
-    uses: .github/workflows/build_prod.yml
+    uses: ./.github/workflows/build_prod.yml
 
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]

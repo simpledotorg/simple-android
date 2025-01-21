@@ -10,6 +10,7 @@ on:
 
 jobs:
   ci-checks:
+    if: github.event_name != 'pull_request'
     uses: ./.github/workflows/ci_checks.yml
     with:
       run-build-checks: false

@@ -24,12 +24,14 @@ jobs:
       ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
     steps:
       - name: Configure Tramline
+        if: github.event.inputs.tramline-input != null && github.event.inputs.tramline-input != ''
         id: tramline
         uses: tramlinehq/deploy-action@v0.1.7
         with:
           input: ${{ github.event.inputs.tramline-input }}
 
       - name: Setup version code and name
+        if: github.event.inputs.tramline-input != null && github.event.inputs.tramline-input != ''
         id: version_code_and_name
         run: |
           VERSION_NAME=${{ steps.tramline.outputs.version_name }}

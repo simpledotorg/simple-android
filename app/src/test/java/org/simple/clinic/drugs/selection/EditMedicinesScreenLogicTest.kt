@@ -39,8 +39,8 @@ import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.TestData
+import org.simple.clinic.util.RxErrorsRule
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset

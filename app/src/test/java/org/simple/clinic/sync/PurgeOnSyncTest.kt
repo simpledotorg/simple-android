@@ -9,8 +9,8 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.junit.Test
 import org.simple.clinic.AppDatabase
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

@@ -7,7 +7,7 @@ import org.mockito.kotlin.verify
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class BMIEntryEffectHandlerTest {

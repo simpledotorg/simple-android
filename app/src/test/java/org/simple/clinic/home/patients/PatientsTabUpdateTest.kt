@@ -13,7 +13,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.drugstockreminders.DrugStockReminder
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.LocalDate
 import java.util.Optional
 

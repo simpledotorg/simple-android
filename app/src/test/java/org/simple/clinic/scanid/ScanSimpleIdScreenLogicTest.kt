@@ -17,7 +17,7 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRe
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class ScanSimpleIdScreenLogicTest {
 

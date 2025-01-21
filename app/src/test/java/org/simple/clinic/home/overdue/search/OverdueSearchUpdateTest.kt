@@ -15,7 +15,7 @@ import org.simple.clinic.home.overdue.search.OverdueButtonType.SELECT_ALL
 import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID

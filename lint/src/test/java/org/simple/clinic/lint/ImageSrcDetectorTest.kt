@@ -15,7 +15,7 @@ class ImageSrcDetectorTest : LintDetectorTest() {
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:src="@drawable/ic_done"/>
-            """.trimIndent())
+            """).indented()
         )
         .run()
         .expect("""
@@ -35,7 +35,7 @@ class ImageSrcDetectorTest : LintDetectorTest() {
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   app:srcCompat="@drawable/ic_done"/>
-            """.trimIndent())
+            """).indented()
         )
         .run()
         .expectClean()

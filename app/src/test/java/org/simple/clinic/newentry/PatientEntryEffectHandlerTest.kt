@@ -31,8 +31,8 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale

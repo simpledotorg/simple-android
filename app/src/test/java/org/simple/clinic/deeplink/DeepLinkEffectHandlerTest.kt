@@ -9,7 +9,7 @@ import org.mockito.kotlin.whenever
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession

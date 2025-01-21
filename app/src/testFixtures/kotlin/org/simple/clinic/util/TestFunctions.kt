@@ -1,4 +1,4 @@
-package org.simple.sharedTestCode.util
+package org.simple.clinic.util
 
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.TestScheduler

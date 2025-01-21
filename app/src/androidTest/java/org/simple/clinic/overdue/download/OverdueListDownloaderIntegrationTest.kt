@@ -10,7 +10,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
 import org.simple.clinic.rules.ServerAuthenticationRule
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

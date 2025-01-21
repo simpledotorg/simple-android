@@ -17,7 +17,7 @@ import org.simple.clinic.questionnaire.QuestionnaireResponseSections
 import org.simple.clinic.questionnaire.QuestionnaireSections
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class PatientsTabLinkEffectHandlerTest {

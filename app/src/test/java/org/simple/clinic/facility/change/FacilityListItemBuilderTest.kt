@@ -5,14 +5,14 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.util.Distance
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 
 class FacilityListItemBuilderTest {
 

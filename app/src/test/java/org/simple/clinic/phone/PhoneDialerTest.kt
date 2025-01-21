@@ -6,7 +6,7 @@ import org.mockito.kotlin.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.clinic.util.RxErrorsRule
 
 class PhoneDialerTest {
 

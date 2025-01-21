@@ -19,8 +19,8 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.TestData
+import org.simple.clinic.util.Rules
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject

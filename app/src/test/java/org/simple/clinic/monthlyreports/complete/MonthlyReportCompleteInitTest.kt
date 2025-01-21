@@ -3,7 +3,7 @@ package org.simple.clinic.monthlyreports.complete
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class MonthlyReportCompleteInitTest {
   private val questionnaireResponse = TestData.questionnaireResponse()

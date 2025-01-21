@@ -16,7 +16,7 @@ class CardViewDetectorTest : LintDetectorTest() {
                   android:layout_height="wrap_content">
 
               </androidx.cardview.widget.CardView>
-            """.trimIndent())
+            """).indented()
         )
         .run()
         .expect("""
@@ -36,7 +36,7 @@ class CardViewDetectorTest : LintDetectorTest() {
                   android:layout_height="wrap_content">
 
               </com.google.android.material.card.MaterialCardView>
-            """.trimIndent())
+            """).indented()
         )
         .run()
         .expectClean()

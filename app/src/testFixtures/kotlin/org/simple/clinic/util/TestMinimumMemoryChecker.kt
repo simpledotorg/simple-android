@@ -1,6 +1,4 @@
-package org.simple.sharedTestCode.util
-
-import org.simple.clinic.util.MinimumMemoryChecker
+package org.simple.clinic.util
 
 class TestMinimumMemoryChecker : MinimumMemoryChecker {
 

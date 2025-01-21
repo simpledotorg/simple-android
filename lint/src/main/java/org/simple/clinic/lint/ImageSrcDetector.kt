@@ -43,18 +43,19 @@ class ImageSrcDetector : ResourceXmlDetector() {
   }
 
   private fun reportSrcIssue(context: XmlContext, element: Element) {
+    val fix = fix()
+        .name("ImageView should use `android:srcCompat`")
+        .composite(
+            fix().set(AUTO_URI, ATTR_SRC_COMPAT, element.getAttributeNS(ANDROID_URI, ATTR_SRC)).build(),
+            fix().unset(ANDROID_URI, ATTR_SRC).build()
+        )
+
     context.report(
         ImageSrcIssue,
         element,
         context.getLocation(element.getAttributeNodeNS(ANDROID_URI, ATTR_SRC)),
         ImageSrcExplanation,
-        LintFix.create().composite(
-            LintFix.create().set(
-                AUTO_URI, ATTR_SRC_COMPAT,
-                element.getAttributeNS(ANDROID_URI, ATTR_SRC)
-            ).build(),
-            LintFix.create().unset(ANDROID_URI, ATTR_SRC).build()
-        )
+        fix
     )
   }
 }

@@ -15,7 +15,7 @@ class TextViewTextSizeDetectorTest : LintDetectorTest() {
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:textSize="18sp"/>
-            """.trimIndent())
+            """).indented()
         )
         .run()
         .expect("""

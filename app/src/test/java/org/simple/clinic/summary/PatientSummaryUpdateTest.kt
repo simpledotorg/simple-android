@@ -27,7 +27,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACT
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.util.UUID
 

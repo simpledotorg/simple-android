@@ -7,7 +7,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.StatesResult
 import org.simple.clinic.appconfig.StatesResult.FetchError

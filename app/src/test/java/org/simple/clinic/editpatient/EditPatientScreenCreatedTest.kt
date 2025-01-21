@@ -16,7 +16,7 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import java.time.Instant

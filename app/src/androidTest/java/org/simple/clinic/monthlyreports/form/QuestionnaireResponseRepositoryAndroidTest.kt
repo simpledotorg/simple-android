@@ -13,7 +13,7 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration

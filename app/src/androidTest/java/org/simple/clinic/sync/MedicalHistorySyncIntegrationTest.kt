@@ -8,7 +8,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository

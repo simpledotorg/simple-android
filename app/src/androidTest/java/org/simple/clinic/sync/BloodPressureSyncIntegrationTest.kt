@@ -8,7 +8,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.sync.BloodPressureSync

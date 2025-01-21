@@ -9,7 +9,7 @@ import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.Random

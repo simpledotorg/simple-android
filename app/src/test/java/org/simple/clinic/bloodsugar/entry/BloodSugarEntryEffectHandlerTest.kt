@@ -30,7 +30,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Instant

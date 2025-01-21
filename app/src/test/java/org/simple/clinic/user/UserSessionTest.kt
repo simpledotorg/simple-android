@@ -21,7 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository

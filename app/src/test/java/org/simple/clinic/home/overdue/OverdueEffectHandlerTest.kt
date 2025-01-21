@@ -20,7 +20,7 @@ import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate

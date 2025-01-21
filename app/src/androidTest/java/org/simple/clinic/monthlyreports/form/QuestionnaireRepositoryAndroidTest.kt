@@ -10,7 +10,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject

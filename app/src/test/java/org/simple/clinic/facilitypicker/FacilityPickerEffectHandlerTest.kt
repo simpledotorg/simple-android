@@ -6,7 +6,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase

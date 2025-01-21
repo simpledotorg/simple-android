@@ -14,7 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.RxErrorsRule

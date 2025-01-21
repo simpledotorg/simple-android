@@ -13,7 +13,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.OpenAs.New

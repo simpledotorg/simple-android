@@ -9,7 +9,7 @@ import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.storage.SharedPreferencesMode
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import java.util.Optional
 import javax.inject.Inject

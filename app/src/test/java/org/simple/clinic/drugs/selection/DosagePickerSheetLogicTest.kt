@@ -16,7 +16,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEffect

@@ -14,7 +14,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock

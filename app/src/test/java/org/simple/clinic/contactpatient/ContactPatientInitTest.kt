@@ -6,7 +6,7 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentConfig

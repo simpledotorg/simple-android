@@ -9,7 +9,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
 

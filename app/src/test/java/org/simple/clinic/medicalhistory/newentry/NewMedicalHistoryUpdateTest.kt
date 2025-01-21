@@ -19,7 +19,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

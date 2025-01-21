@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException
 import org.junit.rules.RuleChain
 import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.assertColumnCount
 import org.simple.clinic.assertColumns
 import org.simple.clinic.assertTableDoesNotExist

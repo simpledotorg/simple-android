@@ -9,7 +9,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository

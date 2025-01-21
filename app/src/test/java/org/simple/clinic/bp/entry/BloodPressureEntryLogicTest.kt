@@ -18,7 +18,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.BloodPressureRepository

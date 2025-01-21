@@ -22,7 +22,7 @@ import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.util.MinimumMemoryChecker
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Locale

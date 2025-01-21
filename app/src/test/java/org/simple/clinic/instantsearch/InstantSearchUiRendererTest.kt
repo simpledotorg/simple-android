@@ -4,7 +4,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS

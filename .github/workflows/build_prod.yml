@@ -41,6 +41,9 @@ jobs:
           echo "ORG_GRADLE_PROJECT_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
 
+      - name: Checkout
+        if: github.event.inputs.tramline-input == null || github.event.inputs.tramline-input == ''
+        uses: actions/checkout@v4
 
       - name: Setup JDK
         uses: actions/setup-java@v4

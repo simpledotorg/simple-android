@@ -139,7 +139,8 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         patient = patient,
         address = address,
         phoneNumbers = listOf(phoneNumber),
-        businessIds = emptyList()
+        businessIds = emptyList(),
+        attributes = null,
     )
 
     val bloodPressureMeasurement = (1..10).map { bloodPressureMeasurement(user, facility, patient, now) }

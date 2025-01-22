@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -149,17 +150,26 @@ data class StatinPrescriptionCheckInfoLoaded(
     val prescriptions: List<PrescribedDrug>,
 ) : PatientSummaryEvent()
 
-data class CVDRiskLoaded(
-    val risk: CVDRiskRange?,
+data class InfoRequiredForStatinPrescription1Loaded(
+    val age: Int,
+    val isPatientDead: Boolean,
+    val hasBPRecordedToday: Boolean,
+    val medicalHistory: MedicalHistory,
+    val prescriptions: List<PrescribedDrug>,
+) : PatientSummaryEvent()
+
+data class InfoRequiredForStatinPrescription2Loaded(
+    val age: Int,
+    val isPatientDead: Boolean,
+    val hasBPRecordedToday: Boolean,
+    val medicalHistory: MedicalHistory,
+    val prescriptions: List<PrescribedDrug>,
+    val cvdRisk: CVDRiskRange?,
     val hasMedicalHistoryChanged: Boolean,
 ) : PatientSummaryEvent()
 
 data class CVDRiskCalculated(
     val risk: CVDRiskRange?
-) : PatientSummaryEvent()
-
-data class StatinInfoLoaded(
-    val statinInfo: StatinInfo
 ) : PatientSummaryEvent()
 
 data object AddSmokingClicked : PatientSummaryEvent()

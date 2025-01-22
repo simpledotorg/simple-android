@@ -119,7 +119,8 @@ class LookupPatientOnline @Inject constructor(
         ),
         address = response.address.toDatabaseModel(),
         phoneNumbers = phoneNumbers,
-        businessIds = businessIds
+        businessIds = businessIds,
+        attributes = null
     )
   }
 

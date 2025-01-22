@@ -9,6 +9,7 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -81,6 +82,11 @@ class CVDRiskRepository @Inject constructor(
 
   fun getCVDRiskImmediate(patientUuid: UUID): CVDRisk? {
     return dao.cvdRiskImmediate(patientUuid)
+  }
+
+  fun cvdRisk(patientUuid: UUID): Observable<Optional<CVDRisk>> {
+    return dao.cvdRisk(patientUuid)
+        .map { Optional.ofNullable(it) }
   }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<CVDRisk> {

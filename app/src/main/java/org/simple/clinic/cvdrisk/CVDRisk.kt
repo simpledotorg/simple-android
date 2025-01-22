@@ -12,6 +12,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -89,6 +90,14 @@ data class CVDRisk(
       LIMIT 1
     """)
     fun cvdRiskImmediate(patientUuid: UUID): CVDRisk?
+
+    @Query("""
+      SELECT * FROM CVDRisk
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+      ORDER BY updatedAt DESC
+      LIMIT 1
+    """)
+    fun cvdRisk(patientUuid: UUID): Observable<CVDRisk?>
 
     @Query("DELETE FROM CVDRisk")
     fun clear()

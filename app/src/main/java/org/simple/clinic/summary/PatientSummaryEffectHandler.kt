@@ -40,6 +40,7 @@ import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDate
 import java.util.Optional
@@ -103,79 +104,104 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
-        .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
-        .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
+        .addTransformer(LoadInfoReqForStatinPrescription1::class.java, loadInfoReqForStatinPrescription1())
+        .addTransformer(LoadInfoReqForStatinPrescription2::class.java, loadInfoReqForStatinPrescription2())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
-        .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
         .addConsumer(UpdateSmokingStatus::class.java, { updateSmokingStatus(it.patientId, it.isSmoker) }, schedulersProvider.io())
         .build()
   }
 
-  private fun loadStatinPrescriptionCheckInfo(): ObservableTransformer<LoadStatinPrescriptionCheckInfo, PatientSummaryEvent> {
+  private fun loadInfoReqForStatinPrescription2(): ObservableTransformer<LoadInfoReqForStatinPrescription2, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
-            val patient = effect.patient
-            val today = LocalDate.now(userClock)
-                .atStartOfDay()
-                .atZone(userClock.zone)
-                .toInstant()
+          .flatMap {
+            patientRepository.patient(it.patientUuid)
+                .extractIfPresent()
+                .flatMap { patient ->
+                  val today = LocalDate.now(userClock)
+                      .atStartOfDay(userClock.zone)
+                      .toInstant()
 
-            bloodPressureRepository.hasBPRecordedToday(
-                patientUuid = patient.uuid,
-                today = today,
-            ).map {
-              Pair(patient, it)
-            }
-          }
-          .flatMap { (patient, hasBPRecordedToday) ->
-            val prescriptionsObservable = prescriptionRepository.newestPrescriptionsForPatient(patient.uuid)
-            prescriptionsObservable.map { prescriptions ->
-              Triple(patient, prescriptions, hasBPRecordedToday)
-            }
-          }
-          .map { (patient, prescriptions, hasBPRecordedToday) ->
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patient.uuid
-            )
-
-            StatinPrescriptionCheckInfoLoaded(
-                age = patient.ageDetails.estimateAge(userClock = userClock),
-                isPatientDead = patient.status == PatientStatus.Dead,
-                hasBPRecordedToday = hasBPRecordedToday,
-                medicalHistory = medicalHistory,
-                prescriptions = prescriptions
-            )
+                  // TODO: Check to see whether to use zip or combineLatest. Most likely combineLatest, but confirm it by testing the entire feature
+                  Observable.combineLatest(
+                      cvdRiskRepository.cvdRisk(patientUuid = patient.uuid)
+                          .extractIfPresent()
+                          .flatMap { cvdRisk ->
+                            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
+                                patientUuid = patient.uuid,
+                                instant = cvdRisk.timestamps.updatedAt,
+                            ).map { hasMedicalHistoryChanged ->
+                              Pair(cvdRisk, hasMedicalHistoryChanged)
+                            }
+                          },
+                      medicalHistoryRepository.historyForPatientOrDefault(
+                          defaultHistoryUuid = uuidGenerator.v4(),
+                          patientUuid = patient.uuid
+                      ),
+                      prescriptionRepository.newestPrescriptionsForPatient(patient.uuid),
+                      bloodPressureRepository.hasBPRecordedToday(
+                          patientUuid = patient.uuid,
+                          today = today
+                      ),
+                  ) { (cvdRisk, hasMedicalHistoryChanged), medicalHistory, prescriptions, hasBPRecordedToday ->
+                    InfoRequiredForStatinPrescription2Loaded(
+                        age = patient.ageDetails.estimateAge(userClock),
+                        isPatientDead = patient.status == PatientStatus.Dead,
+                        cvdRisk = cvdRisk.riskScore,
+                        medicalHistory = medicalHistory,
+                        prescriptions = prescriptions,
+                        hasBPRecordedToday = hasBPRecordedToday,
+                        hasMedicalHistoryChanged = hasMedicalHistoryChanged,
+                    )
+                  }
+                }.map {
+                  Timber.d("""
+                      Info loaded:
+                      CVD Risk: ${it.cvdRisk},
+                      Has medical history changed: ${it.hasMedicalHistoryChanged},
+                      Medical history: ${it.medicalHistory},
+                      Prescriptions: ${it.prescriptions},
+                      Has BP recorded today: ${it.hasBPRecordedToday}
+                    """.trimIndent())
+                  it
+                }
           }
     }
   }
 
-  private fun loadCVDRisk(): ObservableTransformer<LoadCVDRisk, PatientSummaryEvent> {
+  private fun loadInfoReqForStatinPrescription1(): ObservableTransformer<LoadInfoReqForStatinPrescription1, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
-            val patientUuid = effect.patientUuid
+          .flatMap {
+            patientRepository.patient(it.patientUuid)
+                .extractIfPresent()
+                .flatMap { patient ->
+                  val today = LocalDate.now(userClock)
+                      .atStartOfDay(userClock.zone)
+                      .toInstant()
 
-            //TODO FIX THIS - when cvd risk is null, how to pass instant
-            val today = LocalDate.now(userClock)
-                .atStartOfDay()
-                .atZone(userClock.zone)
-                .toInstant()
-
-            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-
-            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
-                patientUuid = patientUuid,
-                instant = cvdRisk?.timestamps?.updatedAt ?: today
-            ).map {
-              Pair(cvdRisk, it)
-            }
-          }
-          .map { (cvdRisk, hasMedicalHistoryChanged) ->
-            CVDRiskLoaded(cvdRisk?.riskScore, hasMedicalHistoryChanged)
+                  Observable.zip(
+                      medicalHistoryRepository.historyForPatientOrDefault(
+                          defaultHistoryUuid = uuidGenerator.v4(),
+                          patientUuid = patient.uuid
+                      ),
+                      prescriptionRepository.newestPrescriptionsForPatient(patient.uuid),
+                      bloodPressureRepository.hasBPRecordedToday(
+                          patientUuid = patient.uuid,
+                          today = today
+                      )
+                  ) { medicalHistory, prescriptions, hasBPRecordedToday ->
+                    InfoRequiredForStatinPrescription1Loaded(
+                        age = patient.ageDetails.estimateAge(userClock),
+                        isPatientDead = patient.status == PatientStatus.Dead,
+                        medicalHistory = medicalHistory,
+                        prescriptions = prescriptions,
+                        hasBPRecordedToday = hasBPRecordedToday
+                    )
+                  }
+                }
           }
     }
   }
@@ -227,29 +253,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
               }
             }
             CVDRiskCalculated(risk)
-          }
-    }
-  }
-
-  private fun loadStatinInfo(): ObservableTransformer<LoadStatinInfo, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map { effect ->
-            val patientUuid = effect.patientUuid
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patientUuid
-            )
-            val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
-            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-            val canPrescribeStatin = cvdRisk?.riskScore?.let { it.max >= 10 } ?: false
-            StatinInfoLoaded(StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
-                cvdRisk = cvdRisk?.riskScore,
-                isSmoker = medicalHistory.isSmoking,
-                bmiReading = bmiReading?.bmiReading,
-            ))
           }
     }
   }
@@ -436,7 +439,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxByOrNull { it.createdAt },
         alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxByOrNull { it.createdAt },
-        facility = facility.toNullable()
+        facility = facility.toNullable(),
+        attributes = patientProfile.attributes,
     )
   }
 

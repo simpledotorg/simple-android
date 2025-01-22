@@ -23,12 +23,15 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import timber.log.Timber
 import java.util.UUID
 
 class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
     private val isPatientStatinNudgeV1Enabled: Boolean,
     private val isPatientStatinNudgeV2Enabled: Boolean,
+    private val minAgeForStatin: Int = 40,
+    private val maxAgeForCVDRisk: Int = 74
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -97,13 +100,87 @@ class PatientSummaryUpdate(
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
-      is CVDRiskLoaded -> cvdRiskLoaded(event, model)
       is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
-      is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddSmokingClicked -> dispatch(ShowSmokingStatusDialog)
       is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
       is BMIReadingAdded -> dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
+      is InfoRequiredForStatinPrescription1Loaded -> infoRequiredForStatinPrescription1Loaded(event, model)
+      is InfoRequiredForStatinPrescription2Loaded -> infoRequiredForStatinPrescription2Loaded(event, model)
+    }
+  }
+
+  private fun infoRequiredForStatinPrescription2Loaded(
+      event: InfoRequiredForStatinPrescription2Loaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val areStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val canPrescribeStatin = event.isPatientDead.not() &&
+        event.hasBPRecordedToday &&
+        areStatinsPrescribedAlready.not() &&
+        event.age in minAgeForStatin..maxAgeForCVDRisk
+
+    return when {
+      canPrescribeStatin && (event.cvdRisk == null || event.hasMedicalHistoryChanged) -> {
+        dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+      }
+
+      canPrescribeStatin -> {
+        next(model.updateStatinInfo(statinInfo = StatinInfo(
+            canPrescribeStatin = true,
+            cvdRisk = event.cvdRisk,
+            isSmoker = event.medicalHistory.isSmoking,
+            bmiReading = model.patientSummaryProfile!!.attributes?.bmiReading,
+            hasCVD = false,
+        )))
+      }
+
+      else -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = false,
+                hasCVD = false
+            )
+        )
+        next(updatedModel)
+      }
+    }
+  }
+
+  private fun infoRequiredForStatinPrescription1Loaded(
+      event: InfoRequiredForStatinPrescription1Loaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
+    val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
+    val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
+
+    val hasCVD = hasHadStroke || hasHadHeartAttack
+    val areStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val canPrescribeStatin = event.isPatientDead.not() &&
+        event.hasBPRecordedToday &&
+        areStatinsPrescribedAlready.not()
+
+    return when {
+      (hasCVD || (hasDiabetes && event.age >= minAgeForStatin)) -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = canPrescribeStatin,
+                hasCVD = hasCVD
+            )
+        )
+        next(updatedModel)
+      }
+
+      else -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canPrescribeStatin = false,
+                hasCVD = false
+            )
+        )
+        next(updatedModel)
+      }
     }
   }
 
@@ -111,8 +188,6 @@ class PatientSummaryUpdate(
       event: StatinPrescriptionCheckInfoLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val minAgeForStatin = 40
-    val maxAgeForCVDRisk = 74
     val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
     val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
     val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
@@ -150,27 +225,6 @@ class PatientSummaryUpdate(
         next(updatedModel)
       }
     }
-  }
-
-  private fun cvdRiskLoaded(
-      event: CVDRiskLoaded,
-      model: PatientSummaryModel
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return if (
-        event.risk == null ||
-        event.hasMedicalHistoryChanged
-    ) {
-      dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
-    } else {
-      dispatch(LoadStatinInfo(model.patientUuid))
-    }
-  }
-
-  private fun statinInfoLoaded(
-      event: StatinInfoLoaded,
-      model: PatientSummaryModel
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return next(model.updateStatinInfo(event.statinInfo))
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {
@@ -358,9 +412,16 @@ class PatientSummaryUpdate(
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
+    val patientProfile = event.patientSummaryProfile
 
-    if (isPatientStatinNudgeV1Enabled || isPatientStatinNudgeV2Enabled) {
-      effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
+    when {
+      isPatientStatinNudgeV2Enabled -> {
+        effects.add(LoadInfoReqForStatinPrescription2(patientUuid = patientProfile.patient.uuid))
+      }
+
+      isPatientStatinNudgeV1Enabled -> {
+        effects.add(LoadInfoReqForStatinPrescription1(patientUuid = patientProfile.patient.uuid))
+      }
     }
 
     if (model.openIntention is LinkIdWithPatient &&

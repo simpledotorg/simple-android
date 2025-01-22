@@ -8,6 +8,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.util.Unicode
 
 @Parcelize
@@ -17,7 +18,8 @@ data class PatientSummaryProfile(
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?,
     val alternativeId: BusinessId?,
-    val facility: Facility?
+    val facility: Facility?,
+    val attributes: PatientAttribute?
 ) : Parcelable {
 
   val hasPhoneNumber: Boolean

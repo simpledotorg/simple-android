@@ -240,7 +240,9 @@ fun DescriptionText(
     statinInfo: StatinInfo
 ) {
   val text = when {
-    statinInfo.cvdRisk == null -> stringResource(R.string.statin_alert_refer_to_doctor)
+    statinInfo.cvdRisk == null ||
+        statinInfo.cvdRisk.min >= 10 -> stringResource(R.string.statin_alert_refer_to_doctor)
+
     statinInfo.isSmoker == Answer.Unanswered &&
         statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
 

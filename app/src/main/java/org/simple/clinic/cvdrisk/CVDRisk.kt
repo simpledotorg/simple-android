@@ -91,14 +91,6 @@ data class CVDRisk(
     """)
     fun cvdRiskImmediate(patientUuid: UUID): CVDRisk?
 
-    @Query("""
-      SELECT * FROM CVDRisk
-      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
-      ORDER BY updatedAt DESC
-      LIMIT 1
-    """)
-    fun cvdRisk(patientUuid: UUID): Observable<CVDRisk?>
-
     @Query("DELETE FROM CVDRisk")
     fun clear()
   }

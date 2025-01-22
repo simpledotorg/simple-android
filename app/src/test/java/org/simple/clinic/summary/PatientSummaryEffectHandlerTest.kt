@@ -838,17 +838,17 @@ class PatientSummaryEffectHandlerTest {
     whenever(patientRepository.patient(
         uuid = patientUuid,
     )) doReturn Observable.just(Optional.of(patient))
-    whenever(cvdRiskRepository.cvdRisk(
+    whenever(cvdRiskRepository.getCVDRiskImmediate(
         patientUuid
-    )) doReturn Observable.just(Optional.of(cvdRisk))
+    )) doReturn cvdRisk
     whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
         patientUuid = patientUuid,
         instant = cvdRisk.timestamps.updatedAt
     )) doReturn Observable.just(false)
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
-    )) doReturn Observable.just(medicalHistory)
+    )) doReturn medicalHistory
     whenever(prescriptionRepository.newestPrescriptionsForPatient(
         patientUuid
     )) doReturn Observable.just(emptyList())

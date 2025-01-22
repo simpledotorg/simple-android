@@ -84,11 +84,6 @@ class CVDRiskRepository @Inject constructor(
     return dao.cvdRiskImmediate(patientUuid)
   }
 
-  fun cvdRisk(patientUuid: UUID): Observable<Optional<CVDRisk>> {
-    return dao.cvdRisk(patientUuid)
-        .map { Optional.ofNullable(it) }
-  }
-
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<CVDRisk> {
     return dao.recordsWithSyncStatus(syncStatus)
   }

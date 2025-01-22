@@ -118,32 +118,30 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             patientRepository.patient(it.patientUuid)
                 .extractIfPresent()
                 .flatMap { patient ->
+                  val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
                   val today = LocalDate.now(userClock)
                       .atStartOfDay(userClock.zone)
                       .toInstant()
 
-                  // TODO: Check to see whether to use zip or combineLatest. Most likely combineLatest, but confirm it by testing the entire feature
                   Observable.combineLatest(
-                      cvdRiskRepository.cvdRisk(patientUuid = patient.uuid)
-                          .extractIfPresent()
-                          .flatMap { cvdRisk ->
-                            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
-                                patientUuid = patient.uuid,
-                                instant = cvdRisk.timestamps.updatedAt,
-                            ).map { hasMedicalHistoryChanged ->
-                              Pair(cvdRisk, hasMedicalHistoryChanged)
-                            }
-                          },
-                      medicalHistoryRepository.historyForPatientOrDefault(
-                          defaultHistoryUuid = uuidGenerator.v4(),
-                          patientUuid = patient.uuid
+                      medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
+                          patientUuid = patient.uuid,
+                          instant = cvdRisk?.timestamps?.updatedAt ?: today,
                       ),
                       prescriptionRepository.newestPrescriptionsForPatient(patient.uuid),
                       bloodPressureRepository.newestMeasurementsForPatient(
                           patientUuid = patient.uuid,
                           limit = 1
                       ),
-                  ) { (cvdRisk, hasMedicalHistoryChanged), medicalHistory, prescriptions, newestBp ->
+                  ) { hasMedicalHistoryChanged, prescriptions, newestBp ->
+                    val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                        patientUuid = patient.uuid
+                    )
+                    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                        defaultHistoryUuid = uuidGenerator.v4(),
+                        patientUuid = patient.uuid
+                    )
+
                     val ninetyDaysAgo = LocalDate.now(userClock)
                         .minusDays(90)
                         .atStartOfDay(userClock.zone)
@@ -152,13 +150,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                       updatedAt > ninetyDaysAgo
                     } ?: false
 
-                    val wasCVDCalculatedWithin90Days = cvdRisk.timestamps.updatedAt > ninetyDaysAgo
+                    val wasCVDCalculatedWithin90Days = cvdRisk?.let { risk ->
+                      risk.timestamps.updatedAt > ninetyDaysAgo
+                    } ?: false
 
-                    val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid = patient.uuid)
                     StatinPrescriptionCheckInfoLoaded(
                         age = patient.ageDetails.estimateAge(userClock),
                         isPatientDead = patient.status == PatientStatus.Dead,
-                        cvdRiskRange = cvdRisk.riskScore,
+                        cvdRiskRange = cvdRisk?.riskScore,
                         medicalHistory = medicalHistory,
                         patientAttribute = patientAttribute,
                         prescriptions = prescriptions,

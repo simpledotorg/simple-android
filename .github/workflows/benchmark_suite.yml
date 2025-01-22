@@ -23,7 +23,7 @@ jobs:
       - name: Checkout Android source
         uses: actions/checkout@v4
 
-      - name: set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'

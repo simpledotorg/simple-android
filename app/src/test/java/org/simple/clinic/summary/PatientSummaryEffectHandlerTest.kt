@@ -10,6 +10,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
@@ -41,10 +42,9 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.Optional
@@ -809,33 +809,6 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when load statin prescription check info effect is received, then load info`() {
     // given
-    val bangladesh = TestData.country(isoCountryCode = "BD")
-    val effectHandler = PatientSummaryEffectHandler(
-        clock = clock,
-        userClock = userClock,
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        patientRepository = patientRepository,
-        bloodPressureRepository = bloodPressureRepository,
-        appointmentRepository = mock(),
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        bloodSugarRepository = bloodSugarRepository,
-        dataSync = dataSync,
-        medicalHistoryRepository = medicalHistoryRepository,
-        country = bangladesh,
-        currentUser = { user },
-        currentFacility = { facility },
-        uuidGenerator = uuidGenerator,
-        facilityRepository = facilityRepository,
-        teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { emptyList() },
-        viewEffectsConsumer = viewEffectHandler::handle,
-        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = cvdRiskCalculator,
-        patientAttributeRepository = patientAttributeRepository,
-    )
-    val testCase = EffectHandlerTestCase(effectHandler.build())
     val assignedFacilityId = UUID.fromString("079784fd-de89-4499-9371-f8ae64f26f70")
     val patient = TestData.patient(
         uuid = patientUuid,
@@ -853,46 +826,56 @@ class PatientSummaryEffectHandlerTest {
         diagnosedWithHypertension = No
     )
 
-    whenever(bloodPressureRepository.hasBPRecordedToday(
+    val bloodPressure = TestData.bloodPressureMeasurement(
+        UUID.fromString("3e8c246f-91b9-4f8c-81fe-91b67ac0a2d5"),
+        systolic = 130,
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure)
+
+    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
+
+    whenever(patientRepository.patient(
+        uuid = patientUuid,
+    )) doReturn Observable.just(Optional.of(patient))
+    whenever(cvdRiskRepository.cvdRisk(
+        patientUuid
+    )) doReturn Observable.just(Optional.of(cvdRisk))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
         patientUuid = patientUuid,
-        today = Instant.parse("2018-01-01T00:00:00Z"),
-    )) doReturn Observable.just(true)
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        instant = cvdRisk.timestamps.updatedAt
+    )) doReturn Observable.just(false)
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
-    )) doReturn medicalHistory
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)) doReturn Observable.just(emptyList())
+    )) doReturn Observable.just(medicalHistory)
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(
+        patientUuid
+    )) doReturn Observable.just(emptyList())
+    whenever(bloodPressureRepository.newestMeasurementsForPatient(
+        patientUuid = patientUuid, limit = 1
+    )) doReturn Observable.just(bloodPressures)
+    whenever(patientAttributeRepository.getPatientAttributeImmediate(
+        patientUuid = patientUuid,
+    )) doReturn null
 
     // when
-    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patient))
+    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patientUuid = patientUuid))
 
     // then
     testCase.assertOutgoingEvents(StatinPrescriptionCheckInfoLoaded(
         age = 50,
         isPatientDead = false,
-        hasBPRecordedToday = true,
+        cvdRiskRange = cvdRisk.riskScore,
         medicalHistory = medicalHistory,
+        patientAttribute = null,
         prescriptions = emptyList(),
+        wasBPMeasuredWithin90Days = true,
+        hasMedicalHistoryChanged = false,
+        wasCVDCalculatedWithin90Days = true,
     ))
 
     verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when load cvd risk effect is received, then load cvd risk`() {
-    //given
-    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
-    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn cvdRisk
-    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
-        patientUuid = patientUuid,
-        instant = cvdRisk.timestamps.updatedAt
-    )) doReturn Observable.just(false)
-
-    //when
-    testCase.dispatch(LoadCVDRisk(patientUuid))
-
-    //then
-    testCase.assertOutgoingEvents(CVDRiskLoaded(cvdRisk.riskScore, false))
   }
 
   @Test
@@ -932,6 +915,7 @@ class PatientSummaryEffectHandlerTest {
     //then
     testCase.assertOutgoingEvents(CVDRiskCalculated(CVDRiskRange(6, 8)))
   }
+
 
   @Test
   fun `when load statin info effect is received, then load statin info`() {

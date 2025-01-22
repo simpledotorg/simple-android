@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -9,6 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
@@ -145,31 +145,21 @@ data class HypertensionNotNowClicked(val continueToDiabetesDiagnosisWarning: Boo
 data class StatinPrescriptionCheckInfoLoaded(
     val age: Int,
     val isPatientDead: Boolean,
-    val hasBPRecordedToday: Boolean,
+    val wasBPMeasuredWithin90Days: Boolean,
     val medicalHistory: MedicalHistory,
+    val patientAttribute: PatientAttribute?,
     val prescriptions: List<PrescribedDrug>,
-) : PatientSummaryEvent()
-
-data class InfoRequiredForStatinPrescription1Loaded(
-    val age: Int,
-    val isPatientDead: Boolean,
-    val hasBPRecordedToday: Boolean,
-    val medicalHistory: MedicalHistory,
-    val prescriptions: List<PrescribedDrug>,
-) : PatientSummaryEvent()
-
-data class InfoRequiredForStatinPrescription2Loaded(
-    val age: Int,
-    val isPatientDead: Boolean,
-    val hasBPRecordedToday: Boolean,
-    val medicalHistory: MedicalHistory,
-    val prescriptions: List<PrescribedDrug>,
-    val cvdRisk: CVDRiskRange?,
+    val cvdRiskRange: CVDRiskRange?,
     val hasMedicalHistoryChanged: Boolean,
+    val wasCVDCalculatedWithin90Days: Boolean,
 ) : PatientSummaryEvent()
 
 data class CVDRiskCalculated(
     val risk: CVDRiskRange?
+) : PatientSummaryEvent()
+
+data class StatinInfoLoaded(
+    val statinInfo: StatinInfo
 ) : PatientSummaryEvent()
 
 data object AddSmokingClicked : PatientSummaryEvent()

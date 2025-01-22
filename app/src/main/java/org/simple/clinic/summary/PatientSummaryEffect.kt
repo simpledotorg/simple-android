@@ -57,11 +57,7 @@ data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class LoadInfoReqForStatinPrescription1(val patientUuid: UUID) : PatientSummaryEffect()
-
-data class LoadInfoReqForStatinPrescription2(val patientUuid: UUID) : PatientSummaryEffect()
-
-data class LoadCVDRisk(val patientUuid: UUID) : PatientSummaryEffect()
+data class LoadStatinPrescriptionCheckInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
 

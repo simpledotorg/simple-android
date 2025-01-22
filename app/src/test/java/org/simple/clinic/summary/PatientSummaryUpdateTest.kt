@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -27,7 +28,6 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACT
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.TestData
 import java.time.Instant
 import java.util.UUID
 
@@ -136,7 +136,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patient))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
         ))
   }
 
@@ -153,7 +153,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patient))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
         ))
   }
 
@@ -2139,43 +2139,61 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when statin prescription check info is loaded and person is below 40 without cvd, then update the state with false`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV2Enabled = true
+    ))
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
             age = 39,
             isPatientDead = false,
-            hasBPRecordedToday = true,
+            wasBPMeasuredWithin90Days = true,
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
                 hasHadHeartAttack = No,
             ),
+            patientAttribute = null,
             prescriptions = listOf(
                 TestData.prescription(name = "losartin")
             ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false, hasCVD = false))),
             hasNoEffects()
         ))
   }
 
   @Test
-  fun `when statin prescription check info is loaded and person is below 40 with cvd, then update the state with true`() {
+  fun `when statin prescription check info is loaded and person has cvd, then update the state with true`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV2Enabled = true
+    ))
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
             age = 39,
             isPatientDead = false,
-            hasBPRecordedToday = true,
+            wasBPMeasuredWithin90Days = true,
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = Yes,
                 hasHadHeartAttack = No,
             ),
+            patientAttribute = null,
             prescriptions = listOf(
                 TestData.prescription(name = "losartin")
             ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
             hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = true))),
@@ -2184,149 +2202,103 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when statin prescription check info is loaded with phase1 and person is greater than or equal to 40 with diabetes, then update the state with true`() {
+  fun `when statin prescription check info is loaded and person is greater than or equal to 40 with diabetes, then update the state with true`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = false
+        isPatientStatinNudgeV2Enabled = true
     ))
-
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
             age = 40,
             isPatientDead = false,
-            hasBPRecordedToday = true,
+            wasBPMeasuredWithin90Days = true,
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = Yes,
                 hasHadStroke = No,
                 hasHadHeartAttack = No,
             ),
+            patientAttribute = null,
             prescriptions = listOf(
                 TestData.prescription(name = "losartin")
             ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = false))),
             hasNoEffects()
         ))
   }
 
   @Test
-  fun `when statin prescription check info is loaded with phase2 and person is greater than or equal to 40, then load cvd risk`() {
+  fun `when statin prescription check info is loaded and person is above 40 with null cvd risk, then calculate cvd risk`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
-        isPatientStatinNudgeV1Enabled = false,
+        isPatientStatinNudgeV1Enabled = true,
         isPatientStatinNudgeV2Enabled = true
     ))
 
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
             age = 40,
             isPatientDead = false,
-            hasBPRecordedToday = true,
+            wasBPMeasuredWithin90Days = true,
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
                 hasHadHeartAttack = No,
             ),
+            patientAttribute = null,
             prescriptions = listOf(
                 TestData.prescription(name = "losartin")
             ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = true,
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadCVDRisk(defaultModel.patientUuid))
+            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
         ))
   }
 
   @Test
-  fun `when statin prescription check info is loaded and person is above 74, then update the state`() {
+  fun `when statin prescription check info is loaded and person is above 40 with cvd risk, then load statin info`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV2Enabled = true
+    ))
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(StatinPrescriptionCheckInfoLoaded(
-            age = 75,
+            age = 48,
             isPatientDead = false,
-            hasBPRecordedToday = true,
+            wasBPMeasuredWithin90Days = true,
             medicalHistory = TestData.medicalHistory(
                 hasDiabetes = No,
                 hasHadStroke = No,
                 hasHadHeartAttack = No,
             ),
+            patientAttribute = null,
             prescriptions = listOf(
                 TestData.prescription(name = "losartin")
             ),
+            cvdRiskRange = CVDRiskRange(14, 21),
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = true,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false))),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when statin prescription check info is loaded and has history of cvd or diabetes, then update the state`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(StatinPrescriptionCheckInfoLoaded(
-            age = 50,
-            isPatientDead = false,
-            hasBPRecordedToday = true,
-            medicalHistory = TestData.medicalHistory(
-                hasDiabetes = Yes,
-                hasHadStroke = No,
-                hasHadHeartAttack = No,
-            ),
-            prescriptions = listOf(
-                TestData.prescription(name = "losartin")
-            ),
-        ))
-        .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true))),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when cvd risk is loaded and risk score is not null, then load statin info`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CVDRiskLoaded(
-            risk = CVDRiskRange(27, 27),
-            hasMedicalHistoryChanged = false
-        ))
-        .then(assertThatNext(
+            hasNoModel(),
             hasEffects(LoadStatinInfo(patientUuid))
-        ))
-  }
-
-  @Test
-  fun `when cvd risk is loaded and risk score is null, then calculate cvd risk`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-    updateSpec
-        .given(model)
-        .whenEvent(CVDRiskLoaded(
-            risk = null,
-            hasMedicalHistoryChanged = false
-        ))
-        .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
-        ))
-  }
-
-  @Test
-  fun `when cvd risk is loaded and risk score is not null and medical history is changed, then calculate cvd risk`() {
-    val model = defaultModel
-        .patientSummaryProfileLoaded(patientSummaryProfile)
-    updateSpec
-        .given(model)
-        .whenEvent(CVDRiskLoaded(
-            risk = CVDRiskRange(27, 27),
-            hasMedicalHistoryChanged = true
-        ))
-        .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
         ))
   }
 

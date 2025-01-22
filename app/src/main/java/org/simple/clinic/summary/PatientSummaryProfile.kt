@@ -19,7 +19,6 @@ data class PatientSummaryProfile(
     val bpPassport: BusinessId?,
     val alternativeId: BusinessId?,
     val facility: Facility?,
-    val attributes: PatientAttribute?
 ) : Parcelable {
 
   val hasPhoneNumber: Boolean

@@ -168,7 +168,6 @@ class PatientRepository @Inject constructor(
         address = patientAddress,
         phoneNumbers = phoneNumbers,
         businessIds = businessIds,
-        attributes = null
     )
   }
 
@@ -284,7 +283,6 @@ class PatientRepository @Inject constructor(
           address = address,
           phoneNumbers = phoneNumbers,
           businessIds = businessIds,
-          attributes = null
       )
     }
   }

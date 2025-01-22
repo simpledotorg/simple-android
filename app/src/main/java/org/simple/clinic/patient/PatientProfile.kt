@@ -6,7 +6,6 @@ import androidx.room.Relation
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.patientattribute.PatientAttribute
 import java.util.UUID
 
 @Parcelize
@@ -30,13 +29,7 @@ data class PatientProfile(
         parentColumn = "uuid",
         entityColumn = "patientUuid"
     )
-    val businessIds: List<BusinessId>,
-
-    @Relation(
-        parentColumn = "uuid",
-        entityColumn = "patientUuid",
-    )
-    val attributes: PatientAttribute?,
+    val businessIds: List<BusinessId>
 ) : Parcelable {
 
   val patientUuid: UUID

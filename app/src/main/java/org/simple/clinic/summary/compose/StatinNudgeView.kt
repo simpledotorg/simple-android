@@ -256,7 +256,9 @@ fun DescriptionText(
   }.toAnnotatedString()
 
   val textColor = when {
-    statinInfo.cvdRisk == null -> SimpleTheme.colors.material.error
+    statinInfo.cvdRisk == null ||
+        statinInfo.cvdRisk.min >= 10 -> SimpleTheme.colors.material.error
+
     statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> SimpleTheme.colors.onSurface67
     else -> SimpleTheme.colors.material.error
   }

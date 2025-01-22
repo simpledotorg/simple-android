@@ -1,29 +1,51 @@
-name: CI
+name: CI Checks
 
 on:
-  push:
-    branches:
-      - release/*
   pull_request:
-  workflow_dispatch:
-    inputs:
-      simple_server_branch:
-        required: false
-        type: string
-        default: master
   workflow_call:
+    inputs:
+      run-build-checks:
+        default: true
+        type: boolean
+        description: True to run build checks
 
 concurrency:
   group: ci-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
-  qa_lint:
+  verify_pr_has_story_link:
+    runs-on: [ ubuntu-latest ]
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify PR description
+        run: .github/scripts/story_link_check.sh '${{ github.event.pull_request.body }}'
+
+  verify_changelog_was_updated:
+    runs-on: [ ubuntu-latest ]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          path: master
+
+      - name: Checkout current
+        uses: actions/checkout@v4
+        with:
+          path: current
+
+      - name: Verify CHANGELOG was updated
+        run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
+
+  lint:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -31,300 +53,28 @@ jobs:
           cache: 'gradle'
 
       - name: QA Lint
-        run: ./gradlew --build-cache --no-daemon lintQaDebug
+        run: ./gradlew --build-cache --no-daemon lint
 
-  qa_unit_tests:
+  unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
 
-      - name: set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
           cache: 'gradle'
 
-      - name: QA Unit Tests
-        run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
-
-  generate_server_app_name:
-    runs-on: [ ubuntu-latest ]
-    outputs:
-      heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-
-      - name: Generate server app name
-        id: generate-server-app-name
-        run: .github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
-
-  create_server_on_heroku:
-    needs: generate_server_app_name
-    runs-on: [ ubuntu-latest ]
-    outputs:
-      heroku_app_name: ${{ steps.create-server-on-heroku.outputs.heroku_app_name }}
-      heroku_app_url: ${{ steps.create-server-on-heroku.outputs.heroku_app_url }}
-      heroku_app_exists: ${{ steps.create-server-on-heroku.outputs.heroku_app_exists }}
-    env:
-      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-        with:
-          path: android-app
-
-      - name: Checkout Server source
-        uses: actions/checkout@v4
-        with:
-          repository: simpledotorg/simple-server
-          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
-          path: server-app
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
-
-      - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
-
-      - name: Create server on Heroku
-        id: create-server-on-heroku
+      - name: Unit Tests
         run: |
-          android-app/.github/scripts/create_heroku_app.sh \
-          ${{ needs.generate_server_app_name.outputs.heroku_app_name }} \
-          server-app
+          ./gradlew --build-cache --no-daemon test -x :app:test;
+          ./gradlew --build-cache --no-daemon testQaDebugUnitTest;
+  
+  
 
-  deploy_server_on_heroku:
-    needs: [create_server_on_heroku]
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
-    outputs:
-      heroku_app_name: ${{ steps.start-simple-server.outputs.heroku_app_name }}
-    env:
-      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-        with:
-          path: android-app
-
-      - name: Checkout server app source
-        uses: actions/checkout@v4
-        with:
-          repository: simpledotorg/simple-server
-          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
-          path: server-app
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
-
-      - name: Create node dependency hash
-        id: create_node_modules_hash
-        run: android-app/.github/scripts/compute_node_dependency_hash.sh
-
-      - name: Cache node modules
-        id: node-dependency-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            package-lock.json
-          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
-
-      - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
-
-      - name: Install Heroku Buildpacks registry
-        run: heroku plugins:install buildpack-registry
-
-      - name: Install heroku buildpacks plugin
-        run: heroku plugins:install buildpacks
-
-      - name: Deploy the server on Heroku
-        id: start-simple-server
-        run: |
-          android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ needs.create_server_on_heroku.outputs.heroku_app_name }} \
-          ${{ env.HEROKU_API_KEY }} \
-          ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
-          server-app \
-          android-app \
-          ${{ needs.create_server_on_heroku.outputs.heroku_app_exists }} \
-          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
-
-
-  build_qa_android_tests_apk:
-    needs: create_server_on_heroku
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
-    steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Build QA Test Artifacts
-        id: build-instrumented-tests
-        run: |
-          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ needs.create_server_on_heroku.outputs.heroku_app_url }}api/ assembleQaDebug assembleQaDebugAndroidTest
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-artifacts
-          path: app/build/outputs/apk
-
-  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
-  # https://github.com/ReactiveCircus/android-emulator-runner
-  qa_android_tests:
-    needs: [ deploy_server_on_heroku, build_qa_android_tests_apk ]
-    runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
-    env:
-      AVD_API_LEVEL: 34
-      AVD_ARCH: x86_64
-    steps:
-      - name: Enable KVM group perms
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
-      - name: Checkout Android source
-        uses: actions/checkout@v4
-
-      - name: Cache AVD
-        uses: actions/cache@v4
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}-${{ env.AVD_ARCH }}
-
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ env.AVD_API_LEVEL }}
-          arch: ${{ env.AVD_ARCH }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          disk-size: 8G
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Create build directory
-        run: mkdir app/build
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: test-artifacts
-          path: app/build/outputs/apk
-
-      - name: QA Android Tests
-        id: run-instrumented-tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ env.AVD_API_LEVEL }}
-          arch: ${{ env.AVD_ARCH }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          disk-size: 8G
-          script: |
-            adb root
-            mkdir -p app/build/outputs/test-artifacts
-            adb install app/build/outputs/apk/qa/debug/app-qa-debug.apk 
-            adb install app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk
-            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >app/build/outputs/test-artifacts/logs.txt 2>app/build/outputs/test-artifacts/logs.txt
-            cat app/build/outputs/test-artifacts/logs.txt
-            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ app/build/outputs/test-artifacts/ || true
-            adb uninstall org.simple.clinic.qa.debug
-            adb uninstall org.simple.clinic.qa.debug.test
-            ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
-
-      - name: Upload failed test artifacts
-        if: always() && steps.run-instrumented-tests.outcome != 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: failed-test-artifacts
-          path: app/build/outputs/test-artifacts
-
-      - name: Teardown Heroku instance
-        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
-        run: |
-          heroku apps:destroy \
-          --app=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }} \
-          --confirm=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }}
-
-  mobius_migration_tests:
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Mobius Migration Tests
-        run: ./gradlew :mobius-migration:test
-
-  verify_release_bundles:
-    runs-on: [ ubuntu-latest ]
-    env:
-      TERM: dumb
-      ORG_GRADLE_PROJECT_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      ORG_GRADLE_PROJECT_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-    strategy:
-      matrix:
-        buildType: [ 'Production' ]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Decrypt secrets
-        run: gpg --batch --yes --quiet --decrypt --passphrase=${{ secrets.KEYSTORE_PASSPHRASE }} --output release/simple.store release/simple.gpg
-
-      - name: Build ${{ matrix.buildType }} Release bundle
-        run: |
-          ./gradlew \
-          -PrunProguard=true \
-          -PdefaultProguardFile=proguard-android.txt \
-          -PsentryUploadProguard=false \
-          bundle${{ matrix.buildType }}Release
-
-      - name: Clean secrets
-        run: |
-          rm -f release/simple.store
+  # TODO: Add Android integration tests once [SC-13775] is resolved
 
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]
@@ -342,32 +92,6 @@ jobs:
 
       - name: Verify existing Room schemas are not modified
         run: current/.github/scripts/compare_directory_contents.sh master/app/schemas/org.simple.clinic.AppDatabase current/app/schemas/org.simple.clinic.AppDatabase
-
-  verify_pr_description:
-    runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Verify PR description
-        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
-
-  verify_changelog_updated:
-    runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@v4
-        with:
-          ref: master
-          path: master
-
-      - name: Checkout current
-        uses: actions/checkout@v4
-        with:
-          path: current
-
-      - name: Verify CHANGELOG was updated
-        run: current/.github/scripts/verify_file_was_changed.sh master/CHANGELOG.md current/CHANGELOG.md
 
   fix_strings_ellipsise:
     runs-on: [ ubuntu-latest ]

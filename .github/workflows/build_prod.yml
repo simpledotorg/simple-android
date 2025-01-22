@@ -1,6 +1,7 @@
 name: Build production app bundle
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       tramline-input:
@@ -8,7 +9,13 @@ on:
         required: false
 
 jobs:
-  build:
+  ci-checks:
+    if: github.event_name != 'pull_request'
+    uses: ./.github/workflows/ci_checks.yml
+    with:
+      run-build-checks: false
+
+  build_app_bundle:
     runs-on: [ ubuntu-latest ]
     env:
       TERM: dumb
@@ -17,12 +24,14 @@ jobs:
       ORG_GRADLE_PROJECT_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
     steps:
       - name: Configure Tramline
+        if: github.event.inputs.tramline-input != null && github.event.inputs.tramline-input != ''
         id: tramline
         uses: tramlinehq/deploy-action@v0.1.7
         with:
           input: ${{ github.event.inputs.tramline-input }}
 
       - name: Setup version code and name
+        if: github.event.inputs.tramline-input != null && github.event.inputs.tramline-input != ''
         id: version_code_and_name
         run: |
           VERSION_NAME=${{ steps.tramline.outputs.version_name }}
@@ -32,6 +41,9 @@ jobs:
           echo "ORG_GRADLE_PROJECT_VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
 
+      - name: Checkout
+        if: github.event.inputs.tramline-input == null || github.event.inputs.tramline-input == ''
+        uses: actions/checkout@v4
 
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -66,6 +78,7 @@ jobs:
           bundleProductionRelease
 
       - name: Upload release bundle
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: release.aab

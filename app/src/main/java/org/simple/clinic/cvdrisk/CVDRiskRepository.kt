@@ -8,6 +8,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -29,6 +30,13 @@ class CVDRiskRepository @Inject constructor(
         syncStatus = PENDING
     )
     dao.saveRisk(cvdRisk)
+  }
+
+  fun save(cvdRisk: CVDRisk, updateAt: Instant) {
+    val updatedCVDRisk = cvdRisk.copy(
+        syncStatus = PENDING,
+        timestamps = cvdRisk.timestamps.copy(updatedAt = updateAt))
+    dao.saveRisk(updatedCVDRisk)
   }
 
   override fun save(records: List<CVDRisk>) {

@@ -1,13 +1,15 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.cvdrisk.CVDRisk
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Answer
-import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
 import java.util.UUID
+import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 
 sealed class PatientSummaryEffect
 
@@ -57,11 +59,19 @@ data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
-
-data class LoadCVDRisk(val patientUuid: UUID) : PatientSummaryEffect()
+data class LoadStatinPrescriptionCheckInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
+
+data class SaveCVDRisk(
+    val patientUuid: UUID,
+    val cvdRiskRange: CVDRiskRange
+) : PatientSummaryEffect()
+
+data class UpdateCVDRisk(
+    val oldRisk: CVDRisk,
+    val newRiskRange: CVDRiskRange
+) : PatientSummaryEffect()
 
 data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
 

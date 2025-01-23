@@ -14,6 +14,7 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.CVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskInput
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
@@ -45,6 +46,7 @@ import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
 import javax.inject.Provider
+import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
@@ -102,10 +104,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
-        .addTransformer(LoadCVDRisk::class.java, loadCVDRisk())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
+        .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
+        .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
-        .addTransformer(UpdateSmokingStatus::class.java, updateSmokingStatus())
+        .addConsumer(UpdateSmokingStatus::class.java, { updateSmokingStatus(it.patientId, it.isSmoker) }, schedulersProvider.io())
         .build()
   }
 
@@ -113,52 +116,57 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
-            val patient = effect.patient
-            val today = LocalDate.now(userClock)
-                .atStartOfDay()
-                .atZone(userClock.zone)
-                .toInstant()
+          .flatMap {
+            patientRepository.patient(it.patientUuid)
+                .extractIfPresent()
+                .flatMap { patient ->
+                  Observable.combineLatest(
+                      medicalHistoryRepository.historyForPatientOrDefault(
+                          defaultHistoryUuid = uuidGenerator.v4(),
+                          patientUuid = patient.uuid
+                      ),
+                      prescriptionRepository.newestPrescriptionsForPatient(patient.uuid),
+                      bloodPressureRepository.newestMeasurementsForPatient(
+                          patientUuid = patient.uuid,
+                          limit = 1
+                      ),
+                  ) { medicalHistory, prescriptions, newestBp ->
+                    val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
 
-            bloodPressureRepository.hasBPRecordedToday(
-                patientUuid = patient.uuid,
-                today = today,
-            ).map {
-              Pair(patient, it)
-            }
-          }
-          .flatMap { (patient, hasBPRecordedToday) ->
-            val prescriptionsObservable = prescriptionRepository.newestPrescriptionsForPatient(patient.uuid)
-            prescriptionsObservable.map { prescriptions ->
-              Triple(patient, prescriptions, hasBPRecordedToday)
-            }
-          }
-          .map { (patient, prescriptions, hasBPRecordedToday) ->
-            val assignedFacility = getAssignedFacility(patient.assignedFacilityId).toNullable()
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patient.uuid
-            )
+                    val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                        patientUuid = patient.uuid
+                    )
 
-            StatinPrescriptionCheckInfoLoaded(
-                age = patient.ageDetails.estimateAge(userClock = userClock),
-                isPatientDead = patient.status == PatientStatus.Dead,
-                hasBPRecordedToday = hasBPRecordedToday,
-                assignedFacility = assignedFacility,
-                medicalHistory = medicalHistory,
-                prescriptions = prescriptions
-            )
-          }
-    }
-  }
+                    val ninetyDaysAgo = LocalDate.now(userClock)
+                        .minusDays(90)
+                        .atStartOfDay(userClock.zone)
+                        .toInstant()
 
-  private fun loadCVDRisk(): ObservableTransformer<LoadCVDRisk, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
-            CVDRiskLoaded(cvdRisk?.riskScore)
+                    val hasMedicalHistoryChanged = cvdRisk?.let { risk ->
+                      medicalHistory.updatedAt > risk.timestamps.updatedAt
+                    } ?: false
+
+                    val wasBPMeasuredWithin90Days = newestBp.firstOrNull()?.updatedAt?.let { updatedAt ->
+                      updatedAt > ninetyDaysAgo
+                    } ?: false
+
+                    val wasCVDCalculatedWithin90Days = cvdRisk?.let { risk ->
+                      risk.timestamps.updatedAt > ninetyDaysAgo
+                    } ?: false
+
+                    StatinPrescriptionCheckInfoLoaded(
+                        age = patient.ageDetails.estimateAge(userClock),
+                        isPatientDead = patient.status == PatientStatus.Dead,
+                        cvdRiskRange = cvdRisk?.riskScore,
+                        medicalHistory = medicalHistory,
+                        patientAttribute = patientAttribute,
+                        prescriptions = prescriptions,
+                        wasBPMeasuredWithin90Days = wasBPMeasuredWithin90Days,
+                        hasMedicalHistoryChanged = hasMedicalHistoryChanged,
+                        wasCVDCalculatedWithin90Days = wasCVDCalculatedWithin90Days,
+                    )
+                  }
+                }
           }
     }
   }
@@ -167,45 +175,64 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
+          .map { effect ->
             val patient = effect.patient
-            bloodPressureRepository
-                .newestMeasurementsForPatient(patient.uuid, 1)
-                .map {
-                  Pair(patient, it.firstOrNull())
-                }
-          }
-          .map { (patient, bloodPressure) ->
-            if (bloodPressure == null) {
-              return@map CVDRiskCalculated(null)
-            }
+            val bloodPressure = bloodPressureRepository
+                .newestMeasurementsForPatientImmediate(patient.uuid, 1).firstOrNull()
+
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                patientUuid = patient.uuid
+            )
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patient.uuid
             )
 
-            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
-                patientUuid = patient.uuid
-            )
+            var risk: CVDRiskRange? = null
 
-            val risk = cvdRiskCalculator.calculateCvdRisk(
-                CVDRiskInput(
-                    gender = patient.gender,
-                    age = patient.ageDetails.estimateAge(userClock),
-                    systolic = bloodPressure.reading.systolic,
-                    isSmoker = medicalHistory.isSmoking,
-                    bmi = patientAttribute?.bmiReading?.calculateBMI(),
-                )
-            )
-
-            if (risk != null) {
-              cvdRiskRepository.save(
-                  riskScore = risk,
-                  patientUuid = patient.uuid,
-                  uuid = uuidGenerator.v4()
+            if (bloodPressure != null) {
+              risk = cvdRiskCalculator.calculateCvdRisk(
+                  CVDRiskInput(
+                      gender = patient.gender,
+                      age = patient.ageDetails.estimateAge(userClock),
+                      systolic = bloodPressure.reading.systolic,
+                      isSmoker = medicalHistory.isSmoking,
+                      bmi = patientAttribute?.bmiReading?.calculateBMI(),
+                  )
               )
             }
-            CVDRiskCalculated(risk)
+
+            val existingCvdRisk = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)
+            CVDRiskCalculated(existingCvdRisk, risk)
+          }
+    }
+  }
+
+  private fun updateCVDRisk(): ObservableTransformer<UpdateCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            cvdRiskRepository.save(
+                it.oldRisk.copy(riskScore = it.newRiskRange),
+                updateAt = Instant.now(clock)
+            )
+            CVDRiskUpdated
+          }
+    }
+  }
+
+  private fun saveCVDRisk(): ObservableTransformer<SaveCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            cvdRiskRepository.save(
+                riskScore = it.cvdRiskRange,
+                patientUuid = it.patientUuid,
+                uuid = uuidGenerator.v4()
+            )
+            CVDRiskUpdated
           }
     }
   }
@@ -233,23 +260,17 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updateSmokingStatus(): ObservableTransformer<UpdateSmokingStatus, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map { effect ->
-            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                patientUuid = effect.patientId,
-                defaultHistoryUuid = uuidGenerator.v4()
-            )
-            val updatedMedicalHistory = medicalHistory.answered(
-                question = MedicalHistoryQuestion.IsSmoking,
-                answer = effect.isSmoker
-            )
+  private fun updateSmokingStatus(patientUuid: UUID, isSmoker: MedicalHistoryAnswer) {
+    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )
+    val updatedMedicalHistory = medicalHistory.answered(
+        question = MedicalHistoryQuestion.IsSmoking,
+        answer = isSmoker
+    )
 
-            medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
-          }.map { SmokingStatusUpdated }
-    }
+    medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
   }
 
   private fun markHypertension(patientUuid: UUID) {
@@ -421,7 +442,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxByOrNull { it.createdAt },
         alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxByOrNull { it.createdAt },
-        facility = facility.toNullable()
+        facility = facility.toNullable(),
     )
   }
 

@@ -6,6 +6,7 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant

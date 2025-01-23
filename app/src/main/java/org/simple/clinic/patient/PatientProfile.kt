@@ -31,6 +31,7 @@ data class PatientProfile(
     )
     val businessIds: List<BusinessId>
 ) : Parcelable {
+
   val patientUuid: UUID
     get() = patient.uuid
 

@@ -164,22 +164,6 @@ data class MedicalHistory(
         FROM MedicalHistory
         WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
     """)
-    fun hasMedicalHistoryForPatientChangedSince(
-        patientUuid: UUID,
-        instantToCompare: Instant,
-        pendingStatus: SyncStatus
-    ): Observable<Boolean>
-
-    @Query("""
-        SELECT (
-            CASE
-                WHEN (COUNT(uuid) > 0) THEN 1
-                ELSE 0
-            END
-        )
-        FROM MedicalHistory
-        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
-    """)
     fun hasMedicalHistoryForPatientChangedSinceImmediate(
         patientUuid: UUID,
         instantToCompare: Instant,

@@ -12,7 +12,6 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps

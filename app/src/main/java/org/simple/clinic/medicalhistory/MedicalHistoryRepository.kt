@@ -115,16 +115,6 @@ class MedicalHistoryRepository @Inject constructor(
     dao.saveHistories(records)
   }
 
-  fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
-    return dao
-        .hasMedicalHistoryForPatientChangedSince(
-            patientUuid = patientUuid,
-            instantToCompare = instant,
-            pendingStatus = PENDING
-        )
-  }
-
-
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
     return dao.recordsWithSyncStatus(syncStatus)
   }

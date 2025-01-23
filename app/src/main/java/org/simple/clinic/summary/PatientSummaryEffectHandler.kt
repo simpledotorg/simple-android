@@ -118,27 +118,20 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             patientRepository.patient(it.patientUuid)
                 .extractIfPresent()
                 .flatMap { patient ->
-                  val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
-                  val today = LocalDate.now(userClock)
-                      .atStartOfDay(userClock.zone)
-                      .toInstant()
-
                   Observable.combineLatest(
-                      medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(
-                          patientUuid = patient.uuid,
-                          instant = cvdRisk?.timestamps?.updatedAt ?: today,
+                      medicalHistoryRepository.historyForPatientOrDefault(
+                          defaultHistoryUuid = uuidGenerator.v4(),
+                          patientUuid = patient.uuid
                       ),
                       prescriptionRepository.newestPrescriptionsForPatient(patient.uuid),
                       bloodPressureRepository.newestMeasurementsForPatient(
                           patientUuid = patient.uuid,
                           limit = 1
                       ),
-                  ) { hasMedicalHistoryChanged, prescriptions, newestBp ->
+                  ) { medicalHistory, prescriptions, newestBp ->
+                    val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(it.patientUuid)
+
                     val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
-                        patientUuid = patient.uuid
-                    )
-                    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-                        defaultHistoryUuid = uuidGenerator.v4(),
                         patientUuid = patient.uuid
                     )
 
@@ -146,6 +139,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                         .minusDays(90)
                         .atStartOfDay(userClock.zone)
                         .toInstant()
+
+                    val hasMedicalHistoryChanged = cvdRisk?.let { risk ->
+                      medicalHistory.updatedAt > risk.timestamps.updatedAt
+                    } ?: false
+
                     val wasBPMeasuredWithin90Days = newestBp.firstOrNull()?.updatedAt?.let { updatedAt ->
                       updatedAt > ninetyDaysAgo
                     } ?: false
@@ -207,7 +205,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
               if (existingCvdRisk != null) {
                 cvdRiskRepository.save(
                     existingCvdRisk.copy(riskScore = risk),
-                    updateTime = Instant.now(clock)
+                    updateAt = Instant.now(clock)
                 )
               } else {
                 cvdRiskRepository.save(

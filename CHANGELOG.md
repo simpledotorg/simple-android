@@ -52,6 +52,7 @@
 - Fix variables usage in build workflows
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
+- Opt out of edge-to-edge enforcement in Android 15
 
 ### Fixes
 

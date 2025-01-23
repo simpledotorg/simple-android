@@ -99,7 +99,8 @@ class PatientSummaryUpdate(
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
-      is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
+      is CVDRiskCalculated -> saveOrUpdateCVDRisk(event, model)
+      is CVDRiskUpdated -> dispatch(LoadStatinInfo(model.patientUuid))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddSmokingClicked -> dispatch(ShowSmokingStatusDialog)
       is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
@@ -154,6 +155,17 @@ class PatientSummaryUpdate(
         )
         next(updatedModel)
       }
+    }
+  }
+
+  private fun saveOrUpdateCVDRisk(
+      event: CVDRiskCalculated,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return when {
+      event.newRiskRange == null -> dispatch(LoadStatinInfo(model.patientUuid))
+      event.oldRisk != null -> dispatch(UpdateCVDRisk(event.oldRisk, event.newRiskRange))
+      else -> dispatch(SaveCVDRisk(model.patientUuid, event.newRiskRange))
     }
   }
 

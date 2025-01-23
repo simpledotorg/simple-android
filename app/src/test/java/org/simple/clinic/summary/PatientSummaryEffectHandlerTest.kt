@@ -894,6 +894,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid
     )
     val bloodPressures = listOf(bloodPressure)
+    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
 
 
     whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid = patientUuid, limit = 1)) doReturn bloodPressures
@@ -904,14 +905,36 @@ class PatientSummaryEffectHandlerTest {
     whenever(patientAttributeRepository.getPatientAttributeImmediate(
         patientUuid = patientUuid,
     )) doReturn null
+    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
+       cvdRisk
 
     //when
     testCase.dispatch(CalculateCVDRisk(patient = patient))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskCalculated(CVDRiskRange(6, 8)))
+    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(6, 6)))
   }
 
+  @Test
+  fun `when save cvd risk effect is received, then save the cvd risk`() {
+    // when
+    testCase.dispatch(SaveCVDRisk(patientUuid, CVDRiskRange(27, 27)))
+
+    // then
+    testCase.assertOutgoingEvents(CVDRiskUpdated)
+  }
+
+  @Test
+  fun `when update cvd risk effect is received, then update the cvd risk`() {
+    //given
+    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
+
+    // when
+    testCase.dispatch(UpdateCVDRisk(cvdRisk, CVDRiskRange(27, 27)))
+
+    // then
+    testCase.assertOutgoingEvents(CVDRiskUpdated)
+  }
 
   @Test
   fun `when load statin info effect is received, then load statin info`() {

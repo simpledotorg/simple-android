@@ -2303,14 +2303,42 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when cvd risk is calculated, then load statin info`() {
+  fun `when cvd risk score is calculated and old cvd risk is null, then save cvd risk`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(CVDRiskCalculated(
-            risk = null
+            oldRisk = null,
+            newRiskRange = CVDRiskRange(5, 14)
         ))
         .then(assertThatNext(
-            hasEffects(LoadStatinInfo(patientUuid))
+            hasEffects(SaveCVDRisk(patientUuid, CVDRiskRange(5, 14)))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk score is calculated and old cvd risk is not null, then save cvd risk`() {
+    val existingCvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(5, 14))
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskCalculated(
+            oldRisk = existingCvdRisk,
+            newRiskRange = CVDRiskRange(5, 14)
+        ))
+        .then(assertThatNext(
+            hasEffects(UpdateCVDRisk(existingCvdRisk, CVDRiskRange(5, 14)))
+        ))
+  }
+
+  @Test
+  fun `when cvd risk score is calculated and both range and old cvd risk are null, then load statin info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CVDRiskCalculated(
+            oldRisk = null,
+            newRiskRange = null
+        ))
+        .then(assertThatNext(
+            hasEffects(LoadStatinInfo(defaultModel.patientUuid))
         ))
   }
 

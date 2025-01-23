@@ -105,6 +105,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
         .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
+        .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
+        .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
         .addConsumer(UpdateSmokingStatus::class.java, { updateSmokingStatus(it.patientId, it.isSmoker) }, schedulersProvider.io())
         .build()
@@ -200,22 +202,37 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
               )
             }
 
-            if (risk != null) {
-              val existingCvdRisk = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)
-              if (existingCvdRisk != null) {
-                cvdRiskRepository.save(
-                    existingCvdRisk.copy(riskScore = risk),
-                    updateAt = Instant.now(clock)
-                )
-              } else {
-                cvdRiskRepository.save(
-                    riskScore = risk,
-                    patientUuid = patient.uuid,
-                    uuid = uuidGenerator.v4()
-                )
-              }
-            }
-            CVDRiskCalculated(risk)
+            val existingCvdRisk = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)
+            CVDRiskCalculated(existingCvdRisk, risk)
+          }
+    }
+  }
+
+  private fun updateCVDRisk(): ObservableTransformer<UpdateCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            cvdRiskRepository.save(
+                it.oldRisk.copy(riskScore = it.newRiskRange),
+                updateAt = Instant.now(clock)
+            )
+            CVDRiskUpdated
+          }
+    }
+  }
+
+  private fun saveCVDRisk(): ObservableTransformer<SaveCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            cvdRiskRepository.save(
+                riskScore = it.cvdRiskRange,
+                patientUuid = it.patientUuid,
+                uuid = uuidGenerator.v4()
+            )
+            CVDRiskUpdated
           }
     }
   }

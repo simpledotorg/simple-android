@@ -12,6 +12,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
@@ -163,7 +164,7 @@ data class MedicalHistory(
         FROM MedicalHistory
         WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
     """)
-    fun hasMedicalHistoryForPatientChangedSince(
+    fun hasMedicalHistoryForPatientChangedSinceImmediate(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus

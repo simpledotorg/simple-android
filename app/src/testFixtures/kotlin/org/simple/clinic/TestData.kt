@@ -1696,7 +1696,7 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 5),
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
             RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
         ),
@@ -1745,7 +1745,7 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 10),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 6),
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 6),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 7),
             RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         )
@@ -1755,9 +1755,9 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 5),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 3),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 3),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 4)
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 3),
+            RiskEntry(systolic = "140 - 159", bmi = "30 - 35", risk = 3),
+            RiskEntry(systolic = "140 - 159", bmi = "> 35", risk = 4)
         )
     )
 

@@ -167,7 +167,7 @@ class PatientRepository @Inject constructor(
         patient = patient,
         address = patientAddress,
         phoneNumbers = phoneNumbers,
-        businessIds = businessIds
+        businessIds = businessIds,
     )
   }
 
@@ -282,7 +282,7 @@ class PatientRepository @Inject constructor(
           patient = patient,
           address = address,
           phoneNumbers = phoneNumbers,
-          businessIds = businessIds
+          businessIds = businessIds,
       )
     }
   }
@@ -648,7 +648,7 @@ class PatientRepository @Inject constructor(
   fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Boolean {
     return database
         .medicalHistoryDao()
-        .hasMedicalHistoryForPatientChangedSince(
+        .hasMedicalHistoryForPatientChangedSinceImmediate(
             patientUuid = patientUuid,
             instantToCompare = instant,
             pendingStatus = PENDING

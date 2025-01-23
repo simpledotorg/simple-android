@@ -29,6 +29,8 @@ class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
     private val isPatientStatinNudgeV1Enabled: Boolean,
     private val isPatientStatinNudgeV2Enabled: Boolean,
+    private val minAgeForStatin: Int = 40,
+    private val maxAgeForCVDRisk: Int = 74
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -97,12 +99,11 @@ class PatientSummaryUpdate(
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
-      is CVDRiskLoaded -> cvdRiskLoaded(event, model)
-      is CVDRiskCalculated -> dispatch(LoadStatinInfo(model.patientUuid))
+      is CVDRiskCalculated -> saveOrUpdateCVDRisk(event, model)
+      is CVDRiskUpdated -> dispatch(LoadStatinInfo(model.patientUuid))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddSmokingClicked -> dispatch(ShowSmokingStatusDialog)
       is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
-      is SmokingStatusUpdated -> dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
       is BMIReadingAdded -> dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
     }
@@ -112,21 +113,18 @@ class PatientSummaryUpdate(
       event: StatinPrescriptionCheckInfoLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val minAgeForStatin = 40
-    val maxAgeForCVDRisk = 74
     val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
     val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
     val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
 
     val hasCVD = hasHadStroke || hasHadHeartAttack
-    val hasStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val areStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
     val canPrescribeStatin = event.isPatientDead.not() &&
-        event.assignedFacility?.facilityType.equals("UHC", ignoreCase = true) &&
-        event.hasBPRecordedToday &&
-        hasStatinsPrescribedAlready.not()
+        event.wasBPMeasuredWithin90Days &&
+        areStatinsPrescribedAlready.not()
 
     return when {
-      (hasCVD || (hasDiabetes && event.age >= minAgeForStatin)) -> {
+      hasCVD || (hasDiabetes && event.age >= minAgeForStatin) -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
                 canPrescribeStatin = canPrescribeStatin,
@@ -137,9 +135,15 @@ class PatientSummaryUpdate(
       }
 
       event.age in minAgeForStatin..maxAgeForCVDRisk &&
-          canPrescribeStatin &&
-          isPatientStatinNudgeV2Enabled -> {
-        dispatch(LoadCVDRisk(model.patientUuid))
+          isPatientStatinNudgeV2Enabled &&
+          canPrescribeStatin -> {
+        if (event.cvdRiskRange == null ||
+            event.hasMedicalHistoryChanged ||
+            !event.wasCVDCalculatedWithin90Days) {
+          dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+        } else {
+          dispatch(LoadStatinInfo(model.patientUuid))
+        }
       }
 
       else -> {
@@ -154,15 +158,14 @@ class PatientSummaryUpdate(
     }
   }
 
-  private fun cvdRiskLoaded(
-      event: CVDRiskLoaded,
+  private fun saveOrUpdateCVDRisk(
+      event: CVDRiskCalculated,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val cvdRisk = event.risk
-    return if (cvdRisk != null) {
-      dispatch(LoadStatinInfo(model.patientUuid))
-    } else {
-      dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+    return when {
+      event.newRiskRange == null -> dispatch(LoadStatinInfo(model.patientUuid))
+      event.oldRisk != null -> dispatch(UpdateCVDRisk(event.oldRisk, event.newRiskRange))
+      else -> dispatch(SaveCVDRisk(model.patientUuid, event.newRiskRange))
     }
   }
 
@@ -358,9 +361,12 @@ class PatientSummaryUpdate(
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
+    val patientProfile = event.patientSummaryProfile
 
-    if (isPatientStatinNudgeV1Enabled || isPatientStatinNudgeV2Enabled) {
-      effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
+    when {
+      isPatientStatinNudgeV2Enabled || isPatientStatinNudgeV1Enabled -> {
+        effects.add(LoadStatinPrescriptionCheckInfo(patientUuid = patientProfile.patient.uuid))
+      }
     }
 
     if (model.openIntention is LinkIdWithPatient &&

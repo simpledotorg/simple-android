@@ -120,6 +120,7 @@ fun RiskText(
     hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
     cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
     cvdRiskRange.min > 10 -> stringResource(R.string.statin_alert_high_risk_patient_x, riskPercentage)
+    cvdRiskRange.min < 5 -> stringResource(R.string.statin_alert_low_high_risk_patient_x, riskPercentage)
     else -> stringResource(R.string.statin_alert_medium_high_risk_patient_x, riskPercentage)
   }
 
@@ -144,10 +145,10 @@ fun RiskText(
   Text(
       modifier = Modifier
           .offset {
-            IntOffset(
-                x = clampedOffsetX.toInt(),
-                y = 0
-            )
+              IntOffset(
+                  x = clampedOffsetX.toInt(),
+                  y = 0
+              )
           }
           .background(riskColor, shape = RoundedCornerShape(50))
           .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -177,20 +178,20 @@ fun RiskProgressBar(
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-            drawContent()
+              drawContent()
 
-            drawLine(
-                color = indicatorColor,
-                start = Offset(startOffset, 0f),
-                end = Offset(startOffset, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
-            drawLine(
-                color = indicatorColor,
-                start = Offset(endOffset, 0f),
-                end = Offset(endOffset, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
+              drawLine(
+                  color = indicatorColor,
+                  start = Offset(startOffset, 0f),
+                  end = Offset(startOffset, size.height),
+                  strokeWidth = 2.dp.toPx()
+              )
+              drawLine(
+                  color = indicatorColor,
+                  start = Offset(endOffset, 0f),
+                  end = Offset(endOffset, size.height),
+                  strokeWidth = 2.dp.toPx()
+              )
           },
       contentAlignment = Alignment.Center,
   ) {
@@ -212,21 +213,21 @@ fun RiskProgressBar(
                 .weight(1f)
                 .fillMaxHeight()
                 .drawWithContent {
-                  drawRect(color.copy(alpha = 0.5f))
+                    drawRect(color.copy(alpha = 0.5f))
 
-                  val visibleStart = maxOf(segmentStartPx, startOffset)
-                  val visibleEnd = minOf(segmentEndPx, endOffset)
+                    val visibleStart = maxOf(segmentStartPx, startOffset)
+                    val visibleEnd = minOf(segmentEndPx, endOffset)
 
-                  if (visibleStart < visibleEnd) {
-                    drawRect(
-                        color = color.copy(alpha = 1.0f),
-                        topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
-                        size = Size(
-                            width = visibleEnd - visibleStart,
-                            height = size.height
+                    if (visibleStart < visibleEnd) {
+                        drawRect(
+                            color = color.copy(alpha = 1.0f),
+                            topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
+                            size = Size(
+                                width = visibleEnd - visibleStart,
+                                height = size.height
+                            )
                         )
-                    )
-                  }
+                    }
                 }
         )
       }
@@ -239,7 +240,9 @@ fun DescriptionText(
     statinInfo: StatinInfo
 ) {
   val text = when {
-    statinInfo.cvdRisk == null -> stringResource(R.string.statin_alert_refer_to_doctor)
+    statinInfo.cvdRisk == null ||
+        statinInfo.cvdRisk.min >= 10 -> stringResource(R.string.statin_alert_refer_to_doctor)
+
     statinInfo.isSmoker == Answer.Unanswered &&
         statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
 
@@ -253,7 +256,9 @@ fun DescriptionText(
   }.toAnnotatedString()
 
   val textColor = when {
-    statinInfo.cvdRisk == null -> SimpleTheme.colors.material.error
+    statinInfo.cvdRisk == null ||
+        statinInfo.cvdRisk.min >= 10 -> SimpleTheme.colors.material.error
+
     statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> SimpleTheme.colors.onSurface67
     else -> SimpleTheme.colors.material.error
   }

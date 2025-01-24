@@ -123,6 +123,16 @@ class PatientSummaryUpdate(
         event.wasBPMeasuredWithin90Days &&
         areStatinsPrescribedAlready.not()
 
+    val isEligibleForNonLabBasedCvdRisk =
+        event.age in minAgeForStatin..maxAgeForCVDRisk &&
+            isPatientStatinNudgeV2Enabled &&
+            canPrescribeStatin
+
+    val shouldReCalculateCVDRisk =
+        event.cvdRiskRange == null ||
+            event.hasMedicalHistoryChanged ||
+            !event.wasCVDCalculatedWithin90Days
+
     return when {
       hasCVD || (hasDiabetes && event.age >= minAgeForStatin) -> {
         val updatedModel = model.updateStatinInfo(
@@ -134,16 +144,12 @@ class PatientSummaryUpdate(
         next(updatedModel)
       }
 
-      event.age in minAgeForStatin..maxAgeForCVDRisk &&
-          isPatientStatinNudgeV2Enabled &&
-          canPrescribeStatin -> {
-        if (event.cvdRiskRange == null ||
-            event.hasMedicalHistoryChanged ||
-            !event.wasCVDCalculatedWithin90Days) {
-          dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
-        } else {
-          dispatch(LoadStatinInfo(model.patientUuid))
-        }
+      isEligibleForNonLabBasedCvdRisk && shouldReCalculateCVDRisk -> {
+          dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+      }
+
+      isEligibleForNonLabBasedCvdRisk -> {
+        dispatch(LoadStatinInfo(model.patientUuid))
       }
 
       else -> {

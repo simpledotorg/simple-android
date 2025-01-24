@@ -2264,7 +2264,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+            hasEffects(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
         ))
   }
 
@@ -2405,7 +2405,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(BMIReadingAdded)
         .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasEffects(CalculateNonLabBasedCVDRisk(patientSummaryProfile.patient)),
             hasNoModel()
         ))
   }

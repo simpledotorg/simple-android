@@ -104,7 +104,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
-        .addTransformer(CalculateCVDRisk::class.java, calculateCVDRisk())
+        .addTransformer(CalculateNonLabBasedCVDRisk::class.java, calculateNonLabBasedCVDRisk())
         .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
         .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
@@ -168,7 +168,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun calculateCVDRisk(): ObservableTransformer<CalculateCVDRisk, PatientSummaryEvent> {
+  private fun calculateNonLabBasedCVDRisk(): ObservableTransformer<CalculateNonLabBasedCVDRisk, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

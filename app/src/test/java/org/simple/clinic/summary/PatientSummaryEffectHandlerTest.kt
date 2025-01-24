@@ -909,7 +909,7 @@ class PatientSummaryEffectHandlerTest {
        cvdRisk
 
     //when
-    testCase.dispatch(CalculateCVDRisk(patient = patient))
+    testCase.dispatch(CalculateNonLabBasedCVDRisk(patient = patient))
 
     //then
     testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(6, 6)))

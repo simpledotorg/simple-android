@@ -61,7 +61,7 @@ data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffe
 
 data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
 
-data class CalculateCVDRisk(val patient: Patient) : PatientSummaryEffect()
+data class CalculateNonLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
 data class SaveCVDRisk(
     val patientUuid: UUID,

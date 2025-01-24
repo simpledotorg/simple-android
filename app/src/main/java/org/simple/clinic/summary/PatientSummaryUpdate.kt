@@ -104,7 +104,7 @@ class PatientSummaryUpdate(
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddSmokingClicked -> dispatch(ShowSmokingStatusDialog)
       is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
-      is BMIReadingAdded -> dispatch(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+      is BMIReadingAdded -> dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
     }
   }

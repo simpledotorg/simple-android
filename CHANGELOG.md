@@ -52,6 +52,7 @@
 - Fix variables usage in build workflows
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
+- Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
 
 ### Fixes
 

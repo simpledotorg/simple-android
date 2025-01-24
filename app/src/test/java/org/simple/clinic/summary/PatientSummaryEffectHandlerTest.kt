@@ -856,7 +856,7 @@ class PatientSummaryEffectHandlerTest {
     )) doReturn null
 
     // when
-    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patientUuid = patientUuid))
+    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patient = patient))
 
     // then
     testCase.assertOutgoingEvents(StatinPrescriptionCheckInfoLoaded(

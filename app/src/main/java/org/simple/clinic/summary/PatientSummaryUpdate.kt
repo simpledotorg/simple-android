@@ -361,11 +361,10 @@ class PatientSummaryUpdate(
       event: PatientSummaryProfileLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf<PatientSummaryEffect>()
-    val patientProfile = event.patientSummaryProfile
 
     when {
       isPatientStatinNudgeV2Enabled || isPatientStatinNudgeV1Enabled -> {
-        effects.add(LoadStatinPrescriptionCheckInfo(patientUuid = patientProfile.patient.uuid))
+        effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
       }
     }
 

@@ -856,7 +856,7 @@ class PatientSummaryEffectHandlerTest {
     )) doReturn null
 
     // when
-    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patientUuid = patientUuid))
+    testCase.dispatch(LoadStatinPrescriptionCheckInfo(patient = patient))
 
     // then
     testCase.assertOutgoingEvents(StatinPrescriptionCheckInfoLoaded(
@@ -909,7 +909,7 @@ class PatientSummaryEffectHandlerTest {
        cvdRisk
 
     //when
-    testCase.dispatch(CalculateCVDRisk(patient = patient))
+    testCase.dispatch(CalculateNonLabBasedCVDRisk(patient = patient))
 
     //then
     testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(6, 6)))

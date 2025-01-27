@@ -4,10 +4,9 @@ import androidx.paging.PagingData
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID

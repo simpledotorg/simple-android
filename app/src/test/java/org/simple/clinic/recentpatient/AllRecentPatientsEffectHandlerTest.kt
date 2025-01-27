@@ -19,7 +19,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.LocalDate
 import java.util.UUID
 

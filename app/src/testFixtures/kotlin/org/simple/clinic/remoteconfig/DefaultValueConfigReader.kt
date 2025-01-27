@@ -1,4 +1,4 @@
-package org.simple.sharedTestCode.remoteconfig
+package org.simple.clinic.remoteconfig
 
 import org.simple.clinic.remoteconfig.ConfigReader
 

@@ -15,7 +15,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttac
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class NewMedicalHistoryUiRendererTest {

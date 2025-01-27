@@ -19,7 +19,7 @@ import org.simple.clinic.storage.DatabaseEncryptor.State.UNENCRYPTED
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.MinimumMemoryChecker
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject

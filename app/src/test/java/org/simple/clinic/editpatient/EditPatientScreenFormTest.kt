@@ -49,11 +49,11 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.D
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.TestData
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

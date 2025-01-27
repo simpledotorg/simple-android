@@ -282,6 +282,10 @@ android {
       }
     }
   }
+
+  testFixtures {
+    enable = true
+  }
 }
 
 dependencies {
@@ -394,15 +398,24 @@ dependencies {
   implementation(projects.commonUi)
 
   val composeBom = platform(libs.androidx.compose.bom)
-  implementation(composeBom)
+  api(composeBom)
   androidTestImplementation(composeBom)
-  implementation(libs.androidx.compose.material3)
-  implementation(libs.androidx.compose.livedata)
-  implementation(libs.androidx.compose.material.iconsExtended)
-  implementation(libs.androidx.compose.ui.tooling.preview)
+  api(libs.androidx.compose.material3)
+  api(libs.androidx.compose.livedata)
+  api(libs.androidx.compose.material.iconsExtended)
+  api(libs.androidx.compose.ui.tooling.preview)
   debugImplementation(libs.androidx.compose.ui.tooling)
 
   implementation(libs.sqlCipher)
+
+  /** Test fixtures dependencies **/
+  testFixturesImplementation(libs.kotlin.stdlib)
+  testFixturesImplementation(libs.junit)
+  testFixturesImplementation(libs.faker)
+  testFixturesImplementation(libs.traceur)
+  testFixturesImplementation(libs.rx.java)
+  testFixturesImplementation(libs.retrofit.retrofit)
+  testFixturesImplementation(libs.okhttp.okhttp)
 
   /**
    * Unit test dependencies
@@ -427,8 +440,6 @@ dependencies {
   testImplementation(libs.truth)
 
   testImplementation(libs.kotlin.reflect)
-
-  testImplementation(projects.sharedTestCode)
 
   /**
    * Android test dependencies
@@ -456,8 +467,6 @@ dependencies {
   androidTestImplementation(libs.truth)
 
   kspAndroidTest(libs.dagger.compiler)
-
-  androidTestImplementation(projects.sharedTestCode)
 
   androidTestImplementation(libs.androidx.compose.test.junit)
   debugImplementation(libs.androidx.compose.test.manifest)

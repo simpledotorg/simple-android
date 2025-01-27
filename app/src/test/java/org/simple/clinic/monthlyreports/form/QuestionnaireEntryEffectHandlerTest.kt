@@ -13,7 +13,7 @@ import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.util.UUID
 
 class QuestionnaireEntryEffectHandlerTest {

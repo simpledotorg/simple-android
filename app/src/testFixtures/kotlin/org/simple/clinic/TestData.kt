@@ -1,8 +1,6 @@
-package org.simple.sharedTestCode
+package org.simple.clinic
 
 import io.bloco.faker.Faker
-import org.simple.clinic.MAX_ALLOWED_PATIENT_AGE
-import org.simple.clinic.MIN_ALLOWED_PATIENT_AGE
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.appconfig.State
@@ -115,13 +113,13 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
-import org.simple.sharedTestCode.util.randomDeletedReason
-import org.simple.sharedTestCode.util.randomGender
-import org.simple.sharedTestCode.util.randomMedicalHistoryAnswer
-import org.simple.sharedTestCode.util.randomOfEnum
-import org.simple.sharedTestCode.util.randomPatientPhoneNumberType
-import org.simple.sharedTestCode.util.randomTeleconsultRecordAnswer
-import org.simple.sharedTestCode.util.randomTeleconsultationType
+import org.simple.clinic.util.randomDeletedReason
+import org.simple.clinic.util.randomGender
+import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.randomOfEnum
+import org.simple.clinic.util.randomPatientPhoneNumberType
+import org.simple.clinic.util.randomTeleconsultRecordAnswer
+import org.simple.clinic.util.randomTeleconsultationType
 import java.net.URI
 import java.time.Instant
 import java.time.LocalDate
@@ -1698,7 +1696,7 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 5),
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
             RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
         ),
@@ -1747,7 +1745,7 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 10),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 6),
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 6),
             RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 7),
             RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         )
@@ -1757,9 +1755,9 @@ object TestData {
         age40to44 = listOf(
             RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
             RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 5),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 3),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 3),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 4)
+            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 3),
+            RiskEntry(systolic = "140 - 159", bmi = "30 - 35", risk = 3),
+            RiskEntry(systolic = "140 - 159", bmi = "> 35", risk = 4)
         )
     )
 

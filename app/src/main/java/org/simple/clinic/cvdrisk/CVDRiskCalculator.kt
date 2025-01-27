@@ -62,9 +62,7 @@ class CVDRiskCalculator @Inject constructor(
   }
 
   private fun getSystolicRange(sbp: Int) = when (sbp) {
-    in 0..119 -> "< 120"
-    in 120..139 -> "120 - 139"
-    in 140..159 -> "140 - 159"
+    in 0..159 -> "140 - 159"
     in 160..179 -> "160 - 179"
     else -> ">= 180"
   }

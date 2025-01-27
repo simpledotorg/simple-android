@@ -11,8 +11,8 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.clinic.TestData
+import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID

@@ -9,7 +9,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID

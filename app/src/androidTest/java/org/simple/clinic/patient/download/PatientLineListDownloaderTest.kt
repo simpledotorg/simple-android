@@ -10,7 +10,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.download.PatientLineListDownloadResult.DownloadSuccessful
 import org.simple.clinic.rules.LocalAuthenticationRule
-import org.simple.sharedTestCode.util.Rules
+import org.simple.clinic.util.Rules
 import javax.inject.Inject
 
 class PatientLineListDownloaderTest {

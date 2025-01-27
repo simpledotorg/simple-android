@@ -7,7 +7,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.history.adapter.BloodSugarHistoryListItem
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID

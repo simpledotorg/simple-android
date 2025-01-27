@@ -1,8 +1,5 @@
-package org.simple.sharedTestCode.util
+package org.simple.clinic.util
 
-import org.simple.clinic.util.ElapsedRealtimeClock
-import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant

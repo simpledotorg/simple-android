@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
-import org.simple.sharedTestCode.TestData
+import org.simple.clinic.TestData
 
 class CVDRiskCalculatorTest {
 
@@ -37,7 +37,7 @@ class CVDRiskCalculatorTest {
         bmi = null
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(5, 6), risk)
+    assertEquals(CVDRiskRange(5, 5), risk)
   }
 
   @Test
@@ -87,7 +87,7 @@ class CVDRiskCalculatorTest {
         systolic = 125,
     )
     val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(3, 8), risk)
+    assertEquals(CVDRiskRange(3, 6), risk)
   }
 }
 

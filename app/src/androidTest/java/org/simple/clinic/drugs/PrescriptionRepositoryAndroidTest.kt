@@ -16,10 +16,10 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.TestData
-import org.simple.sharedTestCode.util.Rules
-import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
+import org.simple.clinic.TestData
+import org.simple.clinic.util.Rules
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

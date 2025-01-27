@@ -136,7 +136,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patientSummaryProfile.patient))
         ))
   }
 
@@ -153,7 +153,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patientSummaryProfile.patient))
         ))
   }
 
@@ -2264,7 +2264,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+            hasEffects(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
         ))
   }
 
@@ -2405,7 +2405,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(BMIReadingAdded)
         .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasEffects(CalculateNonLabBasedCVDRisk(patientSummaryProfile.patient)),
             hasNoModel()
         ))
   }

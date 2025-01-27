@@ -128,7 +128,7 @@ class PatientSummaryUpdate(
             isPatientStatinNudgeV2Enabled &&
             canPrescribeStatin
 
-    val shouldReCalculateCVDRisk =
+    val shouldCalculateCVDRisk =
         event.cvdRiskRange == null ||
             event.hasMedicalHistoryChanged ||
             !event.wasCVDCalculatedWithin90Days
@@ -144,7 +144,7 @@ class PatientSummaryUpdate(
         next(updatedModel)
       }
 
-      isEligibleForNonLabBasedCvdRisk && shouldReCalculateCVDRisk -> {
+      isEligibleForNonLabBasedCvdRisk && shouldCalculateCVDRisk -> {
           dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       }
 

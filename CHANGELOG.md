@@ -19,7 +19,6 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
-- Bump Sentry Android to v7.20.0
 - Bump AGP to v8.8.0
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
@@ -53,6 +52,7 @@
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
 - Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
+- Bump Sentry Android to v8.0.0
 
 ### Fixes
 

@@ -28,7 +28,6 @@
 - Bump RootBeer to 0.1.1
 - Update `CVDRisk` table `riskScore` to range from string
 - Bump Mobius to v2.1.1
-- Bump Sentry Gradle plugin to v4.14.1
 - Bump AndroidX Camera View to v1.4.1
 - Bump Coroutines to v1.10.1
 - Bump Lint to v31.8.0
@@ -53,6 +52,7 @@
 - Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
 - Bump Sentry Android to v8.0.0
 - Bump Gradle to v8.12.1
+- Bump Sentry Gradle plugin to v5
 
 ### Fixes
 

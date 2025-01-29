@@ -53,6 +53,7 @@
 - Bump Sentry Android to v8.0.0
 - Bump Gradle to v8.12.1
 - Bump Sentry Gradle plugin to v5
+- Opt out of edge-to-edge enforcement in Android 15
 
 ### Fixes
 

@@ -36,7 +36,6 @@
 - Bump AndroidX Work to v2.10.0
 - Bump Lottie Compose to v6.6.2
 - Bump Moshi to v1.15.2
-- Bump Gradle to v8.12
 - Bump Dagger to v2.55
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
@@ -53,6 +52,7 @@
 - Migrate to using test fixtures for shared test code
 - Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
 - Bump Sentry Android to v8.0.0
+- Bump Gradle to v8.12.1
 
 ### Fixes
 

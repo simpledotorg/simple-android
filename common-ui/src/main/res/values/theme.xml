@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="Base.Theme.Simple" parent="Theme.MaterialComponents.Light.NoActionBar">
+  <style name="Base.Theme.Simple.Global" parent="Theme.MaterialComponents.Light.NoActionBar">
     <!-- Dialog Themes -->
     <item name="alertDialogTheme">@style/ThemeOverlay.Simple.Dialog.Alert</item>
     <item name="android:datePickerDialogTheme">@style/ThemeOverlay.Simple.Dialog</item>
@@ -52,6 +52,8 @@
     <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Simple.MediumComponent</item>
     <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Simple.LargeComponent</item>
   </style>
+
+  <style name="Base.Theme.Simple" parent="Base.Theme.Simple.Global" />
 
   <style name="Theme.Simple" parent="Base.Theme.Simple">
     <item name="colorPrimary">@color/simple_light_blue_500</item>

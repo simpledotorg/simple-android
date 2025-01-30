@@ -39,8 +39,8 @@
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
 - Bump AndroidX RecyclerView to v1.4.0
-- Bump Kotlin to v2.1.0
-- Bump KSP to v2.1.0-1.0.29
+- Bump KSP to v2.1.10-1.0.29
+- Bump Kotlin to v2.1.10
 - Bump Jackson Core to v2.18.2
 - Bump Firebase Analytics to v22.2.0
 - Bump Open CSV to v5.10
@@ -53,6 +53,8 @@
 - Bump Sentry Android to v8.0.0
 - Bump Gradle to v8.12.1
 - Bump Sentry Gradle plugin to v5
+- Opt out of edge-to-edge enforcement in Android 15
+- Bump Google Gson to v2.12.0
 
 ### Fixes
 

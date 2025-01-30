@@ -111,7 +111,7 @@ firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.2.0"
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
-gson = "com.google.code.gson:gson:2.11.0"
+gson = "com.google.code.gson:gson:2.12.0"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
 

@@ -39,8 +39,8 @@
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
 - Bump AndroidX RecyclerView to v1.4.0
-- Bump Kotlin to v2.1.0
 - Bump KSP to v2.1.10-1.0.29
+- Bump Kotlin to v2.1.10
 - Bump Jackson Core to v2.18.2
 - Bump Firebase Analytics to v22.2.0
 - Bump Open CSV to v5.10

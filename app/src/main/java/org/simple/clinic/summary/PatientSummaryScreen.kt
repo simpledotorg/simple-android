@@ -738,7 +738,7 @@ class PatientSummaryScreen :
     val options = arrayOf(
         getString(R.string.smoking_status_dialog_option_yes),
         getString(R.string.smoking_status_dialog_option_no))
-    var selectedOption = -1
+    var selectedOption = 1
 
     MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.smoking_status_dialog_title)

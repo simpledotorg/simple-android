@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">කිසිවක් නැත</string>
   <string name="prescribed_drugs_dosage_remove">ඉවත් කරන්න</string>
@@ -906,8 +905,12 @@
 
   <string name="htn_warning_dialog_negative_button">දැන් නොවේ</string>
 
-  <!-- Statin Alerts -->
   <string name="statin_alert_at_risk_patient">අවදානමක් සහිත රෝගීන්</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ස්ටැටින් ප්‍රතිකාර&lt;/b&gt; සදහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
+  <string name="statin_alert_add_smoking">දුම් පානය</string>
+  <string name="statin_alert_add_bmi">BMI අගය</string>
+  <string name="purge_notification_desc">දත්ත සංචිතය නඩත්තුවකට ලක්වෙමින් පවතී. මේ සඳහා විනාඩි කිහිපයක් ගත වේ.</string>
 
+  <string name="smoking_status_dialog_title_positive_button">අවසන්</string>
+  <string name="smoking_status_dialog_title_negative_button">අවලංගු කරන්න</string>
 </resources>

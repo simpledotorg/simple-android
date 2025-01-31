@@ -893,8 +893,7 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
   <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
+  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
@@ -902,7 +901,7 @@
   <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
 
   <!-- Data protection consent -->
-  <string name="data_protection_consent_title">\"অ্যাপ ব্যবহারের শর্তাবলী \"</string>
+  <string name="data_protection_consent_title">\\"অ্যাপ ব্যবহারের শর্তাবলী \\"</string>
   <string name="data_protection_consent_subtitle">সিম্পুল অ্যাপ ব্যবহার করতে হলে অবশ্যই আপনাকে নীচের ‘সম্মত হন এবং চালিয়ে যান’ বাটনে ক্লিক করে নিম্নলিখিত শর্তাবলীতে সম্মত হতে হবে৷ সিম্পুল অ্যাপটিতে রোগীদের ব্যক্তিগত স্বাস্থ্য তথ্য (‘ডেটা’) রয়েছে। আপনি আপনার কাজের পরিসীমার মধ্যে প্রয়োজনীয় ডেটাতে প্রবেশ করতে পারবেন। আপনার জন্য প্রযোজ্য নয়, এমন তথ্যের মধ্যে প্রবেশ করতে পারবেন না। আপনাকে অবশ্যই ডেটা গোপনীয় রাখতে হবে। অন্যদের সাথে ডেটা শেয়ার করা যাবে না। সিম্পুল অ্যাপে প্রবেশ করতে সিকিউরিটি কোডের প্রয়োজন হবে এবং সেটি সংরক্ষণ করতে হবে। ব্যবহার না করার সময় আপনাকে অবশ্যই সিম্পুল অ্যাপ থেকে লগ আউট করতে হবে। সাধারণ অ্যাপ বা ডেটা অ্যাক্সেস করার জন্য অন্যদের আপনার লগইন তথ্যগুলো ব্যবহার করার অনুমতি দেওয়া যাবে না। আপনাকে অবশ্যই পর্যায়ক্রমে ডেটা সিঙ্ক করতে হবে, বাধ্যতামূলক রেকর্ড ধারণ করতে হবে এবং প্রয়োজনীয় অন্যান্য রক্ষণাবেক্ষণ করতে হবে। আপনি বুঝতে পেরেছেন যে সিম্পুল অ্যাপটি স্বয়ংক্রিয়ভাবে ডেটাতে আপনার প্রবেশের একটি রেকর্ড তৈরি করে। অননুমোদিত অ্যাক্সেস বা ব্যবহারের শর্তাবলীর অন্যান্য লঙ্ঘনের ফলে সাধারণ অ্যাপে আপনার অ্যাক্সেস প্রত্যাহার করা হতে পারে বা অন্যান্য শাস্তিমূলক ব্যবস্থা নেওয়া হতে পারে| \n\n</string>
   <string name="data_protection_consent_accept_button">সম্মত হন এবং চালিয়ে যান</string>
 
@@ -916,29 +915,4 @@
 
   <string name="htn_warning_dialog_negative_button">এখন নয়</string>
 
-  <!-- Statin Alerts -->
-  <string name="statin_alert_low_high_risk_patient_x">নিম্ন-উচ্চ ঝুঁকি %s</string>
-  <string name="statin_alert_medium_high_risk_patient_x">মাঝারি-উচ্চ ঝুঁকি %s</string>
-  <string name="statin_alert_high_risk_patient_x">উচ্চ ঝুঁকি %s</string>
-  <string name="statin_alert_very_high_risk_patient">অত্যন্ত উচ্চ ঝুঁকির রোগী</string>
-  <string name="statin_alert_at_risk_patient">রোগী ঝুঁকিতে আছেন </string>
-  <string name="statin_alert_refer_to_doctor">&lt;b&gt;স্ট্যাটিন ওষুধের&lt;/b&gt; জন্য ডাক্তারের কাছে পাঠান</string>
-  <string name="statin_alert_add_smoking">ধূমপান যোগ করুন</string>
-  <string name="statin_alert_add_bmi">বিএমআই যোগ করুন</string>
-  <string name="statin_alert_add_smoking_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য ধূমপানের অবস্থা যোগ করুন।</string>
-  <string name="statin_alert_add_bmi_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য বিএমআই যোগ করুন।</string>
-  <string name="statin_alert_add_smoking_and_bmi_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য ধূমপানের অবস্থা এবং বিএমআই যোগ করুন।</string>
-
-  <!-- BMI entry -->
-  <string name="bmi_entry_sheet_title_enter_bmi">বিএমআই</string>
-  <string name="bmi_entry_height_in_cm">উচ্চতা (সেমি)</string>
-  <string name="bmi_entry_weight_in_kg">ওজন (কেজি)</string>
-  <string name="bmi_x">বিএমআই: %s</string>
-
-  <!-- Add Smoking Status Dialog -->
-  <string name="smoking_status_dialog_title">রোগী কি ধূমপান করেন?</string>
-  <string name="smoking_status_dialog_option_yes">হ্যাঁ, ধূমপায়ী</string>
-  <string name="smoking_status_dialog_option_no">না, ধূমপায়ী নন</string>
-  <string name="smoking_status_dialog_title_positive_button">সম্পন্ন</string>
-  <string name="smoking_status_dialog_title_negative_button">বাতিল করুন</string>
-</resources>
+  </resources>

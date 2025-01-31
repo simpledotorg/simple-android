@@ -892,17 +892,15 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">Aganu buuxote ripoorte</string>
   <string name="monthly_screening_reports">Aganunita laooshu odoo</string>
-  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho odoo eesinooni</string><string name="monthly_drug_stock_reports_drug_stock_reports">1%1$s Xagichu duuno </string>
+  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho odoo eesinooni</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">Aganu xagichu kuuso ripoorte</string>
+  <string name="monthly_drug_stock_reports">Aganu xagichu kuuso ripoortubba</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">1%1$s Xagichu duuno </string><!--Oct 2022 drug stock report-->
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Aganu irkote ripoorte</string>
   <string name="monthly_supplies_reports">Aganu irkubbate ripoorte</string>
   <string name="monthly_supplies_report_supplies_report">1%1$s Irkubbate ripoorte</string>
-
-  <string name="change_patient_facility">Soori</string>
-
-  <string name="diabetes_warning_dialog_negative_button">Di’xaa</string>
-
-  <string name="htn_warning_dialog_negative_button">Di’xaa</string>
-
-  </resources>
+</resources>

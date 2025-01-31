@@ -893,17 +893,15 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">ਮਹੀਨਾਵਾਰ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string>
   <string name="monthly_screening_reports">ਮਹੀਨਾਵਾਰ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟਾਂ</string>
-  <string name="monthly_screening_reports_screening_report">%1$s ਦੀ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ</string>
+  <string name="monthly_screening_reports_screening_report">%1$s ਦੀ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">ਮਹੀਨਾਵਾਰ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ</string>
+  <string name="monthly_drug_stock_reports">ਮਹੀਨਾਵਾਰ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟਾਂ</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ</string><!--Oct 2022 drug stock report-->
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ਮਹੀਨਾਵਾਰ ਸਪਲਾਈ ਦੀ ਰਿਪੋਰਟ</string>
   <string name="monthly_supplies_reports">ਮਹੀਨਾਵਾਰ ਸਪਲਾਈ ਦੀਆਂ ਰਿਪੋਰਟਾਂ</string>
   <string name="monthly_supplies_report_supplies_report">%1$s ਸਪਲਾਈ ਦੀ ਰਿਪੋਰਟ</string>
-
-  <string name="change_patient_facility">ਬਦਲੋ</string>
-
-  <string name="diabetes_warning_dialog_negative_button">ਹੁਣੇ ਨਹੀਂ</string>
-
-  <string name="htn_warning_dialog_negative_button">ਹੁਣੇ ਨਹੀਂ</string>
-
-  </resources>
+</resources>

@@ -2359,6 +2359,23 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when statin info is loaded and risk is low-high, then update the state and show smoking status dialog`() {
+    val statinInfo = StatinInfo(
+        canPrescribeStatin = true,
+        CVDRiskRange(7, 14),
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinInfoLoaded(
+            statinInfo = statinInfo
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(statinInfo).showSmokingStatusDialog()),
+            hasEffects(ShowSmokingStatusDialog)
+        ))
+  }
+
+  @Test
   fun `when add smoking button is clicked, then show the smoking status dialog`() {
     updateSpec
         .given(defaultModel)

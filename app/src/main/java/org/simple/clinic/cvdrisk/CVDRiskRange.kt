@@ -17,6 +17,10 @@ data class CVDRiskRange(
   @IgnoredOnParcel
   val level = CVDRiskLevel.compute(this)
 
+  @Transient
+  @IgnoredOnParcel
+  val canPrescribeStatin = max >= 10
+
   class RoomTypeConverter {
 
     @TypeConverter

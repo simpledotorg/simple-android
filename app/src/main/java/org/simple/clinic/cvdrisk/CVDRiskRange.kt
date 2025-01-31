@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -11,6 +12,10 @@ data class CVDRiskRange(
     val min: Int,
     val max: Int,
 ) : Parcelable {
+
+  @Transient
+  @IgnoredOnParcel
+  val level = CVDRiskLevel.compute(this)
 
   class RoomTypeConverter {
 

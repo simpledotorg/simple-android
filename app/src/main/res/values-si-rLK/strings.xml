@@ -909,7 +909,28 @@
   <string name="data_protection_consent_accept_button">එකඟ වී ඉදිරියට යන්න</string>
 
   <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">අවධානමක් සහිත රෝගීන් %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">යම අවධානමක් සහිත රෝගීන් %s</string>
+  <string name="statin_alert_high_risk_patient_x">ඉහළ අවදානම %s</string>
+  <string name="statin_alert_very_high_risk_patient">අවධානමක් සහිත රෝගීන්</string>
   <string name="statin_alert_at_risk_patient">අවදානමක් සහිත රෝගීන්</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ස්ටැටින් ප්‍රතිකාර&lt;/b&gt; සදහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
+  <string name="statin_alert_add_smoking">දුම් පානය</string>
+  <string name="statin_alert_add_bmi">BMI අගය</string>
+  <string name="statin_alert_add_smoking_info">නිවැරදිව අවදානම ගණනයට දුම් පානය කරන්නේද යන්න ඇතුලත් කරන්න</string>
+  <string name="statin_alert_add_bmi_info">වඩාත් නිවැරදි අවදානම් ලකුණු සඳහා BMI එකතු කරන්න</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">වඩාත් නිවැරදිව අවදානම ගණනයට දුම් පානය කරන්නේද යන්න සහ BMI අගය ඇතුලත් කරන්න</string>
 
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">බීඑම්අයි (BMI)</string>
+  <string name="bmi_entry_height_in_cm">උස (සෙ.මී.)</string>
+  <string name="bmi_entry_weight_in_kg">බර (කි.ග්රෑ.)</string>
+  <string name="bmi_x">බීඑම්අයි: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="smoking_status_dialog_title">රෝගියා දුම්පානය කරන්නෙක්ද?</string>
+  <string name="smoking_status_dialog_option_yes">ඔව්, දුම්පානය කරන්නෙක්</string>
+  <string name="smoking_status_dialog_option_no">දුම්පානය නොකරන්නෙක්</string>
+  <string name="smoking_status_dialog_title_positive_button">අවසන්</string>
+  <string name="smoking_status_dialog_title_negative_button">අවලංගු කරන්න</string>
 </resources>

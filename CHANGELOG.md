@@ -55,6 +55,7 @@
 - Bump Sentry Gradle plugin to v5
 - Opt out of edge-to-edge enforcement in Android 15
 - Bump Google Gson to v2.12.0
+- Add statin v2 translations for `bn-BD`
 
 ### Fixes
 

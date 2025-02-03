@@ -30,7 +30,7 @@ import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
     private val isPatientStatinNudgeV1Enabled: Boolean,
-    private val isPatientStatinNudgeV2Enabled: Boolean,
+    private val isNonLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -127,7 +127,7 @@ class PatientSummaryUpdate(
 
     val isEligibleForNonLabBasedCvdRisk =
         event.age in minAgeForStatin..maxAgeForCVDRisk &&
-            isPatientStatinNudgeV2Enabled &&
+            isNonLabBasedStatinNudgeEnabled &&
             canPrescribeStatin
 
     val shouldCalculateCVDRisk =
@@ -384,7 +384,7 @@ class PatientSummaryUpdate(
     val effects = mutableSetOf<PatientSummaryEffect>()
 
     when {
-      isPatientStatinNudgeV2Enabled || isPatientStatinNudgeV1Enabled -> {
+      isNonLabBasedStatinNudgeEnabled || isPatientStatinNudgeV1Enabled -> {
         effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
       }
     }

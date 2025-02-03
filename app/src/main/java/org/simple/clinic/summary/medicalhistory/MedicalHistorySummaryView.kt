@@ -107,7 +107,7 @@ class MedicalHistorySummaryView(
         events = events.ofType(),
         defaultModel = MedicalHistorySummaryModel.create(
             patientUuid = screenKey.patientUuid,
-            showIsSmokingQuestion = features.isEnabled(Feature.PatientStatinNudgeV2)
+            showIsSmokingQuestion = features.isEnabled(Feature.NonLabBasedStatinNudge)
         ),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),

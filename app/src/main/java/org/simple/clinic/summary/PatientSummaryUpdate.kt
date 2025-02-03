@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.cvdrisk.CVDRiskLevel
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
@@ -24,11 +25,12 @@ import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import java.util.UUID
+import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 
 class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
     private val isPatientStatinNudgeV1Enabled: Boolean,
-    private val isPatientStatinNudgeV2Enabled: Boolean,
+    private val isNonLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -125,7 +127,7 @@ class PatientSummaryUpdate(
 
     val isEligibleForNonLabBasedCvdRisk =
         event.age in minAgeForStatin..maxAgeForCVDRisk &&
-            isPatientStatinNudgeV2Enabled &&
+            isNonLabBasedStatinNudgeEnabled &&
             canPrescribeStatin
 
     val shouldCalculateCVDRisk =
@@ -145,7 +147,7 @@ class PatientSummaryUpdate(
       }
 
       isEligibleForNonLabBasedCvdRisk && shouldCalculateCVDRisk -> {
-          dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+        dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       }
 
       isEligibleForNonLabBasedCvdRisk -> {
@@ -179,7 +181,20 @@ class PatientSummaryUpdate(
       event: StatinInfoLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return next(model.updateStatinInfo(event.statinInfo))
+    val canShowSmokingStatusDialog =
+        event.statinInfo.canPrescribeStatin &&
+        (event.statinInfo.cvdRisk?.level == CVDRiskLevel.LOW_HIGH ||
+        event.statinInfo.cvdRisk?.level == CVDRiskLevel.MEDIUM_HIGH) &&
+        event.statinInfo.isSmoker == MedicalHistoryAnswer.Unanswered &&
+        !model.hasShownSmokingStatusDialog
+
+    return if (canShowSmokingStatusDialog) {
+      next(model.updateStatinInfo(event.statinInfo)
+          .showSmokingStatusDialog(),
+          ShowSmokingStatusDialog)
+    } else {
+      next(model.updateStatinInfo(event.statinInfo))
+    }
   }
 
   private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {
@@ -369,7 +384,7 @@ class PatientSummaryUpdate(
     val effects = mutableSetOf<PatientSummaryEffect>()
 
     when {
-      isPatientStatinNudgeV2Enabled || isPatientStatinNudgeV1Enabled -> {
+      isNonLabBasedStatinNudgeEnabled || isPatientStatinNudgeV1Enabled -> {
         effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
       }
     }

@@ -50,16 +50,20 @@
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
 - Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
-- Bump Sentry Android to v8.0.0
 - Bump Gradle to v8.12.1
-- Bump Sentry Gradle plugin to v5
 - Opt out of edge-to-edge enforcement in Android 15
 - Bump Google Gson to v2.12.0
-- Add statin v2 translations for `bn-BD`
+- Add statin translations for `bn-BD`, `si-LK`, `ta-LK`
+- Bump Sentry Android to v8.1.0
+- Bump Sentry Gradle plugin to v5.1.0
+- Show smoking status dialog for low and medium cvd risk.
+- Rename `patient_statin_nudge_v1` feature flag to `non_lab_based_statin_nudge`
+- Rename `cvd_risk_calculation_sheet_v0` feature flag to `non_lab_based_cvd_risk_calculation_sheet`
 
 ### Fixes
 
 - Fix app crashing occasionally when viewing all blood sugar history
+- Fix smoking status dialog ui
 
 ### Features
 

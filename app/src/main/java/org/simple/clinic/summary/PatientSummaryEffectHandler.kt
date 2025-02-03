@@ -116,7 +116,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap { effect ->
+          .switchMap { effect ->
             val patient = effect.patient
             Observable.combineLatest(
                 medicalHistoryRepository.historyForPatientOrDefault(
@@ -246,9 +246,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             )
             val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
             val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-            val canPrescribeStatin = cvdRisk?.riskScore?.let { it.max >= 10 } ?: false
             StatinInfoLoaded(StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canPrescribeStatin = cvdRisk?.riskScore?.canPrescribeStatin ?: false,
                 cvdRisk = cvdRisk?.riskScore,
                 isSmoker = medicalHistory.isSmoking,
                 bmiReading = bmiReading?.bmiReading,

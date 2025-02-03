@@ -243,7 +243,7 @@ class PatientSummaryScreenLogicTest {
         update = PatientSummaryUpdate(
             isPatientReassignmentFeatureEnabled = false,
             isPatientStatinNudgeV1Enabled = false,
-            isPatientStatinNudgeV2Enabled = false
+            isNonLabBasedStatinNudgeEnabled = false
         ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render

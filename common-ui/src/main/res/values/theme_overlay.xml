@@ -69,6 +69,10 @@
     </item>
   </style>
 
+  <style name="ThemeOverlay.Simple.MaterialAlertDialog.CheckedItem">
+    <item name="android:checkedTextViewStyle">@style/MaterialAlertDialog.Simple.Checked.Text</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
     <item name="android:windowIsFloating">false</item>
     <item name="android:statusBarColor">@android:color/transparent</item>

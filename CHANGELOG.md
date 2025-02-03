@@ -19,7 +19,6 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
-- Bump Sentry Android to v7.20.0
 - Bump AGP to v8.8.0
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
@@ -29,7 +28,6 @@
 - Bump RootBeer to 0.1.1
 - Update `CVDRisk` table `riskScore` to range from string
 - Bump Mobius to v2.1.1
-- Bump Sentry Gradle plugin to v4.14.1
 - Bump AndroidX Camera View to v1.4.1
 - Bump Coroutines to v1.10.1
 - Bump Lint to v31.8.0
@@ -37,13 +35,12 @@
 - Bump AndroidX Work to v2.10.0
 - Bump Lottie Compose to v6.6.2
 - Bump Moshi to v1.15.2
-- Bump Gradle to v8.12
 - Bump Dagger to v2.55
 - Bump Play Services Auth to v21.3.0
 - Bump AndroidX Core KTX to v1.15.0
 - Bump AndroidX RecyclerView to v1.4.0
-- Bump Kotlin to v2.1.0
-- Bump KSP to v2.1.0-1.0.29
+- Bump KSP to v2.1.10-1.0.29
+- Bump Kotlin to v2.1.10
 - Bump Jackson Core to v2.18.2
 - Bump Firebase Analytics to v22.2.0
 - Bump Open CSV to v5.10
@@ -53,10 +50,20 @@
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
 - Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
+- Bump Gradle to v8.12.1
+- Opt out of edge-to-edge enforcement in Android 15
+- Bump Google Gson to v2.12.0
+- Add statin translations for `bn-BD`, `si-LK`, `ta-LK`
+- Bump Sentry Android to v8.1.0
+- Bump Sentry Gradle plugin to v5.1.0
+- Show smoking status dialog for low and medium cvd risk.
+- Rename `patient_statin_nudge_v1` feature flag to `non_lab_based_statin_nudge`
+- Rename `cvd_risk_calculation_sheet_v0` feature flag to `non_lab_based_cvd_risk_calculation_sheet`
 
 ### Fixes
 
 - Fix app crashing occasionally when viewing all blood sugar history
+- Fix smoking status dialog ui
 
 ### Features
 

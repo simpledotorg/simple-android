@@ -40,6 +40,7 @@ import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.theme.SimpleInverseTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.cvdrisk.CVDRiskLevel
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
@@ -119,15 +120,10 @@ fun RiskText(
   val riskText = when {
     hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
     cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
-    cvdRiskRange.min > 10 -> stringResource(R.string.statin_alert_high_risk_patient_x, riskPercentage)
-    cvdRiskRange.min < 5 -> stringResource(R.string.statin_alert_low_high_risk_patient_x, riskPercentage)
-    else -> stringResource(R.string.statin_alert_medium_high_risk_patient_x, riskPercentage)
+    else -> stringResource(cvdRiskRange.level.displayStringResId, riskPercentage)
   }
 
-  val riskColor = when {
-    cvdRiskRange == null || cvdRiskRange.min > 10 -> SimpleTheme.colors.material.error
-    else -> Color(0xFFFF7A00)
-  }
+  val riskColor = cvdRiskRange?.level?.color ?: SimpleTheme.colors.material.error
 
   val textMeasurer = rememberTextMeasurer()
   val textWidth = textMeasurer.measure(
@@ -164,11 +160,11 @@ fun RiskProgressBar(
     endOffset: Float
 ) {
   val riskColors = listOf(
-      Color(0xFF00B849), // Very Low
-      Color(0xFFFFC800), // Low
-      SimpleTheme.colors.material.error, // Medium
-      Color(0xFFB81631), // High
-      Color(0xFF731814)  // Very High
+      Color(0xFF00B849), // Low
+      Color(0xFFFFC800), // MEDIUM
+      SimpleTheme.colors.material.error, // HIGH
+      Color(0xFFB81631), // VERY HIGH
+      Color(0xFF731814)  // CRITICAL
   )
 
   val indicatorColor = Color(0xFF2F363D)
@@ -240,26 +236,28 @@ fun DescriptionText(
     statinInfo: StatinInfo
 ) {
   val text = when {
-    statinInfo.cvdRisk == null ||
-        statinInfo.cvdRisk.min >= 10 -> stringResource(R.string.statin_alert_refer_to_doctor)
+    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH ->
+      stringResource(R.string.statin_alert_refer_to_doctor)
 
-    statinInfo.isSmoker == Answer.Unanswered &&
-        statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null ->
+      stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
 
-    statinInfo.isSmoker == Answer.Unanswered &&
-        statinInfo.bmiReading != null -> stringResource(R.string.statin_alert_add_smoking_info)
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null ->
+      stringResource(R.string.statin_alert_add_smoking_info)
 
-    statinInfo.isSmoker != Answer.Unanswered &&
-        statinInfo.bmiReading == null -> stringResource(R.string.statin_alert_add_bmi_info)
+    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null ->
+      stringResource(R.string.statin_alert_add_bmi_info)
 
     else -> stringResource(R.string.statin_alert_refer_to_doctor)
   }.toAnnotatedString()
 
   val textColor = when {
-    statinInfo.cvdRisk == null ||
-        statinInfo.cvdRisk.min >= 10 -> SimpleTheme.colors.material.error
+    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH
+      -> SimpleTheme.colors.material.error
 
-    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null -> SimpleTheme.colors.onSurface67
+    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null ->
+      SimpleTheme.colors.onSurface67
+
     else -> SimpleTheme.colors.material.error
   }
 
@@ -324,11 +322,11 @@ fun StainNudgeAddButtons(
 
 fun getOffsets(cvdRiskRange: CVDRiskRange?, size: Size): Pair<Float, Float> {
   val riskRanges = listOf(
-      0..4,    // Very Low
-      5..9,    // Low
-      10..19,  // Medium
-      20..29,  // High
-      30..33 // Very High
+      0..4,    // LOW
+      5..9,    // MEDIUM
+      10..19,  // HIGH
+      20..29,  // VERY HIGH
+      30..33 // CRITICAL
   )
 
   val startRatio: Float

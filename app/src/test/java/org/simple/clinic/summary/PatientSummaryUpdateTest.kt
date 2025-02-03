@@ -86,7 +86,7 @@ class PatientSummaryUpdateTest {
   private val updateSpec = UpdateSpec(PatientSummaryUpdate(
       isPatientReassignmentFeatureEnabled = true,
       isPatientStatinNudgeV1Enabled = true,
-      isPatientStatinNudgeV2Enabled = true,
+      isNonLabBasedStatinNudgeEnabled = true,
   ))
 
   @Test
@@ -111,7 +111,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
 
     updateSpec
@@ -128,7 +128,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
 
     updateSpec
@@ -136,7 +136,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patientSummaryProfile.patient))
         ))
   }
 
@@ -145,7 +145,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = true,
     ))
 
     updateSpec
@@ -153,7 +153,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryProfileLoaded(patientSummaryProfile))
         .then(assertThatNext(
             hasModel(defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)),
-            hasEffects(LoadStatinPrescriptionCheckInfo(patientUuid = defaultModel.patientUuid))
+            hasEffects(LoadStatinPrescriptionCheckInfo(patient = patientSummaryProfile.patient))
         ))
   }
 
@@ -1694,7 +1694,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false
+        isNonLabBasedStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1723,7 +1723,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1752,7 +1752,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false
+        isNonLabBasedStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -2142,7 +2142,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2174,7 +2174,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2206,7 +2206,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2238,7 +2238,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
@@ -2264,7 +2264,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CalculateCVDRisk(model.patientSummaryProfile!!.patient))
+            hasEffects(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
         ))
   }
 
@@ -2273,7 +2273,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2359,6 +2359,23 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when statin info is loaded and risk is low-high, then update the state and show smoking status dialog`() {
+    val statinInfo = StatinInfo(
+        canPrescribeStatin = true,
+        CVDRiskRange(7, 14),
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinInfoLoaded(
+            statinInfo = statinInfo
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(statinInfo).showSmokingStatusDialog()),
+            hasEffects(ShowSmokingStatusDialog)
+        ))
+  }
+
+  @Test
   fun `when add smoking button is clicked, then show the smoking status dialog`() {
     updateSpec
         .given(defaultModel)
@@ -2405,7 +2422,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(BMIReadingAdded)
         .then(assertThatNext(
-            hasEffects(CalculateCVDRisk(patientSummaryProfile.patient)),
+            hasEffects(CalculateNonLabBasedCVDRisk(patientSummaryProfile.patient)),
             hasNoModel()
         ))
   }

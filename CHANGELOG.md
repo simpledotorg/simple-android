@@ -56,6 +56,7 @@
 - Add statin translations for `bn-BD`, `si-LK`, `ta-LK`
 - Bump Sentry Android to v8.1.0
 - Bump Sentry Gradle plugin to v5.1.0
+- Show smoking status dialog for low and medium cvd risk.
 
 ### Fixes
 

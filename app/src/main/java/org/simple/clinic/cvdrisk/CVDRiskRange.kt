@@ -12,6 +12,12 @@ data class CVDRiskRange(
     val max: Int,
 ) : Parcelable {
 
+  val level: CVDRiskLevel
+    get() = CVDRiskLevel.compute(this)
+
+  val canPrescribeStatin: Boolean
+    get() = max >= 10
+
   class RoomTypeConverter {
 
     @TypeConverter

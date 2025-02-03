@@ -109,6 +109,11 @@
     <item name="android:textColor">@color/color_on_surface_67</item>
   </style>
 
+  <style name="MaterialAlertDialog.Simple.Checked.Text" parent="Widget.MaterialComponents.CheckedTextView">
+    <item name="android:textAppearance">?attr/textAppearanceBody0</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
   <style name="MaterialAlertDialog.Simple" parent="MaterialAlertDialog.MaterialComponents">
     <item name="backgroundInsetStart">@dimen/spacing_40</item>
     <item name="backgroundInsetEnd">@dimen/spacing_40</item>

@@ -738,9 +738,9 @@ class PatientSummaryScreen :
     val options = arrayOf(
         getString(R.string.smoking_status_dialog_option_yes),
         getString(R.string.smoking_status_dialog_option_no))
-    var selectedOption = -1
+    var selectedOption = 1
 
-    MaterialAlertDialogBuilder(requireContext())
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_CheckedItem)
         .setTitle(R.string.smoking_status_dialog_title)
         .setSingleChoiceItems(options, selectedOption) { _, indexSelected ->
           selectedOption = indexSelected

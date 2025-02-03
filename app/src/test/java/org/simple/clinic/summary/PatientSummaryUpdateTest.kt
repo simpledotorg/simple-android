@@ -86,7 +86,7 @@ class PatientSummaryUpdateTest {
   private val updateSpec = UpdateSpec(PatientSummaryUpdate(
       isPatientReassignmentFeatureEnabled = true,
       isPatientStatinNudgeV1Enabled = true,
-      isPatientStatinNudgeV2Enabled = true,
+      isNonLabBasedStatinNudgeEnabled = true,
   ))
 
   @Test
@@ -111,7 +111,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
 
     updateSpec
@@ -128,7 +128,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
 
     updateSpec
@@ -145,7 +145,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = true,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = true,
     ))
 
     updateSpec
@@ -1694,7 +1694,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false
+        isNonLabBasedStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1723,7 +1723,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false,
+        isNonLabBasedStatinNudgeEnabled = false,
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1752,7 +1752,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = false,
-        isPatientStatinNudgeV2Enabled = false
+        isNonLabBasedStatinNudgeEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -2142,7 +2142,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2174,7 +2174,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2206,7 +2206,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     updateSpec
         .given(defaultModel)
@@ -2238,7 +2238,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
@@ -2273,7 +2273,7 @@ class PatientSummaryUpdateTest {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
         isPatientStatinNudgeV1Enabled = true,
-        isPatientStatinNudgeV2Enabled = true
+        isNonLabBasedStatinNudgeEnabled = true
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 

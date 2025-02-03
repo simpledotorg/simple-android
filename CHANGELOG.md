@@ -57,6 +57,8 @@
 - Bump Sentry Android to v8.1.0
 - Bump Sentry Gradle plugin to v5.1.0
 - Show smoking status dialog for low and medium cvd risk.
+- Rename `patient_statin_nudge_v1` feature flag to `non_lab_based_statin_nudge`
+- Rename `cvd_risk_calculation_sheet_v0` feature flag to `non_lab_based_cvd_risk_calculation_sheet`
 
 ### Fixes
 

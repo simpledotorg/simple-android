@@ -31,6 +31,7 @@ class PatientSummaryUpdate(
     private val isPatientReassignmentFeatureEnabled: Boolean,
     private val isPatientStatinNudgeV1Enabled: Boolean,
     private val isNonLabBasedStatinNudgeEnabled: Boolean,
+    private val isLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -384,7 +385,9 @@ class PatientSummaryUpdate(
     val effects = mutableSetOf<PatientSummaryEffect>()
 
     when {
-      isNonLabBasedStatinNudgeEnabled || isPatientStatinNudgeV1Enabled -> {
+      isPatientStatinNudgeV1Enabled ||
+          isNonLabBasedStatinNudgeEnabled ||
+          isLabBasedStatinNudgeEnabled -> {
         effects.add(LoadStatinPrescriptionCheckInfo(patient = event.patientSummaryProfile.patient))
       }
     }

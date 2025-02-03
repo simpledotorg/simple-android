@@ -60,6 +60,7 @@
 ### Fixes
 
 - Fix app crashing occasionally when viewing all blood sugar history
+- Fix smoking status dialog ui
 
 ### Features
 

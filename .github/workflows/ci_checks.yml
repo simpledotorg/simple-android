@@ -10,7 +10,7 @@ on:
         description: True to run build checks
 
 concurrency:
-  group: ci-${{ github.head_ref }}
+  group: ci-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:

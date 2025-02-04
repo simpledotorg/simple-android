@@ -270,6 +270,7 @@ class PatientSummaryScreen :
         isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment),
         isPatientStatinNudgeV1Enabled = features.isEnabled(Feature.PatientStatinNudge),
         isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
+        isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
     )
   }
 

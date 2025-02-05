@@ -15,9 +15,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.CVDRiskCalculator
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -34,14 +35,13 @@ import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.UiEvent
-import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.clinic.TestData
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
 import java.time.LocalDate
 import java.util.Optional
@@ -221,6 +221,8 @@ class PatientSummaryScreenLogicTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
+        cvdRiskRepository = cvdRiskRepository,
+        patientAttributeRepository = patientAttributeRepository,
         country = TestData.country(),
         currentUser = { user },
         currentFacility = { facility },
@@ -230,10 +232,8 @@ class PatientSummaryScreenLogicTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        viewEffectsConsumer = viewEffectHandler::handle,
-        cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = CVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
-        patientAttributeRepository = patientAttributeRepository
+        nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(

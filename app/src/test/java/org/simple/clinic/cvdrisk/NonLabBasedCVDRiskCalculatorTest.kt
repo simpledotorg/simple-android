@@ -3,13 +3,14 @@ package org.simple.clinic.cvdrisk
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
 
-class CVDRiskCalculatorTest {
+class NonLabBasedCVDRiskCalculatorTest {
 
   private val nonLabBasedCVDRiskCalculationSheet = TestData.nonLabBasedCVDRiskCalculationSheet()
-  private val cvdRiskCalculator = CVDRiskCalculator(
+  private val cvdRiskCalculator = NonLabBasedCVDRiskCalculator(
       nonLabBasedCVDRiskCalculationSheet = { nonLabBasedCVDRiskCalculationSheet }
   )
 

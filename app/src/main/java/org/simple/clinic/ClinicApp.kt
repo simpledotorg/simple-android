@@ -102,8 +102,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
     crashReporterSinks.forEach(CrashReporter::addSink)
 
-    setupApplicationPerformanceMonitoring()
-
     Timber.plant(CrashBreadcrumbsTimberTree())
     RxJavaPlugins.setErrorHandler { error ->
       if (!error.canBeIgnoredSafely()) {
@@ -148,39 +146,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
           )
       )
     }
-  }
-
-  private fun setupApplicationPerformanceMonitoring() {
-    val samplingRate = remoteConfig
-        .double("datadog_sample_rate", 0.0)
-        .toFloat()
-        .clamp(0F, 100F)
-
-    val datadogConfig = Configuration
-        .Builder(
-            logsEnabled = false,
-            tracesEnabled = true,
-            crashReportsEnabled = false,
-            rumEnabled = true
-        )
-        .trackBackgroundRumEvents(true)
-        .trackLongTasks(5000)
-        .useViewTrackingStrategy(FragmentViewTrackingStrategy(
-            trackArguments = false,
-            supportFragmentComponentPredicate = ResolveScreenNamesForDatadog()
-        ))
-        .sampleRumSessions(samplingRate = samplingRate)
-        .build()
-    val credentials = Credentials(
-        clientToken = BuildConfig.DATADOG_CLIENT_TOKEN,
-        envName = BuildConfig.DATADOG_ENVIRONMENT,
-        variant = BuildConfig.FLAVOR,
-        rumApplicationId = BuildConfig.DATADOG_APPLICATION_ID,
-        serviceName = BuildConfig.DATADOG_SERVICE_NAME
-    )
-    Datadog.initialize(this, credentials, datadogConfig, TrackingConsent.GRANTED)
-    GlobalRum.registerIfAbsent(RumMonitor.Builder().build())
-    GlobalTracer.registerIfAbsent(AndroidTracer.Builder().build())
   }
 
   override fun getCameraXConfig(): CameraXConfig {

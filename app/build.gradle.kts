@@ -95,10 +95,8 @@ android {
     val datadogClientToken: String by project
     val datadogEnvironment: String by project
 
-    addManifestPlaceholders(mapOf(
-        "sentryDsn" to sentryDsn,
-        "sentryEnvironment" to sentryEnvironment
-    ))
+    buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
+    buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)

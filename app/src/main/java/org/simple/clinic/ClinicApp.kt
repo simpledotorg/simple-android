@@ -15,6 +15,12 @@ import com.datadog.android.tracing.AndroidTracer
 import io.opentracing.util.GlobalTracer
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import io.sentry.Hint
+import io.sentry.SentryEvent
+import io.sentry.SentryLevel
+import io.sentry.SentryOptions.BeforeSendCallback
+import io.sentry.android.core.SentryAndroid
+import io.sentry.android.fragment.FragmentLifecycleIntegration
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
 import org.simple.clinic.analytics.ResolveScreenNamesForDatadog
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
@@ -78,6 +84,8 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
 
+    setupSentry()
+
     databaseEncryptor
         .databaseEncryptionState
         .filter {
@@ -110,6 +118,36 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     SqlPerformanceReporter.addSink(SentrySqlPerformanceReportingSink())
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
+  }
+
+  private fun setupSentry() {
+    SentryAndroid.init(this) { options ->
+      options.dsn = BuildConfig.SENTRY_DSN
+      options.environment = BuildConfig.SENTRY_ENVIRONMENT
+
+      options.sampleRate = remoteConfig
+          .double("sentry_errors_sample_rate", 0.0)
+          .coerceIn(0.0, 1.0)
+      options.tracesSampleRate = remoteConfig
+          .double("sentry_traces_sample_rate", 0.0)
+          .coerceIn(0.0, 1.0)
+
+      options.beforeSend = BeforeSendCallback { event, hint ->
+        if (event.level != SentryLevel.DEBUG) {
+          event
+        } else {
+          null
+        }
+      }
+
+      options.addIntegration(
+          FragmentLifecycleIntegration(
+              application = this,
+              enableFragmentLifecycleBreadcrumbs = true,
+              enableAutoFragmentLifecycleTracing = true,
+          )
+      )
+    }
   }
 
   private fun setupApplicationPerformanceMonitoring() {

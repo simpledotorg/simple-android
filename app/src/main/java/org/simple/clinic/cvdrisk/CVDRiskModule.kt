@@ -38,8 +38,8 @@ class CVDRiskModule {
 
   @Provides
   @OptIn(ExperimentalStdlibApi::class)
-  fun cvdRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): CVDRiskCalculationSheet? {
-    val adapter = moshi.adapter<CVDRiskCalculationSheet>()
+  fun nonLabBasedCVDRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): GenderData<NonLabBasedRiskEntry>? {
+    val adapter = moshi.adapter<GenderData<NonLabBasedRiskEntry>>()
     val json = configReader.string("non_lab_based_cvd_risk_calculation_sheet", "{}")
 
     return try {

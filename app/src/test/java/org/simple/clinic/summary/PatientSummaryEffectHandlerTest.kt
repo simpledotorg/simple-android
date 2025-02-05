@@ -79,7 +79,7 @@ class PatientSummaryEffectHandlerTest {
       htnPrescriptions = listOf("amlodipine"),
       diabetesPrescriptions = listOf("metformin")
   )
-  private val cvdRiskCalculator = CVDRiskCalculator({ TestData.cvdRiskCalculationSheet() })
+  private val cvdRiskCalculator = CVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() }
 
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,

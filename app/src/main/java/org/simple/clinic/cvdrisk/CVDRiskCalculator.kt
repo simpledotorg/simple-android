@@ -8,12 +8,11 @@ import javax.inject.Inject
 
 @AppScope
 class CVDRiskCalculator @Inject constructor(
-    private val cvdRiskCalculationSheet: Lazy<CVDRiskCalculationSheet?>,
+    private val nonLabBasedCVDRiskCalculationSheet: Lazy<GenderData<NonLabBasedRiskEntry>?>,
 ) {
-
   fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
-      val riskEntries = getRiskEntries(cvdRiskInput) ?: return null
+      val riskEntries = getNonLabBasedRiskEntries(cvdRiskInput) ?: return null
 
       val systolicRange = getSystolicRange(systolic)
       val bmiRangeList = getBMIRangeList(bmi)
@@ -22,43 +21,43 @@ class CVDRiskCalculator @Inject constructor(
     }
   }
 
-  private fun getRiskEntries(cvdRiskInput: CVDRiskInput): List<RiskEntry>? {
+  private fun getNonLabBasedRiskEntries(cvdRiskInput: CVDRiskInput): List<NonLabBasedRiskEntry>? {
     with(cvdRiskInput) {
-      val sheet = cvdRiskCalculationSheet.get()
+      val sheet = nonLabBasedCVDRiskCalculationSheet.get()
       val genderData = sheet?.let { getGenderData(it, gender) }
       val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
       return smokingDataList?.let { getAgeRange(smokingDataList, age) }
     }
   }
 
-  private fun getGenderData(cvdRiskData: CVDRiskCalculationSheet, gender: Gender) = when (gender) {
+  private fun <T : RiskEntry> getGenderData(cvdRiskData: GenderData<T>, gender: Gender) = when (gender) {
     Gender.Female -> cvdRiskData.women
     Gender.Male -> cvdRiskData.men
     else -> null
   }
 
-  private fun getSmokingDataList(genderData: CVDRiskCategory, isSmoker: Answer) = when (isSmoker) {
-    Answer.Yes -> listOf(genderData.smoking)
-    Answer.No -> listOf(genderData.nonSmoking)
-    else -> listOf(genderData.nonSmoking, genderData.smoking)
+  private fun <T : RiskEntry> getSmokingDataList(smokingData: SmokingData<T>, isSmoker: Answer) = when (isSmoker) {
+    Answer.Yes -> listOf(smokingData.smoking)
+    Answer.No -> listOf(smokingData.nonSmoking)
+    else -> listOf(smokingData.nonSmoking, smokingData.smoking)
   }
 
-  private fun getAgeRange(smokingDataList: List<SmokingData>, age: Int): List<RiskEntry>? {
+  private fun <T : RiskEntry> getAgeRange(ageData: List<AgeData<T>>, age: Int): List<T>? {
     val ageToRiskMapping = mapOf(
-        40..44 to { data: SmokingData -> data.age40to44 },
-        45..49 to { data: SmokingData -> data.age45to49 },
-        50..54 to { data: SmokingData -> data.age50to54 },
-        55..59 to { data: SmokingData -> data.age55to59 },
-        60..64 to { data: SmokingData -> data.age60to64 },
-        65..69 to { data: SmokingData -> data.age65to69 },
-        70..74 to { data: SmokingData -> data.age70to74 }
+        40..44 to { data: AgeData<T> -> data.age40to44 },
+        45..49 to { data: AgeData<T> -> data.age45to49 },
+        50..54 to { data: AgeData<T> -> data.age50to54 },
+        55..59 to { data: AgeData<T> -> data.age55to59 },
+        60..64 to { data: AgeData<T> -> data.age60to64 },
+        65..69 to { data: AgeData<T> -> data.age65to69 },
+        70..74 to { data: AgeData<T> -> data.age70to74 }
     )
 
     val riskExtractor = ageToRiskMapping.entries
         .firstOrNull { age in it.key }
         ?.value ?: return null
 
-    return smokingDataList.mapNotNull(riskExtractor).flatten()
+    return ageData.mapNotNull(riskExtractor).flatten()
   }
 
   private fun getSystolicRange(sbp: Int) = when (sbp) {

@@ -232,7 +232,7 @@ class PatientSummaryScreenLogicTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = CVDRiskCalculator({ TestData.cvdRiskCalculationSheet() }),
+        cvdRiskCalculator = CVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
         patientAttributeRepository = patientAttributeRepository
     )
 

@@ -13,7 +13,7 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.CVDRiskCalculator
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
@@ -79,7 +79,7 @@ class PatientSummaryEffectHandlerTest {
       htnPrescriptions = listOf("amlodipine"),
       diabetesPrescriptions = listOf("metformin")
   )
-  private val cvdRiskCalculator = CVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() }
+  private val nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() }
 
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
@@ -92,6 +92,8 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
+      cvdRiskRepository = cvdRiskRepository,
+      patientAttributeRepository = patientAttributeRepository,
       country = TestData.country(),
       currentUser = { user },
       currentFacility = { facility },
@@ -101,10 +103,8 @@ class PatientSummaryEffectHandlerTest {
       prescriptionRepository = prescriptionRepository,
       cdssPilotFacilities = { emptyList() },
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-      cvdRiskRepository = cvdRiskRepository,
+      nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
       viewEffectsConsumer = viewEffectHandler::handle,
-      cvdRiskCalculator = cvdRiskCalculator,
-      patientAttributeRepository = patientAttributeRepository,
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -138,6 +138,8 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
+        cvdRiskRepository = cvdRiskRepository,
+        patientAttributeRepository = patientAttributeRepository,
         country = bangladesh,
         currentUser = { user },
         currentFacility = { facility },
@@ -146,11 +148,9 @@ class PatientSummaryEffectHandlerTest {
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
-        viewEffectsConsumer = viewEffectHandler::handle,
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = cvdRiskCalculator,
-        patientAttributeRepository = patientAttributeRepository,
+        nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+        viewEffectsConsumer = viewEffectHandler::handle,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -201,6 +201,8 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
+        cvdRiskRepository = cvdRiskRepository,
+        patientAttributeRepository = patientAttributeRepository,
         country = bangladesh,
         currentUser = { user },
         currentFacility = { facility },
@@ -210,10 +212,8 @@ class PatientSummaryEffectHandlerTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+        nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
-        cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = cvdRiskCalculator,
-        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
@@ -633,6 +633,8 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
+        cvdRiskRepository = cvdRiskRepository,
+        patientAttributeRepository = patientAttributeRepository,
         country = TestData.country(),
         currentUser = { user },
         currentFacility = { facility },
@@ -642,10 +644,8 @@ class PatientSummaryEffectHandlerTest {
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { cdssPilotFacilities },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        cvdRiskRepository = cvdRiskRepository,
+        nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
-        cvdRiskCalculator = cvdRiskCalculator,
-        patientAttributeRepository = patientAttributeRepository,
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
 
@@ -906,7 +906,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid,
     )) doReturn null
     whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
-       cvdRisk
+        cvdRisk
 
     //when
     testCase.dispatch(CalculateNonLabBasedCVDRisk(patient = patient))

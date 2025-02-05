@@ -49,4 +49,18 @@ class CVDRiskModule {
       null
     }
   }
+
+  @Provides
+  @OptIn(ExperimentalStdlibApi::class)
+  fun labBasedCVDRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): DiabetesData? {
+    val adapter = moshi.adapter<DiabetesData>()
+    val json = configReader.string("lab_based_cvd_risk_calculation_sheet", "{}")
+
+    return try {
+      adapter.fromJson(json)
+    } catch (e: Throwable) {
+      CrashReporter.report(e)
+      null
+    }
+  }
 }

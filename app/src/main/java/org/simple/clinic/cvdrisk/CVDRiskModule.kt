@@ -38,9 +38,23 @@ class CVDRiskModule {
 
   @Provides
   @OptIn(ExperimentalStdlibApi::class)
-  fun cvdRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): CVDRiskCalculationSheet? {
-    val adapter = moshi.adapter<CVDRiskCalculationSheet>()
+  fun nonLabBasedCVDRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): NonLabBasedCVDRiskCalculationSheet? {
+    val adapter = moshi.adapter<NonLabBasedCVDRiskCalculationSheet>()
     val json = configReader.string("non_lab_based_cvd_risk_calculation_sheet", "{}")
+
+    return try {
+      adapter.fromJson(json)
+    } catch (e: Throwable) {
+      CrashReporter.report(e)
+      null
+    }
+  }
+
+  @Provides
+  @OptIn(ExperimentalStdlibApi::class)
+  fun labBasedCVDRiskCalculationSheet(moshi: Moshi, configReader: ConfigReader): LabBasedCVDRiskCalculationSheet? {
+    val adapter = moshi.adapter<LabBasedCVDRiskCalculationSheet>()
+    val json = configReader.string("lab_based_cvd_risk_calculation_sheet", "{}")
 
     return try {
       adapter.fromJson(json)

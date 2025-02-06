@@ -13,7 +13,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
-import org.simple.clinic.cvdrisk.CVDRiskInput
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
@@ -189,7 +189,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             if (bloodPressure != null) {
               risk = nonLabBasedCVDRiskCalculator.calculateCvdRisk(
-                  CVDRiskInput(
+                  NonLabBasedCVDRiskInput(
                       gender = patient.gender,
                       age = patient.ageDetails.estimateAge(userClock),
                       systolic = bloodPressure.reading.systolic,

@@ -16,7 +16,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return exact risk for matching data`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Female,
         age = 40,
         systolic = 130,
@@ -30,7 +30,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return risk range when bmi is not specified`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Female,
         age = 40,
         systolic = 130,
@@ -43,7 +43,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return null when no matching data`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 80,
         systolic = 200,
@@ -56,7 +56,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should handle nonsmoking data correctly`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
         systolic = 125,
@@ -69,7 +69,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return risk range when smoking is unanswered`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
         systolic = 125,
@@ -82,7 +82,7 @@ class NonLabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return risk range when bmi and smoking is not specified`() {
-    val cvdRiskInput = CVDRiskInput(
+    val cvdRiskInput = NonLabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
         systolic = 125,

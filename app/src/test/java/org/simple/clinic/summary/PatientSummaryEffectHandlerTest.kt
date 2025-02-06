@@ -17,6 +17,7 @@ import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.StatinInfo
+import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -80,6 +81,7 @@ class PatientSummaryEffectHandlerTest {
       diabetesPrescriptions = listOf("metformin")
   )
   private val nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() }
+  private val labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator { TestData.labBasedCVDRiskCalculationSheet() }
 
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
@@ -104,6 +106,7 @@ class PatientSummaryEffectHandlerTest {
       cdssPilotFacilities = { emptyList() },
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
       nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+      labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
       viewEffectsConsumer = viewEffectHandler::handle,
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -150,6 +153,7 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+        labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -213,6 +217,7 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+        labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -645,6 +650,7 @@ class PatientSummaryEffectHandlerTest {
         cdssPilotFacilities = { cdssPilotFacilities },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+        labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
@@ -875,7 +881,7 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
-  fun `when calculate cvd risk effect is received, then calculate cvd risk`() {
+  fun `when calculate non lab based cvd risk effect is received, then calculate non lab based cvd risk`() {
     //given
     val patient = TestData.patient(
         uuid = patientUuid,
@@ -913,6 +919,44 @@ class PatientSummaryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(6, 6)))
+  }
+
+  @Test
+  fun `when calculate lab based cvd risk effect is received, then calculate lab based cvd risk`() {
+    //given
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        gender = Gender.Male,
+        status = PatientStatus.Active,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 40,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null,
+        )
+    )
+    val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
+    val bloodPressure = TestData.bloodPressureMeasurement(
+        UUID.fromString("3e8c246f-91b9-4f8c-81fe-91b67ac0a2d5"),
+        systolic = 130,
+        patientUuid = patientUuid
+    )
+    val bloodPressures = listOf(bloodPressure)
+    val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
+
+
+    whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid = patientUuid, limit = 1)) doReturn bloodPressures
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )) doReturn medicalHistory
+    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
+        cvdRisk
+
+    //when
+    testCase.dispatch(CalculateLabBasedCVDRisk(patient = patient))
+
+    //then
+    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(10, 10)))
   }
 
   @Test

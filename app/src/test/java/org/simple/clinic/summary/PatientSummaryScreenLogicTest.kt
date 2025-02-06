@@ -18,8 +18,9 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRepository
+import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -233,6 +234,7 @@ class PatientSummaryScreenLogicTest {
         cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
+        labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator() { TestData.labBasedCVDRiskCalculationSheet() },
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

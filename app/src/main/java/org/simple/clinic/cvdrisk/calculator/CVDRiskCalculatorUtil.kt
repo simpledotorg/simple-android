@@ -9,9 +9,9 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.Gender
 
 object CVDRiskCalculatorUtil {
-  fun <T : RiskEntry> getGenderData(cvdRiskData: GenderData<T>, gender: Gender) = when (gender) {
-    Gender.Female -> cvdRiskData.women
-    Gender.Male -> cvdRiskData.men
+  fun <T : RiskEntry> getGenderData(genderData: GenderData<T>, gender: Gender) = when (gender) {
+    Gender.Female -> genderData.women
+    Gender.Male -> genderData.men
     else -> null
   }
 

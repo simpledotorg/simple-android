@@ -14,11 +14,12 @@ import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.cvdrisk.CVDRisk
-import org.simple.clinic.cvdrisk.CVDRiskCalculationSheet
-import org.simple.clinic.cvdrisk.CVDRiskCategory
 import org.simple.clinic.cvdrisk.CVDRiskRange
-import org.simple.clinic.cvdrisk.RiskEntry
-import org.simple.clinic.cvdrisk.SmokingData
+import org.simple.clinic.cvdrisk.AgeData
+import org.simple.clinic.cvdrisk.Men
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskCalculationSheet
+import org.simple.clinic.cvdrisk.NonLabBasedRiskEntry
+import org.simple.clinic.cvdrisk.Women
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Answer.Yes
 import org.simple.clinic.drugs.search.Drug
@@ -1691,82 +1692,142 @@ object TestData {
     )
   }
 
-  fun cvdRiskCalculationSheet(): CVDRiskCalculationSheet {
-    val smokingDataWomen = SmokingData(
+  fun nonLabBasedCVDRiskCalculationSheet(): NonLabBasedCVDRiskCalculationSheet {
+    val smokingDataWomen = AgeData(
         age40to44 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
         ),
-        age45to49 = null,
-        age50to54 = null,
-        age55to59 = null,
+        age45to49 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+        ),
+        age50to54 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+        ),
+        age55to59 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+        ),
         age60to64 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 21),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 18),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 12),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 13),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 14)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 21),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 18),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 12),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 13),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 14)
         ),
-        age65to69 = null,
-        age70to74 = null
+        age65to69 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+        ),
+        age70to74 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 11),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 5),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 6)
+        )
     )
 
-    val nonSmokingDataWomen = SmokingData(
+    val nonSmokingDataWomen = AgeData(
         age40to44 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
         ),
-        age45to49 = null,
-        age50to54 = null,
-        age55to59 = null,
+        age45to49 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+        ),
+        age50to54 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+        ),
+        age55to59 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+        ),
         age60to64 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 13),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 11),
-            RiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 7),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 8),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 13),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 11),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 7),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 8),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         ),
-        age65to69 = null,
-        age70to74 = null
+        age65to69 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+        ),
+        age70to74 = listOf(
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 4),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "25 - 29", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 2),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 2)
+        )
     )
 
-    val womenGenderData = CVDRiskCategory(
+    val womenGenderData = Women(
         smoking = smokingDataWomen,
         nonSmoking = nonSmokingDataWomen
     )
 
     val smokingDataMen = smokingDataWomen.copy(
         age40to44 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 10),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
-            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 6),
-            RiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 7),
-            RiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 10),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 9),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 6),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "30 - 35", risk = 7),
+            NonLabBasedRiskEntry(systolic = "120 - 139", bmi = "> 35", risk = 8)
         )
     )
 
     val nonSmokingDataMen = nonSmokingDataWomen.copy(
         age40to44 = listOf(
-            RiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
-            RiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 5),
-            RiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 3),
-            RiskEntry(systolic = "140 - 159", bmi = "30 - 35", risk = 3),
-            RiskEntry(systolic = "140 - 159", bmi = "> 35", risk = 4)
+            NonLabBasedRiskEntry(systolic = ">= 180", bmi = "< 20", risk = 5),
+            NonLabBasedRiskEntry(systolic = "160 - 179", bmi = "20 - 24", risk = 5),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "25 - 29", risk = 3),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "30 - 35", risk = 3),
+            NonLabBasedRiskEntry(systolic = "140 - 159", bmi = "> 35", risk = 4)
         )
     )
 
-    val menGenderData = CVDRiskCategory(
+    val menGenderData = Men(
         smoking = smokingDataMen,
         nonSmoking = nonSmokingDataMen
     )
 
-    return CVDRiskCalculationSheet(
+    return NonLabBasedCVDRiskCalculationSheet(
         women = womenGenderData,
         men = menGenderData
     )

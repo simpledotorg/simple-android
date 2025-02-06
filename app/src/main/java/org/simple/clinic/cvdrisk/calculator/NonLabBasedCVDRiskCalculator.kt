@@ -1,7 +1,7 @@
 package org.simple.clinic.cvdrisk.calculator
 
 import dagger.Lazy
-import org.simple.clinic.cvdrisk.CVDRiskInput
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.GenderData
 import org.simple.clinic.cvdrisk.NonLabBasedRiskEntry
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class NonLabBasedCVDRiskCalculator @Inject constructor(
     private val nonLabBasedCVDRiskCalculationSheet: Lazy<GenderData<NonLabBasedRiskEntry>?>,
 ) {
-  fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): CVDRiskRange? {
+  fun calculateCvdRisk(cvdRiskInput: NonLabBasedCVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
       val riskEntries = getNonLabBasedRiskEntries(cvdRiskInput) ?: return null
 
@@ -28,7 +28,7 @@ class NonLabBasedCVDRiskCalculator @Inject constructor(
     }
   }
 
-  private fun getNonLabBasedRiskEntries(cvdRiskInput: CVDRiskInput): List<NonLabBasedRiskEntry>? {
+  private fun getNonLabBasedRiskEntries(cvdRiskInput: NonLabBasedCVDRiskInput): List<NonLabBasedRiskEntry>? {
     with(cvdRiskInput) {
       val sheet = nonLabBasedCVDRiskCalculationSheet.get()
       val genderData = sheet?.let { getGenderData(it, gender) }

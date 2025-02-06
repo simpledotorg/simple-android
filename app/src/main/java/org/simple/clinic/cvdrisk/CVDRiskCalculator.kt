@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @AppScope
 class CVDRiskCalculator @Inject constructor(
-    private val nonLabBasedCVDRiskCalculationSheet: Lazy<GenderData<NonLabBasedRiskEntry>?>,
+    private val nonLabBasedCVDRiskCalculationSheet: Lazy<NonLabBasedCVDRiskCalculationSheet?>,
 ) {
   fun calculateCvdRisk(cvdRiskInput: CVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
@@ -23,14 +23,14 @@ class CVDRiskCalculator @Inject constructor(
 
   private fun getNonLabBasedRiskEntries(cvdRiskInput: CVDRiskInput): List<NonLabBasedRiskEntry>? {
     with(cvdRiskInput) {
-      val sheet = nonLabBasedCVDRiskCalculationSheet.get()
-      val genderData = sheet?.let { getGenderData(it, gender) }
+      val sheet = nonLabBasedCVDRiskCalculationSheet.get() ?: return null
+      val genderData = getGenderData(sheet, gender)
       val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
       return smokingDataList?.let { getAgeRange(smokingDataList, age) }
     }
   }
 
-  private fun <T : RiskEntry> getGenderData(cvdRiskData: GenderData<T>, gender: Gender) = when (gender) {
+  private fun getGenderData(cvdRiskData: NonLabBasedCVDRiskCalculationSheet, gender: Gender) = when (gender) {
     Gender.Female -> cvdRiskData.women
     Gender.Male -> cvdRiskData.men
     else -> null
@@ -57,7 +57,7 @@ class CVDRiskCalculator @Inject constructor(
         .firstOrNull { age in it.key }
         ?.value ?: return null
 
-    return ageData.mapNotNull(riskExtractor).flatten()
+    return ageData.map(riskExtractor).flatten()
   }
 
   private fun getSystolicRange(sbp: Int) = when (sbp) {

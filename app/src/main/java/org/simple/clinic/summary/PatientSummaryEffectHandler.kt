@@ -12,11 +12,13 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
-import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
+import org.simple.clinic.cvdrisk.LabBasedCVDRiskInput
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.StatinInfo
+import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
@@ -72,6 +74,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     private val nonLabBasedCVDRiskCalculator: NonLabBasedCVDRiskCalculator,
+    private val labBasedCVDRiskCalculator: LabBasedCVDRiskCalculator,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -105,6 +108,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .addTransformer(LoadStatinPrescriptionCheckInfo::class.java, loadStatinPrescriptionCheckInfo())
         .addTransformer(CalculateNonLabBasedCVDRisk::class.java, calculateNonLabBasedCVDRisk())
+        .addTransformer(CalculateLabBasedCVDRisk::class.java, calculateLabBasedCVDRisk())
         .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
         .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
@@ -195,6 +199,41 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                       systolic = bloodPressure.reading.systolic,
                       isSmoker = medicalHistory.isSmoking,
                       bmi = patientAttribute?.bmiReading?.calculateBMI(),
+                  )
+              )
+            }
+
+            val existingCvdRisk = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)
+            CVDRiskCalculated(existingCvdRisk, risk)
+          }
+    }
+  }
+
+  private fun calculateLabBasedCVDRisk(): ObservableTransformer<CalculateLabBasedCVDRisk, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val patient = effect.patient
+            val bloodPressure = bloodPressureRepository
+                .newestMeasurementsForPatientImmediate(patient.uuid, 1).firstOrNull()
+
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = patient.uuid
+            )
+
+            var risk: CVDRiskRange? = null
+
+            if (bloodPressure != null) {
+              risk = labBasedCVDRiskCalculator.calculateCvdRisk(
+                  LabBasedCVDRiskInput(
+                      gender = patient.gender,
+                      age = patient.ageDetails.estimateAge(userClock),
+                      systolic = bloodPressure.reading.systolic,
+                      isSmoker = medicalHistory.isSmoking,
+                      diagnosedWithDiabetes = medicalHistory.diagnosedWithDiabetes,
+                      cholesterol = null //Update once the value is available in medical history
                   )
               )
             }

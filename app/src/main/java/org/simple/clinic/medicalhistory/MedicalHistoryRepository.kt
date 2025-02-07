@@ -34,10 +34,12 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = Unanswered,
         diagnosedWithDiabetes = Unanswered,
         isSmoking = Unanswered,
+        cholesterol = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
-        deletedAt = null)
+        deletedAt = null
+    )
 
     return dao.historyForPatient(patientUuid)
         .toObservable()
@@ -73,6 +75,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = Unanswered,
         diagnosedWithDiabetes = Unanswered,
         isSmoking = Unanswered,
+        cholesterol = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -97,6 +100,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
         diagnosedWithDiabetes = historyEntry.hasDiabetes,
         isSmoking = historyEntry.isSmoking,
+        cholesterol = null,
         syncStatus = SyncStatus.PENDING,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -162,6 +166,7 @@ class MedicalHistoryRepository @Inject constructor(
           hasHadKidneyDisease = hasHadKidneyDisease,
           diagnosedWithDiabetes = hasDiabetes,
           isSmoking = isSmoking,
+          cholesterol = cholesterol,
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,

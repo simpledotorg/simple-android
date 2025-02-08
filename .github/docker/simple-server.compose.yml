@@ -15,7 +15,10 @@ services:
       - "6379"
 
   server:
-    image: simpledotorg/server:latest
+    container_name: simple-server
+    build:
+      context: https://github.com/simpledotorg/simple-server.git
+      dockerfile: ./.docker/dev.Dockerfile
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
     expose:
       - "3000"
@@ -32,3 +35,14 @@ services:
       CALL_SESSION_REDIS_HOST: redis
       RAILS_CACHE_REDIS_URL: redis://
       SIDEKIQ_REDIS_HOST: redis
+    networks:
+      - simple-network
+      - default
+
+networks:
+  simple-network:
+    driver: bridge
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

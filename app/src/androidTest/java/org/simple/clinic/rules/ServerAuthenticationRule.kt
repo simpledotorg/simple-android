@@ -27,6 +27,7 @@ import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.toNullable
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -128,11 +129,15 @@ class ServerAuthenticationRule : TestRule {
 
     // Even though the OTP does not change for QA users, the server checks whether an OTP for
     // a user has been consumed when we make the login call.
-    usersApi.activate(ActivateUserRequest.create(userUuid, userPin)).execute()
+    val result = usersApi.activate(ActivateUserRequest.create(userUuid, userPin)).execute()
+    println("Activate result: " + result.message())
 
     usersApi
         .login(loginRequest)
-        .flatMapCompletable { userSession.storeUserAndAccessToken(it.loggedInUser, it.accessToken) }
+        .flatMapCompletable {
+          println("Login Response: $it")
+          userSession.storeUserAndAccessToken(it.loggedInUser, it.accessToken)
+        }
         .blockingAwait()
 
     verifyAccessTokenIsPresent()

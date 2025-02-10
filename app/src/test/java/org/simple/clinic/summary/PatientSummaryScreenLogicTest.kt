@@ -232,7 +232,7 @@ class PatientSummaryScreenLogicTest {
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle,
         cvdRiskRepository = cvdRiskRepository,
-        cvdRiskCalculator = CVDRiskCalculator({ TestData.cvdRiskCalculationSheet() }),
+        cvdRiskCalculator = CVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
         patientAttributeRepository = patientAttributeRepository
     )
 
@@ -243,7 +243,8 @@ class PatientSummaryScreenLogicTest {
         update = PatientSummaryUpdate(
             isPatientReassignmentFeatureEnabled = false,
             isPatientStatinNudgeV1Enabled = false,
-            isNonLabBasedStatinNudgeEnabled = false
+            isNonLabBasedStatinNudgeEnabled = false,
+            isLabBasedStatinNudgeEnabled = false,
         ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render

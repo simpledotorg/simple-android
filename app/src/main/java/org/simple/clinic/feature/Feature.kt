@@ -26,5 +26,6 @@ enum class Feature(
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   PatientReassignment(false, "patient_reassignment_v0"),
   PatientStatinNudge(false, "patient_statin_nudge_v0"),
-  NonLabBasedStatinNudge(false, "non_lab_based_statin_nudge")
+  NonLabBasedStatinNudge(false, "non_lab_based_statin_nudge"),
+  LabBasedStatinNudge(false, "lab_based_statin_nudge")
 }

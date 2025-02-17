@@ -61,7 +61,8 @@
 - Rename `cvd_risk_calculation_sheet_v0` feature flag to `non_lab_based_cvd_risk_calculation_sheet`
 - Add `lab_based_statin_nudge` feature flag.
 - Bug fixes in CI workflows
-- Fetch `lab_based_cvd_risk_calculation_sheet` from remote config.
+- Fetch `lab_based_cvd_risk_calculation_sheet` from remote config
+- Add `cholesterol_value` to `MedicalHistory` table
 
 ### Fixes
 

@@ -58,6 +58,9 @@ data class MedicalHistory(
 
     val isSmoking: Answer,
 
+    @ColumnInfo(name = "cholesterol_value")
+    val cholesterol: Float?,
+
     val syncStatus: SyncStatus,
 
     val createdAt: Instant,

@@ -2,19 +2,11 @@ package org.simple.clinic.cvdrisk.calculator
 
 import org.simple.clinic.cvdrisk.AgeData
 import org.simple.clinic.cvdrisk.CVDRiskRange
-import org.simple.clinic.cvdrisk.GenderData
 import org.simple.clinic.cvdrisk.RiskEntry
 import org.simple.clinic.cvdrisk.SmokingData
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.patient.Gender
 
 object CVDRiskCalculatorUtil {
-  fun <T : RiskEntry> getGenderData(genderData: GenderData<T>, gender: Gender) = when (gender) {
-    Gender.Female -> genderData.women
-    Gender.Male -> genderData.men
-    else -> null
-  }
-
   fun <T : RiskEntry> getSmokingDataList(smokingData: SmokingData<T>, isSmoker: Answer) = when (isSmoker) {
     Answer.Yes -> listOf(smokingData.smoking)
     Answer.No -> listOf(smokingData.nonSmoking)
@@ -33,7 +25,7 @@ object CVDRiskCalculatorUtil {
     )
 
     val riskExtractor = ageToRiskMapping.entries.firstOrNull { age in it.key }?.value ?: return null
-    return ageData.mapNotNull(riskExtractor).flatten()
+    return ageData.map(riskExtractor).flatten()
   }
 
   fun getSystolicRange(sbp: Int) = when (sbp) {

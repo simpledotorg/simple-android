@@ -1,21 +1,21 @@
 package org.simple.clinic.cvdrisk.calculator
 
 import dagger.Lazy
-import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.CVDRiskRange
-import org.simple.clinic.cvdrisk.GenderData
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskCalculationSheet
+import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.NonLabBasedRiskEntry
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.formatRisk
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getAgeRange
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getGenderData
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSmokingDataList
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSystolicRange
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.patient.Gender
 import javax.inject.Inject
 
 @AppScope
 class NonLabBasedCVDRiskCalculator @Inject constructor(
-    private val nonLabBasedCVDRiskCalculationSheet: Lazy<GenderData<NonLabBasedRiskEntry>?>,
+    private val nonLabBasedCVDRiskCalculationSheet: Lazy<NonLabBasedCVDRiskCalculationSheet?>,
 ) {
   fun calculateCvdRisk(cvdRiskInput: NonLabBasedCVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
@@ -35,6 +35,12 @@ class NonLabBasedCVDRiskCalculator @Inject constructor(
       val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
       return smokingDataList?.let { getAgeRange(smokingDataList, age) }
     }
+  }
+
+  private fun getGenderData(genderData: NonLabBasedCVDRiskCalculationSheet, gender: Gender) = when (gender) {
+    Gender.Female -> genderData.women
+    Gender.Male -> genderData.men
+    else -> null
   }
 
   private fun getBMIRangeList(bmi: Float?): List<String> {

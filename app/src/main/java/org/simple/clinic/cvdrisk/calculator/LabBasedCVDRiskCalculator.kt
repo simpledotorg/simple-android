@@ -2,21 +2,21 @@ package org.simple.clinic.cvdrisk.calculator
 
 import dagger.Lazy
 import org.simple.clinic.cvdrisk.CVDRiskRange
-import org.simple.clinic.cvdrisk.DiabetesData
+import org.simple.clinic.cvdrisk.LabBasedCVDRiskCalculationSheet
 import org.simple.clinic.cvdrisk.LabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.LabBasedRiskEntry
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.formatRisk
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getAgeRange
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getGenderData
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSmokingDataList
 import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSystolicRange
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.patient.Gender
 import javax.inject.Inject
 
 @AppScope
 class LabBasedCVDRiskCalculator @Inject constructor(
-    private val labBasedCVDRiskCalculationSheet: Lazy<DiabetesData?>,
+    private val labBasedCVDRiskCalculationSheet: Lazy<LabBasedCVDRiskCalculationSheet?>,
 ) {
     fun calculateCvdRisk(cvdRiskInput: LabBasedCVDRiskInput): CVDRiskRange? {
         with(cvdRiskInput) {
@@ -41,7 +41,13 @@ class LabBasedCVDRiskCalculator @Inject constructor(
         }
     }
 
-    private fun getDiabetesData(diabetesData: DiabetesData, answer: Answer) =
+  private fun  getGenderData(genderData: LabBasedCVDRiskCalculationSheet.DiabetesRisk, gender: Gender) = when (gender) {
+    Gender.Female -> genderData.women
+    Gender.Male -> genderData.men
+    else -> null
+  }
+
+    private fun getDiabetesData(diabetesData: LabBasedCVDRiskCalculationSheet, answer: Answer) =
         when (answer) {
             Answer.Yes -> diabetesData.diabetes
             Answer.No -> diabetesData.noDiabetes

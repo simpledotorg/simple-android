@@ -6,17 +6,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class LabBasedCVDRiskCalculationSheet(
     val diabetes: DiabetesRisk,
-    @Json(name = "nodiabetes") val noDiabetes: NoDiabetesRisk,
+    @Json(name = "nodiabetes") val noDiabetes: DiabetesRisk,
 ) : CVDRiskCalculationSheet {
 
   @JsonClass(generateAdapter = true)
   data class DiabetesRisk(
-      val women: Women<LabBasedRiskEntry>,
-      val men: Men<LabBasedRiskEntry>
-  )
-
-  @JsonClass(generateAdapter = true)
-  data class NoDiabetesRisk(
       val women: Women<LabBasedRiskEntry>,
       val men: Men<LabBasedRiskEntry>
   )
@@ -26,25 +20,25 @@ data class LabBasedCVDRiskCalculationSheet(
 data class NonLabBasedCVDRiskCalculationSheet(
     val women: Women<NonLabBasedRiskEntry>,
     val men: Men<NonLabBasedRiskEntry>
-): CVDRiskCalculationSheet
+) : CVDRiskCalculationSheet
 
 sealed interface CVDRiskCalculationSheet
 
 @JsonClass(generateAdapter = true)
-data class Women<T: RiskEntry>(
+data class Women<T : RiskEntry>(
     override val smoking: AgeData<T>,
     @Json(name = "nonsmoking")
     override val nonSmoking: AgeData<T>
-): SmokingData<T>
+) : SmokingData<T>
 
 @JsonClass(generateAdapter = true)
-data class Men<T: RiskEntry>(
+data class Men<T : RiskEntry>(
     override val smoking: AgeData<T>,
     @Json(name = "nonsmoking")
     override val nonSmoking: AgeData<T>
-): SmokingData<T>
+) : SmokingData<T>
 
-sealed interface SmokingData<T: RiskEntry> {
+sealed interface SmokingData<T : RiskEntry> {
   val smoking: AgeData<T>
   val nonSmoking: AgeData<T>
 }

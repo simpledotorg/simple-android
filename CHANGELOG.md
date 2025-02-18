@@ -64,6 +64,7 @@
 - Add `cholesterol_value` to `MedicalHistory` table
 - Bump AGP to v8.8.1
 - Fix JSON variable name in non-lab based statin calculation sheet
+- Add `LabBasedCVDRiskCalculator` and effect to calculate lab based cvd risk.
 
 ### Fixes
 

@@ -33,12 +33,14 @@ sealed interface CVDRiskCalculationSheet
 @JsonClass(generateAdapter = true)
 data class Women<T: RiskEntry>(
     override val smoking: AgeData<T>,
+    @Json(name = "nonsmoking")
     override val nonSmoking: AgeData<T>
 ): SmokingData<T>
 
 @JsonClass(generateAdapter = true)
 data class Men<T: RiskEntry>(
     override val smoking: AgeData<T>,
+    @Json(name = "nonsmoking")
     override val nonSmoking: AgeData<T>
 ): SmokingData<T>
 

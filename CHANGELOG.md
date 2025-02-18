@@ -19,7 +19,6 @@
 - Bump AndroidX Annotation to v1.9.1
 - Upload generated mapping file to Sentry
 - Bump ConstraintLayout to v2.2.0
-- Bump AGP to v8.8.0
 - Add `isSmoking` in `MedicalHistory` table
 - Add `PatientAttribute` sync resource
 - Add `CVDRisk` sync resource
@@ -63,6 +62,7 @@
 - Bug fixes in CI workflows
 - Fetch `lab_based_cvd_risk_calculation_sheet` from remote config
 - Add `cholesterol_value` to `MedicalHistory` table
+- Bump AGP to v8.8.1
 
 ### Fixes
 

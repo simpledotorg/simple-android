@@ -1,8 +1,8 @@
 package org.simple.clinic.summary.addcholesterol
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class CholesterolEntryUpdate(
@@ -18,19 +18,25 @@ class CholesterolEntryUpdate(
   }
 
   private fun onSaveClicked(model: CholesterolEntryModel): Next<CholesterolEntryModel, CholesterolEntryEffect> {
-    val effects = mutableSetOf<CholesterolEntryEffect>()
-
-    when {
+    return when {
       model.cholesterolValue < minReqCholesterol -> {
-        effects.add(ShowReqMinCholesterolValidationError)
+        dispatch(ShowReqMinCholesterolValidationError)
       }
 
       model.cholesterolValue > maxReqCholesterol -> {
-        effects.add(ShowReqMaxCholesterolValidationError)
+        dispatch(ShowReqMaxCholesterolValidationError)
+      }
+
+      else -> {
+        next(
+            model.savingCholesterol(),
+            SaveCholesterol(
+                patientUuid = model.patientUUID,
+                cholesterolValue = model.cholesterolValue
+            )
+        )
       }
     }
-
-    return dispatch(effects)
   }
 
   private fun cholesterolChanged(model: CholesterolEntryModel, event: CholesterolChanged): Next<CholesterolEntryModel, CholesterolEntryEffect> {

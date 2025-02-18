@@ -1,18 +1,30 @@
 package org.simple.clinic.summary.addcholesterol
 
+import org.simple.clinic.summary.addcholesterol.CholesterolEntrySaveState.NOT_SAVING_CHOLESTEROL
+import org.simple.clinic.summary.addcholesterol.CholesterolEntrySaveState.SAVING_CHOLESTEROL
+import java.util.UUID
+
 data class CholesterolEntryModel(
-    val cholesterolValue: Float
+    val patientUUID: UUID,
+    val cholesterolValue: Float,
+    val cholesterolSaveState: CholesterolEntrySaveState,
 ) {
 
   companion object {
-    fun create(): CholesterolEntryModel {
+    fun create(patientUUID: UUID): CholesterolEntryModel {
       return CholesterolEntryModel(
-          cholesterolValue = 0f
+          patientUUID = patientUUID,
+          cholesterolValue = 0f,
+          cholesterolSaveState = NOT_SAVING_CHOLESTEROL,
       )
     }
   }
 
   fun cholesterolChanged(cholesterolValue: Float): CholesterolEntryModel {
     return copy(cholesterolValue = cholesterolValue)
+  }
+
+  fun savingCholesterol(): CholesterolEntryModel {
+    return copy(cholesterolSaveState = SAVING_CHOLESTEROL)
   }
 }

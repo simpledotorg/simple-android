@@ -6,10 +6,14 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import java.util.UUID
 
 class CholesterolEntryUpdateTest {
 
-  private val defaultModel = CholesterolEntryModel.create()
+  private val patientUuid = UUID.fromString("74cf8bf8-2a82-4cd0-a685-d1c3d10c42d9")
+  private val defaultModel = CholesterolEntryModel.create(
+      patientUUID = patientUuid
+  )
   private val updateSpec = UpdateSpec(
       CholesterolEntryUpdate()
   )
@@ -47,6 +51,22 @@ class CholesterolEntryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowReqMaxCholesterolValidationError)
+        ))
+  }
+
+  @Test
+  fun `when cholesterol value is within range and save is clicked, then save the cholesterol value`() {
+    val cholesterolValue = 400f
+    updateSpec
+        .given(defaultModel.cholesterolChanged(cholesterolValue))
+        .whenEvent(SaveClicked)
+        .then(assertThatNext(
+            hasModel(
+                defaultModel
+                    .cholesterolChanged(cholesterolValue)
+                    .savingCholesterol()
+            ),
+            hasEffects(SaveCholesterol(patientUuid, cholesterolValue))
         ))
   }
 }

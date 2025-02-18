@@ -63,6 +63,8 @@ data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummar
 
 data class CalculateNonLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
+data class CalculateLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
+
 data class SaveCVDRisk(
     val patientUuid: UUID,
     val cvdRiskRange: CVDRiskRange

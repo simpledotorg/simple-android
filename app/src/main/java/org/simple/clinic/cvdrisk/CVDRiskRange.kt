@@ -37,6 +37,15 @@ data class CVDRiskRange(
   }
 
   companion object {
+
+    fun from(risks: List<Int>): CVDRiskRange? {
+      return when {
+        risks.isEmpty() -> null
+        risks.size == 1 -> CVDRiskRange(min = risks.first(), max = risks.first())
+        else -> CVDRiskRange(risks.min(), risks.max())
+      }
+    }
+
     fun parseRiskRange(risk: String): CVDRiskRange {
       val risks = risk.split("-").map { it.trim() }
       return when (risks.size) {

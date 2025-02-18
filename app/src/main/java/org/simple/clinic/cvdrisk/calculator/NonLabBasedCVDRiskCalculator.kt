@@ -5,10 +5,6 @@ import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskCalculationSheet
 import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.NonLabBasedRiskEntry
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.formatRisk
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getAgeRange
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSmokingDataList
-import org.simple.clinic.cvdrisk.calculator.CVDRiskCalculatorUtil.getSystolicRange
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.Gender
 import javax.inject.Inject
@@ -20,11 +16,12 @@ class NonLabBasedCVDRiskCalculator @Inject constructor(
   fun calculateCvdRisk(cvdRiskInput: NonLabBasedCVDRiskInput): CVDRiskRange? {
     with(cvdRiskInput) {
       val riskEntries = getNonLabBasedRiskEntries(cvdRiskInput) ?: return null
-
-      val systolicRange = getSystolicRange(systolic)
       val bmiRangeList = getBMIRangeList(bmi)
-      val risks = riskEntries.filter { it.systolic == systolicRange && it.bmi in bmiRangeList }.map { it.risk }
-      return formatRisk(risks)
+      val risks = riskEntries
+          .filter { it.isInSystolicRange(systolic) && it.bmi in bmiRangeList }
+          .map { it.risk }
+
+      return CVDRiskRange.from(risks)
     }
   }
 
@@ -32,8 +29,9 @@ class NonLabBasedCVDRiskCalculator @Inject constructor(
     with(cvdRiskInput) {
       val sheet = nonLabBasedCVDRiskCalculationSheet.get()
       val genderData = sheet?.let { getGenderData(it, gender) }
-      val smokingDataList = genderData?.let { getSmokingDataList(it, isSmoker) }
-      return smokingDataList?.let { getAgeRange(smokingDataList, age) }
+      val smokingDataList = genderData?.ageDataForSmokingStatus(isSmoker)
+
+      return smokingDataList?.flatMap { it.riskForAge(age) }
     }
   }
 

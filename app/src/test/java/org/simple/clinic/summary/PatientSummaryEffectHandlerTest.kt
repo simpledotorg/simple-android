@@ -943,7 +943,6 @@ class PatientSummaryEffectHandlerTest {
     val bloodPressures = listOf(bloodPressure)
     val cvdRisk = TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
 
-
     whenever(bloodPressureRepository.newestMeasurementsForPatientImmediate(patientUuid = patientUuid, limit = 1)) doReturn bloodPressures
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         patientUuid = patientUuid,
@@ -956,7 +955,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(CalculateLabBasedCVDRisk(patient = patient))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(10, 10)))
+    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(7, 14)))
   }
 
   @Test

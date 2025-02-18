@@ -7,6 +7,7 @@ import org.simple.clinic.mobius.next
 
 class CholesterolEntryUpdate(
     private val minReqCholesterol: Float = 25f,
+    private val maxReqCholesterol: Float = 1000f,
 ) : Update<CholesterolEntryModel, CholesterolEntryEvent, CholesterolEntryEffect> {
 
   override fun update(model: CholesterolEntryModel, event: CholesterolEntryEvent): Next<CholesterolEntryModel, CholesterolEntryEffect> {
@@ -22,6 +23,10 @@ class CholesterolEntryUpdate(
     when {
       model.cholesterolValue < minReqCholesterol -> {
         effects.add(ShowReqMinCholesterolValidationError)
+      }
+
+      model.cholesterolValue > maxReqCholesterol -> {
+        effects.add(ShowReqMaxCholesterolValidationError)
       }
     }
 

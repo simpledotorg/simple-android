@@ -37,4 +37,16 @@ class CholesterolEntryUpdateTest {
             hasEffects(ShowReqMinCholesterolValidationError)
         ))
   }
+
+  @Test
+  fun `when cholesterol value is over max range and save is clicked then show validation error`() {
+    val cholesterolValue = 1001f
+    updateSpec
+        .given(defaultModel.cholesterolChanged(cholesterolValue))
+        .whenEvent(SaveClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowReqMaxCholesterolValidationError)
+        ))
+  }
 }

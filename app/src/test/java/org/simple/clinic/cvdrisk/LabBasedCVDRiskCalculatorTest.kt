@@ -16,6 +16,7 @@ class LabBasedCVDRiskCalculatorTest {
 
   @Test
   fun `should return exact risk for matching data`() {
+    val expectedRiskRange = CVDRiskRange(7, 7)
     val cvdRiskInput = LabBasedCVDRiskInput(
         gender = Gender.Female,
         age = 40,
@@ -24,13 +25,14 @@ class LabBasedCVDRiskCalculatorTest {
         diagnosedWithDiabetes = Answer.Yes,
         cholesterol = 3f
     )
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
 
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(10, 10), risk)
+    assertEquals(expectedRiskRange, riskRange)
   }
 
   @Test
   fun `should return risk range when cholesterol is not specified`() {
+    val expectedRiskRange = CVDRiskRange(7, 13)
     val cvdRiskInput = LabBasedCVDRiskInput(
         gender = Gender.Female,
         age = 40,
@@ -38,8 +40,9 @@ class LabBasedCVDRiskCalculatorTest {
         isSmoker = Answer.Yes,
         diagnosedWithDiabetes = Answer.Yes,
     )
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(10, 10), risk)
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
+
+    assertEquals(expectedRiskRange, riskRange)
   }
 
   @Test
@@ -52,12 +55,14 @@ class LabBasedCVDRiskCalculatorTest {
         cholesterol = 5.9f,
         diagnosedWithDiabetes = Answer.Yes,
     )
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(null, risk)
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
+
+    assertEquals(null, riskRange)
   }
 
   @Test
   fun `should handle nonsmoking data correctly`() {
+    val expectedRiskRange = CVDRiskRange(4, 4)
     val cvdRiskInput = LabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
@@ -66,12 +71,14 @@ class LabBasedCVDRiskCalculatorTest {
         cholesterol = 5.9f,
         diagnosedWithDiabetes = Answer.Yes,
     )
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(6, 6), risk)
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
+
+    assertEquals(expectedRiskRange, riskRange)
   }
 
   @Test
   fun `should return risk range when smoking is unanswered`() {
+    val expectedRiskRange = CVDRiskRange(4, 7)
     val cvdRiskInput = LabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
@@ -80,19 +87,22 @@ class LabBasedCVDRiskCalculatorTest {
         cholesterol = 3.4f,
         diagnosedWithDiabetes = Answer.Yes,
     )
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(5, 10), risk)
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
+
+    assertEquals(expectedRiskRange, riskRange)
   }
 
   @Test
-  fun `should return risk range when bmi and smoking is not specified`() {
+  fun `should return risk range when cholesterol and smoking is not specified`() {
+    val expectedRiskRange = CVDRiskRange(4, 14)
     val cvdRiskInput = LabBasedCVDRiskInput(
         gender = Gender.Male,
         age = 40,
         systolic = 125,
         diagnosedWithDiabetes = Answer.Yes,
     )
-    val risk = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
-    assertEquals(CVDRiskRange(5, 10), risk)
+    val riskRange = cvdRiskCalculator.calculateCvdRisk(cvdRiskInput)
+
+    assertEquals(expectedRiskRange, riskRange)
   }
 }

@@ -85,6 +85,10 @@ data class MedicalHistory(
     }
   }
 
+  fun cholesterolChanged(cholesterol: Float): MedicalHistory {
+    return copy(cholesterol = cholesterol)
+  }
+
   @Dao
   interface RoomDao {
 

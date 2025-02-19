@@ -4,6 +4,8 @@ import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -15,14 +17,17 @@ import java.util.UUID
 
 class CholesterolEntryEffectHandlerTest {
 
+  private val uiActions = mock<CholesterolEntryUiActions>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val viewEffectHandler = CholesterolEntryViewEffectHandler(uiActions)
   private val effectHandler = CholesterolEntryEffectHandler(
       clock = TestUtcClock(),
       uuidGenerator = FakeUuidGenerator(
           uuid = UUID.fromString("94c8371d-0d3a-4343-9787-da6bca1a5843"),
       ),
       medicalHistoryRepository = medicalHistoryRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      viewEffectConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -51,5 +56,15 @@ class CholesterolEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CholesterolSaved)
+  }
+
+  @Test
+  fun `when hide cholesterol error message effect is received, then hide the errors`() {
+    // when
+    testCase.dispatch(HideCholesterolErrorMessage)
+
+    // then
+    verify(uiActions).hideErrorMessage()
+    verifyNoMoreInteractions(uiActions)
   }
 }

@@ -67,4 +67,14 @@ class CholesterolEntryEffectHandlerTest {
     verify(uiActions).hideErrorMessage()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when dismiss sheet effect is received, then dismiss sheet`() {
+    // when
+    testCase.dispatch(DismissSheet)
+
+    // then
+    verify(uiActions).dismissSheet()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

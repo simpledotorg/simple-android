@@ -1113,4 +1113,9 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="smoking_status_dialog_option_no">Not a smoker</string>
   <string name="smoking_status_dialog_title_positive_button">Done</string>
   <string name="smoking_status_dialog_title_negative_button">Cancel</string>
+
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
+  <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
+  <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
 </resources>

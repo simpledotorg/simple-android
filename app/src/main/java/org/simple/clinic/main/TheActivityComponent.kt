@@ -71,6 +71,7 @@ import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.assignedfacility.AssignedFacilityView
 import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInjector
@@ -169,7 +170,8 @@ interface TheActivityComponent :
     MonthlyReportsScreen.Injector,
     MonthlyReportCompleteScreen.Injector,
     ReassignPatientSheet.Injector,
-    BMIEntrySheet.Injector {
+    BMIEntrySheet.Injector,
+    CholesterolEntrySheet.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

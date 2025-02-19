@@ -15,8 +15,12 @@ class CholesterolEntryUpdate(
       is CholesterolChanged -> cholesterolChanged(model, event)
       SaveClicked -> onSaveClicked(model)
       CholesterolSaved -> onCholesterolSaved(model)
+      KeyboardClosed -> onKeyboardClosed()
     }
   }
+
+  private fun onKeyboardClosed(): Next<CholesterolEntryModel, CholesterolEntryEffect> =
+      dispatch(DismissSheet)
 
   private fun onCholesterolSaved(model: CholesterolEntryModel): Next<CholesterolEntryModel, CholesterolEntryEffect> {
     return next(model.cholesterolSaved(), DismissSheet)

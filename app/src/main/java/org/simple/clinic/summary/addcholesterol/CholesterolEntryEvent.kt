@@ -7,3 +7,5 @@ data class CholesterolChanged(val cholesterolValue: Float) : CholesterolEntryEve
 data object SaveClicked : CholesterolEntryEvent
 
 data object CholesterolSaved : CholesterolEntryEvent
+
+data object KeyboardClosed : CholesterolEntryEvent

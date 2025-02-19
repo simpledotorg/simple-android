@@ -85,4 +85,15 @@ class CholesterolEntryUpdateTest {
             hasEffects(DismissSheet)
         ))
   }
+
+  @Test
+  fun `when keyboard is closed, then dismiss sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(KeyboardClosed)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(DismissSheet)
+        ))
+  }
 }

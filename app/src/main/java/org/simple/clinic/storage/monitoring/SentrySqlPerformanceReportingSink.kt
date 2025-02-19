@@ -2,6 +2,7 @@ package org.simple.clinic.storage.monitoring
 
 import io.sentry.ISpan
 import io.sentry.Sentry
+import io.sentry.TransactionOptions
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter.ReportSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter.SqlOperation
 
@@ -23,6 +24,7 @@ class SentrySqlPerformanceReportingSink : ReportSink {
         /* name = */ "room.query",
         /* operation = */ "${operation.daoName}/${operation.methodName}"
     )
+    span.setTag("op_thread", operation.threadName)
 
     runningSpans = runningSpans + (operation to span)
   }

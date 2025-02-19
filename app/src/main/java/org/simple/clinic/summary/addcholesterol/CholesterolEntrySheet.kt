@@ -17,6 +17,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetCholesterolEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
@@ -32,7 +33,7 @@ class CholesterolEntrySheet : BaseBottomSheet<
     CholesterolEntryModel,
     CholesterolEntryEvent,
     CholesterolEntryEffect,
-    CholesterolEntryViewEffect>(), CholesterolEntryUiActions {
+    CholesterolEntryViewEffect>(), CholesterolEntryUi, CholesterolEntryUiActions {
 
   @Inject
   lateinit var cholesterolEntryEffectHandlerFactory: CholesterolEntryEffectHandler.Factory
@@ -48,6 +49,9 @@ class CholesterolEntrySheet : BaseBottomSheet<
 
   private val cholesterolErrorTextView
     get() = binding.cholesterolErrorTextView
+
+  private val progressIndicator
+    get() = binding.progressLoader
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -71,6 +75,10 @@ class CholesterolEntrySheet : BaseBottomSheet<
 
   override fun viewEffectsHandler(): ViewEffectsHandler<CholesterolEntryViewEffect> {
     return CholesterolEntryViewEffectHandler(this)
+  }
+
+  override fun uiRenderer(): ViewRenderer<CholesterolEntryModel> {
+    return CholesterolEntryUiRenderer(this)
   }
 
   override fun events() = Observable
@@ -97,6 +105,16 @@ class CholesterolEntrySheet : BaseBottomSheet<
 
   override fun showReqMinCholesterolError() {
     showCholesterolErrorMessage(getString(R.string.cholesterol_error_lower_limit))
+  }
+
+  override fun showProgress() {
+    progressIndicator.visibleOrGone(isVisible = true)
+    cholesterolTextField.visibleOrGone(isVisible = false)
+  }
+
+  override fun hideProgress() {
+    progressIndicator.visibleOrGone(isVisible = false)
+    cholesterolTextField.visibleOrGone(isVisible = true)
   }
 
   private fun showCholesterolErrorMessage(message: String) {

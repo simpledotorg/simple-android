@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_gravity="bottom"
+  android:animateLayoutChanges="true"
+  tools:background="?attr/colorSurface"
+  tools:context=".summary.addcholesterol.CholesterolEntrySheet"
+  tools:gravity="bottom">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+      android:id="@+id/enterCholesterolTitleTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_24"
+      android:text="@string/add_cholesterol_title"
+      android:textAppearance="?attr/textAppearanceHeadline6"
+      android:textColor="?attr/colorOnSurface"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:ignore="UnusedAttribute" />
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/cholesterolTextFieldLayout"
+      style="@style/Widget.Simple.TextField.Layout.Large.MeasurementInput"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/spacing_128"
+      android:layout_marginTop="@dimen/spacing_16"
+      app:layout_constraintBottom_toTopOf="@id/cholesterolErrorTextView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/enterCholesterolTitleTextView"
+      app:layout_goneMarginBottom="@dimen/spacing_24">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/cholesterolTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        tools:ignore="UnusedAttribute,SpeakableTextPresentCheck">
+
+        <requestFocus />
+
+      </com.google.android.material.textfield.TextInputEditText>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+      android:id="@+id/progressLoader"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_40"
+      android:layout_marginBottom="@dimen/spacing_40"
+      android:indeterminate="true"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/enterCholesterolTitleTextView" />
+
+    <TextView
+      android:id="@+id/cholesterolErrorTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:layout_marginBottom="@dimen/spacing_24"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorError"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/cholesterolTextFieldLayout"
+      tools:text="@string/cholesterol_error_lower_limit"
+      tools:visibility="gone" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</org.simple.clinic.widgets.LinearLayoutWithPreImeKeyEventListener>

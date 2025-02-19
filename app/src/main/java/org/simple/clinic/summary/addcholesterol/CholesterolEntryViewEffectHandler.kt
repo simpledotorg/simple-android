@@ -10,9 +10,7 @@ class CholesterolEntryViewEffectHandler(
     return when (viewEffect) {
       HideCholesterolErrorMessage -> uiActions.hideErrorMessage()
       DismissSheet -> uiActions.dismissSheet()
-      ShowReqMaxCholesterolValidationError -> {
-        // no-op
-      }
+      ShowReqMaxCholesterolValidationError -> uiActions.showReqMaxCholesterolError()
       ShowReqMinCholesterolValidationError -> {
         // no-op
       }

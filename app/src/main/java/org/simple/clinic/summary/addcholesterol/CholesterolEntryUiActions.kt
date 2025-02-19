@@ -4,4 +4,5 @@ interface CholesterolEntryUiActions {
   fun hideErrorMessage()
   fun dismissSheet()
   fun showReqMaxCholesterolError()
+  fun showReqMinCholesterolError()
 }

@@ -87,4 +87,14 @@ class CholesterolEntryEffectHandlerTest {
     verify(uiActions).showReqMaxCholesterolError()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show req min cholesterol validation error effect is received, then show error`() {
+    // when
+    testCase.dispatch(ShowReqMinCholesterolValidationError)
+
+    // then
+    verify(uiActions).showReqMinCholesterolError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

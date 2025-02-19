@@ -27,4 +27,8 @@ data class CholesterolEntryModel(
   fun savingCholesterol(): CholesterolEntryModel {
     return copy(cholesterolSaveState = SAVING_CHOLESTEROL)
   }
+
+  fun cholesterolSaved(): CholesterolEntryModel {
+    return copy(cholesterolSaveState = NOT_SAVING_CHOLESTEROL)
+  }
 }

@@ -69,4 +69,20 @@ class CholesterolEntryUpdateTest {
             hasEffects(SaveCholesterol(patientUuid, cholesterolValue))
         ))
   }
+
+  @Test
+  fun `when cholesterol value is saved, then reset save state and dismiss sheet`() {
+    val cholesterolValue = 400f
+    updateSpec
+        .given(defaultModel.cholesterolChanged(cholesterolValue))
+        .whenEvent(CholesterolSaved)
+        .then(assertThatNext(
+            hasModel(
+                defaultModel
+                    .cholesterolChanged(cholesterolValue)
+                    .cholesterolSaved()
+            ),
+            hasEffects(DismissSheet)
+        ))
+  }
 }

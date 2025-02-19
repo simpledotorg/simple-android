@@ -13,3 +13,5 @@ data object HideCholesterolErrorMessage : CholesterolEntryViewEffect
 data object ShowReqMinCholesterolValidationError : CholesterolEntryViewEffect
 
 data object ShowReqMaxCholesterolValidationError : CholesterolEntryViewEffect
+
+data object DismissSheet : CholesterolEntryViewEffect

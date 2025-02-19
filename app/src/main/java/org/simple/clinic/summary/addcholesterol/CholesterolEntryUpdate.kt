@@ -14,7 +14,12 @@ class CholesterolEntryUpdate(
     return when (event) {
       is CholesterolChanged -> cholesterolChanged(model, event)
       SaveClicked -> onSaveClicked(model)
+      CholesterolSaved -> onCholesterolSaved(model)
     }
+  }
+
+  private fun onCholesterolSaved(model: CholesterolEntryModel): Next<CholesterolEntryModel, CholesterolEntryEffect> {
+    return next(model.cholesterolSaved(), DismissSheet)
   }
 
   private fun onSaveClicked(model: CholesterolEntryModel): Next<CholesterolEntryModel, CholesterolEntryEffect> {

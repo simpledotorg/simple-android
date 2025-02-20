@@ -8,10 +8,6 @@
     tools:ignore="GoogleAppIndexingWarning"
     tools:replace="android:name,android:icon">
 
-    <meta-data
-      android:name="io.sentry.auto-init"
-      android:value="false" />
-
     <receiver android:name=".DebugNotificationActionReceiver" />
 
     <receiver

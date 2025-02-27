@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.addcholesterol
 
 import android.content.Context
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -20,6 +21,7 @@ import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.textChanges
@@ -96,7 +98,7 @@ class CholesterolEntrySheet : BaseBottomSheet<
   }
 
   override fun dismissSheet() {
-    router.pop()
+    router.popWithResult(Succeeded(CholesterolAdded))
   }
 
   override fun showReqMaxCholesterolError() {
@@ -158,4 +160,7 @@ class CholesterolEntrySheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: CholesterolEntrySheet)
   }
+
+  @Parcelize
+  data object CholesterolAdded : Parcelable
 }

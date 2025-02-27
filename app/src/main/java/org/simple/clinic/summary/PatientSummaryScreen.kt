@@ -71,6 +71,7 @@ import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
+import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
@@ -757,6 +758,10 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun openCholesterolEntrySheet(patientUuid: UUID) {
+    router.pushExpectingResult(ScreenRequest.CholesterolEntrySheet, CholesterolEntrySheet.Key(patientUuid))
+  }
+
   override fun openBMIEntrySheet(patientUuid: UUID) {
     router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
   }
@@ -903,5 +908,8 @@ class PatientSummaryScreen :
 
     @Parcelize
     data object BMIEntrySheet : ScreenRequest()
+
+    @Parcelize
+    data object CholesterolEntrySheet : ScreenRequest()
   }
 }

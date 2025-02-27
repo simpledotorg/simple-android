@@ -23,6 +23,7 @@ import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -233,7 +234,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                       systolic = bloodPressure.reading.systolic,
                       isSmoker = medicalHistory.isSmoking,
                       diagnosedWithDiabetes = medicalHistory.diagnosedWithDiabetes,
-                      cholesterol = null //Update once the value is available in medical history
+                      cholesterol = medicalHistory.cholesterol?.let { MedicalHistory.convertCholesterolToMmol(it) }
                   )
               )
             }

@@ -12,6 +12,9 @@ data class StatinInfo(
     val isSmoker: Answer = Answer.Unanswered,
     val bmiReading: BMIReading? = null,
     val hasCVD: Boolean = false,
+    val hasDiabetes: Boolean = false,
+    val age: Int = 0,
+    val cholesterol: Float? = null,
 ) : Parcelable {
   companion object {
     fun default(): StatinInfo {

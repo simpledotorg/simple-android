@@ -80,6 +80,8 @@ fun StatinNudge(
               endOffset = endOffset,
               cvdRiskRange = statinInfo.cvdRisk,
               hasCVD = statinInfo.hasCVD,
+              hasDiabetes = statinInfo.hasDiabetes,
+              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
               parentWidth = constraints.maxWidth,
           )
           Spacer(modifier = Modifier.height(12.dp))
@@ -114,7 +116,9 @@ fun RiskText(
     endOffset: Float,
     cvdRiskRange: CVDRiskRange?,
     hasCVD: Boolean,
+    hasDiabetes: Boolean,
     parentWidth: Int,
+    isLabBasedStatinNudgeEnabled: Boolean,
     parentPadding: Float = 16f
 ) {
   val midpoint = (startOffset + endOffset) / 2
@@ -125,9 +129,14 @@ fun RiskText(
     "${cvdRiskRange?.min}-${cvdRiskRange?.max}%"
   }
 
+  val labBasedReqMaxRiskRange = 10
   val riskText = when {
     hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
-    cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
+    cvdRiskRange == null ||
+        (hasDiabetes && (cvdRiskRange.max < labBasedReqMaxRiskRange && isLabBasedStatinNudgeEnabled)) -> {
+      stringResource(R.string.statin_alert_at_risk_patient)
+    }
+
     else -> stringResource(cvdRiskRange.level.displayStringResId, riskPercentage)
   }
 

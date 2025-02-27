@@ -2718,6 +2718,25 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when cholesterol is added, then calculate lab based cvd risk`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(CholesterolAdded)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CalculateLabBasedCVDRisk(patient))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

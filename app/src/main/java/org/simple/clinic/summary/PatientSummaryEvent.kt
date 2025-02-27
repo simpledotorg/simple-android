@@ -178,3 +178,5 @@ data class SmokingStatusAnswered(
 data object BMIReadingAdded : PatientSummaryEvent()
 
 data object AddBMIClicked : PatientSummaryEvent()
+
+data object AddCholesterolClicked: PatientSummaryEvent()

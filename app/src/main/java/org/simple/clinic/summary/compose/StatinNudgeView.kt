@@ -49,9 +49,12 @@ import org.simple.clinic.util.toAnnotatedString
 @Composable
 fun StatinNudge(
     statinInfo: StatinInfo,
+    isNonLabBasedStatinNudgeEnabled: Boolean,
+    isLabBasedStatinNudgeEnabled: Boolean,
     modifier: Modifier = Modifier,
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
+    addCholesterol: () -> Unit,
 ) {
   AnimatedVisibility(
       visible = statinInfo.canShowStatinNudge,
@@ -86,12 +89,17 @@ fun StatinNudge(
           )
           Spacer(modifier = Modifier.height(16.dp))
           DescriptionText(statinInfo = statinInfo)
-          if (statinInfo.cvdRisk != null) {
+
+          val onlyOneTypeOfNudgeIsEnabled = isLabBasedStatinNudgeEnabled xor isNonLabBasedStatinNudgeEnabled
+          if (statinInfo.cvdRisk != null && onlyOneTypeOfNudgeIsEnabled) {
             StainNudgeAddButtons(
                 modifier = Modifier.padding(top = 16.dp),
                 statinInfo = statinInfo,
+                isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
+                isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
                 addSmokingClick = addSmokingClick,
-                addBMIClick = addBMIClick
+                addBMIClick = addBMIClick,
+                addCholesterol = addCholesterol,
             )
           }
         }
@@ -141,10 +149,10 @@ fun RiskText(
   Text(
       modifier = Modifier
           .offset {
-              IntOffset(
-                  x = clampedOffsetX.toInt(),
-                  y = 0
-              )
+            IntOffset(
+                x = clampedOffsetX.toInt(),
+                y = 0
+            )
           }
           .background(riskColor, shape = RoundedCornerShape(50))
           .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -174,20 +182,20 @@ fun RiskProgressBar(
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(startOffset, 0f),
-                  end = Offset(startOffset, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(endOffset, 0f),
-                  end = Offset(endOffset, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(startOffset, 0f),
+                end = Offset(startOffset, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(endOffset, 0f),
+                end = Offset(endOffset, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {
@@ -209,21 +217,21 @@ fun RiskProgressBar(
                 .weight(1f)
                 .fillMaxHeight()
                 .drawWithContent {
-                    drawRect(color.copy(alpha = 0.5f))
+                  drawRect(color.copy(alpha = 0.5f))
 
-                    val visibleStart = maxOf(segmentStartPx, startOffset)
-                    val visibleEnd = minOf(segmentEndPx, endOffset)
+                  val visibleStart = maxOf(segmentStartPx, startOffset)
+                  val visibleEnd = minOf(segmentEndPx, endOffset)
 
-                    if (visibleStart < visibleEnd) {
-                        drawRect(
-                            color = color.copy(alpha = 1.0f),
-                            topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
-                            size = Size(
-                                width = visibleEnd - visibleStart,
-                                height = size.height
-                            )
+                  if (visibleStart < visibleEnd) {
+                    drawRect(
+                        color = color.copy(alpha = 1.0f),
+                        topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
+                        size = Size(
+                            width = visibleEnd - visibleStart,
+                            height = size.height
                         )
-                    }
+                    )
+                  }
                 }
         )
       }
@@ -278,8 +286,11 @@ fun DescriptionText(
 fun StainNudgeAddButtons(
     modifier: Modifier,
     statinInfo: StatinInfo,
+    isNonLabBasedStatinNudgeEnabled: Boolean,
+    isLabBasedStatinNudgeEnabled: Boolean,
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
+    addCholesterol: () -> Unit,
 ) {
   SimpleInverseTheme {
     Row(
@@ -301,7 +312,8 @@ fun StainNudgeAddButtons(
           )
         }
       }
-      if (statinInfo.bmiReading == null) {
+
+      if (isNonLabBasedStatinNudgeEnabled && statinInfo.bmiReading == null) {
         FilledButton(
             modifier = modifier
                 .height(36.dp)
@@ -312,6 +324,22 @@ fun StainNudgeAddButtons(
         ) {
           Text(
               text = stringResource(R.string.statin_alert_add_bmi),
+              fontSize = 14.sp,
+          )
+        }
+      }
+
+      if (isLabBasedStatinNudgeEnabled && statinInfo.cholesterol == null) {
+        FilledButton(
+            modifier = modifier
+                .height(36.dp)
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(50)),
+            onClick = { addCholesterol() }
+        ) {
+          Text(
+              text = stringResource(R.string.statin_alert_add_cholesterol),
               fontSize = 14.sp,
           )
         }
@@ -364,8 +392,11 @@ fun StatinNudgePreview() {
   SimpleTheme {
     StatinNudge(
         statinInfo = StatinInfo(canShowStatinNudge = true, hasDiabetes = true),
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
         addSmokingClick = {},
         addBMIClick = {},
+        addCholesterol = {}
     )
   }
 }

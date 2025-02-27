@@ -2700,6 +2700,24 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when add cholesterol is clicked, then open cholesterol entry sheet`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddCholesterolClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenCholesterolEntrySheet(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

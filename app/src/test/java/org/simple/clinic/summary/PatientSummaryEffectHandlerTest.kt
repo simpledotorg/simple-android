@@ -1043,4 +1043,15 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).openBMIEntrySheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open cholesterol entry sheet effect is received, then open cholesterol entry sheet`() {
+    // when
+    testCase.dispatch(OpenCholesterolEntrySheet(patientUuid = patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openCholesterolEntrySheet(patientUuid = patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -20,6 +20,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -2375,12 +2376,29 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when statin info is loaded, then update the state`() {
     val statinInfo = StatinInfo(
-        canPrescribeStatin = true
+        canPrescribeStatin = true,
+        cvdRisk = CVDRiskRange(11, 11),
+        isSmoker = Yes,
+        bmiReading = BMIReading(165f, 60f),
+        hasCVD = true,
+        hasDiabetes = false,
+        age = 55,
+        cholesterol = null,
     )
+
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinInfoLoaded(
-            statinInfo = statinInfo
+            age = 55,
+            medicalHistory = TestData.medicalHistory(
+                hasHadStroke = Yes,
+                hasHadHeartAttack = Yes,
+                hasDiabetes = No,
+                isSmoking = Yes,
+                cholesterol = null,
+            ),
+            riskRange = CVDRiskRange(11, 11),
+            bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(
             hasModel(defaultModel.updateStatinInfo(statinInfo)),
@@ -2392,12 +2410,27 @@ class PatientSummaryUpdateTest {
   fun `when statin info is loaded and risk is low-high, then update the state and show smoking status dialog`() {
     val statinInfo = StatinInfo(
         canPrescribeStatin = true,
-        CVDRiskRange(7, 14),
+        cvdRisk = CVDRiskRange(4, 11),
+        isSmoker = Unanswered,
+        bmiReading = BMIReading(165f, 60f),
+        hasCVD = true,
+        hasDiabetes = false,
+        age = 55,
+        cholesterol = null,
     )
     updateSpec
         .given(defaultModel)
         .whenEvent(StatinInfoLoaded(
-            statinInfo = statinInfo
+            age = 55,
+            medicalHistory = TestData.medicalHistory(
+                hasHadStroke = Yes,
+                hasHadHeartAttack = Yes,
+                hasDiabetes = No,
+                isSmoking = Unanswered,
+                cholesterol = null,
+            ),
+            riskRange = CVDRiskRange(4, 11),
+            bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(
             hasModel(defaultModel.updateStatinInfo(statinInfo).showSmokingStatusDialog()),

@@ -2,13 +2,13 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.cvdrisk.CVDRisk
 import org.simple.clinic.cvdrisk.CVDRiskRange
-import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.PatientAttribute
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -163,7 +163,10 @@ data class CVDRiskCalculated(
 data object CVDRiskUpdated : PatientSummaryEvent()
 
 data class StatinInfoLoaded(
-    val statinInfo: StatinInfo
+    val age: Int,
+    val medicalHistory: MedicalHistory,
+    val riskRange: CVDRiskRange?,
+    val bmiReading: BMIReading?,
 ) : PatientSummaryEvent()
 
 data object AddSmokingClicked : PatientSummaryEvent()

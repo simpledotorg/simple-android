@@ -2490,6 +2490,216 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when lab based statin feature is enabled and statin prescription check info is loaded and person is below 40 without cvd, then update the state with false`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 39,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
+        ))
+        .then(assertThatNext(
+            hasModel(model.updateStatinInfo(StatinInfo(canPrescribeStatin = false, hasDiabetes = false))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when lab based statin feature is enabled statin prescription check info is loaded and person has cvd, then update the state with true`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 39,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = Yes,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
+        ))
+        .then(assertThatNext(
+            hasModel(model.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when lab based statin feature is enabled statin prescription check info is loaded and person has diabetes and age is greater than 74, then update the state with true`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 75,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = Yes,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = false,
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasDiabetes = true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when lab based statin feature is enabled statin prescription check info is loaded and has diabetes and is eligible for calculating lab based CVD risk and should calculate CVD risk then calculate CVD risk`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 40,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = Yes,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = true,
+            wasCVDCalculatedWithin90Days = false,
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+        ))
+  }
+
+  @Test
+  fun `when lab based statin feature is enabled statin prescription check info is loaded and doesnt have diabetes and is eligible for calculating lab based CVD risk and should calculate CVD risk then calculate CVD risk`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 40,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = null,
+            hasMedicalHistoryChanged = true,
+            wasCVDCalculatedWithin90Days = false,
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+        ))
+  }
+
+  @Test
+  fun `when lab based statin feature is enabled and statin prescription check info is loaded and person is above 40 with diabetes and is eligible for lab based CVD risk, then load statin info`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false,
+        isPatientStatinNudgeV1Enabled = true,
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+    ))
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(StatinPrescriptionCheckInfoLoaded(
+            age = 48,
+            isPatientDead = false,
+            wasBPMeasuredWithin90Days = true,
+            medicalHistory = TestData.medicalHistory(
+                hasDiabetes = No,
+                hasHadStroke = No,
+                hasHadHeartAttack = No,
+            ),
+            patientAttribute = null,
+            prescriptions = listOf(
+                TestData.prescription(name = "losartin")
+            ),
+            cvdRiskRange = CVDRiskRange(14, 21),
+            hasMedicalHistoryChanged = false,
+            wasCVDCalculatedWithin90Days = true,
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadStatinInfo(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -111,6 +111,7 @@ class PatientSummaryUpdate(
       is BMIReadingAdded -> dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
       is AddCholesterolClicked -> dispatch(OpenCholesterolEntrySheet(model.patientUuid))
+      CholesterolAdded -> dispatch(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
     }
   }
 

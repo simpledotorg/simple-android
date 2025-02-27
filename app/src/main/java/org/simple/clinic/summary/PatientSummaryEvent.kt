@@ -180,3 +180,5 @@ data object BMIReadingAdded : PatientSummaryEvent()
 data object AddBMIClicked : PatientSummaryEvent()
 
 data object AddCholesterolClicked: PatientSummaryEvent()
+
+data object CholesterolAdded : PatientSummaryEvent()

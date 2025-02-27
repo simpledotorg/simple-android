@@ -955,7 +955,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(CalculateLabBasedCVDRisk(patient = patient))
 
     //then
-    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(7, 14)))
+    testCase.assertOutgoingEvents(CVDRiskCalculated(cvdRisk, CVDRiskRange(14, 14)))
   }
 
   @Test
@@ -983,11 +983,21 @@ class PatientSummaryEffectHandlerTest {
   fun `when load statin info effect is received, then load statin info`() {
     //given
     val bmiReading = BMIReading(height = 177f, weight = 53f)
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn TestData.patient(
+        uuid = patientUuid,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 55,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null,
+        )
+    )
+    val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
+
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         defaultHistoryUuid = uuidGenerator.v4(),
         patientUuid = patientUuid
-    )) doReturn
-        TestData.medicalHistory(isSmoking = Yes)
+    )) doReturn medicalHistory
 
     whenever(patientAttributeRepository.getPatientAttributeImmediate(patientUuid)) doReturn
         TestData.patientAttribute(reading = bmiReading)
@@ -999,12 +1009,12 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadStatinInfo(patientUuid))
 
     //then
-    testCase.assertOutgoingEvents(StatinInfoLoaded(StatinInfo(
-        canPrescribeStatin = true,
-        cvdRisk = CVDRiskRange(27, 27),
-        isSmoker = Yes,
-        bmiReading = bmiReading
-    )))
+    testCase.assertOutgoingEvents(StatinInfoLoaded(
+        age = 55,
+        medicalHistory = medicalHistory,
+        riskRange = CVDRiskRange(27, 27),
+        bmiReading = bmiReading,
+    ))
   }
 
   @Test

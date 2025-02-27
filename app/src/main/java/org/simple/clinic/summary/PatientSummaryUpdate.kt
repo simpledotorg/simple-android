@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.cvdrisk.CVDRiskLevel
+import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
@@ -182,19 +183,36 @@ class PatientSummaryUpdate(
       event: StatinInfoLoaded,
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val canShowSmokingStatusDialog =
-        event.statinInfo.canPrescribeStatin &&
-        (event.statinInfo.cvdRisk?.level == CVDRiskLevel.LOW_HIGH ||
-        event.statinInfo.cvdRisk?.level == CVDRiskLevel.MEDIUM_HIGH) &&
-        event.statinInfo.isSmoker == MedicalHistoryAnswer.Unanswered &&
+    val age = event.age
+    val medicalHistory = event.medicalHistory
+    val hasCVD = medicalHistory.hasHadStroke == Yes || medicalHistory.hasHadHeartAttack == Yes
+    val hasDiabetes = medicalHistory.diagnosedWithDiabetes == Yes
+    val cholesterol = medicalHistory.cholesterol
+    val bmiReading = event.bmiReading
+    val calculatedRiskRange = event.riskRange
+    val canPrescribeStatin = calculatedRiskRange?.canPrescribeStatin ?: false
+
+    val canShowSmokingStatusDialog = canPrescribeStatin &&
+        (calculatedRiskRange?.level == CVDRiskLevel.LOW_HIGH ||
+            calculatedRiskRange?.level == CVDRiskLevel.MEDIUM_HIGH) &&
+        medicalHistory.isSmoking == MedicalHistoryAnswer.Unanswered &&
         !model.hasShownSmokingStatusDialog
 
+    val statinInfo = StatinInfo(
+        canPrescribeStatin = canPrescribeStatin,
+        cvdRisk = calculatedRiskRange,
+        isSmoker = medicalHistory.isSmoking,
+        bmiReading = bmiReading,
+        hasCVD = hasCVD,
+        hasDiabetes = hasDiabetes,
+        age = age,
+        cholesterol = cholesterol,
+    )
+
     return if (canShowSmokingStatusDialog) {
-      next(model.updateStatinInfo(event.statinInfo)
-          .showSmokingStatusDialog(),
-          ShowSmokingStatusDialog)
+      next(model.updateStatinInfo(statinInfo).showSmokingStatusDialog(), ShowSmokingStatusDialog)
     } else {
-      next(model.updateStatinInfo(event.statinInfo))
+      next(model.updateStatinInfo(statinInfo))
     }
   }
 

@@ -766,7 +766,7 @@ class PatientSummaryViewRendererTest {
   @Test
   fun `when statin info is loaded then update the statin alert`() {
     //given
-    val statinInfo = StatinInfo(canPrescribeStatin = true)
+    val statinInfo = StatinInfo(canShowStatinNudge = true)
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
         .updateStatinInfo(statinInfo)
@@ -820,7 +820,7 @@ class PatientSummaryViewRendererTest {
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
         .scheduledAppointmentLoaded(appointment)
-        .updateStatinInfo(StatinInfo(canPrescribeStatin = true))
+        .updateStatinInfo(StatinInfo(canShowStatinNudge = true))
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -839,7 +839,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
-    verify(ui).updateStatinAlert(StatinInfo(canPrescribeStatin = true))
+    verify(ui).updateStatinAlert(StatinInfo(canShowStatinNudge = true))
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
     verifyNoMoreInteractions(ui)

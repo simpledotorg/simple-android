@@ -267,7 +267,11 @@ class PatientSummaryUpdate(
     val cholesterol = medicalHistory.cholesterol
     val bmiReading = event.bmiReading
     val calculatedRiskRange = event.riskRange
-    val canPrescribeStatin = calculatedRiskRange?.canPrescribeStatin ?: false
+    val canPrescribeStatin = if (isLabBasedStatinNudgeEnabled) {
+      true
+    } else {
+      calculatedRiskRange?.canPrescribeStatin ?: false
+    }
 
     val canShowSmokingStatusDialog = canPrescribeStatin &&
         (calculatedRiskRange?.level == CVDRiskLevel.LOW_HIGH ||

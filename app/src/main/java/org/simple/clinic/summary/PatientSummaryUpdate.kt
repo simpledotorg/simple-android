@@ -151,7 +151,7 @@ class PatientSummaryUpdate(
       hasCVD -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasCVD = true
             )
         )
@@ -162,7 +162,7 @@ class PatientSummaryUpdate(
       hasDiabetes && event.age > maxAgeForCVDRisk -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasDiabetes = true
             )
         )
@@ -181,7 +181,7 @@ class PatientSummaryUpdate(
       else -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = false,
+                canShowStatinNudge = false,
                 hasCVD = false
             )
         )
@@ -218,7 +218,7 @@ class PatientSummaryUpdate(
       hasCVD || (hasDiabetes && event.age >= minAgeForStatin) -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasCVD = hasCVD
             )
         )
@@ -236,7 +236,7 @@ class PatientSummaryUpdate(
       else -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = false,
+                canShowStatinNudge = false,
                 hasCVD = false
             )
         )
@@ -285,7 +285,7 @@ class PatientSummaryUpdate(
     }
 
     val statinInfo = StatinInfo(
-        canPrescribeStatin = canPrescribeStatin,
+        canShowStatinNudge = canPrescribeStatin,
         cvdRisk = riskRange,
         isSmoker = medicalHistory.isSmoking,
         bmiReading = bmiReading,

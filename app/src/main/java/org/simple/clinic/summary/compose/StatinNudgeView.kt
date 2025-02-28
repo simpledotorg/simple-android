@@ -54,7 +54,7 @@ fun StatinNudge(
     addBMIClick: () -> Unit,
 ) {
   AnimatedVisibility(
-      visible = statinInfo.canPrescribeStatin,
+      visible = statinInfo.canShowStatinNudge,
       enter = expandVertically(
           animationSpec = tween(500),
           expandFrom = Alignment.Top
@@ -362,6 +362,10 @@ fun List<IntRange>.findSegmentRatio(value: Int): Float {
 @Composable
 fun StatinNudgePreview() {
   SimpleTheme {
-    StatinNudge(StatinInfo(canPrescribeStatin = true), addSmokingClick = {}, addBMIClick = {})
+    StatinNudge(
+        statinInfo = StatinInfo(canShowStatinNudge = true, hasDiabetes = true),
+        addSmokingClick = {},
+        addBMIClick = {},
+    )
   }
 }

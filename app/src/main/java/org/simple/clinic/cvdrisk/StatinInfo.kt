@@ -7,7 +7,7 @@ import org.simple.clinic.patientattribute.BMIReading
 
 @Parcelize
 data class StatinInfo(
-    val canPrescribeStatin: Boolean,
+    val canShowStatinNudge: Boolean,
     val cvdRisk: CVDRiskRange? = null,
     val isSmoker: Answer = Answer.Unanswered,
     val bmiReading: BMIReading? = null,
@@ -19,7 +19,7 @@ data class StatinInfo(
   companion object {
     fun default(): StatinInfo {
       return StatinInfo(
-          canPrescribeStatin = false,
+          canShowStatinNudge = false,
       )
     }
   }

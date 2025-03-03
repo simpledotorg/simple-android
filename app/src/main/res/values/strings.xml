@@ -1089,14 +1089,19 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="statin_alert_medium_high_risk_patient_x">MEDIUM-HIGH RISK %s</string>
   <string name="statin_alert_high_risk_patient_x">HIGH RISK %s</string>
   <string name="statin_alert_very_high_risk_patient">VERY HIGH RISK PATIENT</string>
+  <string name="statin_alert_very_high_risk_range">VERY HIGH RISK %1$s%%</string>
   <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
   <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
+  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
   <string name="statin_alert_add_smoking">Add smoking</string>
   <string name="statin_alert_add_bmi">Add BMI</string>
   <string name="statin_alert_add_cholesterol">Add cholesterol</string>
   <string name="statin_alert_add_smoking_info">Add smoking for more accurate risk score.</string>
   <string name="statin_alert_add_bmi_info">Add BMI for more accurate risk score.</string>
   <string name="statin_alert_add_smoking_and_bmi_info">Add smoking status and BMI for more accurate risk score.</string>
+  <string name="statin_alert_add_cholesterol_info">Add cholesterol for more accurate risk score.</string>
+  <string name="statin_alert_add_smoking_and_cholesterol_info">Add smoking status and cholesterol for more accurate risk score.</string>
 
   <!-- Purge notification -->
   <string name="purge_notification_title">Optimising database</string>

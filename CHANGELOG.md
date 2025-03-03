@@ -62,10 +62,11 @@
 - Bug fixes in CI workflows
 - Fetch `lab_based_cvd_risk_calculation_sheet` from remote config
 - Add `cholesterol_value` to `MedicalHistory` table
-- Bump AGP to v8.8.1
 - Fix JSON variable name in non-lab based statin calculation sheet
 - Add `LabBasedCVDRiskCalculator` and effect to calculate lab based cvd risk
 - Add `CholesterolEntrySheet`
+- Bump AGP to v8.8.2
+- Calculate lab-based CVD risk score
 
 ### Fixes
 

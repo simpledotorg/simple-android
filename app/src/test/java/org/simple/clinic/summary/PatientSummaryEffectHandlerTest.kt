@@ -934,7 +934,11 @@ class PatientSummaryEffectHandlerTest {
             dateOfBirth = null,
         )
     )
-    val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
+    val medicalHistory = TestData.medicalHistory(
+        isSmoking = Yes,
+        hasDiabetes = Yes,
+        cholesterol = 400f,
+    )
     val bloodPressure = TestData.bloodPressureMeasurement(
         UUID.fromString("3e8c246f-91b9-4f8c-81fe-91b67ac0a2d5"),
         systolic = 130,
@@ -948,8 +952,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
     )) doReturn medicalHistory
-    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn
-        cvdRisk
+    whenever(cvdRiskRepository.getCVDRiskImmediate(patientUuid)) doReturn cvdRisk
 
     //when
     testCase.dispatch(CalculateLabBasedCVDRisk(patient = patient))

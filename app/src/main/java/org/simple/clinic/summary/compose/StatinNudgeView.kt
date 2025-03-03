@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,15 +47,22 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
 
+private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 10
+private const val LAB_BASED_MAX_REQ_MAX_RISK_RANGE = 20
+private const val MIN_AGE_FOR_STATIN = 40
+
 @Composable
 fun StatinNudge(
     statinInfo: StatinInfo,
-    modifier: Modifier = Modifier,
+    isNonLabBasedStatinNudgeEnabled: Boolean,
+    isLabBasedStatinNudgeEnabled: Boolean,
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
+    addCholesterol: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
   AnimatedVisibility(
-      visible = statinInfo.canPrescribeStatin,
+      visible = statinInfo.canShowStatinNudge,
       enter = expandVertically(
           animationSpec = tween(500),
           expandFrom = Alignment.Top
@@ -77,6 +85,8 @@ fun StatinNudge(
               endOffset = endOffset,
               cvdRiskRange = statinInfo.cvdRisk,
               hasCVD = statinInfo.hasCVD,
+              hasDiabetes = statinInfo.hasDiabetes,
+              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
               parentWidth = constraints.maxWidth,
           )
           Spacer(modifier = Modifier.height(12.dp))
@@ -85,13 +95,21 @@ fun StatinNudge(
               endOffset = endOffset
           )
           Spacer(modifier = Modifier.height(16.dp))
-          DescriptionText(statinInfo = statinInfo)
-          if (statinInfo.cvdRisk != null) {
+          DescriptionText(
+              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+              statinInfo = statinInfo
+          )
+
+          val onlyOneTypeOfNudgeIsEnabled = isLabBasedStatinNudgeEnabled xor isNonLabBasedStatinNudgeEnabled
+          if (statinInfo.cvdRisk != null && onlyOneTypeOfNudgeIsEnabled) {
             StainNudgeAddButtons(
                 modifier = Modifier.padding(top = 16.dp),
                 statinInfo = statinInfo,
+                isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
+                isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
                 addSmokingClick = addSmokingClick,
-                addBMIClick = addBMIClick
+                addBMIClick = addBMIClick,
+                addCholesterol = addCholesterol,
             )
           }
         }
@@ -106,7 +124,9 @@ fun RiskText(
     endOffset: Float,
     cvdRiskRange: CVDRiskRange?,
     hasCVD: Boolean,
+    hasDiabetes: Boolean,
     parentWidth: Int,
+    isLabBasedStatinNudgeEnabled: Boolean,
     parentPadding: Float = 16f
 ) {
   val midpoint = (startOffset + endOffset) / 2
@@ -116,10 +136,19 @@ fun RiskText(
   } else {
     "${cvdRiskRange?.min}-${cvdRiskRange?.max}%"
   }
+  val maxCvdRiskRange = cvdRiskRange?.max ?: 0
 
   val riskText = when {
     hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
-    cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
+
+    maxCvdRiskRange > LAB_BASED_MAX_REQ_MAX_RISK_RANGE ->
+      stringResource(R.string.statin_alert_very_high_risk_range, maxCvdRiskRange.toString())
+
+    cvdRiskRange == null ||
+        (hasDiabetes && (cvdRiskRange.max < LAB_BASED_MIN_REQ_MAX_RISK_RANGE && isLabBasedStatinNudgeEnabled)) -> {
+      stringResource(R.string.statin_alert_at_risk_patient)
+    }
+
     else -> stringResource(cvdRiskRange.level.displayStringResId, riskPercentage)
   }
 
@@ -141,10 +170,10 @@ fun RiskText(
   Text(
       modifier = Modifier
           .offset {
-              IntOffset(
-                  x = clampedOffsetX.toInt(),
-                  y = 0
-              )
+            IntOffset(
+                x = clampedOffsetX.toInt(),
+                y = 0
+            )
           }
           .background(riskColor, shape = RoundedCornerShape(50))
           .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -174,20 +203,20 @@ fun RiskProgressBar(
           .fillMaxWidth()
           .height(14.dp)
           .drawWithContent {
-              drawContent()
+            drawContent()
 
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(startOffset, 0f),
-                  end = Offset(startOffset, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
-              drawLine(
-                  color = indicatorColor,
-                  start = Offset(endOffset, 0f),
-                  end = Offset(endOffset, size.height),
-                  strokeWidth = 2.dp.toPx()
-              )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(startOffset, 0f),
+                end = Offset(startOffset, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
+            drawLine(
+                color = indicatorColor,
+                start = Offset(endOffset, 0f),
+                end = Offset(endOffset, size.height),
+                strokeWidth = 2.dp.toPx()
+            )
           },
       contentAlignment = Alignment.Center,
   ) {
@@ -209,21 +238,21 @@ fun RiskProgressBar(
                 .weight(1f)
                 .fillMaxHeight()
                 .drawWithContent {
-                    drawRect(color.copy(alpha = 0.5f))
+                  drawRect(color.copy(alpha = 0.5f))
 
-                    val visibleStart = maxOf(segmentStartPx, startOffset)
-                    val visibleEnd = minOf(segmentEndPx, endOffset)
+                  val visibleStart = maxOf(segmentStartPx, startOffset)
+                  val visibleEnd = minOf(segmentEndPx, endOffset)
 
-                    if (visibleStart < visibleEnd) {
-                        drawRect(
-                            color = color.copy(alpha = 1.0f),
-                            topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
-                            size = Size(
-                                width = visibleEnd - visibleStart,
-                                height = size.height
-                            )
+                  if (visibleStart < visibleEnd) {
+                    drawRect(
+                        color = color.copy(alpha = 1.0f),
+                        topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
+                        size = Size(
+                            width = visibleEnd - visibleStart,
+                            height = size.height
                         )
-                    }
+                    )
+                  }
                 }
         )
       }
@@ -233,23 +262,13 @@ fun RiskProgressBar(
 
 @Composable
 fun DescriptionText(
-    statinInfo: StatinInfo
+    statinInfo: StatinInfo,
+    isLabBasedStatinNudgeEnabled: Boolean,
 ) {
-  val text = when {
-    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH ->
-      stringResource(R.string.statin_alert_refer_to_doctor)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null ->
-      stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null ->
-      stringResource(R.string.statin_alert_add_smoking_info)
-
-    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null ->
-      stringResource(R.string.statin_alert_add_bmi_info)
-
-    else -> stringResource(R.string.statin_alert_refer_to_doctor)
-  }.toAnnotatedString()
+  val text = descriptionText(
+      isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+      statinInfo = statinInfo,
+  )
 
   val textColor = when {
     statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH
@@ -275,11 +294,59 @@ fun DescriptionText(
 }
 
 @Composable
+@ReadOnlyComposable
+private fun descriptionText(
+    isLabBasedStatinNudgeEnabled: Boolean,
+    statinInfo: StatinInfo
+): AnnotatedString {
+  val maxCvdRiskRange = statinInfo.cvdRisk?.max ?: 0
+
+  return when {
+    statinInfo.hasCVD -> stringResource(R.string.statin_alert_refer_to_doctor)
+
+    statinInfo.hasDiabetes && statinInfo.age > MIN_AGE_FOR_STATIN && isLabBasedStatinNudgeEnabled.not() ->
+      stringResource(R.string.statin_alert_refer_to_doctor_diabetic_40)
+
+    statinInfo.hasDiabetes && statinInfo.age > MIN_AGE_FOR_STATIN && isLabBasedStatinNudgeEnabled && maxCvdRiskRange < LAB_BASED_MIN_REQ_MAX_RISK_RANGE ->
+      stringResource(R.string.statin_alert_refer_to_doctor_diabetic_40)
+
+    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH ->
+      stringResource(R.string.statin_alert_refer_to_doctor)
+
+    statinInfo.hasDiabetes && isLabBasedStatinNudgeEnabled ->
+      stringResource(R.string.statin_alert_refer_to_doctor_diabetic)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null && isLabBasedStatinNudgeEnabled.not() ->
+      stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null && isLabBasedStatinNudgeEnabled.not() ->
+      stringResource(R.string.statin_alert_add_smoking_info)
+
+    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null && isLabBasedStatinNudgeEnabled.not() ->
+      stringResource(R.string.statin_alert_add_bmi_info)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol == null && isLabBasedStatinNudgeEnabled ->
+      stringResource(R.string.statin_alert_add_smoking_and_cholesterol_info)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol != null && isLabBasedStatinNudgeEnabled ->
+      stringResource(R.string.statin_alert_add_smoking_info)
+
+    statinInfo.isSmoker != Answer.Unanswered && statinInfo.cholesterol == null && isLabBasedStatinNudgeEnabled ->
+      stringResource(R.string.statin_alert_add_cholesterol_info)
+
+    else -> stringResource(R.string.statin_alert_refer_to_doctor)
+  }.toAnnotatedString()
+}
+
+@Composable
 fun StainNudgeAddButtons(
     modifier: Modifier,
     statinInfo: StatinInfo,
+    isNonLabBasedStatinNudgeEnabled: Boolean,
+    isLabBasedStatinNudgeEnabled: Boolean,
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
+    addCholesterol: () -> Unit,
 ) {
   SimpleInverseTheme {
     Row(
@@ -301,7 +368,8 @@ fun StainNudgeAddButtons(
           )
         }
       }
-      if (statinInfo.bmiReading == null) {
+
+      if (isNonLabBasedStatinNudgeEnabled && statinInfo.bmiReading == null) {
         FilledButton(
             modifier = modifier
                 .height(36.dp)
@@ -312,6 +380,22 @@ fun StainNudgeAddButtons(
         ) {
           Text(
               text = stringResource(R.string.statin_alert_add_bmi),
+              fontSize = 14.sp,
+          )
+        }
+      }
+
+      if (isLabBasedStatinNudgeEnabled && statinInfo.cholesterol == null) {
+        FilledButton(
+            modifier = modifier
+                .height(36.dp)
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(50)),
+            onClick = { addCholesterol() }
+        ) {
+          Text(
+              text = stringResource(R.string.statin_alert_add_cholesterol),
               fontSize = 14.sp,
           )
         }
@@ -362,6 +446,13 @@ fun List<IntRange>.findSegmentRatio(value: Int): Float {
 @Composable
 fun StatinNudgePreview() {
   SimpleTheme {
-    StatinNudge(StatinInfo(canPrescribeStatin = true), addSmokingClick = {}, addBMIClick = {})
+    StatinNudge(
+        statinInfo = StatinInfo(canShowStatinNudge = true, hasDiabetes = true),
+        isNonLabBasedStatinNudgeEnabled = false,
+        isLabBasedStatinNudgeEnabled = true,
+        addSmokingClick = {},
+        addBMIClick = {},
+        addCholesterol = {}
+    )
   }
 }

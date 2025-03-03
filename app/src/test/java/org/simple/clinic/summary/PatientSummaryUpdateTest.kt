@@ -2191,7 +2191,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = false, hasCVD = false))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = false, hasCVD = false))),
             hasNoEffects()
         ))
   }
@@ -2224,7 +2224,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = true))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = true))),
             hasNoEffects()
         ))
   }
@@ -2257,7 +2257,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = false))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = false))),
             hasNoEffects()
         ))
   }
@@ -2376,7 +2376,7 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when statin info is loaded, then update the state`() {
     val statinInfo = StatinInfo(
-        canPrescribeStatin = true,
+        canShowStatinNudge = true,
         cvdRisk = CVDRiskRange(11, 11),
         isSmoker = Yes,
         bmiReading = BMIReading(165f, 60f),
@@ -2409,7 +2409,7 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when statin info is loaded and lab based statin nudge is not enabled and max risk is below 10, then statin cannot be prescribed`() {
     val statinInfo = StatinInfo(
-        canPrescribeStatin = false,
+        canShowStatinNudge = false,
         cvdRisk = CVDRiskRange(9, 9),
         isSmoker = Yes,
         bmiReading = BMIReading(165f, 60f),
@@ -2448,7 +2448,7 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when statin info is loaded and lab-based statin is enabled, then statin can be prescribed`() {
     val statinInfo = StatinInfo(
-        canPrescribeStatin = true,
+        canShowStatinNudge = true,
         cvdRisk = null,
         isSmoker = Yes,
         bmiReading = BMIReading(165f, 60f),
@@ -2487,7 +2487,7 @@ class PatientSummaryUpdateTest {
   @Test
   fun `when statin info is loaded and risk is low-high, then update the state and show smoking status dialog`() {
     val statinInfo = StatinInfo(
-        canPrescribeStatin = true,
+        canShowStatinNudge = true,
         cvdRisk = CVDRiskRange(4, 11),
         isSmoker = Unanswered,
         bmiReading = BMIReading(165f, 60f),
@@ -2598,7 +2598,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(model.updateStatinInfo(StatinInfo(canPrescribeStatin = false, hasDiabetes = false))),
+            hasModel(model.updateStatinInfo(StatinInfo(canShowStatinNudge = false, hasDiabetes = false))),
             hasNoEffects()
         ))
   }
@@ -2633,7 +2633,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(model.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasCVD = true))),
+            hasModel(model.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = true))),
             hasNoEffects()
         ))
   }
@@ -2666,7 +2666,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canPrescribeStatin = true, hasDiabetes = true))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasDiabetes = true))),
             hasNoEffects()
         ))
   }

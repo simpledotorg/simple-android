@@ -141,3 +141,5 @@ data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarni
 data object ShowSmokingStatusDialog : PatientSummaryViewEffect()
 
 data class OpenBMIEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()
+
+data class OpenCholesterolEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()

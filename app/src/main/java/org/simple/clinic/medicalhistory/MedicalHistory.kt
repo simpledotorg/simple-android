@@ -12,7 +12,6 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
@@ -69,6 +68,14 @@ data class MedicalHistory(
 
     val deletedAt: Instant?
 ) : Parcelable {
+
+  companion object {
+
+    fun convertCholesterolToMmol(cholesterol: Float): Float {
+      return cholesterol / 38.67f
+    }
+  }
+
   val diagnosisRecorded: Boolean
     get() = diagnosedWithHypertension != Unanswered && diagnosedWithDiabetes != Unanswered
 

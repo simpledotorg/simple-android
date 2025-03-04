@@ -34,7 +34,8 @@ class PatientSummaryUpdate(
     private val isNonLabBasedStatinNudgeEnabled: Boolean,
     private val isLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
-    private val maxAgeForCVDRisk: Int = 74
+    private val maxAgeForCVDRisk: Int = 74,
+    private val minReqMaxRiskRangeForLabBasedNudge: Int = 10,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -151,7 +152,7 @@ class PatientSummaryUpdate(
       hasCVD -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasCVD = true
             )
         )
@@ -162,7 +163,7 @@ class PatientSummaryUpdate(
       hasDiabetes && event.age > maxAgeForCVDRisk -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasDiabetes = true
             )
         )
@@ -181,7 +182,7 @@ class PatientSummaryUpdate(
       else -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = false,
+                canShowStatinNudge = false,
                 hasCVD = false
             )
         )
@@ -218,7 +219,7 @@ class PatientSummaryUpdate(
       hasCVD || (hasDiabetes && event.age >= minAgeForStatin) -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = canPrescribeStatin,
+                canShowStatinNudge = canPrescribeStatin,
                 hasCVD = hasCVD
             )
         )
@@ -236,7 +237,7 @@ class PatientSummaryUpdate(
       else -> {
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
-                canPrescribeStatin = false,
+                canShowStatinNudge = false,
                 hasCVD = false
             )
         )
@@ -268,7 +269,7 @@ class PatientSummaryUpdate(
     val bmiReading = event.bmiReading
     val calculatedRiskRange = event.riskRange
     val canPrescribeStatin = if (isLabBasedStatinNudgeEnabled) {
-      true
+      checkIfLabBasedNudgeCanBeShown(event.medicalHistory, event.riskRange)
     } else {
       calculatedRiskRange?.canPrescribeStatin ?: false
     }
@@ -285,7 +286,7 @@ class PatientSummaryUpdate(
     }
 
     val statinInfo = StatinInfo(
-        canPrescribeStatin = canPrescribeStatin,
+        canShowStatinNudge = canPrescribeStatin,
         cvdRisk = riskRange,
         isSmoker = medicalHistory.isSmoking,
         bmiReading = bmiReading,
@@ -302,12 +303,18 @@ class PatientSummaryUpdate(
     }
   }
 
+  private fun checkIfLabBasedNudgeCanBeShown(
+    medicalHistory: MedicalHistory,
+    riskRange: CVDRiskRange?
+  ): Boolean {
+    val maxRiskRange = riskRange?.max ?: 0
+    return !(medicalHistory.diagnosedWithDiabetes != Yes && maxRiskRange < minReqMaxRiskRangeForLabBasedNudge)
+  }
+
   private fun labBasedRiskRange(calculatedRiskRange: CVDRiskRange?): CVDRiskRange? {
     if (calculatedRiskRange == null) return null
 
-    val reqMaxRiskRange = 10
-
-    return if (calculatedRiskRange.max < reqMaxRiskRange) {
+    return if (calculatedRiskRange.max < minReqMaxRiskRangeForLabBasedNudge) {
       null
     } else {
       calculatedRiskRange

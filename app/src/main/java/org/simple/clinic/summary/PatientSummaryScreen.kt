@@ -328,8 +328,11 @@ class PatientSummaryScreen :
           StatinNudge(
               statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+              isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
+              isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
               addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
-              addBMIClick = { additionalEvents.notify(AddBMIClicked) }
+              addBMIClick = { additionalEvents.notify(AddBMIClicked) },
+              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) }
           )
         }
       }
@@ -360,6 +363,10 @@ class PatientSummaryScreen :
 
       is ScreenRequest.BMIEntrySheet -> {
         additionalEvents.notify(BMIReadingAdded)
+      }
+
+      is ScreenRequest.CholesterolEntrySheet -> {
+        additionalEvents.notify(CholesterolAdded)
       }
     }
   }

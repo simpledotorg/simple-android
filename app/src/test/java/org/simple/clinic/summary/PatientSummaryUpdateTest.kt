@@ -2446,14 +2446,14 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when statin info is loaded and lab-based statin is enabled, then statin can be prescribed`() {
+  fun `when statin info is loaded and lab-based statin is enabled and has diabetes, then statin can be prescribed`() {
     val statinInfo = StatinInfo(
         canShowStatinNudge = true,
         cvdRisk = null,
         isSmoker = Yes,
         bmiReading = BMIReading(165f, 60f),
         hasCVD = true,
-        hasDiabetes = false,
+        hasDiabetes = true,
         age = 55,
         cholesterol = null,
     )
@@ -2471,7 +2471,7 @@ class PatientSummaryUpdateTest {
             medicalHistory = TestData.medicalHistory(
                 hasHadStroke = Yes,
                 hasHadHeartAttack = Yes,
-                hasDiabetes = No,
+                hasDiabetes = Yes,
                 isSmoking = Yes,
                 cholesterol = null,
             ),
@@ -2482,6 +2482,45 @@ class PatientSummaryUpdateTest {
             hasModel(defaultModel.updateStatinInfo(statinInfo)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when statin info is loaded and lab-based statin is enabled and has diabetes and max risk is less than 10, then statin cannot be prescribed`() {
+    val statinInfo = StatinInfo(
+      canShowStatinNudge = false,
+      cvdRisk = null,
+      isSmoker = Yes,
+      bmiReading = BMIReading(165f, 60f),
+      hasCVD = true,
+      hasDiabetes = false,
+      age = 55,
+      cholesterol = null,
+    )
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+      isPatientReassignmentFeatureEnabled = true,
+      isPatientStatinNudgeV1Enabled = true,
+      isNonLabBasedStatinNudgeEnabled = true,
+      isLabBasedStatinNudgeEnabled = true,
+    ))
+
+    updateSpec
+      .given(defaultModel)
+      .whenEvent(StatinInfoLoaded(
+        age = 55,
+        medicalHistory = TestData.medicalHistory(
+          hasHadStroke = Yes,
+          hasHadHeartAttack = Yes,
+          hasDiabetes = No,
+          isSmoking = Yes,
+          cholesterol = null,
+        ),
+        riskRange = CVDRiskRange(9, 9),
+        bmiReading = BMIReading(165f, 60f),
+      ))
+      .then(assertThatNext(
+        hasModel(defaultModel.updateStatinInfo(statinInfo)),
+        hasNoEffects()
+      ))
   }
 
   @Test

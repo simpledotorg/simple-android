@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">ታሪኽ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?(ዝድለ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት ወሲዱ ኔሩ ድዩ? (ኣገዳሲ) </string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>
   <string name="prescribed_drugs_dosage_remove">ምልጋስ </string>
@@ -893,15 +892,22 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">ወርሓዊ ጸብጻብ መጻረዪ</string>
   <string name="monthly_screening_reports">ወርሓዊ ጸብጻባት መጻረዪ</string>
-  <string name="monthly_screening_reports_screening_report">%1$s ጸብጻብ መጻረዪ</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">ወርሓዊ ጸብጻብ መኽዘን መድሓኒት</string>
-  <string name="monthly_drug_stock_reports">ወርሓዊ ጸብጻባት መኽዘን መድሓኒት</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$sታት ጸብጻብ መኽዘን መድሓኒት</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">%1$s ጸብጻብ መጻረዪ</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$sታት ጸብጻብ መኽዘን መድሓኒት</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሓዊ ጸብጻብ ቀረባት</string>
   <string name="monthly_supplies_reports">ወርሓዊ ጸብጻባት ቀረባት</string>
   <string name="monthly_supplies_report_supplies_report">%1$sታት ጸብጻብ ቀረባት </string>
-</resources>
+
+  <string name="change_patient_facility">ለውጢ</string>
+
+  <string name="diabetes_warning_dialog_negative_button">ሕዚ ኣይኮነን</string>
+
+  <string name="htn_warning_dialog_negative_button">ሕዚ ኣይኮነን</string>
+
+  <string name="purge_notification_desc">ምትዕርራይ ናይ ዳታ ቤዝ ኣብ መስርሕ ኣሎ እዚ ሓደ ደቐቕ ጥራይ’ዩ ዝወስድ</string>
+
+  <string name="smoking_status_dialog_title_positive_button">ተሰሪሑ</string>
+  <string name="smoking_status_dialog_title_negative_button"> ሰርዝ</string>
+
+  </resources>

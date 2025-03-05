@@ -65,9 +65,9 @@
 - Fix JSON variable name in non-lab based statin calculation sheet
 - Add `LabBasedCVDRiskCalculator` and effect to calculate lab based cvd risk
 - Add `CholesterolEntrySheet`
-- Bump AGP to v8.8.2
 - Calculate lab-based CVD risk score
 - Update copy of statin nudge to support lab-based nudge
+- Bump AGP to v8.9.0
 
 ### Fixes
 

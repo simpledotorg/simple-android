@@ -48,11 +48,10 @@
 - Fix variables usage in build workflows
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
-- Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
 - Bump Gradle to v8.12.1
 - Opt out of edge-to-edge enforcement in Android 15
 - Bump Google Gson to v2.12.0
-- Add statin translations for `bn-BD`, `si-LK`, `ta-LK`
+- Update translations for `bn-BD`, `si-LK`, `ta-LK`
 - Bump Sentry Android to v8.1.0
 - Bump Sentry Gradle plugin to v5.1.0
 - Show smoking status dialog for low and medium cvd risk.

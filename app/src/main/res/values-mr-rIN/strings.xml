@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">इतिहास</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">रुग्णाने मागच्या महिन्यात कधीही बीपीची औषधे घेतली का? (आवश्यक)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">रुग्णाने मागच्या महिन्यात कधीही मधुमेहाची औषधे घेतली का? (आवश्यक)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">काही नाही</string>
   <string name="prescribed_drugs_dosage_remove">काढून टाका</string>
@@ -892,15 +891,22 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">मासिक छाननी अहवाल</string>
   <string name="monthly_screening_reports">मासिक तपासणी अहवाल</string>
-  <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग अहवाल</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">मासिक औषध साठ्याचा अहवाल</string>
-  <string name="monthly_drug_stock_reports">मासिक औषध साठ्याचे अहवाल</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s औषध साठ्याचा अहवाल</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग अहवाल</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s औषध साठ्याचा अहवाल</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">मासिक पुरवठ्यांचा अहवाल</string>
   <string name="monthly_supplies_reports">मासिक पुरवठ्यांचे अहवाल</string>
   <string name="monthly_supplies_report_supplies_report">%1$s पुरवठ्यांचे अहवाल</string>
-</resources>
+
+  <string name="change_patient_facility">बदला</string>
+
+  <string name="diabetes_warning_dialog_negative_button">आता नाही</string>
+
+  <string name="htn_warning_dialog_negative_button">आता नाही</string>
+
+  <string name="purge_notification_desc">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
+
+  <string name="smoking_status_dialog_title_positive_button">पूर्ण झाले</string>
+  <string name="smoking_status_dialog_title_negative_button">रद्द करा</string>
+
+  </resources>

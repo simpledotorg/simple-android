@@ -338,6 +338,7 @@
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
+  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
@@ -419,6 +420,9 @@
   <string name="settings_software">ሶፍትዌር</string>
   <string name="settings_update">አዘምን ወይም አድስ</string>
   <string name="settings_software_version">ስሪት %1$s</string>
+  <string name="settings_logout">Logout</string>
+  <string name="settings_logout_dialog_title">Logout</string>
+  <string name="settings_logout_dialog_desc">Are you sure you want to logout?</string>
   <string name="settings_logout_dialog_positive_action">አዎ</string>
   <string name="settings_logout_dialog_negative_action">አይ</string>
 
@@ -897,15 +901,87 @@
   <string name="monthly_screening_reports_screening_report">%1$s የማጣሪያ ሪፖርቶች</string><!--Oct 2022 screening report-->
 
   <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">ወርሃዊ የመድሃኒት ክምችት ሪፖርት</string>
-  <string name="monthly_drug_stock_reports">ወርሃዊ የመድሃኒት ክምችት ሪፖርቶች</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s የመድሃኒት ክምችት ሪፖርት</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_drug_stock_report">Drug stock report</string>
+  <string name="monthly_drug_stock_reports">Drug stock reports</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s የመድሃኒት ክምችት ሪፖርት</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሃዊ የአቅርቦቶች ሪፖርት</string>
   <string name="monthly_supplies_reports">ወርሃዊ የአቅርቦቶች ሪፖርቶች</string>
   <string name="monthly_supplies_report_supplies_report">%1$s የአቅርቦቶች ሪፖርት</string>
-  <string name="data_protection_consent_title">\"የአጠቃቀም መመሪያ \"</string>
-  <string name="data_protection_consent_subtitle">የሲምፕል መተግበሪያን ከመጠቀምዎ በፊት የሚከተሉትን ውሎች በማንበብ እና በመስማማት ከስር “ይስማሙ እና ይቀጥሉ\" የሚለውን ሳጥን ይጫኑ። የሲምፕል መተግበሪያ የታካሚዎች የግል የጤና መረጃ (“ውሂብ ወይም ዳታ\") ይዟል. በምትሠሩበት የጤና ተቋም ውስጥ ከታካሚ እንክብካቤ ጋር የተያያዙ የሥራ ተግባሮችን ለማከናወን እንደ አስፈላጊነቱ የታካሚን መረጃ ማግኘት ይችላሉ፤ ነገር ግን ለሌላ ለማንኛውም ዓላማ የታካሚን ውሂብ/ዳታ መክፈት ወይም ማየት የተከለከለ ነው። መረጃን በሚስጥር መያዝ አለብዎት።  መረጃን ለሌላ ሶስተኛ አካል ያለ ታካሚው እና ተቋሙ እውቅና እና ፈቃድ ማጋራት ፈጽሞ የተከለከለ ነው። የሲምፕል መተግበሪያን ለመክፈት የሚጠቀሙበትን የደህንነት ኮድ ለግልዎ ብቻ መጠቀም አለብዎት።  በማይጠቀሙበት ጊዜ ወዲያውኑ ከሲምፕል መተግበሪያ መውጣት አለብዎት።  ሌሎች አካላት የእርስዎን የመግቢያ ሚስጢር ኮድ ተጠቅመው ወደ ሲምፕል መተግበሪያ ወይም ዳታ እንዲገቡ መፍቀድ የተከለከለ ነው። እንደ አስፈላጊነቱ በየጊዜው የዳታ መላክን/ሲንክኖሪዛቲኦን፣ የግዴታ መዝገቦችን መያዝ እና ሌሎች ዝማኔዎችን እና ጥገናዎችን ማከናወን አለብዎት። የሲምፕል መተግበሪያ የውሂብ መዳረሻዎን መዝገብ በራስ-ሰር እንደሚፈጥር ይገባዎታል። ያልተፈቀደ መዳረሻ ወይም ሌሎች የአጠቃቀም ደንቦችን መጣስ የሲምፕል  መተግበሪያ መዳረሻዎ እንዲሰረዝ ወይም ሌሎች አስተዳደራዊ እርምጃዎችን ሊያስከትል ይችላል።</string>
-  <string name="data_protection_consent_accept_button">\"ይስማሙ እና ይቀጥሉ \"</string>
+
+  <!-- Drug Stock Expiry Form -->
+  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
+
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">Terms of Use</string>
+  <string name="data_protection_consent_subtitle">Before using the Simple app, you must read and agree to the following terms by clicking <b>“AGREE AND CONTINUE”</b> below.\n\n
+The Simple app contains private health information of patients (“Data”).\n\n
+• You may only access Data as necessary to perform your job duties related to patient care within the healthcare facility in which you work. Accessing or viewing Data for any other purpose is prohibited.\n\n
+• You must keep Data confidential. Sharing Data with others is prohibited.\n\n
+• You must keep the security code you use to access the Simple app private.\n\n
+• You must promptly log out of the Simple app when not in use. Allowing others to use your login credentials to access the Simple app or Data is prohibited.\n\n
+• You must perform periodic syncing of data, capturing of mandatory records, and other maintenance as required.\n\n
+• You understand that the Simple app automatically creates a record of your access to Data. Unauthorized access or other violations of the Terms of Use may result in your access to the Simple app being revoked or other disciplinary measures.\n\n
+  </string>
+  <string name="data_protection_consent_accept_button">AGREE AND CONTINUE</string>
+
+  <!-- Patient transfer to CC -->
+  <string name="patient_facility_reassignment">Eligible for CC refilling</string>
+  <string name="reassign_patient_title">Eligible for refills at CC. Transfer patient?</string>
+  <string name="reassign_patient_description">Assign to preferred community clinic for future visits.</string>
+  <string name="change_patient_facility">ለውጥ</string>
+
+  <!-- Diabetes Diagnosis Warning Dialog -->
+  <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
+  <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
+  <string name="diabetes_warning_dialog_positive_button">Yes, has diabetes</string>
+  <string name="diabetes_warning_dialog_negative_button">አሁን አይሆንም</string>
+
+  <!-- HTN Diagnosis Warning Dialog -->
+  <string name="htn_warning_dialog_title">Add Hypertension diagnosis?</string>
+  <string name="htn_warning_dialog_desc">This patient is on hypertension medication.</string>
+  <string name="htn_warning_dialog_positive_button">Yes, has hypertension</string>
+  <string name="htn_warning_dialog_negative_button">አሁን አይሆንም</string>
+
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">LOW-HIGH RISK %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">MEDIUM-HIGH RISK %s</string>
+  <string name="statin_alert_high_risk_patient_x">HIGH RISK %s</string>
+  <string name="statin_alert_very_high_risk_patient">VERY HIGH RISK PATIENT</string>
+  <string name="statin_alert_very_high_risk_range">VERY HIGH RISK %s</string>
+  <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
+  <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
+  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
+  <string name="statin_alert_add_smoking">Add smoking</string>
+  <string name="statin_alert_add_bmi">Add BMI</string>
+  <string name="statin_alert_add_cholesterol">Add cholesterol</string>
+  <string name="statin_alert_add_smoking_info">Add smoking for more accurate risk score.</string>
+  <string name="statin_alert_add_bmi_info">Add BMI for more accurate risk score.</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">Add smoking status and BMI for more accurate risk score.</string>
+  <string name="statin_alert_add_cholesterol_info">Add cholesterol for more accurate risk score.</string>
+  <string name="statin_alert_add_smoking_and_cholesterol_info">Add smoking status and cholesterol for more accurate risk score.</string>
+
+  <!-- Purge notification -->
+  <string name="purge_notification_title">Optimising database</string>
+  <string name="purge_notification_desc">ዳታ ቤዝ ጥገና በሂደት ላይ ነው፤ ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
+
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">Height (cm)</string>
+  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
+  <string name="bmi_x">BMI: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
+  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
+  <string name="smoking_status_dialog_option_no">Not a smoker</string>
+  <string name="smoking_status_dialog_title_positive_button">ተጠናቅቋል</string>
+  <string name="smoking_status_dialog_title_negative_button">ይቅር</string>
+
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
+  <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
+  <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
 </resources>

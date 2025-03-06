@@ -891,12 +891,7 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">மாதாந்திரத் தகுதிச்சோதனை அறிக்கை</string>
   <string name="monthly_screening_reports">மாதாந்தரத் தகுதிச்சோதனை அறிக்கைகள்</string>
-  <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string>
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">மாதாந்திர மருந்து இருப்பு அறிக்கை</string>
-  <string name="monthly_drug_stock_reports">மாதாந்திர மருந்து இருப்பு அறிக்கைகள்</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s மருந்து இருப்பு அறிக்கை</string>
+  <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s மருந்து இருப்பு அறிக்கை</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">மாதாந்திரப் பொருட்கள் அறிக்கை</string>
@@ -920,4 +915,8 @@
   <string name="smoking_status_dialog_title_positive_button">முடிந்தது</string>
   <string name="smoking_status_dialog_title_negative_button">ரத்து செய்யவும்</string>
 
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title">கொலஸ்ட்ரால்(mg/dl)</string>
+  <string name="cholesterol_error_upper_limit">கொலஸ்ட்ரால் 1000 க்கு மேல் இருக்கக்கூடாது.</string>
+  <string name="cholesterol_error_lower_limit">கொலஸ்ட்ரால் 25 க்கு குறைவாக இருக்கக்கூடாது</string>
 </resources>

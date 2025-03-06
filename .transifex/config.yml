@@ -1,9 +1,10 @@
 filters:
   - filter_type: file
     # all supported i18n types: https://docs.transifex.com/formats
-    file_format: Android
+    file_format: ANDROID
     source_language: en
     source_file: app/src/main/res/values/strings.xml
+    mode: sourceastranslation
    # path expression to translation files, must contain <lang> placeholder
     translation_files_expression: 'app/src/main/res/values-<lang>/strings.xml'
 settings:

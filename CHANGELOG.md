@@ -51,7 +51,7 @@
 - Bump Gradle to v8.12.1
 - Opt out of edge-to-edge enforcement in Android 15
 - Bump Google Gson to v2.12.0
-- Update translations for `bn-BD`, `si-LK`, `ta-LK`
+- Update translations for `bn-BD`, `si-LK`, `ta-LK`, `ta-IN`
 - Bump Sentry Android to v8.1.0
 - Bump Sentry Gradle plugin to v5.1.0
 - Show smoking status dialog for low and medium cvd risk.

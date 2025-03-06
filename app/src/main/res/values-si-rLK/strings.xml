@@ -947,4 +947,8 @@
   <string name="smoking_status_dialog_title_positive_button">අවසන්</string>
   <string name="smoking_status_dialog_title_negative_button">අවලංගු කරන්න</string>
 
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title"> කොලෙස්ටරෝල් මට්ටම  (mg/dL)</string>
+  <string name="cholesterol_error_upper_limit">කොලෙස්ටරෝල් මට්ටම 1000ට වඩා වැඩි විය නොහැක</string>
+  <string name="cholesterol_error_lower_limit"> කොලෙස්ටරෝල් මට්ටම 25ට වඩා අඩු විය නොහැක</string>
 </resources>

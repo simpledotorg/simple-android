@@ -60,7 +60,7 @@ services:
       SIMPLE_APP_SIGNATURE: <redacted>
       TWILIO_ACCOUNT_SID: <redacted>
       TWILIO_REMINDERS_ACCOUNT_SID: <redacted>
-      SEED_TYPE: test
+      SEED_TYPE: empty
       SENTRY_SECURITY_HEADER_ENDPOINT: http://none.org
       EXOTEL_TOKEN: <redacted>
       TWILIO_AUTH_TOKEN: <redacted>

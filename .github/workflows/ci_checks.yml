@@ -90,7 +90,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Start Simple Docker server
-        run: .github/scripts/deploy_docker_server.sh
+        run: |
+          .github/scripts/deploy_docker_server.sh
+          echo "CONTAINER_ID=$(docker container ls -q -f name=simple-server)" >> $GITHUB_ENV
 
       - name: Cache AVD
         uses: actions/cache@v4
@@ -156,6 +158,20 @@ jobs:
         with:
           name: failed-test-artifacts
           path: app/build/outputs/test-artifacts
+
+      - name: Extract Docker logs
+        if: always()
+        run: |
+          docker cp ${{ env.CONTAINER_ID }}:/home/app/log ./docker_logs
+          zip -r docker_logs.zip docker_logs/
+          
+
+      - name: Upload Docker logs
+        if: always() && steps.run-instrumented-tests.outcome != 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: docker_logs.zip
 
       - name: Stop Simple Docker server
         run: |

@@ -1,34 +1,83 @@
 version: "3"
 
 services:
+  ### psql -h postgres -p 5432 -U postgres
   postgres:
     image: postgres:14.3-alpine
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-    expose:
-      - "5432"
+    ports:
+      - "5432:5432"
+
+  webdb:
+    image: webdb/app
+    ports:
+      - "22071:22071"
+    depends_on:
+      server:
+        condition: service_healthy
 
   redis:
     image: redis:5-alpine
-    expose:
-      - "6379"
+    ports:
+      - "6379:6379"
+
 
   server:
-    image: simpledotorg/server:latest
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:setup; bundle exec rails s -p 3000 -b '0.0.0.0'"
-    expose:
-      - "3000"
+    image: simpledotorg/server
+    #command: bash -c "rm -f tmp/pids/server.pid ; bundle install ;  bundle exec rake db:setup ; bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "bash ./run_docker_server.sh"
+    healthcheck:
+      test: "curl -f http://localhost:3000/api/v3/ping"
+      start_period: 10m
     ports:
-      - "8420:3000"
+      - "3000:3000"
     depends_on:
       - redis
       - postgres
+    volumes:
+      - ./scripts/run_docker_server.sh:/home/app/run_docker_server.sh
     environment:
       SIMPLE_SERVER_DATABASE_HOST: postgres
       SIMPLE_SERVER_DATABASE_USERNAME: postgres
       SIMPLE_SERVER_DATABASE_PASSWORD: password
+      SIMPLE_SERVER_DATABASE_NAME: SIMPLE_POC
       SIMPLE_SERVER_HOST_PROTOCOL: https
       CALL_SESSION_REDIS_HOST: redis
       RAILS_CACHE_REDIS_URL: redis://
+      RAILS_CACHE_REDIS_PASSWORD: NONE
+      RAILS_ENV: test
       SIDEKIQ_REDIS_HOST: redis
+      SIDEKIQ_CONCURRENCY: 5
+      SIMPLE_SERVER_HOST: localhost
+      SENDGRID_USERNAME: NONE
+      SENDGRID_PASSWORD: NONE
+      SENTRY_DSN: none.org
+      SEED_GENERATED_ACTIVE_USER_ROLE: Seed User | Active
+      SEED_GENERATED_ADMIN_PASSWORD: trying to fix hypertension
+      SEED_GENERATED_INACTIVE_USER_ROLE: Seed User | Inactive
+      SIMPLE_APP_SIGNATURE: <redacted>
+      TWILIO_ACCOUNT_SID: <redacted>
+      TWILIO_REMINDERS_ACCOUNT_SID: <redacted>
+      SEED_TYPE: empty
+      SENTRY_SECURITY_HEADER_ENDPOINT: http://none.org
+      EXOTEL_TOKEN: <redacted>
+      TWILIO_AUTH_TOKEN: <redacted>
+      TWILIO_PHONE_NUMBER: <redacted>
+      TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN: <redacted>
+      TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER: <redacted>
+      SIMPLE_SERVER_ENV: qa
+      TEMPORARY_RETENTION_DURATION_SECONDS: 60
+      ANALYTICS_DASHBOARD_CACHE_TTL: 3600
+      CALL_SESSION_REDIS_POOL_SIZE: 12
+      CALL_SESSION_REDIS_TIMEOUT_SEC: 1
+      DEFAULT_COUNTRY: US
+      DEFAULT_NUMBER_OF_RECORDS: 10
+      EMAIL_SUBJECT_PREFIX: "[Simple DEVELOPMENT]"
+      HELP_SCREEN_YOUTUBE_PASSPORT_URL: https://youtu.be/aktZ1yTdDOA
+      HELP_SCREEN_YOUTUBE_TRAINING_URL: https://youtu.be/MC_45DoRw2g
+      HELP_SCREEN_YOUTUBE_VIDEO_URL: https://youtu.be/nHsQ06tiLzw
+      SENTRY_CURRENT_ENV: development
+      USER_OTP_VALID_UNTIL_DELTA_IN_MINUTES: 10
+      SECRET_KEY_BASE: 6e3a553d989615581dfdfcfcb0670b002e5d9d27c38a284a5020107e8ba516789117630f9c7e0ade1d0d7b0b68aeb50df88d8b15ea55dc423246db2984f6e5ef

@@ -233,26 +233,7 @@ class SettingsScreenTest {
   }
 
   @Test
-  fun whenLogoutFeatureIsNotEnabledThenDoNotShowLogoutButton() {
-    val model = SettingsModel.default(
-        isChangeLanguageFeatureEnabled = true,
-    )
-    composeRule.setContent {
-      SettingsScreen(
-          model = model,
-          navigationIconClick = { /*no-op*/ },
-          changeLanguageButtonClick = { /*no-op*/ },
-          updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
-      )
-    }
-
-    // then
-    composeRule.onNodeWithTag("SETTINGS_LOGOUT_BUTTON").assertDoesNotExist()
-  }
-
-  @Test
-  fun whenLogoutFeatureIsEnabledThenShowLogoutButton() {
+  fun logoutButtonShouldBeVisible() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
     )

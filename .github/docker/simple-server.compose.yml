@@ -60,14 +60,14 @@ services:
       SIMPLE_APP_SIGNATURE: <redacted>
       TWILIO_ACCOUNT_SID: <redacted>
       TWILIO_REMINDERS_ACCOUNT_SID: <redacted>
-      SEED_TYPE: empty
+      SEED_TYPE: test
       SENTRY_SECURITY_HEADER_ENDPOINT: http://none.org
       EXOTEL_TOKEN: <redacted>
       TWILIO_AUTH_TOKEN: <redacted>
       TWILIO_PHONE_NUMBER: <redacted>
       TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN: <redacted>
       TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER: <redacted>
-      SIMPLE_SERVER_ENV: test
+      SIMPLE_SERVER_ENV: development
       TEMPORARY_RETENTION_DURATION_SECONDS: 60
       ANALYTICS_DASHBOARD_CACHE_TTL: 3600
       CALL_SESSION_REDIS_POOL_SIZE: 12

@@ -72,9 +72,96 @@ jobs:
           ./gradlew --build-cache --no-daemon test -x :app:test;
           ./gradlew --build-cache --no-daemon testQaDebugUnitTest;
   
-  
 
-  # TODO: Add Android integration tests once [SC-13775] is resolved
+  integration_tests:
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 60
+    env:
+      AVD_API_LEVEL: 34
+      AVD_ARCH: x86_64
+    steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+
+      - name: Checkout Android source
+        uses: actions/checkout@v4
+
+      - name: Start Simple Docker server
+        run: .github/scripts/deploy_docker_server.sh
+
+      - name: Cache AVD
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}-${{ env.AVD_ARCH }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          disk-size: 8G
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Create build directory
+        run: mkdir app/build
+
+      - name: Build QA Test Artifacts
+        id: build-instrumented-tests
+        run: |
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=http://10.0.2.2:3000/api/ assembleQaDebug assembleQaDebugAndroidTest
+
+      - name: Android Tests
+        id: run-instrumented-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          disk-size: 8G
+          script: |
+            adb root
+            mkdir -p app/build/outputs/test-artifacts
+            adb install app/build/outputs/apk/qa/debug/app-qa-debug.apk 
+            adb install app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk
+            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >app/build/outputs/test-artifacts/logs.txt 2>app/build/outputs/test-artifacts/logs.txt
+            cat app/build/outputs/test-artifacts/logs.txt
+            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ app/build/outputs/test-artifacts/ || true
+            adb uninstall org.simple.clinic.qa.debug
+            adb uninstall org.simple.clinic.qa.debug.test
+            ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
+
+      - name: Upload failed test artifacts
+        if: always() && steps.run-instrumented-tests.outcome != 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-test-artifacts
+          path: app/build/outputs/test-artifacts
+
+      - name: Stop Simple Docker server
+        run: |
+          docker compose -f ".github/docker/simple-server.compose.yml" down
+
 
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]

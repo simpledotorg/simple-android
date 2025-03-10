@@ -892,6 +892,8 @@
   <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্টসমূহ</string>
   <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
 
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">\"অ্যাপ ব্যবহারের শর্তাবলী \"</string>
   <!-- Patient transfer to CC -->
   <string name="patient_facility_reassignment">কমিউনিটি ক্লিনিকে রিফিল করার জন্য যোগ্য</string>
   <string name="change_patient_facility">পরিবর্তন</string>
@@ -900,8 +902,30 @@
 
   <string name="htn_warning_dialog_negative_button">এখন নয়</string>
 
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">নিম্ন-উচ্চ ঝুঁকি %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">মাঝারি-উচ্চ ঝুঁকি %s</string>
+  <string name="statin_alert_high_risk_patient_x">উচ্চ ঝুঁকি %s</string>
+  <string name="statin_alert_very_high_risk_patient">অত্যন্ত উচ্চ ঝুঁকির রোগী</string>
+  <string name="statin_alert_at_risk_patient">রোগী ঝুঁকিতে আছেন </string>
+  <string name="statin_alert_refer_to_doctor">&lt;b&gt;স্ট্যাটিন ওষুধের&lt;/b&gt; জন্য ডাক্তারের কাছে পাঠান</string>
+  <string name="statin_alert_add_smoking">ধূমপান যোগ করুন</string>
+  <string name="statin_alert_add_bmi">বিএমআই যোগ করুন</string>
+  <string name="statin_alert_add_smoking_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য ধূমপানের অবস্থা যোগ করুন।</string>
+  <string name="statin_alert_add_bmi_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য বিএমআই যোগ করুন।</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য ধূমপানের অবস্থা এবং বিএমআই যোগ করুন।</string>
   <string name="purge_notification_desc">ডাটাবেস রক্ষণাবেক্ষণ প্রগতিতে রয়েছে। এটি সম্পন্ন হতে এক মিনিট সময় নেবে।</string>
 
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">বিএমআই</string>
+  <string name="bmi_entry_height_in_cm">উচ্চতা (সেমি)</string>
+  <string name="bmi_entry_weight_in_kg">ওজন (কেজি)</string>
+  <string name="bmi_x">বিএমআই: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="smoking_status_dialog_title">রোগী কি ধূমপান করেন?</string>
+  <string name="smoking_status_dialog_option_yes">হ্যাঁ, ধূমপায়ী</string>
+  <string name="smoking_status_dialog_option_no">না, ধূমপায়ী নন</string>
   <string name="smoking_status_dialog_title_positive_button">সম্পন্ন</string>
   <string name="smoking_status_dialog_title_negative_button">বাতিল করুন</string>
 

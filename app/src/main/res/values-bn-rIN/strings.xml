@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">ইতিহাস</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">গত মাসে রোগী কি কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">কিছুই না</string>
   <string name="prescribed_drugs_dosage_remove">অপসারণ করুন</string>
@@ -897,10 +896,23 @@
   <!--Monthly drug stock reports-->
   <string name="monthly_drug_stock_report">মাসিক ওষুধের স্টক রিপোর্ট</string>
   <string name="monthly_drug_stock_reports">মাসিক ওষুধের স্টক রিপোর্ট</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ওষুধের স্টক রিপোর্ট</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ওষুধের স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
   <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
   <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
-</resources>
+
+  <string name="change_patient_facility">बदला</string>
+
+  <string name="diabetes_warning_dialog_negative_button">आता नाही</string>
+
+  <string name="htn_warning_dialog_negative_button">आता नाही</string>
+
+  <string name="statin_alert_at_risk_patient">রোগী ঝুঁকিতে আছেন</string>
+  <string name="purge_notification_desc">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
+
+  <string name="smoking_status_dialog_title_positive_button">पूर्ण झाले</string>
+  <string name="smoking_status_dialog_title_negative_button">रद्द करा</string>
+
+  </resources>

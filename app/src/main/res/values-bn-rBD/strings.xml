@@ -319,9 +319,6 @@
   <string name="reports_come_back_later">পরে ফিরে আসুন</string>
   <string name="reports_you_will_be_able_to_see">আপনি এখানে আপনার ক্লিনিকের জন্য হাইপারটেনশনের রিপোর্ট দেখতে পাবেন।</string>
 
-  <!-- Medical History -->
-  <!--suppress UnusedResources used in enum -->
-  <string name="medicalhistory_question_heartattack">হার্ট অ্যাটাক</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_stroke">স্ট্রোক</string>
   <!--suppress UnusedResources -->
@@ -338,8 +335,6 @@
   <string name="newmedicalhistory_history">ইতিহাস</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">গত মাসে রোগী কি কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
-  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">কোনটিই নয়</string>
   <string name="prescribed_drugs_dosage_remove">অপসারণ করুন</string>
@@ -420,9 +415,6 @@
   <string name="settings_software">সফটওয়্যার</string>
   <string name="settings_update">আপডেট করুন</string>
   <string name="settings_software_version">সংস্করণ %1$s</string>
-  <string name="settings_logout">Logout</string>
-  <string name="settings_logout_dialog_title">Logout</string>
-  <string name="settings_logout_dialog_desc">Are you sure you want to logout?</string>
   <string name="settings_logout_dialog_positive_action">হ্যাঁ</string>
   <string name="settings_logout_dialog_negative_action">না</string>
 
@@ -552,7 +544,6 @@
   <string name="contactpatient_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
   <string name="contactpatient_public_hospital_transfer">অন্য জনস্বাস্থ্য সুবিধাতে স্থানান্তরিত করা হয়েছে</string>
   <string name="contactpatient_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
-  <string name="contactpatient_refused_to_come_back">ফিরে আসতে অস্বীকৃতি জানিয়েছে</string>
   <string name="contactpatient_patient_died">মারা গেছে</string>
   <string name="contactpatient_other_reason">অন্য কারণ</string>
   <string name="contactpatient_unknown">অজানা</string>
@@ -872,8 +863,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">বাতিল করুন</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">ডাউনলোড করুন</string>
-  <string name="patient_line_list_download_link">IHCI রোগীর রেজিস্টার ডাউনলোড করুন</string>
-
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">বিজ্ঞপ্তি চালু করুন</string>
   <string name="notification_permission_denied_message">আপনাকে গুরুত্বপূর্ণ রিমাইন্ডার দেখানোর জন্য সিম্পলের অনুমতি প্রয়োজন। অনুমতি &gt; বিজ্ঞপ্তি থেকে চালু করুন</string>
@@ -896,12 +885,6 @@
 
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Drug stock report</string>
-  <string name="monthly_drug_stock_reports">Drug stock reports</string>
   <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
@@ -909,70 +892,17 @@
   <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্টসমূহ</string>
   <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
 
-  <!-- Drug Stock Expiry Form -->
-  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
-
-  <!-- Data protection consent -->
-  <string name="data_protection_consent_title">\\"অ্যাপ ব্যবহারের শর্তাবলী \\"</string>
-  <string name="data_protection_consent_subtitle">সিম্পুল অ্যাপ ব্যবহার করতে হলে অবশ্যই আপনাকে নীচের ‘সম্মত হন এবং চালিয়ে যান’ বাটনে ক্লিক করে নিম্নলিখিত শর্তাবলীতে সম্মত হতে হবে৷ সিম্পুল অ্যাপটিতে রোগীদের ব্যক্তিগত স্বাস্থ্য তথ্য (‘ডেটা’) রয়েছে। আপনি আপনার কাজের পরিসীমার মধ্যে প্রয়োজনীয় ডেটাতে প্রবেশ করতে পারবেন। আপনার জন্য প্রযোজ্য নয়, এমন তথ্যের মধ্যে প্রবেশ করতে পারবেন না। আপনাকে অবশ্যই ডেটা গোপনীয় রাখতে হবে। অন্যদের সাথে ডেটা শেয়ার করা যাবে না। সিম্পুল অ্যাপে প্রবেশ করতে সিকিউরিটি কোডের প্রয়োজন হবে এবং সেটি সংরক্ষণ করতে হবে। ব্যবহার না করার সময় আপনাকে অবশ্যই সিম্পুল অ্যাপ থেকে লগ আউট করতে হবে। সাধারণ অ্যাপ বা ডেটা অ্যাক্সেস করার জন্য অন্যদের আপনার লগইন তথ্যগুলো ব্যবহার করার অনুমতি দেওয়া যাবে না। আপনাকে অবশ্যই পর্যায়ক্রমে ডেটা সিঙ্ক করতে হবে, বাধ্যতামূলক রেকর্ড ধারণ করতে হবে এবং প্রয়োজনীয় অন্যান্য রক্ষণাবেক্ষণ করতে হবে। আপনি বুঝতে পেরেছেন যে সিম্পুল অ্যাপটি স্বয়ংক্রিয়ভাবে ডেটাতে আপনার প্রবেশের একটি রেকর্ড তৈরি করে। অননুমোদিত অ্যাক্সেস বা ব্যবহারের শর্তাবলীর অন্যান্য লঙ্ঘনের ফলে সাধারণ অ্যাপে আপনার অ্যাক্সেস প্রত্যাহার করা হতে পারে বা অন্যান্য শাস্তিমূলক ব্যবস্থা নেওয়া হতে পারে| \n\n</string>
-  <string name="data_protection_consent_accept_button">সম্মত হন এবং চালিয়ে যান</string>
-
   <!-- Patient transfer to CC -->
   <string name="patient_facility_reassignment">কমিউনিটি ক্লিনিকে রিফিল করার জন্য যোগ্য</string>
-  <string name="reassign_patient_title">কমিউনিটি ক্লিনিকে রিফিল করার জন্য যোগ্য। রোগী স্থানান্তর করুন ?</string>
-  <string name="reassign_patient_description">ভবিষ্যতে ভিজিট করার জন্য পছন্দের কমিউনিটি ক্লিনিকে সিলেক্ট করুন।</string>
   <string name="change_patient_facility">পরিবর্তন</string>
 
-  <!-- Diabetes Diagnosis Warning Dialog -->
-  <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
-  <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
-  <string name="diabetes_warning_dialog_positive_button">Yes, has diabetes</string>
   <string name="diabetes_warning_dialog_negative_button">এখন নয়</string>
 
-  <!-- HTN Diagnosis Warning Dialog -->
-  <string name="htn_warning_dialog_title">Add Hypertension diagnosis?</string>
-  <string name="htn_warning_dialog_desc">This patient is on hypertension medication.</string>
-  <string name="htn_warning_dialog_positive_button">Yes, has hypertension</string>
   <string name="htn_warning_dialog_negative_button">এখন নয়</string>
 
-  <!-- Statin Alerts -->
-  <string name="statin_alert_low_high_risk_patient_x">LOW-HIGH RISK %s</string>
-  <string name="statin_alert_medium_high_risk_patient_x">MEDIUM-HIGH RISK %s</string>
-  <string name="statin_alert_high_risk_patient_x">HIGH RISK %s</string>
-  <string name="statin_alert_very_high_risk_patient">VERY HIGH RISK PATIENT</string>
-  <string name="statin_alert_very_high_risk_range">VERY HIGH RISK %s</string>
-  <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
-  <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_add_smoking">Add smoking</string>
-  <string name="statin_alert_add_bmi">Add BMI</string>
-  <string name="statin_alert_add_cholesterol">Add cholesterol</string>
-  <string name="statin_alert_add_smoking_info">Add smoking for more accurate risk score.</string>
-  <string name="statin_alert_add_bmi_info">Add BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_bmi_info">Add smoking status and BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_cholesterol_info">Add cholesterol for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_cholesterol_info">Add smoking status and cholesterol for more accurate risk score.</string>
-
-  <!-- Purge notification -->
-  <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">ডাটাবেস রক্ষণাবেক্ষণ প্রগতিতে রয়েছে। এটি সম্পন্ন হতে এক মিনিট সময় নেবে।</string>
 
-  <!-- BMI entry -->
-  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
-  <string name="bmi_entry_height_in_cm">Height (cm)</string>
-  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
-  <string name="bmi_x">BMI: %s</string>
-
-  <!-- Add Smoking Status Dialog -->
-  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
-  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
-  <string name="smoking_status_dialog_option_no">Not a smoker</string>
   <string name="smoking_status_dialog_title_positive_button">সম্পন্ন</string>
   <string name="smoking_status_dialog_title_negative_button">বাতিল করুন</string>
 
-  <!-- Cholesterol entry sheet -->
-  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
-  <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
-  <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
-</resources>
+  </resources>

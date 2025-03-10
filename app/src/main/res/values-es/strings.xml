@@ -430,7 +430,7 @@
   <string name="changelanguage_done">Listo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Por favor espere…</string>
+  <string name="placeholder_loading_title">Por favor espere...</string>
   <string name="placeholder_loading_message">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
   <!-- Select Country Screen -->
@@ -521,8 +521,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marcar paciente como \"accedió a visitar\"</string>
-  <string name="contactpatient_remind_call_later">Recordar llamar después…</string>
-  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados…</string>
+  <string name="contactpatient_remind_call_later">Recordar llamar después...</string>
+  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados...</string>
   <string name="contactpatient_result_of_call">Resultado de la llamada</string>
   <string name="contactpatient_call">Llamada</string>
   <string name="contactpatient_call_normal">Normal</string>
@@ -902,7 +902,12 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">Reporte de pruebas mensual</string>
   <string name="monthly_screening_reports">Reportes de pruebas mensual</string>
-  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string>
+  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">Reporte mensual de existencias de medicamentos</string>
+  <string name="monthly_drug_stock_reports">Reportes mensuales de existencias de medicamentos</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Reporte mensual de suministros</string>

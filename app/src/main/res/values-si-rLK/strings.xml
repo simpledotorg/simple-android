@@ -876,14 +876,14 @@
   <string name="notification_permission_denied_negetive_button">දැන් නොවේ</string>
 
   <!--reports-->
-  <string name="reports_report">%1$s වාර්තාව</string>
+  <string name="reports_report">%1$s වාර්තාව</string><!--Oct 2023 report-->
   <string name="reports_submit_btn_text">භාර දෙන්න</string>
   <string name="reports_complete">සම්පූර්ණයි!</string>
   <string name="reports_done">අවසන්</string>
-  <string name="reports_submitted_with_date_and_time">භාර දෙනු ලැබිණි %1$s</string>
+  <string name="reports_submitted_with_date_and_time">භාර දෙනු ලැබිණි %1$s</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_report">වාර්තාව භාර දෙන්න</string>
   <string name="reports_submitted">භාර දෙනු ලැබිණි</string>
-  <string name="reports_submitted_with_date">%1$s වාර්තාව භාර දෙනු ලැබිණි</string>
+  <string name="reports_submitted_with_date">%1$s වාර්තාව භාර දෙනු ලැබිණි</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">සුරැකුම් නොකළ වෙනස්කම්</string>
   <string name="reports_unsaved_changes_text">සුරැකුම් නොකළ වෙනස්කම් අහිමි වෙනු ඇත.\nඔබට පිට වීමට අවශ්‍ය බව විශ්වාසද?</string>
   <string name="reports_stay_title">මෙම පිටුවේ රැඳී සිටින්න</string>
@@ -892,7 +892,7 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">මාසික පරීක්ෂණ වාර්තා</string>
   <string name="monthly_screening_reports">මාසික පරීක්ෂණ වාර්තා</string>
-  <string name="monthly_screening_reports_screening_report">%1$s පරීක්ෂණ වාර්තාව</string>
+  <string name="monthly_screening_reports_screening_report">%1$s පරීක්ෂණ වාර්තාව</string><!--Oct 2022 screening report-->
 
   <!--Monthly drug stock reports-->
   <string name="monthly_drug_stock_report">මාසික ඖෂධ තොග වාර්තාව</string>
@@ -904,14 +904,16 @@
   <string name="monthly_supplies_reports">මාසික සැපයුම් වාර්තා</string>
   <string name="monthly_supplies_report_supplies_report">%1$s සැපයුම් වාර්තාවක්</string>
 
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">\"භාවිතය පිළිබද උපදෙස් \"</string>
+  <string name="data_protection_consent_subtitle">මෙම \'\'Simple’’මෘදුකාංගය භාවිතයට පෙර ඔබ පහත තොරතුරු කියවා,අවබෝධ කරගෙන,\'\'කැමැත්ත ලබාදෙමි\'\'යන්න තෝරා ගැනීමෙන් එකග විය යුතුය.  - Simple මෘදුකාංගයේ රෝගීන්ගේ පුද්ගලික තොරතුරු (\'\'දත්ත\'\') අඩංගු වේ.  - ඔබට ප්‍රවේශ විය හැක්කේ ඔබ සේවය කරන සෞඛ්‍ය සේවා ආයතනය තුල රෝගී සත්කාර සේවා සදහා අත්‍යවශ්‍යය, ඔබේ රාජකාරි කටයුතු ඉටුකිරීමට අවශ්‍යය වන දත්ත සදහා පමණි.වෙනත් අරමුණු සදහා දත්ත වෙත ප්‍රවේශවීම සපුරා තහනම් වේ.   - ඔබ දත්ත වල රහස්‍යයභාවය ආරක්ෂා කල යුතුය. අන් අය සමග දත්ත හුවමාරු කිරීම කිසිවිටකත් සිදුකිරීම තහනම් වේ.  - Simple මෘදුකාංගය වෙත ප්‍රවේශ වීමට භාවිතා කරන මුරපද, ආරක්ෂක කේත පෞද්ගලිකව තබාගත යුතු අතර අන් අයට මෙම මෘදුකාංගය වෙත ප්‍රවේශය සදහා ලබාදීම තහනම් ක්‍රියාවක් වේ. මෙම මෘදුකාංගය භාවිතා නොකරන විට මෘදුකාංගයෙන් ඉවත්විය යුතුය.  - ඔබ වරින්වර, දත්ත සමමුර්ත කිරීම හා අවශ්‍යය පරිදි යාවත්කාලීන කිරීම, නඩත්තු කිරීම සිදුකල යුතුය.  - Simple මෘදුකාංගය ඔබ දත්ත වෙත ප්‍රවේශවීම හා ඔබ කරනා කටයුතු පිළිබද වාර්තාවක් ස්වයoක්‍රීයව නිර්මාණය කරයි. අනවසර ප්‍රවේශවීම්,මෙම උපදෙස් උල්ලංගණය කිරීම් හමුවේ මෙම මෘදුකාංගය වෙත ප්‍රවේශවීම අවලංගු කිරීමට හෝ වෙනත් විනයානුකූල පියවර සදහා හේතුවිය හැක.</string>
+  <string name="data_protection_consent_accept_button">එකඟ වී ඉදිරියට යන්න</string>
+
   <string name="change_patient_facility">වෙනස් කරන්න</string>
 
   <string name="diabetes_warning_dialog_negative_button">දැන් නොවේ</string>
 
   <string name="htn_warning_dialog_negative_button">දැන් නොවේ</string>
-  <string name="data_protection_consent_title">\"භාවිතය පිළිබද උපදෙස් \"</string>
-  <string name="data_protection_consent_subtitle">මෙම \'\'Simple’’මෘදුකාංගය භාවිතයට පෙර ඔබ පහත තොරතුරු කියවා,අවබෝධ කරගෙන,\'\'කැමැත්ත ලබාදෙමි\'\'යන්න තෝරා ගැනීමෙන් එකග විය යුතුය.  - Simple මෘදුකාංගයේ රෝගීන්ගේ පුද්ගලික තොරතුරු (\'\'දත්ත\'\') අඩංගු වේ.  - ඔබට ප්‍රවේශ විය හැක්කේ ඔබ සේවය කරන සෞඛ්‍ය සේවා ආයතනය තුල රෝගී සත්කාර සේවා සදහා අත්‍යවශ්‍යය, ඔබේ රාජකාරි කටයුතු ඉටුකිරීමට අවශ්‍යය වන දත්ත සදහා පමණි.වෙනත් අරමුණු සදහා දත්ත වෙත ප්‍රවේශවීම සපුරා තහනම් වේ.   - ඔබ දත්ත වල රහස්‍යයභාවය ආරක්ෂා කල යුතුය. අන් අය සමග දත්ත හුවමාරු කිරීම කිසිවිටකත් සිදුකිරීම තහනම් වේ.  - Simple මෘදුකාංගය වෙත ප්‍රවේශ වීමට භාවිතා කරන මුරපද, ආරක්ෂක කේත පෞද්ගලිකව තබාගත යුතු අතර අන් අයට මෙම මෘදුකාංගය වෙත ප්‍රවේශය සදහා ලබාදීම තහනම් ක්‍රියාවක් වේ. මෙම මෘදුකාංගය භාවිතා නොකරන විට මෘදුකාංගයෙන් ඉවත්විය යුතුය.  - ඔබ වරින්වර, දත්ත සමමුර්ත කිරීම හා අවශ්‍යය පරිදි යාවත්කාලීන කිරීම, නඩත්තු කිරීම සිදුකල යුතුය.  - Simple මෘදුකාංගය ඔබ දත්ත වෙත ප්‍රවේශවීම හා ඔබ කරනා කටයුතු පිළිබද වාර්තාවක් ස්වයoක්‍රීයව නිර්මාණය කරයි. අනවසර ප්‍රවේශවීම්,මෙම උපදෙස් උල්ලංගණය කිරීම් හමුවේ මෙම මෘදුකාංගය වෙත ප්‍රවේශවීම අවලංගු කිරීමට හෝ වෙනත් විනයානුකූල පියවර සදහා හේතුවිය හැක.</string>
-  <string name="data_protection_consent_accept_button">එකඟ වී ඉදිරියට යන්න</string>
 
   <!-- Statin Alerts -->
   <string name="statin_alert_low_high_risk_patient_x">අවධානමක් සහිත රෝගීන් %s</string>
@@ -931,14 +933,13 @@
   <string name="statin_alert_add_cholesterol_info"> වඩාත් නිවැරදි අවදානම් මට්ටමක් සඳහා කොලෙස්ටරෝල් අගය එකතු  කරන්න</string>
   <string name="statin_alert_add_smoking_and_cholesterol_info"> වඩාත් නිවැරදි අවදානම් මට්ටම්ක් සඳහා දුම්පානය  තත්ත්වය සහ කොලෙස්ටරෝල් අගය එකතු කරන්න</string>
 
+  <string name="purge_notification_desc">දත්ත සංචිතය නඩත්තුවකට ලක්වෙමින් පවතී. මේ සඳහා විනාඩි කිහිපයක් ගත වේ.</string>
+
   <!-- BMI entry -->
   <string name="bmi_entry_sheet_title_enter_bmi">බීඑම්අයි (BMI)</string>
   <string name="bmi_entry_height_in_cm">උස (සෙ.මී.)</string>
   <string name="bmi_entry_weight_in_kg">බර (කි.ග්රෑ.)</string>
   <string name="bmi_x">බීඑම්අයි: %s</string>
-
-  <!-- Purge notification -->
-  <string name="purge_notification_desc">දත්ත සංචිතය නඩත්තුවකට ලක්වෙමින් පවතී. මේ සඳහා විනාඩි කිහිපයක් ගත වේ.</string>
 
   <!-- Add Smoking Status Dialog -->
   <string name="smoking_status_dialog_title">රෝගියා දුම්පානය කරන්නෙක්ද?</string>
@@ -947,4 +948,8 @@
   <string name="smoking_status_dialog_title_positive_button">අවසන්</string>
   <string name="smoking_status_dialog_title_negative_button">අවලංගු කරන්න</string>
 
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title"> කොලෙස්ටරෝල් මට්ටම  (mg/dL)</string>
+  <string name="cholesterol_error_upper_limit">කොලෙස්ටරෝල් මට්ටම 1000ට වඩා වැඩි විය නොහැක</string>
+  <string name="cholesterol_error_lower_limit"> කොලෙස්ටරෝල් මට්ටම 25ට වඩා අඩු විය නොහැක</string>
 </resources>

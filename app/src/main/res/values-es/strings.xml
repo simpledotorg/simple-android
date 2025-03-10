@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <!-- Common -->
-  <string name="gender_female">Femenino</string>
   <string name="gender_male">Masculino</string>
   <string name="gender_transgender">Transgénero</string>
   <!--suppress UnusedResources -->
@@ -342,8 +340,6 @@
   <string name="newmedicalhistory_history">Historia</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">¿El paciente tomó medicinas para la PA en cualquier momento durante el mes pasado? (requerido)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">¿El paciente tomó medicinas para la diabetes en cualquier momento durante el mes pasado? (requerido)</string>
-  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Ninguno</string>
   <string name="prescribed_drugs_dosage_remove">Eliminar</string>
@@ -424,9 +420,6 @@
   <string name="settings_software">Programa</string>
   <string name="settings_update">Actualizar</string>
   <string name="settings_software_version">Versión %1$s</string>
-  <string name="settings_logout">Logout</string>
-  <string name="settings_logout_dialog_title">Logout</string>
-  <string name="settings_logout_dialog_desc">Are you sure you want to logout?</string>
   <string name="settings_logout_dialog_positive_action">Sí</string>
   <string name="settings_logout_dialog_negative_action">No</string>
 
@@ -435,7 +428,7 @@
   <string name="changelanguage_done">Listo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Por favor espere…</string>
+  <string name="placeholder_loading_title">Por favor espere...</string>
   <string name="placeholder_loading_message">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
   <!-- Select Country Screen -->
@@ -526,8 +519,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marcar paciente como \"accedió a visitar\"</string>
-  <string name="contactpatient_remind_call_later">Recordar llamar después…</string>
-  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados…</string>
+  <string name="contactpatient_remind_call_later">Recordar llamar después...</string>
+  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados...</string>
   <string name="contactpatient_result_of_call">Resultado de la llamada</string>
   <string name="contactpatient_call">Llamada</string>
   <string name="contactpatient_call_normal">Normal</string>
@@ -559,7 +552,6 @@
   <string name="contactpatient_invalid_phone_number">El número telefónico no funciona</string>
   <string name="contactpatient_public_hospital_transfer">Transferido a otra unidad de salud pública</string>
   <string name="contactpatient_moved_to_private">Cambiado a un profesional privado</string>
-  <string name="contactpatient_refused_to_come_back">Rechazó volver</string>
   <string name="contactpatient_patient_died">Fallecido</string>
   <string name="contactpatient_other_reason">Otra razón</string>
   <string name="contactpatient_unknown">Desconocido</string>
@@ -907,90 +899,22 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">Reporte de pruebas mensual</string>
   <string name="monthly_screening_reports">Reportes de pruebas mensual</string>
-  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Drug stock report</string>
-  <string name="monthly_drug_stock_reports">Drug stock reports</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string>
+  <string name="monthly_screening_reports_screening_report">Reporte de pruebas %1$s </string><string name="monthly_drug_stock_reports_drug_stock_reports">Reporte %1$s de existencias de medicamentos</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Reporte mensual de suministros</string>
   <string name="monthly_supplies_reports">Reportes mensuales de suministros</string>
   <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string>
 
-  <!-- Drug Stock Expiry Form -->
-  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
-
-  <!-- Data protection consent -->
-  <string name="data_protection_consent_title">Terms of Use</string>
-  <string name="data_protection_consent_subtitle">Before using the Simple app, you must read and agree to the following terms by clicking <b>“AGREE AND CONTINUE”</b> below.\n\n
-The Simple app contains private health information of patients (“Data”).\n\n
-• You may only access Data as necessary to perform your job duties related to patient care within the healthcare facility in which you work. Accessing or viewing Data for any other purpose is prohibited.\n\n
-• You must keep Data confidential. Sharing Data with others is prohibited.\n\n
-• You must keep the security code you use to access the Simple app private.\n\n
-• You must promptly log out of the Simple app when not in use. Allowing others to use your login credentials to access the Simple app or Data is prohibited.\n\n
-• You must perform periodic syncing of data, capturing of mandatory records, and other maintenance as required.\n\n
-• You understand that the Simple app automatically creates a record of your access to Data. Unauthorized access or other violations of the Terms of Use may result in your access to the Simple app being revoked or other disciplinary measures.\n\n
-  </string>
-  <string name="data_protection_consent_accept_button">AGREE AND CONTINUE</string>
-
-  <!-- Patient transfer to CC -->
-  <string name="patient_facility_reassignment">Eligible for CC refilling</string>
-  <string name="reassign_patient_title">Eligible for refills at CC. Transfer patient?</string>
-  <string name="reassign_patient_description">Assign to preferred community clinic for future visits.</string>
   <string name="change_patient_facility">Cambiar</string>
 
-  <!-- Diabetes Diagnosis Warning Dialog -->
-  <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
-  <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
-  <string name="diabetes_warning_dialog_positive_button">Yes, has diabetes</string>
   <string name="diabetes_warning_dialog_negative_button">Ahora no</string>
 
-  <!-- HTN Diagnosis Warning Dialog -->
-  <string name="htn_warning_dialog_title">Add Hypertension diagnosis?</string>
-  <string name="htn_warning_dialog_desc">This patient is on hypertension medication.</string>
-  <string name="htn_warning_dialog_positive_button">Yes, has hypertension</string>
   <string name="htn_warning_dialog_negative_button">Ahora no</string>
 
-  <!-- Statin Alerts -->
-  <string name="statin_alert_low_high_risk_patient_x">LOW-HIGH RISK %s</string>
-  <string name="statin_alert_medium_high_risk_patient_x">MEDIUM-HIGH RISK %s</string>
-  <string name="statin_alert_high_risk_patient_x">HIGH RISK %s</string>
-  <string name="statin_alert_very_high_risk_patient">VERY HIGH RISK PATIENT</string>
-  <string name="statin_alert_very_high_risk_range">VERY HIGH RISK %s</string>
-  <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
-  <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_add_smoking">Add smoking</string>
-  <string name="statin_alert_add_bmi">Add BMI</string>
-  <string name="statin_alert_add_cholesterol">Add cholesterol</string>
-  <string name="statin_alert_add_smoking_info">Add smoking for more accurate risk score.</string>
-  <string name="statin_alert_add_bmi_info">Add BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_bmi_info">Add smoking status and BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_cholesterol_info">Add cholesterol for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_cholesterol_info">Add smoking status and cholesterol for more accurate risk score.</string>
-
-  <!-- Purge notification -->
-  <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
-  <!-- BMI entry -->
-  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
-  <string name="bmi_entry_height_in_cm">Height (cm)</string>
-  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
-  <string name="bmi_x">BMI: %s</string>
-
-  <!-- Add Smoking Status Dialog -->
-  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
-  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
-  <string name="smoking_status_dialog_option_no">Not a smoker</string>
   <string name="smoking_status_dialog_title_positive_button">Listo</string>
   <string name="smoking_status_dialog_title_negative_button">Cancelar</string>
 
-  <!-- Cholesterol entry sheet -->
-  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
-  <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
-  <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
-</resources>
+  </resources>

@@ -888,6 +888,11 @@
 
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
+  <!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">মাসিক ওষুধের স্টক রিপোর্ট</string>
+  <string name="monthly_drug_stock_reports">মাসিক ওষুধের স্টক রিপোর্ট</string>
   <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ওষুধের স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
@@ -895,15 +900,15 @@
   <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
   <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
 
-  <string name="change_patient_facility">পরিবর্তন</string>
+  <string name="change_patient_facility">बदला</string>
 
-  <string name="diabetes_warning_dialog_negative_button">এখন নয়</string>
+  <string name="diabetes_warning_dialog_negative_button">आता नाही</string>
 
-  <string name="htn_warning_dialog_negative_button">এখন নয়</string>
+  <string name="htn_warning_dialog_negative_button">आता नाही</string>
 
-  <string name="purge_notification_desc">ডাটাবেস রক্ষণাবেক্ষণ চলছে। এটি সম্পন্ন হতে এক মিনিট সময় নেবে।</string>
+  <string name="purge_notification_desc">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
 
-  <string name="smoking_status_dialog_title_positive_button">সম্পন্ন</string>
-  <string name="smoking_status_dialog_title_negative_button">বাতিল করুন</string>
+  <string name="smoking_status_dialog_title_positive_button">पूर्ण झाले</string>
+  <string name="smoking_status_dialog_title_negative_button">रद्द करा</string>
 
   </resources>

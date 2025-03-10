@@ -123,8 +123,6 @@
   <string name="patients_recentpatients_no_recent_patients">சமீபத்திய நோயாளர்கள் இல்லை</string>
   <string name="patients_recentpatients_see_all">அனைத்தையும் காண்க</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
-  <string name="patients_links_title">இணைப்புகள்</string>
-
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">இரத்த அழுத்தம்</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">இரத்த அழுத்தத்தைத் திருத்துக</string>
@@ -338,8 +336,6 @@
   <string name="newmedicalhistory_history">வரலாறு</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
-  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">எதுவுமில்லை</string>
   <string name="prescribed_drugs_dosage_remove">அகற்று</string>
@@ -420,9 +416,6 @@
   <string name="settings_software">மென்பொருள்</string>
   <string name="settings_update">புதுப்பிப்பு</string>
   <string name="settings_software_version">பதிப்பு %1$s</string>
-  <string name="settings_logout">Logout</string>
-  <string name="settings_logout_dialog_title">Logout</string>
-  <string name="settings_logout_dialog_desc">Are you sure you want to logout?</string>
   <string name="settings_logout_dialog_positive_action">ஆம்</string>
   <string name="settings_logout_dialog_negative_action">இல்லை</string>
 
@@ -552,7 +545,6 @@
   <string name="contactpatient_invalid_phone_number">தொலைபேசி இலக்கம் வேலை செய்யவில்லை</string>
   <string name="contactpatient_public_hospital_transfer">மற்றொரு பொதுச் சுகாதார சிகிச்சை மையத்திற்கு மாற்றப்பட்டது</string>
   <string name="contactpatient_moved_to_private">தனியார் பயிற்சியாளருக்கு நகர்த்தப்பட்டது</string>
-  <string name="contactpatient_refused_to_come_back">Refused to come back</string>
   <string name="contactpatient_patient_died">இறந்துவிட்டார்</string>
   <string name="contactpatient_other_reason">வேறு காரணம்</string>
   <string name="contactpatient_unknown">தெரியாதது</string>
@@ -872,8 +864,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">ரத்துசெய்</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">இதாகப் பதிவிறக்கு</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">பதிவிறக்கப்பட்டது</string>
-  <string name="patient_line_list_download_link">IHCI நோயாளர் பதிவேட்டைப் பதிவிறக்கம் செய்யவும்</string>
-
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">அறிவிப்புகளை இயக்கவும்</string>
   <string name="notification_permission_denied_message">முக்கியமான நினைவூட்டல்களை உங்களுக்குக் காட்டுவதற்கு சிம்பிள் செயலிக்கு அனுமதி தேவைப்படுகின்றது.அனுமதிகள் &gt; அறிவிப்புகள் என்பதன் கீழ் இயக்கவும்</string>
@@ -894,93 +884,17 @@
   <string name="reports_stay_title">இந்தப் பக்கத்தில் தொடர்ந்து இருக்கவும்</string>
   <string name="reports_leave_page_title">இந்தப் பக்கத்தை விட்டு வெளியேறவும்</string>
 
-  <!--Monthly screen reports-->
-  <string name="monthly_screening_report">மாதாந்த ஆராய்வு அறிக்கை</string>
-  <string name="monthly_screening_reports">மாதாந்திர ஆராய்வு அறிக்கைகள்</string>
-  <string name="monthly_screening_reports_screening_report">%1$s அறிக்கையை ஆய்வு செய்தல்</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Drug stock report</string>
-  <string name="monthly_drug_stock_reports">Drug stock reports</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s மருந்து இருப்பு அறிக்கை</string>
-
-  <!--Monthly supplies reports-->
-  <string name="monthly_supplies_report">மாதாந்த விநியோக அறிக்கை</string>
-  <string name="monthly_supplies_reports">மாதாந்த விநியோக அறிக்கைகள்</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s விநியோக அறிக்கை</string>
-
-  <!-- Drug Stock Expiry Form -->
-  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
-
-  <!-- Data protection consent -->
-  <string name="data_protection_consent_title">Terms of Use</string>
-  <string name="data_protection_consent_subtitle">Before using the Simple app, you must read and agree to the following terms by clicking <b>“AGREE AND CONTINUE”</b> below.\n\n
-The Simple app contains private health information of patients (“Data”).\n\n
-• You may only access Data as necessary to perform your job duties related to patient care within the healthcare facility in which you work. Accessing or viewing Data for any other purpose is prohibited.\n\n
-• You must keep Data confidential. Sharing Data with others is prohibited.\n\n
-• You must keep the security code you use to access the Simple app private.\n\n
-• You must promptly log out of the Simple app when not in use. Allowing others to use your login credentials to access the Simple app or Data is prohibited.\n\n
-• You must perform periodic syncing of data, capturing of mandatory records, and other maintenance as required.\n\n
-• You understand that the Simple app automatically creates a record of your access to Data. Unauthorized access or other violations of the Terms of Use may result in your access to the Simple app being revoked or other disciplinary measures.\n\n
-  </string>
-  <string name="data_protection_consent_accept_button">AGREE AND CONTINUE</string>
-
-  <!-- Patient transfer to CC -->
-  <string name="patient_facility_reassignment">Eligible for CC refilling</string>
-  <string name="reassign_patient_title">Eligible for refills at CC. Transfer patient?</string>
-  <string name="reassign_patient_description">Assign to preferred community clinic for future visits.</string>
   <string name="change_patient_facility">மாற்றம்</string>
 
-  <!-- Diabetes Diagnosis Warning Dialog -->
-  <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
-  <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
-  <string name="diabetes_warning_dialog_positive_button">Yes, has diabetes</string>
   <string name="diabetes_warning_dialog_negative_button">இப்போது இல்லை</string>
 
-  <!-- HTN Diagnosis Warning Dialog -->
-  <string name="htn_warning_dialog_title">Add Hypertension diagnosis?</string>
-  <string name="htn_warning_dialog_desc">This patient is on hypertension medication.</string>
-  <string name="htn_warning_dialog_positive_button">Yes, has hypertension</string>
   <string name="htn_warning_dialog_negative_button">இப்போது இல்லை</string>
 
-  <!-- Statin Alerts -->
-  <string name="statin_alert_low_high_risk_patient_x">LOW-HIGH RISK %s</string>
-  <string name="statin_alert_medium_high_risk_patient_x">MEDIUM-HIGH RISK %s</string>
-  <string name="statin_alert_high_risk_patient_x">HIGH RISK %s</string>
-  <string name="statin_alert_very_high_risk_patient">VERY HIGH RISK PATIENT</string>
-  <string name="statin_alert_very_high_risk_range">VERY HIGH RISK %s</string>
   <string name="statin_alert_at_risk_patient">ஆபத்தில் உள்ள நோயாளி</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ஸ்டேடின் மருந்துக்காக&lt;/b&gt; மருத்துவரை அணுகவும்</string>
-  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_add_smoking">Add smoking</string>
-  <string name="statin_alert_add_bmi">Add BMI</string>
-  <string name="statin_alert_add_cholesterol">Add cholesterol</string>
-  <string name="statin_alert_add_smoking_info">Add smoking for more accurate risk score.</string>
-  <string name="statin_alert_add_bmi_info">Add BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_bmi_info">Add smoking status and BMI for more accurate risk score.</string>
-  <string name="statin_alert_add_cholesterol_info">Add cholesterol for more accurate risk score.</string>
-  <string name="statin_alert_add_smoking_and_cholesterol_info">Add smoking status and cholesterol for more accurate risk score.</string>
-
-  <!-- Purge notification -->
-  <string name="purge_notification_title">Optimising database</string>
   <string name="purge_notification_desc">தரவுத்தளப் பராமரிப்பு செயலிலுள்ளது. இதற்கு ஒரு நிமிடம் மட்டுமே ஆகும்.</string>
 
-  <!-- BMI entry -->
-  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
-  <string name="bmi_entry_height_in_cm">Height (cm)</string>
-  <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
-  <string name="bmi_x">BMI: %s</string>
-
-  <!-- Add Smoking Status Dialog -->
-  <string name="smoking_status_dialog_title">Is patient a smoker?</string>
-  <string name="smoking_status_dialog_option_yes">Yes, smoker</string>
-  <string name="smoking_status_dialog_option_no">Not a smoker</string>
   <string name="smoking_status_dialog_title_positive_button">முடிந்தது</string>
   <string name="smoking_status_dialog_title_negative_button">ரத்துசெய்</string>
 
-  <!-- Cholesterol entry sheet -->
-  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
-  <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
-  <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
-</resources>
+  </resources>

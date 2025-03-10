@@ -4,7 +4,7 @@ filters:
     file_format: ANDROID
     source_language: en
     source_file: app/src/main/res/values/strings.xml
-    mode: sourceastranslation
+    mode: reviewed
    # path expression to translation files, must contain <lang> placeholder
     translation_files_expression: 'app/src/main/res/values-<lang>/strings.xml'
 settings:

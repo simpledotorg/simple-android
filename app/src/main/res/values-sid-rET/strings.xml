@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">Xagge</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Sa\'i aganira xisamanchu sukarete xagicho adhino? (Hasisiro)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Foqa</string>
   <string name="prescribed_drugs_dosage_remove">Kayisi</string>
@@ -892,15 +891,22 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">Aganu buuxote ripoorte</string>
   <string name="monthly_screening_reports">Aganunita laooshu odoo</string>
-  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho odoo eesinooni</string><!--Oct 2022 screening report-->
-
-  <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Aganu xagichu kuuso ripoorte</string>
-  <string name="monthly_drug_stock_reports">Aganu xagichu kuuso ripoortubba</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">1%1$s Xagichu duuno </string><!--Oct 2022 drug stock report-->
+  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho odoo eesinooni</string><string name="monthly_drug_stock_reports_drug_stock_reports">1%1$s Xagichu duuno </string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Aganu irkote ripoorte</string>
   <string name="monthly_supplies_reports">Aganu irkubbate ripoorte</string>
   <string name="monthly_supplies_report_supplies_report">1%1$s Irkubbate ripoorte</string>
-</resources>
+
+  <string name="change_patient_facility">Soori</string>
+
+  <string name="diabetes_warning_dialog_negative_button">Di’xaa</string>
+
+  <string name="htn_warning_dialog_negative_button">Di’xaa</string>
+
+  <string name="purge_notification_desc">Database maintenance in progress. Tini shima bixilisa adhitano</string>
+
+  <string name="smoking_status_dialog_title_positive_button">Gofino</string>
+  <string name="smoking_status_dialog_title_negative_button">Hoola</string>
+
+  </resources>

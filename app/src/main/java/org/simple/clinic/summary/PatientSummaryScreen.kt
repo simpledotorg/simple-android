@@ -71,6 +71,7 @@ import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
+import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
@@ -327,8 +328,11 @@ class PatientSummaryScreen :
           StatinNudge(
               statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
+              isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
+              isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
               addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
-              addBMIClick = { additionalEvents.notify(AddBMIClicked) }
+              addBMIClick = { additionalEvents.notify(AddBMIClicked) },
+              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) }
           )
         }
       }
@@ -359,6 +363,10 @@ class PatientSummaryScreen :
 
       is ScreenRequest.BMIEntrySheet -> {
         additionalEvents.notify(BMIReadingAdded)
+      }
+
+      is ScreenRequest.CholesterolEntrySheet -> {
+        additionalEvents.notify(CholesterolAdded)
       }
     }
   }
@@ -757,6 +765,10 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun openCholesterolEntrySheet(patientUuid: UUID) {
+    router.pushExpectingResult(ScreenRequest.CholesterolEntrySheet, CholesterolEntrySheet.Key(patientUuid))
+  }
+
   override fun openBMIEntrySheet(patientUuid: UUID) {
     router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
   }
@@ -903,5 +915,8 @@ class PatientSummaryScreen :
 
     @Parcelize
     data object BMIEntrySheet : ScreenRequest()
+
+    @Parcelize
+    data object CholesterolEntrySheet : ScreenRequest()
   }
 }

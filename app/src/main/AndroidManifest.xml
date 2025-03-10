@@ -54,10 +54,12 @@
     android:allowBackup="false"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
+    android:networkSecurityConfig="@xml/network_config"
     android:supportsRtl="true"
     android:theme="@style/Theme.Simple"
     tools:ignore="AllowBackup,DataExtractionRules,GoogleAppIndexingWarning,LockedOrientationActivity"
-    tools:replace="android:allowBackup">
+    tools:replace="android:allowBackup"
+    tools:targetApi="n">
 
     <meta-data
       android:name="com.google.mlkit.vision.DEPENDENCIES"

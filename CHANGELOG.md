@@ -48,11 +48,10 @@
 - Fix variables usage in build workflows
 - Add display name to `ImageView#src` lint fix
 - Migrate to using test fixtures for shared test code
-- Add statin v1 translations for Tamil (Sri Lanka) and Sinhala
 - Bump Gradle to v8.12.1
 - Opt out of edge-to-edge enforcement in Android 15
 - Bump Google Gson to v2.12.0
-- Add statin translations for `bn-BD`, `si-LK`, `ta-LK`
+- Update translations for `bn-BD`, `si-LK`, `ta-LK`, `ta-IN`
 - Bump Sentry Android to v8.1.0
 - Bump Sentry Gradle plugin to v5.1.0
 - Show smoking status dialog for low and medium cvd risk.
@@ -62,10 +61,12 @@
 - Bug fixes in CI workflows
 - Fetch `lab_based_cvd_risk_calculation_sheet` from remote config
 - Add `cholesterol_value` to `MedicalHistory` table
-- Bump AGP to v8.8.1
 - Fix JSON variable name in non-lab based statin calculation sheet
 - Add `LabBasedCVDRiskCalculator` and effect to calculate lab based cvd risk
 - Add `CholesterolEntrySheet`
+- Bump AGP to v8.8.2
+- Calculate lab-based CVD risk score
+- Update copy of statin nudge to support lab-based nudge
 
 ### Fixes
 

@@ -16,13 +16,13 @@ import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.LabBasedCVDRiskInput
 import org.simple.clinic.cvdrisk.NonLabBasedCVDRiskInput
-import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -233,7 +233,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                       systolic = bloodPressure.reading.systolic,
                       isSmoker = medicalHistory.isSmoking,
                       diagnosedWithDiabetes = medicalHistory.diagnosedWithDiabetes,
-                      cholesterol = null //Update once the value is available in medical history
+                      cholesterol = medicalHistory.cholesterol?.let { MedicalHistory.convertCholesterolToMmol(it) }
                   )
               )
             }
@@ -279,18 +279,20 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { effect ->
             val patientUuid = effect.patientUuid
+            val patient = patientRepository.patientImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
-            val bmiReading = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
-            val cvdRisk = cvdRiskRepository.getCVDRiskImmediate(patientUuid)
-            StatinInfoLoaded(StatinInfo(
-                canPrescribeStatin = cvdRisk?.riskScore?.canPrescribeStatin ?: false,
-                cvdRisk = cvdRisk?.riskScore,
-                isSmoker = medicalHistory.isSmoking,
-                bmiReading = bmiReading?.bmiReading,
-            ))
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
+            val riskRange = cvdRiskRepository.getCVDRiskImmediate(patientUuid)?.riskScore
+
+            StatinInfoLoaded(
+                age = patient!!.ageDetails.estimateAge(userClock),
+                medicalHistory = medicalHistory,
+                riskRange = riskRange,
+                bmiReading = patientAttribute?.bmiReading,
+            )
           }
     }
   }

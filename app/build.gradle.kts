@@ -13,7 +13,6 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.sentry)
-  alias(libs.plugins.datadog)
   alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.compose.compiler)
   alias(libs.plugins.google.services)
@@ -90,20 +89,12 @@ android {
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
-    val datadogServiceName: String by project
-    val datadogApplicationId: String by project
-    val datadogClientToken: String by project
-    val datadogEnvironment: String by project
 
     buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
     buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
-    buildConfigField("String", "DATADOG_SERVICE_NAME", "\"$datadogServiceName\"")
-    buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
-    buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
-    buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
 
     ksp {
       arg("room.schemaLocation", "$projectDir/schemas")
@@ -482,8 +473,6 @@ dependencies {
   lintChecks(projects.lint)
 
   runtimeOnly(libs.jackson.core)
-
-  implementation(libs.datadog.sdk)
 
   androidTestImplementation(libs.apache.commons.math)
 }

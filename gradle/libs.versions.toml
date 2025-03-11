@@ -201,8 +201,6 @@ uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.1.0"
 #noinspection GradleDependency
 viewpump = "io.github.inflationx:viewpump:2.0.3"
 
-datadog-sdk = "com.datadoghq:dd-sdk-android:1.19.3"
-
 #noinspection GradleDependency
 zxing = "com.google.zxing:core:3.3.3"
 
@@ -236,7 +234,6 @@ kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 sentry = { id = "io.sentry.android.gradle", version = "5.1.0" }
-datadog = { id = "com.datadoghq.dd-sdk-android-gradle-plugin", version = "1.15.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

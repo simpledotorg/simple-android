@@ -891,7 +891,12 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">மாதாந்திரத் தகுதிச்சோதனை அறிக்கை</string>
   <string name="monthly_screening_reports">மாதாந்தரத் தகுதிச்சோதனை அறிக்கைகள்</string>
-  <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s மருந்து இருப்பு அறிக்கை</string>
+  <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">மாதாந்திர மருந்து இருப்பு அறிக்கை</string>
+  <string name="monthly_drug_stock_reports">மாதாந்திர மருந்து இருப்பு அறிக்கைகள்</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s மருந்து இருப்பு அறிக்கை</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">மாதாந்திரப் பொருட்கள் அறிக்கை</string>

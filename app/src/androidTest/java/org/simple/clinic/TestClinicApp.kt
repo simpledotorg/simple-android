@@ -1,19 +1,11 @@
 package org.simple.clinic
 
 import android.app.Application
-import android.content.Context
 import androidx.test.platform.app.InstrumentationRegistry
-import com.datadog.android.Datadog
-import com.datadog.android.core.configuration.Configuration
-import com.datadog.android.core.configuration.Credentials
-import com.datadog.android.core.configuration.UploadFrequency
-import com.datadog.android.privacy.TrackingConsent
-import com.datadog.android.rum.GlobalRum
-import com.datadog.android.rum.RumMonitor
-import com.datadog.android.rum.tracking.ViewTrackingStrategy
-import com.datadog.android.tracing.AndroidTracer
 import com.tspoon.traceur.Traceur
-import io.opentracing.util.GlobalTracer
+import io.sentry.SentryLevel
+import io.sentry.SentryOptions
+import io.sentry.android.core.SentryAndroid
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.benchmark.BackupBenchmarkDatabase
 import org.simple.clinic.di.DaggerTestAppComponent
@@ -100,9 +92,8 @@ class TestClinicApp : Application() {
       dataSync.syncTheWorld()
       backupBenchmarkDatabase.backup()
 
-      setupDatadog(
-          clientToken = instrumentationArgs.getString("dd_client_token")!!,
-          applicationId = instrumentationArgs.getString("dd_application_id")!!
+      setupSentry(
+          dsn = instrumentationArgs.getString("sentry_dsn")!!,
       )
     }
   }
@@ -155,39 +146,20 @@ class TestClinicApp : Application() {
         .build()
   }
 
-  private fun setupDatadog(
-      clientToken: String,
-      applicationId: String
-  ) {
-    val datadogConfig = Configuration
-        .Builder(
-            logsEnabled = true,
-            tracesEnabled = true,
-            crashReportsEnabled = false,
-            rumEnabled = false
-        )
-        .useViewTrackingStrategy(NoopViewTrackingStrategy())
-        .setUploadFrequency(UploadFrequency.FREQUENT)
-        .build()
-    val credentials = Credentials(
-        clientToken = clientToken,
-        envName = "test",
-        variant = BuildConfig.FLAVOR,
-        rumApplicationId = applicationId,
-        serviceName = "simple-android-perf-regression"
-    )
-    Datadog.initialize(this, credentials, datadogConfig, TrackingConsent.GRANTED)
-    GlobalRum.registerIfAbsent(RumMonitor.Builder().build())
-    GlobalTracer.registerIfAbsent(AndroidTracer.Builder().setPartialFlushThreshold(5).build())
-  }
+  private fun setupSentry(dsn: String) {
+    SentryAndroid.init(this) { options ->
+      options.dsn = dsn
+      options.environment = "test"
+      options.sampleRate = 0.0
+      options.tracesSampleRate = 1.0
 
-  private class NoopViewTrackingStrategy : ViewTrackingStrategy {
-    override fun register(context: Context) {
-      // No need to track views in tests
-    }
-
-    override fun unregister(context: Context?) {
-      // No need to track views in tests
+      options.beforeSend = SentryOptions.BeforeSendCallback { event, _ ->
+        if (event.level != SentryLevel.DEBUG) {
+          event
+        } else {
+          null
+        }
+      }
     }
   }
 }

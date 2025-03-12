@@ -67,6 +67,7 @@
 - Bump AGP to v8.8.2
 - Calculate lab-based CVD risk score
 - Update copy of statin nudge to support lab-based nudge
+- Report SQL performance metrics to Sentry
 
 ### Fixes
 

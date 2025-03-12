@@ -6,7 +6,7 @@
 
     <meta-data
       android:name="listener"
-      android:value="org.simple.clinic.benchmark.WaitForDatadogToUpload" />
+      android:value="org.simple.clinic.benchmark.WaitForSentryToUpload" />
 
   </instrumentation>
 </manifest>

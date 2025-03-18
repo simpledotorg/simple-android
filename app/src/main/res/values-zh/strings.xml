@@ -73,7 +73,7 @@
   <string name="patiententry_error_empty_district">必须的</string>
   <string name="patiententry_error_state_empty">必须的</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">输入患者年龄</string>
-  <string name="patiententry_error_invalid_dateofbirth">输入患者的出生日期（年/月/日</string>
+  <string name="patiententry_error_invalid_dateofbirth">输入患者的出生日期（DD/MM/YYYY）</string>
   <string name="patiententry_error_dateofbirth_is_in_future">确定患者的出生日期</string>
   <string name="patiententry_error_phonenumber_blank">电话号码不能为空</string>
   <string name="patiententry_error_phonenumber_length_less">电话号码不能少于%1$s 位数</string>
@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -518,8 +518,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>

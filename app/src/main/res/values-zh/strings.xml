@@ -32,7 +32,7 @@
   <string name="identifiertype_unknown">Id</string>
   <string name="identifiertype_india_national_health_id">国民健康身份证</string>
   <string name="identifiertype_sri_lanka_national_id">居民身份证号</string>
-  <string name="identifiertype_sri_lanka_personal_health_number">个人健康号码</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">个人健康档案号</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">姓名、电话或身份证</string>

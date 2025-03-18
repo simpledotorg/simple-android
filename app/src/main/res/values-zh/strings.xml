@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -518,8 +518,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>
@@ -691,7 +691,7 @@
   <string name="sheet_national_health_id">全民健康档案号%1$s</string>
 
   <!-- Instant search -->
-  <string name="patientinstantsearch_assigned_facility_header">分配给%1$s</string>
+  <string name="patientinstantsearch_assigned_facility_header">分派给%1$s</string>
   <string name="patientinstantsearch_nearby_facilities_header">附近设施</string>
   <string name="patientsearch_error_no_patients_in_facility">您可以在此查看在贵机构登记的所有患者信息</string>
   <string name="patientsearch_error_no_search_results">无匹配患者</string>

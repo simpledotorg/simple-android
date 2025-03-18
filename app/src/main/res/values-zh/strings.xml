@@ -228,7 +228,7 @@
   <string name="registrationname_name_label">您的职务和全名</string>
   <string name="registrationname_error_empty_name">请输入您的全名</string>
   <string name="registrationname_next">下一步</string>
-  <string name="registrationname_name_and_role_hint">范例：护士迪帕-辛格</string>
+  <string name="registrationname_name_and_role_hint">范例：护士张-美丽</string>
 
   <string name="registrationpin_pin_label">创建安全密码</string>
   <string name="registrationpin_pin_hint">记住您的 PIN 码，稍后会用到它</string>
@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -518,8 +518,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>

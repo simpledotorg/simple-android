@@ -31,7 +31,7 @@
   <string name="identifiertype_ethiopia_medical_record_number">病历编号</string>
   <string name="identifiertype_unknown">Id</string>
   <string name="identifiertype_india_national_health_id">国民健康身份证</string>
-  <string name="identifiertype_sri_lanka_national_id">国民身份证</string>
+  <string name="identifiertype_sri_lanka_national_id">居民身份证</string>
   <string name="identifiertype_sri_lanka_personal_health_number">个人健康号码</string>
 
   <!-- Patient search -->
@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -518,8 +518,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>

@@ -18,9 +18,10 @@ class SqlPerformanceReporter {
     fun begin(
         daoName: String,
         startTimeMillis: Long,
-        methodName: String
+        methodName: String,
+        threadName: String,
     ) {
-      val operation = SqlOperation(daoName, startTimeMillis, methodName)
+      val operation = SqlOperation(daoName, startTimeMillis, methodName, threadName)
 
       INSTANCE.onEachSink { it.begin(operation) }
     }
@@ -29,9 +30,10 @@ class SqlPerformanceReporter {
     fun end(
         daoName: String,
         startTimeMillis: Long,
-        methodName: String
+        methodName: String,
+        threadName: String,
     ) {
-      val operation = SqlOperation(daoName, startTimeMillis, methodName)
+      val operation = SqlOperation(daoName, startTimeMillis, methodName, threadName)
 
       INSTANCE.onEachSink { it.end(operation) }
     }
@@ -60,6 +62,7 @@ class SqlPerformanceReporter {
   data class SqlOperation(
       val daoName: String,
       val startTimeMillis: Long,
-      val methodName: String
+      val methodName: String,
+      val threadName: String,
   )
 }

@@ -9,7 +9,6 @@ class InfrastructureModule {
   @Provides
   fun provideInfrastructure(
       sentryInfrastructure: SentryInfrastructure,
-      datadogInfrastructure: DatadogInfrastructure,
       firebaseAnalyticsInfrastructure: FirebaseAnalyticsInfrastructure
-  ) = listOf(sentryInfrastructure, datadogInfrastructure, firebaseAnalyticsInfrastructure)
+  ) = listOf(sentryInfrastructure, firebaseAnalyticsInfrastructure)
 }

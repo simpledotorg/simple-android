@@ -10,7 +10,6 @@ plugins {
   alias(libs.plugins.ksp) apply false
   alias(libs.plugins.google.services) apply false
   alias(libs.plugins.sentry) apply false
-  alias(libs.plugins.datadog) apply false
 }
 
 buildscript {

@@ -1,8 +1,8 @@
 package org.simple.clinic.di.network
 
-import com.datadog.android.DatadogInterceptor
 import dagger.Module
 import dagger.Provides
+import io.sentry.okhttp.SentryOkHttpInterceptor
 import okhttp3.Interceptor
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
@@ -18,7 +18,7 @@ class HttpInterceptorsModule {
       compressRequestInterceptor: CompressRequestInterceptor
   ): List<Interceptor> {
     return listOf(
-        DatadogInterceptor(),
+        SentryOkHttpInterceptor(),
         loggedInInterceptor,
         appInfoHttpInterceptor,
         compressRequestInterceptor,

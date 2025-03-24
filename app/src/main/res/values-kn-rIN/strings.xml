@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">ಇತಿಹಾಸ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಬಿಪಿ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ? (ಅಗತ್ಯವಿದೆ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಡಯಾಬಿಟಿಸ್ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ? (ಅಗತ್ಯವಿದೆ)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ಯಾವುದೂ ಅಲ್ಲ</string>
   <string name="prescribed_drugs_dosage_remove">ತೆಗೆದುಹಾಕಿ</string>
@@ -897,10 +896,22 @@
   <!--Monthly drug stock reports-->
   <string name="monthly_drug_stock_report">ಮಾಸಿಕ ಔಷಧ ದಾಸ್ತಾನು ವರದಿ</string>
   <string name="monthly_drug_stock_reports">ಮಾಸಿಕ ಔಷಧ ದಾಸ್ತಾನು ವರದಿಗಳು</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ಔಷಧ ದಾಸ್ತಾನು ವರದಿ</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ಔಷಧ ದಾಸ್ತಾನು ವರದಿ</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ಮಾಸಿಕ ಪೂರೈಕೆಗಳ ವರದಿ</string>
   <string name="monthly_supplies_reports">ಮಾಸಿಕ ಪೂರೈಕೆಗಳ ವರದಿಗಳು</string>
   <string name="monthly_supplies_report_supplies_report">%1$s ಪೂರೈಕೆಗಳ ವರದಿ</string>
-</resources>
+
+  <string name="change_patient_facility">ಬದಲಾಯಿಸಿ</string>
+
+  <string name="diabetes_warning_dialog_negative_button">ಈಗ ಬೇಡ</string>
+
+  <string name="htn_warning_dialog_negative_button">ಈಗ ಬೇಡ</string>
+
+  <string name="purge_notification_desc">ಡೇಟಾಬೇಸ್ ನಿರ್ವಹಣೆಯು ಪ್ರಗತಿಯಲ್ಲಿದೆ. ಇದಕ್ಕೆ ಕೇವಲ ಒಂದು ನಿಮಿಷ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.</string>
+
+  <string name="smoking_status_dialog_title_positive_button">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="smoking_status_dialog_title_negative_button">ರದ್ದುಮಾಡಿ</string>
+
+  </resources>

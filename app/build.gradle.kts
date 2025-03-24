@@ -1,17 +1,18 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import org.simple.rmg.RoomMetadataGenerator
+import java.util.EnumSet
 
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.sentry)
-  alias(libs.plugins.datadog)
   alias(libs.plugins.ksp)
   alias(libs.plugins.kotlin.compose.compiler)
   alias(libs.plugins.google.services)
@@ -33,7 +34,8 @@ sentry {
   // We are using our own instrumentation tooling for Room queries
   // Look at [ADR 013: SQL Performance Profiling (v2)]
   tracingInstrumentation {
-    enabled.set(false)
+    enabled = true
+    features.set(EnumSet.allOf(InstrumentationFeature::class.java) - InstrumentationFeature.DATABASE)
   }
 }
 
@@ -87,22 +89,12 @@ android {
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
-    val datadogServiceName: String by project
-    val datadogApplicationId: String by project
-    val datadogClientToken: String by project
-    val datadogEnvironment: String by project
 
-    addManifestPlaceholders(mapOf(
-        "sentryDsn" to sentryDsn,
-        "sentryEnvironment" to sentryEnvironment
-    ))
+    buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
+    buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
-    buildConfigField("String", "DATADOG_SERVICE_NAME", "\"$datadogServiceName\"")
-    buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
-    buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
-    buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
 
     ksp {
       arg("room.schemaLocation", "$projectDir/schemas")
@@ -481,8 +473,6 @@ dependencies {
   lintChecks(projects.lint)
 
   runtimeOnly(libs.jackson.core)
-
-  implementation(libs.datadog.sdk)
 
   androidTestImplementation(libs.apache.commons.math)
 }

@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
   <string name="prescribed_drugs_dosage_remove">ያስወግዱ</string>
@@ -899,13 +898,27 @@
   <!--Monthly drug stock reports-->
   <string name="monthly_drug_stock_report">ወርሃዊ የመድሃኒት ክምችት ሪፖርት</string>
   <string name="monthly_drug_stock_reports">ወርሃዊ የመድሃኒት ክምችት ሪፖርቶች</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s የመድሃኒት ክምችት ሪፖርት</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s የመድሃኒት ክምችት ሪፖርት</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሃዊ የአቅርቦቶች ሪፖርት</string>
   <string name="monthly_supplies_reports">ወርሃዊ የአቅርቦቶች ሪፖርቶች</string>
   <string name="monthly_supplies_report_supplies_report">%1$s የአቅርቦቶች ሪፖርት</string>
-  <string name="data_protection_consent_title">\"የአጠቃቀም መመሪያ \"</string>
-  <string name="data_protection_consent_subtitle">የሲምፕል መተግበሪያን ከመጠቀምዎ በፊት የሚከተሉትን ውሎች በማንበብ እና በመስማማት ከስር “ይስማሙ እና ይቀጥሉ\" የሚለውን ሳጥን ይጫኑ። የሲምፕል መተግበሪያ የታካሚዎች የግል የጤና መረጃ (“ውሂብ ወይም ዳታ\") ይዟል. በምትሠሩበት የጤና ተቋም ውስጥ ከታካሚ እንክብካቤ ጋር የተያያዙ የሥራ ተግባሮችን ለማከናወን እንደ አስፈላጊነቱ የታካሚን መረጃ ማግኘት ይችላሉ፤ ነገር ግን ለሌላ ለማንኛውም ዓላማ የታካሚን ውሂብ/ዳታ መክፈት ወይም ማየት የተከለከለ ነው። መረጃን በሚስጥር መያዝ አለብዎት።  መረጃን ለሌላ ሶስተኛ አካል ያለ ታካሚው እና ተቋሙ እውቅና እና ፈቃድ ማጋራት ፈጽሞ የተከለከለ ነው። የሲምፕል መተግበሪያን ለመክፈት የሚጠቀሙበትን የደህንነት ኮድ ለግልዎ ብቻ መጠቀም አለብዎት።  በማይጠቀሙበት ጊዜ ወዲያውኑ ከሲምፕል መተግበሪያ መውጣት አለብዎት።  ሌሎች አካላት የእርስዎን የመግቢያ ሚስጢር ኮድ ተጠቅመው ወደ ሲምፕል መተግበሪያ ወይም ዳታ እንዲገቡ መፍቀድ የተከለከለ ነው። እንደ አስፈላጊነቱ በየጊዜው የዳታ መላክን/ሲንክኖሪዛቲኦን፣ የግዴታ መዝገቦችን መያዝ እና ሌሎች ዝማኔዎችን እና ጥገናዎችን ማከናወን አለብዎት። የሲምፕል መተግበሪያ የውሂብ መዳረሻዎን መዝገብ በራስ-ሰር እንደሚፈጥር ይገባዎታል። ያልተፈቀደ መዳረሻ ወይም ሌሎች የአጠቃቀም ደንቦችን መጣስ የሲምፕል  መተግበሪያ መዳረሻዎ እንዲሰረዝ ወይም ሌሎች አስተዳደራዊ እርምጃዎችን ሊያስከትል ይችላል።</string>
-  <string name="data_protection_consent_accept_button">\"ይስማሙ እና ይቀጥሉ \"</string>
-</resources>
+
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">\\"የአጠቃቀም መመሪያ \\"</string>
+  <string name="data_protection_consent_subtitle">የሲምፕል መተግበሪያን ከመጠቀምዎ በፊት የሚከተሉትን ውሎች በማንበብ እና በመስማማት ከስር “ይስማሙ እና ይቀጥሉ\\" የሚለውን ሳጥን ይጫኑ። የሲምፕል መተግበሪያ የታካሚዎች የግል የጤና መረጃ (“ውሂብ ወይም ዳታ\\") ይዟል. በምትሠሩበት የጤና ተቋም ውስጥ ከታካሚ እንክብካቤ ጋር የተያያዙ የሥራ ተግባሮችን ለማከናወን እንደ አስፈላጊነቱ የታካሚን መረጃ ማግኘት ይችላሉ፤ ነገር ግን ለሌላ ለማንኛውም ዓላማ የታካሚን ውሂብ/ዳታ መክፈት ወይም ማየት የተከለከለ ነው። መረጃን በሚስጥር መያዝ አለብዎት። መረጃን ለሌላ ሶስተኛ አካል ያለ ታካሚው እና ተቋሙ እውቅና እና ፈቃድ ማጋራት ፈጽሞ የተከለከለ ነው። የሲምፕል መተግበሪያን ለመክፈት የሚጠቀሙበትን የደህንነት ኮድ ለግልዎ ብቻ መጠቀም አለብዎት። በማይጠቀሙበት ጊዜ ወዲያውኑ ከሲምፕል መተግበሪያ መውጣት አለብዎት። ሌሎች አካላት የእርስዎን የመግቢያ ሚስጢር ኮድ ተጠቅመው ወደ ሲምፕል መተግበሪያ ወይም ዳታ እንዲገቡ መፍቀድ የተከለከለ ነው። እንደ አስፈላጊነቱ በየጊዜው የዳታ መላክን/ሲንክኖሪዛቲኦን፣ የግዴታ መዝገቦችን መያዝ እና ሌሎች ዝማኔዎችን እና ጥገናዎችን ማከናወን አለብዎት። የሲምፕል መተግበሪያ የውሂብ መዳረሻዎን መዝገብ በራስ-ሰር እንደሚፈጥር ይገባዎታል። ያልተፈቀደ መዳረሻ ወይም ሌሎች የአጠቃቀም ደንቦችን መጣስ የሲምፕል መተግበሪያ መዳረሻዎ እንዲሰረዝ ወይም ሌሎች አስተዳደራዊ እርምጃዎችን ሊያስከትል ይችላል።</string>
+  <string name="data_protection_consent_accept_button">\\"ይስማሙ እና ይቀጥሉ \\"</string>
+
+  <string name="change_patient_facility">ለውጥ</string>
+
+  <string name="diabetes_warning_dialog_negative_button">አሁን አይሆንም</string>
+
+  <string name="htn_warning_dialog_negative_button">አሁን አይሆንም</string>
+
+  <string name="purge_notification_desc">ዳታ ቤዝ ጥገና በሂደት ላይ ነው፤ ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
+
+  <string name="smoking_status_dialog_title_positive_button">ተጠናቅቋል</string>
+  <string name="smoking_status_dialog_title_negative_button">ይቅር</string>
+
+  </resources>

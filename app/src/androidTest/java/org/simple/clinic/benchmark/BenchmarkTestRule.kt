@@ -1,13 +1,16 @@
 package org.simple.clinic.benchmark
 
 import android.util.Log
-import io.opentracing.util.GlobalTracer
+import io.sentry.Sentry
+import io.sentry.SentryLongDate
+import io.sentry.SpanStatus
+import io.sentry.TransactionOptions
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.TestClinicApp
-import java.util.concurrent.TimeUnit.MICROSECONDS
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
@@ -65,19 +68,22 @@ class BenchmarkTestRule(
 
         Log.i("PerfRegression", "Median benchmark for $testClass#$testMethod: ${medianTimeTaken}ms")
 
-        val tracer = GlobalTracer.get()
-        val adjustedStartTime = millisToMicros(System.currentTimeMillis() - medianTimeTaken)
-        val span = tracer
-            .buildSpan("test.method")
-            .withTag("class", testClass)
-            .withTag("method", testMethod)
-            .withStartTimestamp(adjustedStartTime)
-            .start()
+        val adjustedStartTime = millisToNanos(System.currentTimeMillis() - medianTimeTaken)
 
-        span.finish(adjustedStartTime + millisToMicros(medianTimeTaken))
+        val span = Sentry.startTransaction(
+            /* name = */ "test.method",
+            /* operation = */ "$testClass/$testMethod",
+            /* transactionOptions = */ TransactionOptions().apply {
+              startTimestamp = SentryLongDate(adjustedStartTime)
+            }
+        )
+
+        span.finish(
+            SpanStatus.OK,
+            SentryLongDate(adjustedStartTime + millisToNanos(medianTimeTaken)))
       }
 
-      private fun millisToMicros(millis: Long) = MICROSECONDS.convert(millis, MILLISECONDS)
+      private fun millisToNanos(millis: Long) = TimeUnit.NANOSECONDS.convert(millis, MILLISECONDS)
     }
   }
 }

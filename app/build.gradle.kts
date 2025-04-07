@@ -89,12 +89,14 @@ android {
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
+    val skipCountrySelection: String by project
 
     buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
     buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
+    buildConfigField("boolean", "SKIP_COUNTRY_SELECTION", skipCountrySelection)
 
     ksp {
       arg("room.schemaLocation", "$projectDir/schemas")

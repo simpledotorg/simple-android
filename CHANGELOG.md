@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 2025.04.07
+
 ### Internal
 
 - Bump desugar JDK library to v2.1.4

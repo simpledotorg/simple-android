@@ -2,6 +2,10 @@
 
 ## Next Release
 
+## Internal
+
+- Bump Gson to v2.13.0
+
 ## 2025.04.07
 
 ### Internal

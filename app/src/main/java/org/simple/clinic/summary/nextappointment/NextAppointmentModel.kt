@@ -31,10 +31,10 @@ data class NextAppointmentModel(
     get() = nextAppointmentPatientProfile!!.appointment!!
 
   val appointmentIsInAssignedFacility
-    get() = appointment.facilityUuid == nextAppointmentPatientProfile!!.patient.assignedFacilityId
+    get() = appointment.facilityUuid == nextAppointmentPatientProfile!!.patient!!.assignedFacilityId
 
   val appointmentFacilityName
-    get() = nextAppointmentPatientProfile!!.facility.name
+    get() = nextAppointmentPatientProfile!!.facility!!.name
 
   fun nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile: NextAppointmentPatientProfile?): NextAppointmentModel {
     return copy(nextAppointmentPatientProfile = nextAppointmentPatientProfile)

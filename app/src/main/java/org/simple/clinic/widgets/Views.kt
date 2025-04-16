@@ -52,17 +52,18 @@ import io.reactivex.Observable
 import org.simple.clinic.R
 import timber.log.Timber
 import java.time.Duration
+import androidx.core.view.isGone
 
 fun EditText.showKeyboard() {
-  fun openKeyboard() {
+  val openKeyboard = Runnable {
     requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
   }
 
-  postDelayed(::openKeyboard, 100)
+  postDelayed(openKeyboard, 100)
 
-  doOnDetach { removeCallbacks(::openKeyboard) }
+  doOnDetach { removeCallbacks(openKeyboard) }
 }
 
 fun ViewGroup.hideKeyboard() {
@@ -195,7 +196,7 @@ fun View.executeOnNextMeasure(runnable: () -> Unit) {
         viewTreeObserver.removeOnPreDrawListener(this)
         runnable()
 
-      } else if (visibility == View.GONE) {
+      } else if (isGone) {
         Timber.w("View's visibility is set to Gone. It'll never be measured: %s", resourceName())
         viewTreeObserver.removeOnPreDrawListener(this)
       }
@@ -286,27 +287,29 @@ fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
 }
 
 fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
+  val runnable = Runnable { onScrollComplete() }
   post {
     val distanceToScrollFromTop = view.topRelativeTo(this)
 
     smoothScrollTo(0, distanceToScrollFromTop)
 
-    postDelayed(onScrollComplete, 400)
+    postDelayed(runnable, 400)
   }
 
-  doOnDetach { removeCallbacks(onScrollComplete) }
+  doOnDetach { removeCallbacks(runnable) }
 }
 
 fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
+  val runnable=  Runnable { onScrollComplete() }
   post {
     val distanceToScrollFromTop = view.topRelativeTo(this)
 
     smoothScrollTo(0, distanceToScrollFromTop)
 
-    postDelayed(onScrollComplete, 400)
+    postDelayed(runnable, 400)
   }
 
-  doOnDetach { removeCallbacks(onScrollComplete) }
+  doOnDetach { removeCallbacks(runnable) }
 }
 
 var ViewFlipper.displayedChildResId: Int

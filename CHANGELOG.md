@@ -5,6 +5,21 @@
 ## Internal
 
 - Bump Gson to v2.13.0
+- Bump AGP to v8.9.1
+- Bump AndroidX Camera to v1.4.2
+- Bump AndroidX Paging to v3.3.6
+- Bump AndroidX Room to v2.7.0
+- Bump AndroidX Security Crypto to v1.1.0-alpha07
+- Bump AndroidX Core KTX to v1.16.0
+- Bump AndroidX Fragment KTX to v1.8.6
+- Bump AndroidX Benchmark to v1.3.4
+- Bump Kotlin to v2.1.20
+- Bump KSP to v2.1.20-1.0.31
+- Bump Lint to v31.9.1
+- Bump Android Desugar JDK to v2.1.5
+- Bump ConstraintLayout to v2.2.1
+- Bump Firebase Analytics KTX to v22.4.0
+- Bump Sentry to v8.6.0
 
 ## 2025.04.07
 

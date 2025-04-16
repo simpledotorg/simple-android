@@ -71,7 +71,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
 
-    setupSentry()
+    if (!BuildConfig.DEBUG) {
+      setupSentry()
+    }
 
     databaseEncryptor
         .databaseEncryptionState

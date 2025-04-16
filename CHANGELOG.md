@@ -5,6 +5,7 @@
 ## Internal
 
 - Bump Gson to v2.13.0
+- Skip Sentry config during app startup in the debug mode
 
 ## 2025.04.07
 

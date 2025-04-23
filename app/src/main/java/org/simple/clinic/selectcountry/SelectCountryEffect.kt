@@ -11,3 +11,5 @@ data class SaveCountryEffect(val country: Country) : SelectCountryEffect()
 sealed class SelectCountryViewEffect : SelectCountryEffect()
 
 data object GoToStateSelectionScreen : SelectCountryViewEffect()
+
+data object ReplaceCurrentScreenWithStateSelectionScreen : SelectCountryViewEffect()

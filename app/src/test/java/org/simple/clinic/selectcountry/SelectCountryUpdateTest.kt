@@ -121,4 +121,33 @@ class SelectCountryUpdateTest {
             hasEffects(GoToStateSelectionScreen)
         ))
   }
+
+  @Test
+  fun `when selected country is saved and there was only one country returned, then replace with state selection screen`() {
+    val ihci = TestData.deployment(
+        endPoint = "https://in.simple.org",
+        displayName = "IHCI"
+    )
+    val kerala = TestData.deployment(
+        endPoint = "https://kerala.simple.org",
+        displayName = "Kerala"
+    )
+    val india = TestData.country(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(ihci, kerala)
+    )
+    val model = defaultModel
+        .manifestFetched(listOf(india))
+        .countryChosen(india)
+
+    spec
+        .given(model)
+        .whenEvent(CountrySaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceCurrentScreenWithStateSelectionScreen)
+        ))
+  }
 }

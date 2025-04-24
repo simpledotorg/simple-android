@@ -95,9 +95,13 @@ class Router(
       return
     }
 
-    val newHistory = history
-        .removeLast()
-        .add(navRequest)
+    val newHistory = if (history.requests.size > 1) {
+      history
+          .removeLast()
+          .add(navRequest)
+    } else {
+      History(listOf(navRequest))
+    }
 
     executeStateChange(newHistory, Direction.Replace, null, transactionOptions)
   }

@@ -32,7 +32,7 @@ class SelectCountryUpdateTest {
   private val countries = listOf(india, bangladesh)
 
   @Test
-  fun `when the manifest is fetched with multiple countries, then update the countries list`() {
+  fun `when the manifest is fetched, then update the countries list`() {
     spec
         .given(defaultModel)
         .whenEvent(ManifestFetched(countries))
@@ -43,14 +43,14 @@ class SelectCountryUpdateTest {
   }
 
   @Test
-  fun `when the manifest is fetched with single country, then save the country`() {
+  fun `when the manifest is fetched with single country, then update the countries list and save the country`() {
     val countries = listOf(india)
     spec
         .given(defaultModel)
         .whenEvent(ManifestFetched(countries))
         .then(assertThatNext(
-            hasEffects(SaveCountryEffect(countries.first())),
-            hasNoModel()
+            hasModel(defaultModel.manifestFetched(countries)),
+            hasEffects(SaveCountryEffect(countries.first()))
         ))
   }
 

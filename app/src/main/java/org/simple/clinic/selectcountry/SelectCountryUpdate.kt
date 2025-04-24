@@ -31,10 +31,11 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
   }
 
   private fun manifestFetched(model: SelectCountryModel, countries: List<Country>): Next<SelectCountryModel, SelectCountryEffect> {
+    val manifestFetchedModel = model.manifestFetched(countries)
     return if (countries.size > 1) {
-      next(model.manifestFetched(countries))
+      next(manifestFetchedModel)
     } else {
-      dispatch(SaveCountryEffect(countries.first()))
+      next(manifestFetchedModel, SaveCountryEffect(countries.first()))
     }
   }
 }

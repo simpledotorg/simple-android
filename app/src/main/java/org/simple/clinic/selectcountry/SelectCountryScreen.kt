@@ -180,7 +180,7 @@ class SelectCountryScreen : BaseScreen<
   }
 
   override fun replaceCurrentScreenToStateSelectionScreen() {
-    router.push(SelectStateScreen.Key())
+    router.replaceTop(SelectStateScreen.Key())
   }
 
   @Parcelize

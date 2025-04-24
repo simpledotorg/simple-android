@@ -2,10 +2,14 @@
 
 ## Next Release
 
-## Internal
+### Internal
 
 - Bump Gson to v2.13.0
 - Skip Sentry config during app startup in the debug mode
+
+### Features
+
+- Auto-select country and state when only one option is available
 
 ## 2025.04.07
 

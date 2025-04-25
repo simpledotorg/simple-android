@@ -25,7 +25,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
     val effect = if (model.hasMoreThanOneCountry) {
       GoToStateSelectionScreen
     } else {
-      ReplaceCurrentScreenWithStateSelectionScreen
+      ReplaceWithStateSelectionScreen
     }
     return dispatch(effect)
   }

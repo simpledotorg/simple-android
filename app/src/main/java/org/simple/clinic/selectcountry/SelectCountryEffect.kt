@@ -12,4 +12,4 @@ sealed class SelectCountryViewEffect : SelectCountryEffect()
 
 data object GoToStateSelectionScreen : SelectCountryViewEffect()
 
-data object ReplaceCurrentScreenWithStateSelectionScreen : SelectCountryViewEffect()
+data object ReplaceWithStateSelectionScreen : SelectCountryViewEffect()

@@ -9,7 +9,7 @@
 
 ### Features
 
-- Auto-select country and state when only one option is available
+- Auto-select country when only one option is available
 
 ## 2025.04.07
 

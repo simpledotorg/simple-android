@@ -147,7 +147,7 @@ class SelectCountryUpdateTest {
         .whenEvent(CountrySaved)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ReplaceCurrentScreenWithStateSelectionScreen)
+            hasEffects(ReplaceWithStateSelectionScreen)
         ))
   }
 }

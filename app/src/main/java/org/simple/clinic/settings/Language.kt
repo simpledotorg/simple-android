@@ -19,7 +19,6 @@ data class ProvidedLanguage(val displayName: String, val languageCode: String) :
   fun isApplicableToCountry(country: Country): Boolean {
     val parts = languageCode.split("-")
     return when (parts.size) {
-      1 -> true
       2 -> languageCode.contains(country.isoCountryCode, ignoreCase = true)
       else -> true
     }

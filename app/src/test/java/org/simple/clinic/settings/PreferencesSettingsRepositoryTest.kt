@@ -1,11 +1,13 @@
 package org.simple.clinic.settings
 
 import com.f2prateek.rx.preferences2.Preference
+import com.google.common.truth.Truth.assertThat
+import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.junit.Test
+import org.simple.clinic.TestData
 import java.util.Locale
 import java.util.Optional
 
@@ -13,10 +15,14 @@ class PreferencesSettingsRepositoryTest {
 
   private val preference = mock<Preference<Optional<Locale>>>()
 
-  private val english = ProvidedLanguage(displayName = "English", languageCode = "en-IN")
+  private val english = ProvidedLanguage(displayName = "English", languageCode = "en")
   private val kannada = ProvidedLanguage(displayName = "ಕನ್ನಡ", languageCode = "kn-IN")
+  private val sidama = ProvidedLanguage(displayName = "Sidama", languageCode = "sid-ET")
+  private val country = TestData.country(
+      isoCountryCode = "IN",
+  )
 
-  private val repository = PreferencesSettingsRepository(preference, listOf(english, kannada))
+  private val repository = PreferencesSettingsRepository(preference, listOf(english, kannada, sidama), country)
 
   @Test
   fun `if user selected locale is not set, fetching the current language should return the default language`() {
@@ -66,5 +72,14 @@ class PreferencesSettingsRepositoryTest {
 
     // then
     verify(preference).set(Optional.of(locale))
+  }
+
+  @Test
+  fun `getting supported languages should only fetch languages applicable for the selected country or languages applicable to all countries`() {
+    // when
+    val supportedLanguages = repository.getSupportedLanguages().blockingGet()
+
+    // then
+    assertThat(supportedLanguages).containsExactly(english, kannada)
   }
 }

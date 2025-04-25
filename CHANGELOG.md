@@ -11,6 +11,10 @@
 
 - Auto-select country when only one option is available
 
+### Changes
+
+- Display only languages supported by the selected country in the settings screen
+
 ## 2025.04.07
 
 ### Internal

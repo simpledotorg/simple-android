@@ -10,6 +10,7 @@ class SelectCountryViewEffectHandler(
   override fun handle(viewEffect: SelectCountryViewEffect) {
     when (viewEffect) {
       GoToStateSelectionScreen -> uiActions.goToStateSelectionScreen()
+      ReplaceWithStateSelectionScreen -> uiActions.replaceWithStateSelectionScreen()
     }.exhaustive()
   }
 }

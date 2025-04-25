@@ -179,6 +179,10 @@ class SelectCountryScreen : BaseScreen<
     router.push(SelectStateScreen.Key())
   }
 
+  override fun replaceWithStateSelectionScreen() {
+    router.replaceTop(SelectStateScreen.Key())
+  }
+
   @Parcelize
   data class Key(
       override val analyticsName: String = "Select Country"

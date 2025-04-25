@@ -11,6 +11,9 @@ data class SelectCountryModel(
     val selectedCountry: Country?
 ) : Parcelable {
 
+  val hasMoreThanOneCountry: Boolean
+    get() = countries.orEmpty().size > 1
+
   fun hasFetchedCountries(): Boolean = countries != null
 
   fun hasFailedToFetchCountries(): Boolean = manifestFetchError != null

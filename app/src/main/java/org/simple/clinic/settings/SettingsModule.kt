@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.util.preference.LocalePreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import java.util.Locale
@@ -21,14 +22,15 @@ class SettingsModule {
 
   @Provides
   fun provideSettingsRepository(
-      @Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>
+      @Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>,
+      country: Country,
   ): SettingsRepository {
     val supportedLanguages = listOf<Language>(
         ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET"),
         ProvidedLanguage(displayName = "አማርኛ", languageCode = "am-ET"),
         ProvidedLanguage(displayName = "বাংলা", languageCode = "bn-BD"),
         ProvidedLanguage(displayName = "বাঙালি", languageCode = "bn-IN"),
-        ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
+        ProvidedLanguage(displayName = "English", languageCode = "en"),
         ProvidedLanguage(displayName = "Español", languageCode = "es"),
         ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
         ProvidedLanguage(displayName = "ಕನ್ನಡ", languageCode = "kn-IN"),
@@ -45,7 +47,8 @@ class SettingsModule {
 
     return PreferencesSettingsRepository(
         userSelectedLocalePreference = userSelectedLocalePreference,
-        supportedLanguages = supportedLanguages
+        supportedLanguages = supportedLanguages,
+        country = country
     )
   }
 }

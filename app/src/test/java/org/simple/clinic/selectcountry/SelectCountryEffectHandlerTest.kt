@@ -110,4 +110,16 @@ class SelectCountryEffectHandlerTest {
     verify(uiActions).goToStateSelectionScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when replace the state selection screen effect is received, then replace the state selection screen`() {
+    // when
+    testCase.dispatch(ReplaceWithStateSelectionScreen)
+
+    // then
+    verifyNoInteractions(repository)
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).replaceWithStateSelectionScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

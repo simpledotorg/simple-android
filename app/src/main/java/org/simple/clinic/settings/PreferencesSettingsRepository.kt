@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.ofType
 import java.util.Locale
@@ -11,7 +12,8 @@ import java.util.Optional
 
 class PreferencesSettingsRepository(
     private val userSelectedLocalePreference: Preference<Optional<Locale>>,
-    private val supportedLanguages: List<Language>
+    private val supportedLanguages: List<Language>,
+    private val country: Country,
 ) : SettingsRepository {
 
   override fun getCurrentLanguage(): Single<Language> {
@@ -30,7 +32,11 @@ class PreferencesSettingsRepository(
   }
 
   override fun getSupportedLanguages(): Single<List<Language>> {
-    return Single.just(supportedLanguages)
+    val filteredLanguages = supportedLanguages
+        .filterIsInstance<ProvidedLanguage>()
+        .filter { language -> language.isApplicableToCountry(country) }
+
+    return Single.just(filteredLanguages)
   }
 
   override fun setCurrentLanguage(newLanguage: Language): Completable {

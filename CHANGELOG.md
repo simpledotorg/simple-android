@@ -6,6 +6,7 @@
 
 - Bump Gson to v2.13.0
 - Skip Sentry config during app startup in the debug mode
+- Show spanish language option in non-production builds only
 
 ### Features
 

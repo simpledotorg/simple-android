@@ -37,7 +37,7 @@ abstract class BaseDatabaseMigrationTest(
     helper.migrations = migrations
   }
 
-  protected val before: SupportSQLiteDatabase by lazy(LazyThreadSafetyMode.NONE) { helper.createDatabase(fromVersion) }
+  protected val before: SupportSQLiteDatabase by lazy(LazyThreadSafetyMode.NONE) { helper.setupDatabase(fromVersion) }
 
   protected val after: SupportSQLiteDatabase by lazy(LazyThreadSafetyMode.NONE) { helper.migrateTo(toVersion) }
 }

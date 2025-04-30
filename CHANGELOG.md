@@ -21,6 +21,7 @@
 - Bump Firebase Analytics KTX to v22.4.0
 - Bump Sentry to v8.10.0
 - Bump Dagger to v2.56.2
+- Bump Coroutines to v1.10.2
 - Skip Sentry config during app startup in the debug mode
 - Show spanish language option in non-production builds only
 

@@ -32,7 +32,7 @@ room-metadataGenerator = "2.1.0"
 
 rx-binding = "3.1.0"
 
-coroutines = "1.10.1"
+coroutines = "1.10.2"
 
 compose-compiler = "1.5.13"
 

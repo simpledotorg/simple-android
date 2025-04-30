@@ -19,7 +19,7 @@
 - Bump Android Desugar JDK to v2.1.5
 - Bump ConstraintLayout to v2.2.1
 - Bump Firebase Analytics KTX to v22.4.0
-- Bump Sentry to v8.10.0
+- Bump Sentry to v8.11.0
 - Bump Dagger to v2.56.2
 - Bump Coroutines to v1.10.2
 - Skip Sentry config during app startup in the debug mode

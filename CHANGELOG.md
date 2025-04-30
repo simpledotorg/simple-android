@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump Gson to v2.13.0
+- Bump Gson to v2.13.1
 - Bump AndroidX Camera to v1.4.2
 - Bump AndroidX Paging to v3.3.6
 - Bump AndroidX Room to v2.7.1

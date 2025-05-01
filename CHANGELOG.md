@@ -33,6 +33,7 @@
 ### Changes
 
 - Display only languages supported by the selected country in the settings screen
+- Update manifest payload to move countries to top level and add version field
 
 ## 2025.04.07
 

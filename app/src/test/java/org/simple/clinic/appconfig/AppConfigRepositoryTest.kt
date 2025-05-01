@@ -2,16 +2,16 @@ package org.simple.clinic.appconfig
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.Single
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import io.reactivex.Single
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.appconfig.api.ManifestFetchApi
@@ -43,7 +43,7 @@ class AppConfigRepositoryTest {
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
     // given
-    val countriesV2 = listOf(
+    val countries = listOf(
         Country(
             isoCountryCode = "IN",
             displayName = "India",
@@ -56,16 +56,19 @@ class AppConfigRepositoryTest {
             )
         )
     )
-    val countriesPayload = CountriesPayload(countriesV2)
+    val manifestPayload = Manifest(
+        version = "3",
+        supportedCountries = countries
+    )
 
-    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(Manifest(countriesPayload)))
+    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(manifestPayload))
 
     // then
 
     repository
         .fetchAppManifest()
         .test()
-        .assertValue(FetchSucceeded(countriesV2))
+        .assertValue(FetchSucceeded(countries))
         .assertNoErrors()
   }
 

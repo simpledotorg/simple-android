@@ -43,6 +43,18 @@ class SelectCountryUpdateTest {
   }
 
   @Test
+  fun `when the manifest is fetched with single country, then update the countries list and save the country`() {
+    val countries = listOf(india)
+    spec
+        .given(defaultModel)
+        .whenEvent(ManifestFetched(countries))
+        .then(assertThatNext(
+            hasModel(defaultModel.manifestFetched(countries)),
+            hasEffects(SaveCountryEffect(countries.first()))
+        ))
+  }
+
+  @Test
   fun `when the manifest fetch fails, then update the error`() {
     spec
         .given(defaultModel)
@@ -107,6 +119,35 @@ class SelectCountryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToStateSelectionScreen)
+        ))
+  }
+
+  @Test
+  fun `when selected country is saved and there was only one country returned, then replace with state selection screen`() {
+    val ihci = TestData.deployment(
+        endPoint = "https://in.simple.org",
+        displayName = "IHCI"
+    )
+    val kerala = TestData.deployment(
+        endPoint = "https://kerala.simple.org",
+        displayName = "Kerala"
+    )
+    val india = TestData.country(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(ihci, kerala)
+    )
+    val model = defaultModel
+        .manifestFetched(listOf(india))
+        .countryChosen(india)
+
+    spec
+        .given(model)
+        .whenEvent(CountrySaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceWithStateSelectionScreen)
         ))
   }
 }

@@ -80,7 +80,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_7_to_8() {
-    val db_v7 = helper.createDatabase(version = 7)
+    val db_v7 = helper.setupDatabase(version = 7)
 
     db_v7.execSQL("""
       INSERT OR ABORT INTO `LoggedInUser`(`uuid`,`fullName`,`phoneNumber`,`pinDigest`, `status`,`createdAt`,`updatedAt`)
@@ -106,7 +106,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_8_to_9() {
-    helper.createDatabase(version = 8)
+    helper.setupDatabase(version = 8)
     val db_v9 = helper.migrateTo(9)
 
     db_v9.query("SELECT * FROM `Appointment`").use {
@@ -116,7 +116,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_9_to_10() {
-    helper.createDatabase(version = 9)
+    helper.setupDatabase(version = 9)
     val db_v10 = helper.migrateTo(10)
 
     db_v10.query("SELECT * FROM `Communication`").use {
@@ -126,7 +126,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_10_to_11() {
-    val db_v10 = helper.createDatabase(version = 10)
+    val db_v10 = helper.setupDatabase(version = 10)
 
     db_v10.execSQL("""
       INSERT OR REPLACE INTO `Appointment`(`id`,`patientId`,`facilityId`,`date`,`status`,`statusReason`,`syncStatus`,`createdAt`,`updatedAt`)
@@ -186,7 +186,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_11_to_12() {
-    helper.createDatabase(version = 11)
+    helper.setupDatabase(version = 11)
     val db_v12 = helper.migrateTo(12)
 
     db_v12.query("SELECT * FROM `MedicalHistory`").use {
@@ -196,7 +196,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_12_to_13() {
-    val db_v12 = helper.createDatabase(version = 12)
+    val db_v12 = helper.setupDatabase(version = 12)
 
     db_v12.execSQL("""
       INSERT OR REPLACE INTO `Appointment`(`uuid`,`patientUuid`,`facilityUuid`,`date`,`status`,`statusReason`,`syncStatus`,`createdAt`,`updatedAt`)
@@ -233,7 +233,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_13_to_14() {
-    val db_v13 = helper.createDatabase(version = 13)
+    val db_v13 = helper.setupDatabase(version = 13)
 
     val patientUuid = "ee367a66-f47e-42d8-965b-7a2b5c54f4bd"
     val addressUuid = "ddb15d83-f390-4f6b-96c5-b2f5064cae6d"
@@ -302,7 +302,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_14_to_15() {
-    val db_14 = helper.createDatabase(version = 14)
+    val db_14 = helper.setupDatabase(version = 14)
 
     db_14.query("SELECT * FROM `MedicalHistory`").use {
       assertThat(it.columnCount).isEqualTo(10)
@@ -347,7 +347,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_16_to_17() {
-    val db_16 = helper.createDatabase(version = 16)
+    val db_16 = helper.setupDatabase(version = 16)
 
     val patientUuid1 = "ee367a66-f47e-42d8-965b-7a2b5c54f4bd"
     val patientUuid2 = "a1d33096-cea6-4beb-8441-82cab2befe2d"
@@ -407,7 +407,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_17_to_18() {
-    val db_v17 = helper.createDatabase(version = 17)
+    val db_v17 = helper.setupDatabase(version = 17)
 
     val nonExistentFacilityUuid = "non-existent-facility-uuid"
     val existentFacilityUuid = "464bcda8-b26a-484d-bb70-49b3675f4a38"
@@ -505,7 +505,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_18_to_19() {
-    helper.createDatabase(version = 18)
+    helper.setupDatabase(version = 18)
     val db_v19 = helper.migrateTo(19)
 
     db_v19.query("""SELECT * FROM "OngoingLoginEntry" """).use {
@@ -515,7 +515,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_19_to_20() {
-    val db_19 = helper.createDatabase(version = 19)
+    val db_19 = helper.setupDatabase(version = 19)
     val historyUuid = "464bcda8-b26a-484d-bb70-49b3675f4a38"
 
     db_19.execSQL("""
@@ -550,7 +550,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_20_to_21() {
-    val db_20 = helper.createDatabase(version = 20)
+    val db_20 = helper.setupDatabase(version = 20)
 
     val patientUuid = UUID.randomUUID()
 
@@ -600,7 +600,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_21_to_22() {
-    helper.createDatabase(version = 21)
+    helper.setupDatabase(version = 21)
     val db_22 = helper.migrateTo(22)
 
     db_22.query("""SELECT * FROM "Protocol" """).use {
@@ -614,7 +614,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_22_to_23() {
-    val db_22 = helper.createDatabase(version = 22)
+    val db_22 = helper.setupDatabase(version = 22)
     val protocolUuid = UUID.randomUUID()
 
     db_22.execSQL("""
@@ -657,7 +657,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_23_to_24() {
-    val db_v23 = helper.createDatabase(version = 23)
+    val db_v23 = helper.setupDatabase(version = 23)
 
     db_v23.apply {
       assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 9)
@@ -692,7 +692,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_24_to_25() {
-    val db_v24 = helper.createDatabase(version = 24)
+    val db_v24 = helper.setupDatabase(version = 24)
     db_v24.assertColumnCount(tableName = "Facility", expectedCount = 13)
 
     db_v24.execSQL("""
@@ -722,7 +722,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_25_to_26() {
-    val db_v25 = helper.createDatabase(version = 25)
+    val db_v25 = helper.setupDatabase(version = 25)
     val protocolUuid = UUID.randomUUID()
     db_v25.execSQL("""
       INSERT INTO "Protocol" VALUES(
@@ -761,7 +761,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_26_to_27() {
-    val db_v26 = helper.createDatabase(version = 26)
+    val db_v26 = helper.setupDatabase(version = 26)
     db_v26.assertColumnCount(tableName = "Facility", expectedCount = 14)
 
     db_v26.execSQL("""
@@ -793,7 +793,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_27_to_28() {
-    val db_v27 = helper.createDatabase(version = 27)
+    val db_v27 = helper.setupDatabase(version = 27)
     db_v27.assertColumnCount(tableName = "Facility", expectedCount = 15)
 
     db_v27.execSQL("""
@@ -849,7 +849,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Patient"
     val columnCount = 14
 
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
 
     val addressUuid = "ddb15d83-f390-4f6b-96c5-b2f5064cae6d"
@@ -918,7 +918,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_28_to_29_verify_syncStatus_updated_for_BloodPressureMeasurement() {
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     val tableName = "BloodPressureMeasurement"
     db_v28.assertColumnCount(tableName = tableName, expectedCount = 10)
 
@@ -966,7 +966,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_28_to_29_verify_syncStatus_updated_for_PrescribedDrug() {
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     val tableName = "PrescribedDrug"
     db_v28.assertColumnCount(tableName = tableName, expectedCount = 12)
 
@@ -1018,7 +1018,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_28_to_29_verify_syncStatus_updated_for_Facility() {
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = "Facility", expectedCount = 17)
 
     db_v28.execSQL("""
@@ -1114,7 +1114,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Appointment"
     val columnCount = 12
 
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
 
     db_v28.execSQL("""
@@ -1170,7 +1170,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Communication"
     val columnCount = 9
 
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
 
     db_v28.execSQL("""
@@ -1218,7 +1218,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "MedicalHistory"
     val columnCount = 12
 
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
 
     db_v28.execSQL("""
@@ -1274,7 +1274,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Protocol"
     val columnCount = 7
 
-    val db_v28 = helper.createDatabase(version = 28)
+    val db_v28 = helper.setupDatabase(version = 28)
     db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
 
     db_v28.execSQL("""
@@ -1319,7 +1319,7 @@ class DatabaseMigrationAndroidTest {
     val expectedColumnCount = 9
 
     lastPatientPullToken.set(Optional.of("old_token"))
-    val db_v29 = helper.createDatabase(29)
+    val db_v29 = helper.setupDatabase(29)
     db_v29.assertTableDoesNotExist(tableName)
 
     val db_v30 = helper.migrateTo(30)
@@ -1332,7 +1332,7 @@ class DatabaseMigrationAndroidTest {
   fun migration_30_to_31() {
     val tableName = "MissingPhoneReminder"
 
-    val db_v30 = helper.createDatabase(30)
+    val db_v30 = helper.setupDatabase(30)
     db_v30.assertTableDoesNotExist(tableName)
 
     val db_v31 = helper.migrateTo(31)
@@ -1345,7 +1345,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Appointment"
     val columnCount_v31 = 12
 
-    val db_31 = helper.createDatabase(version = 31)
+    val db_31 = helper.setupDatabase(version = 31)
     db_31.assertColumnCount(tableName, columnCount_v31)
     db_31.execSQL("""
       INSERT INTO "Appointment" VALUES(
@@ -1395,7 +1395,7 @@ class DatabaseMigrationAndroidTest {
     val tableName = "Appointment"
     val columnCount = 13
 
-    val db_v32 = helper.createDatabase(version = 32)
+    val db_v32 = helper.setupDatabase(version = 32)
     db_v32.assertColumnCount(tableName, columnCount)
 
     db_v32.execSQL("""
@@ -1443,7 +1443,7 @@ class DatabaseMigrationAndroidTest {
   fun migration_33_to_34() {
     val tableName = "Appointment"
 
-    val db_v33 = helper.createDatabase(version = 33)
+    val db_v33 = helper.setupDatabase(version = 33)
 
     db_v33.execSQL("""
             INSERT INTO $tableName VALUES(
@@ -1487,7 +1487,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_34_to_35_verify_column_count() {
-    val db_v34 = helper.createDatabase(version = 34)
+    val db_v34 = helper.setupDatabase(version = 34)
 
     db_v34.apply {
       assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 10)
@@ -1516,7 +1516,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_34_to_35_verify_default_values() {
-    val db_v34 = helper.createDatabase(version = 34)
+    val db_v34 = helper.setupDatabase(version = 34)
 
     val bpTable = "BloodPressureMeasurement"
     val drugTable = "PrescribedDrug"
@@ -1673,7 +1673,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_34_to_35_verify_default_recorded_at_for_patient() {
-    val db_v34 = helper.createDatabase(version = 34)
+    val db_v34 = helper.setupDatabase(version = 34)
 
     val bpTable = "BloodPressureMeasurement"
     val patientTable = "Patient"
@@ -1942,7 +1942,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_userstatus_from_36_to_37() {
-    val db_v36 = helper.createDatabase(version = 36)
+    val db_v36 = helper.setupDatabase(version = 36)
 
     fun insertUser(uuid: String, oldStatus: String) {
       db_v36.execSQL("""
@@ -1987,7 +1987,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_appointment_status_from_37_to_38() {
-    val db_v37 = helper.createDatabase(version = 37)
+    val db_v37 = helper.setupDatabase(version = 37)
 
     fun insertAppointment(uuid: String, oldStatus: String) {
       db_v37.execSQL("""
@@ -2034,7 +2034,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrate_patient_status_from_38_to_39() {
-    val db_38 = helper.createDatabase(version = 38)
+    val db_38 = helper.setupDatabase(version = 38)
 
     db_38.execSQL("""
       INSERT INTO PatientAddress VALUES(
@@ -2219,7 +2219,7 @@ class DatabaseMigrationAndroidTest {
         hasDiabetes = "yes"
     )
 
-    val db_v39 = helper.createDatabase(39)
+    val db_v39 = helper.setupDatabase(39)
     listOf(
         allUnknownAnswersBeforeMigration,
         allYesAnswersBeforeMigration,
@@ -2280,7 +2280,7 @@ class DatabaseMigrationAndroidTest {
       }
     }
 
-    val dbV40 = helper.createDatabase(40)
+    val dbV40 = helper.setupDatabase(40)
     val maleUuid = UUID.fromString("b2e3b63f-9b09-4b8d-bfa7-af2ac5972786")
     val femaleUuid = UUID.fromString("c11af491-d125-45af-9b3c-aa73510960c3")
     val transgenderUuid = UUID.fromString("05384716-65d7-4261-8bcf-f2faecf62bb2")
@@ -2357,7 +2357,7 @@ class DatabaseMigrationAndroidTest {
     val mobileUuid = UUID.fromString("b2e3b63f-9b09-4b8d-bfa7-af2ac5972786")
     val landlineUuid = UUID.fromString("c11af491-d125-45af-9b3c-aa73510960c3")
 
-    val dbV41 = helper.createDatabase(41)
+    val dbV41 = helper.setupDatabase(41)
     savePatientPhoneNumber(dbV41, mobileUuid, "MOBILE")
     savePatientPhoneNumber(dbV41, landlineUuid, "LANDLINE")
 
@@ -2368,7 +2368,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun drop_communication_table_from_42_to_43() {
-    val dbV42 = helper.createDatabase(42)
+    val dbV42 = helper.setupDatabase(42)
     dbV42.assertTableExists("Communication")
 
     val dbV43 = helper.migrateTo(43)
@@ -2377,7 +2377,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migrating_ongoing_login_entry_to_44_should_add_the_new_columns() {
-    val db_v43 = helper.createDatabase(43)
+    val db_v43 = helper.setupDatabase(43)
     val tableName = "OngoingLoginEntry"
 
     db_v43.assertColumns(
@@ -2683,7 +2683,7 @@ class DatabaseMigrationAndroidTest {
 
     testCases.forEach { testCase ->
       // given
-      val db_v43 = helper.createDatabase(43)
+      val db_v43 = helper.setupDatabase(43)
       val facilityUuid = UUID.fromString("77cf0466-6446-473a-830d-ca49bb1607f4")
       createFacility(db = db_v43, facilityUuid = facilityUuid)
 
@@ -2742,7 +2742,7 @@ class DatabaseMigrationAndroidTest {
   @Test
   fun migrating_to_45_should_remove_the_columns_from_the_Patient_table() {
     // given
-    val db_v44 = helper.createDatabase(44)
+    val db_v44 = helper.setupDatabase(44)
     val tableName = "Patient"
     db_v44.assertColumns(
         tableName = tableName,
@@ -2770,7 +2770,7 @@ class DatabaseMigrationAndroidTest {
   @Test
   fun migrating_to_45_should_not_remove_any_of_the_existing_data_from_the_patient_table() {
     // given
-    val db_v44 = helper.createDatabase(44)
+    val db_v44 = helper.setupDatabase(44)
 
     val instant = Instant.parse("2018-01-01T00:00:00.000Z")
 
@@ -2895,7 +2895,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_to_46_should_create_table_HomescreenIllustration() {
-    val db_v45 = helper.createDatabase(45)
+    val db_v45 = helper.setupDatabase(45)
     db_v45.assertTableDoesNotExist("HomescreenIllustration")
     val db_v46 = helper.migrateTo(46)
     db_v46.assertTableExists("HomescreenIllustration")
@@ -2907,7 +2907,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun verify_migration_to_47_drops_table_HomescreenIllustration() {
-    val dbV46 = helper.createDatabase(46)
+    val dbV46 = helper.setupDatabase(46)
     dbV46.assertTableExists("HomescreenIllustration")
 
     val dbV47 = helper.migrateTo(47)
@@ -2921,7 +2921,7 @@ class DatabaseMigrationAndroidTest {
     val patientAddressUuid = "05f9c798-1701-4379-b14a-b1b18d937a33"
     val patientUuid = "0b18af95-e73f-43ea-9838-34abe9d7858e"
 
-    val dbV47 = helper.createDatabase(47)
+    val dbV47 = helper.setupDatabase(47)
     dbV47.assertColumns(
         "Patient",
         setOf("uuid", "addressUuid", "fullName", "gender", "dateOfBirth", "status", "createdAt", "updatedAt", "deletedAt", "recordedAt",
@@ -2975,7 +2975,7 @@ class DatabaseMigrationAndroidTest {
   fun migration_from_48_to_49_should_create_encounter_table() {
     //given
     val encounterTable = "Encounter"
-    val db_48 = helper.createDatabase(version = 48)
+    val db_48 = helper.setupDatabase(version = 48)
     db_48.assertTableDoesNotExist(encounterTable)
 
     //when
@@ -3032,7 +3032,7 @@ class DatabaseMigrationAndroidTest {
     )
     val testRecords = listOf(earliestBpWhichIsDeleted, firstBp, secondBp)
 
-    val db_49 = helper.createDatabase(version = 49)
+    val db_49 = helper.setupDatabase(version = 49)
 
     testRecords
         .map {
@@ -3126,7 +3126,7 @@ class DatabaseMigrationAndroidTest {
     )
     val testRecords = listOf(bpAtFacility1, bpAtFacility2)
 
-    val db_49 = helper.createDatabase(version = 49)
+    val db_49 = helper.setupDatabase(version = 49)
 
     testRecords
         .map {
@@ -3236,7 +3236,7 @@ class DatabaseMigrationAndroidTest {
     )
     val testRecords = listOf(firstBp, secondBp)
 
-    val db_49 = helper.createDatabase(version = 49)
+    val db_49 = helper.setupDatabase(version = 49)
 
     testRecords
         .map {
@@ -3347,7 +3347,7 @@ class DatabaseMigrationAndroidTest {
     )
     val testRecords = listOf(bpForFirstPatient, bpForSecondPatient)
 
-    val db_49 = helper.createDatabase(version = 49)
+    val db_49 = helper.setupDatabase(version = 49)
 
     testRecords
         .map {
@@ -3430,7 +3430,7 @@ class DatabaseMigrationAndroidTest {
   @Test
   fun migration_from_50_to_51_should_add_syncStatus_to_Encounter() {
     //given
-    val db_50 = helper.createDatabase(version = 50)
+    val db_50 = helper.setupDatabase(version = 50)
     val encounterTable = "Encounter"
 
     db_50.assertColumns(tableName = encounterTable, expectedColumns = setOf(
@@ -3469,7 +3469,7 @@ class DatabaseMigrationAndroidTest {
     }
 
     // given
-    val db_51 = helper.createDatabase(51)
+    val db_51 = helper.setupDatabase(51)
 
     val deletedEncounterUuid = UUID.fromString("e321da68-c015-4da4-8796-529c08c8bf4f")
     val deletedEncounterDeletedAt = Instant.parse("2018-01-01T00:00:01Z")
@@ -3534,7 +3534,7 @@ class DatabaseMigrationAndroidTest {
 
   @Test
   fun migration_from_52_to_53_should_add_house_address_and_zone_columns() {
-    val db_52 = helper.createDatabase(52)
+    val db_52 = helper.setupDatabase(52)
     val selectAllPatientAddressesQuery = "SELECT * FROM PatientAddress"
     db_52.query(selectAllPatientAddressesQuery).use {
       assertThat(it.columnCount)
@@ -3554,7 +3554,7 @@ class DatabaseMigrationAndroidTest {
   @Test
   fun migration_to_54_should_remove_the_encounterUuid_column_from_the_BloodPressureMeasurement_table() {
     // given
-    val db_v53 = helper.createDatabase(53)
+    val db_v53 = helper.setupDatabase(53)
     db_v53.insert("BloodPressureMeasurement", mapOf(
         "uuid" to UUID.fromString("99e9a490-deaa-4eab-b3c4-f63f1566e76c"),
         "systolic" to 120,
@@ -3645,7 +3645,7 @@ class DatabaseMigrationAndroidTest {
   @Test
   fun migration_to_54_should_drop_the_Encounter_table() {
     // given
-    val db_v53 = helper.createDatabase(53)
+    val db_v53 = helper.setupDatabase(53)
     db_v53.assertTableExists("Encounter")
 
     // when

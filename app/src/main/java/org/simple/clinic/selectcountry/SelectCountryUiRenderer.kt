@@ -6,12 +6,14 @@ class SelectCountryUiRenderer(private val ui: SelectCountryUi) : ViewRenderer<Se
 
   override fun render(model: SelectCountryModel) {
     when {
-      model.hasFetchedCountries() -> {
+      model.hasFetchedCountries() && model.hasMoreThanOneCountry -> {
         ui.displaySupportedCountries(model.countries!!, model.selectedCountry)
       }
+
       model.isFetching() -> {
         ui.showProgress()
       }
+
       model.hasFailedToFetchCountries() -> {
         when (model.manifestFetchError!!) {
           NetworkError -> ui.displayNetworkErrorMessage()

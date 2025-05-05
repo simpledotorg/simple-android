@@ -17,11 +17,11 @@ data class NextAppointmentPatientProfile(
         parentColumn = "patientUuid",
         entityColumn = "uuid"
     )
-    val patient: Patient,
+    val patient: Patient?,
 
     @Relation(
         parentColumn = "facilityUuid",
         entityColumn = "uuid"
     )
-    val facility: Facility
+    val facility: Facility?
 ) : Parcelable

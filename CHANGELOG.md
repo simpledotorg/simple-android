@@ -2,10 +2,36 @@
 
 ## Next Release
 
-## Internal
+### Internal
 
-- Bump Gson to v2.13.0
+- Bump Gson to v2.13.1
+- Bump AndroidX Camera to v1.4.2
+- Bump AndroidX Paging to v3.3.6
+- Bump AndroidX Room to v2.7.1
+- Bump AndroidX Security Crypto to v1.1.0-alpha07
+- Bump AndroidX Core KTX to v1.16.0
+- Bump AndroidX Fragment KTX to v1.8.6
+- Bump AndroidX Benchmark to v1.3.4
+- Bump AndroidX Benchmark to v2.10.1
+- Bump Kotlin to v2.1.20
+- Bump KSP to v2.1.20-1.0.31
+- Bump Lint to v31.9.2
+- Bump Android Desugar JDK to v2.1.5
+- Bump ConstraintLayout to v2.2.1
+- Bump Firebase Analytics KTX to v22.4.0
+- Bump Sentry to v8.11.0
+- Bump Dagger to v2.56.2
+- Bump Coroutines to v1.10.2
 - Skip Sentry config during app startup in the debug mode
+- Show spanish language option in non-production builds only
+
+### Features
+
+- Auto-select country when only one option is available
+
+### Changes
+
+- Display only languages supported by the selected country in the settings screen
 
 ## 2025.04.07
 

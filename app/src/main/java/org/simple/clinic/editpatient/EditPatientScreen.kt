@@ -85,6 +85,7 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.setFragmentResultListener
@@ -383,6 +384,7 @@ class EditPatientScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     setAdapterWhenVillageTypeAheadIsEnabled()
 
+    rootView.applyStatusBarPadding()
     saveButtonFrame.applyInsetsBottomPadding()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }

@@ -15,7 +15,7 @@ data class InsetsInitialPadding(
     val bottom: Int,
 )
 
-fun AppBarLayout.applyStatusBarPadding() {
+fun View.applyStatusBarPadding() {
   updateInsetPadding(typeMask = Type.statusBars()) { view, insets, initialPadding ->
     view.updatePadding(top = initialPadding.top + insets.top)
   }

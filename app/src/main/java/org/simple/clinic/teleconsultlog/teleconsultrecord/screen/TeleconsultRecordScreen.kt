@@ -1,7 +1,9 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
@@ -28,6 +30,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Message
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
@@ -44,6 +47,9 @@ class TeleconsultRecordScreen :
     TeleconsultRecordUi,
     UiActions,
     HandlesBack {
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -107,6 +113,11 @@ class TeleconsultRecordScreen :
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
   }
 
   override fun renderPatientDetails(patient: Patient) {

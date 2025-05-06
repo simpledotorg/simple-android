@@ -34,6 +34,7 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
@@ -91,6 +92,9 @@ class BloodPressureHistoryScreen : BaseScreen<
   private val bpHistoryList
     get() = binding.bpHistoryList
 
+  private val appbar
+    get() = binding.appbar
+
   private val toolbar
     get() = binding.toolbar
 
@@ -133,6 +137,7 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
 
     setupBloodPressureHistoryList()
     handleToolbarBackClick()

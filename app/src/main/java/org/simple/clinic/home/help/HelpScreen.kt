@@ -19,6 +19,7 @@ import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
@@ -35,6 +36,9 @@ class HelpScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: HelpScreenEffectHandler.Factory
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -62,6 +66,7 @@ class HelpScreen : BaseScreen<
   @SuppressLint("SetJavaScriptEnabled")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true

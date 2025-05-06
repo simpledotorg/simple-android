@@ -55,6 +55,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -96,6 +97,9 @@ class OverdueSearchScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: OverdueSearchEffectHandler.Factory
+
+  private val appbar
+    get() = binding.overdueSearchAppBar
 
   private val overdueSearchToolbar
     get() = binding.overdueSearchToolbar
@@ -219,6 +223,7 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     overdueSearchToolbar.setNavigationOnClickListener {
       router.pop()
     }

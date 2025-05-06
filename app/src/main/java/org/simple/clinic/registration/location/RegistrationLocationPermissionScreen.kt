@@ -23,6 +23,7 @@ import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -39,6 +40,9 @@ class RegistrationLocationPermissionScreen : BaseScreen<
 
   private val skipButton
     get() = binding.skipButton
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -95,6 +99,7 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener {
       router.pop()
     }

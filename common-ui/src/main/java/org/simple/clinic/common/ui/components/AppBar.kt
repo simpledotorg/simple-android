@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
@@ -35,6 +37,7 @@ fun TopAppBar(
 ) {
   MaterialTopAppBar(
       modifier = modifier,
+      windowInsets = WindowInsets.statusBars,
       backgroundColor = SimpleTheme.colors.toolbarPrimary,
       contentColor = SimpleTheme.colors.onToolbarPrimary
   ) {

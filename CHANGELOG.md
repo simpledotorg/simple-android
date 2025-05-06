@@ -19,11 +19,17 @@
 - Bump Android Desugar JDK to v2.1.5
 - Bump ConstraintLayout to v2.2.1
 - Bump Firebase Analytics KTX to v22.4.0
-- Bump Sentry to v8.11.0
+- Bump Sentry to v5.5.0
+- Bump Sentry Gradle Plugin to v8.11.1
 - Bump Dagger to v2.56.2
 - Bump Coroutines to v1.10.2
 - Skip Sentry config during app startup in the debug mode
 - Show spanish language option in non-production builds only
+- Bump Open CSV to v5.11
+- Bump Jackson core to v2.19.0
+- Bump asm to v9.8
+- Bump Firebase config to v22.1.1
+- Bump Lottie Compose to v6.6.6
 
 ### Features
 

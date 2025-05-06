@@ -52,6 +52,7 @@ import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -214,6 +215,9 @@ class OverdueScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    buttonsFrame.applyInsetsBottomPadding()
+
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
   }

@@ -30,6 +30,7 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.A
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Message
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Video
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -59,6 +60,9 @@ class TeleconsultRecordScreen :
 
   private val patientTookMedicineCheckBox
     get() = binding.patientTookMedicineCheckBox
+
+  private val buttonFrame
+    get() = binding.buttonFrame
 
   private val doneButton
     get() = binding.doneButton
@@ -118,6 +122,7 @@ class TeleconsultRecordScreen :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     appbar.applyStatusBarPadding()
+    buttonFrame.applyInsetsBottomPadding()
   }
 
   override fun renderPatientDetails(patient: Patient) {

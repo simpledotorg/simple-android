@@ -21,7 +21,7 @@ fun AppBarLayout.applyStatusBarPadding() {
   }
 }
 
-fun View.applyNavigationBarPadding() {
+fun View.applyInsetsBottomPadding() {
   updateInsetPadding(typeMask = Type.navigationBars() or Type.ime()) { view, insets, initialPadding ->
     view.updatePadding(bottom = initialPadding.bottom + insets.bottom)
   }

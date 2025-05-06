@@ -64,6 +64,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNa
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -217,6 +218,9 @@ class PatientEntryScreen : BaseScreen<
   private val identifierContainer
     get() = binding.identifierContainer
 
+  private val saveButtonFrame
+    get() = binding.saveButtonFrame
+
   private val saveButton
     get() = binding.saveButton
 
@@ -292,6 +296,7 @@ class PatientEntryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    saveButtonFrame.applyInsetsBottomPadding()
     backButton.setOnClickListener { router.pop() }
     colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
   }

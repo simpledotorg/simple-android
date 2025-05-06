@@ -21,6 +21,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
@@ -46,6 +47,9 @@ class RegistrationFullNameScreen :
 
   private val validationErrorTextView
     get() = binding.validationErrorTextView
+
+  private val nextButtonFrame
+    get() = binding.nextButtonFrame
 
   private val nextButton
     get() = binding.nextButton
@@ -90,6 +94,8 @@ class RegistrationFullNameScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    nextButtonFrame.applyInsetsBottomPadding()
 
     backButton.setOnClickListener {
       router.pop()

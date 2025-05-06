@@ -42,6 +42,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -80,6 +81,9 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   private val toolbar
     get() = binding.toolbar
+
+  private val nextButtonFrame
+    get() = binding.nextButtonFrame
 
   private val nextButton
     get() = binding.nextButton
@@ -156,6 +160,7 @@ class NewMedicalHistoryScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     appbar.applyStatusBarPadding()
+    nextButtonFrame.applyInsetsBottomPadding()
     toolbar.setNavigationOnClickListener {
       router.pop()
     }

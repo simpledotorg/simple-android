@@ -22,6 +22,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreenKey
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -46,6 +47,9 @@ class TeleconsultPrescriptionScreen : BaseScreen<
 
   private val teleconsultPrescriptionMedicinesView
     get() = binding.teleconsultPrescriptionMedicinesView
+
+  private val buttonFrame
+    get() = binding.buttonFrame
 
   private val nextButton
     get() = binding.nextButton
@@ -93,6 +97,7 @@ class TeleconsultPrescriptionScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     appbar.applyStatusBarPadding()
+    buttonFrame.applyInsetsBottomPadding()
   }
 
   override fun renderPatientDetails(patient: Patient) {

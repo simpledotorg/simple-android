@@ -1,7 +1,9 @@
 package org.simple.clinic.teleconsultlog.prescription
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
@@ -20,6 +22,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreenKey
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -31,6 +34,9 @@ class TeleconsultPrescriptionScreen : BaseScreen<
     TeleconsultPrescriptionEvent,
     TeleconsultPrescriptionEffect,
     Unit>(), TeleconsultPrescriptionUi, TeleconsultPrescriptionUiActions {
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -83,6 +89,11 @@ class TeleconsultPrescriptionScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenTeleconsultPrescriptionBinding
       .inflate(layoutInflater, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
+  }
 
   override fun renderPatientDetails(patient: Patient) {
     val ageValue = patient.ageDetails.estimateAge(userClock)

@@ -49,6 +49,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -82,6 +83,9 @@ class EditMedicinesScreen :
 
   @Inject
   lateinit var features: Features
+
+  private val appbar
+    get() = binding.prescribeddrugsAppbar
 
   private val toolbar
     get() = binding.prescribeddrugsToolbar
@@ -153,6 +157,7 @@ class EditMedicinesScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(requireContext())

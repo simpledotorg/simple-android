@@ -22,6 +22,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
@@ -38,6 +39,9 @@ class ChangeLanguageScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: ChangeLanguageEffectHandler.Factory
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -88,6 +92,7 @@ class ChangeLanguageScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
 
     setupLanguagesList()
     toolbar.setNavigationOnClickListener { router.pop() }

@@ -25,6 +25,7 @@
 - Skip Sentry config during app startup in the debug mode
 - Show spanish language option in non-production builds only
 - Increase lab based risk threshold to 20%
+- Update manifest payload to move countries to top level and add version field
 
 ### Features
 
@@ -33,7 +34,6 @@
 ### Changes
 
 - Display only languages supported by the selected country in the settings screen
-- Update manifest payload to move countries to top level and add version field
 
 ## 2025.04.07
 

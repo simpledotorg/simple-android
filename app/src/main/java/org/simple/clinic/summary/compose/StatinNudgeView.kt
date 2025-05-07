@@ -47,7 +47,7 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
 
-private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 10
+private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 20
 private const val MIN_AGE_FOR_STATIN = 40
 
 @Composable

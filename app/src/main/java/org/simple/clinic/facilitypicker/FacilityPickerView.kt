@@ -25,6 +25,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -68,6 +69,9 @@ class FacilityPickerView(
 
   private var binding: ViewFacilitypickerBinding? = null
 
+  private val appbar
+    get() = binding!!.appbarLayout
+
   private val toolbarViewWithSearch
     get() = binding!!.toolbarViewWithSearch
 
@@ -90,6 +94,7 @@ class FacilityPickerView(
 
     context.injector<Injector>().inject(this)
 
+    appbar.applyStatusBarPadding()
     toolbarViewWithSearch.setNavigationOnClickListener { backClicked?.invoke() }
 
     facilityRecyclerView.layoutManager = LinearLayoutManager(context)

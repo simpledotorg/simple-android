@@ -80,6 +80,8 @@ import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsult
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
@@ -109,6 +111,9 @@ class PatientSummaryScreen :
 
   private val rootLayout
     get() = binding.rootLayout
+
+  private val appbar
+    get() = binding.patientSummaryAppBar
 
   private val drugSummaryView
     get() = binding.drugSummaryView
@@ -318,6 +323,9 @@ class PatientSummaryScreen :
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
+    appbar.applyStatusBarPadding()
+    doneButtonFrame.applyInsetsBottomPadding()
+    logTeleconsultButtonFrame.applyInsetsBottomPadding()
 
     subscriptions.add(setupChildViewVisibility())
 

@@ -23,6 +23,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DeletedReason
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
@@ -43,6 +44,9 @@ class DeletePatientScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: DeletePatientEffectHandler.Factory
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -74,8 +78,9 @@ class DeletePatientScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener { router.pop() }
+
     with(deleteReasonsRecyclerView) {
       adapter = deleteReasonsAdapter
       addItemDecoration(DividerItemDecorator(requireContext(), marginStart = 56.dp, marginEnd = 16.dp))

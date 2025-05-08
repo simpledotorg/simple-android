@@ -25,6 +25,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
@@ -53,6 +54,9 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
   private val doneButton
     get() = binding.removeAppointmentDone
+
+  private val appbar
+    get() = binding.removeAppointmentAppBar
 
   private val toolbar
     get() = binding.removeAppointmentToolbar
@@ -89,6 +93,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener { router.pop() }
 
     removalReasonsRecyclerView.adapter = removalReasonsAdapter

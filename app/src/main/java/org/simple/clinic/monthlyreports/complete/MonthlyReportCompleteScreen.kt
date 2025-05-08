@@ -1,7 +1,9 @@
 package org.simple.clinic.monthlyreports.complete
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -23,6 +25,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import java.time.format.DateTimeFormatter
@@ -55,6 +58,9 @@ class MonthlyReportCompleteScreen : BaseScreen<
   private val monthSubmittedTextView
     get() = binding.monthSubmittedTextView
 
+  private val doneButtonFrame
+    get() = binding.buttonFrame
+
   private val doneButton
     get() = binding.doneButton
 
@@ -86,6 +92,11 @@ class MonthlyReportCompleteScreen : BaseScreen<
       layoutInflater: LayoutInflater,
       container: ViewGroup?
   ) = ScreenMonthlyReportCompleteBinding.inflate(layoutInflater, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    doneButtonFrame.applyInsetsBottomPadding()
+  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

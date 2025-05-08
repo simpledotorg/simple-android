@@ -17,7 +17,7 @@ class MigrationTestHelperWithForeignKeyConstraints : MigrationTestHelper(
 
   lateinit var migrations: List<Migration>
 
-  fun createDatabase(version: Int): SupportSQLiteDatabase {
+  fun setupDatabase(version: Int): SupportSQLiteDatabase {
     return super.createDatabase(TEST_DB_NAME, version).apply {
       setForeignKeyConstraintsEnabled(true)
     }

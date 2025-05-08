@@ -6,6 +6,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Manifest(
 
-    @Json(name = "v2")
-    val supportedCountries: CountriesPayload
+    @Json(name = "version")
+    val version: String,
+
+    @Json(name = "countries")
+    val supportedCountries: List<Country>
 )

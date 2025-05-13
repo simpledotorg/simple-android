@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSizeIn
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -17,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -101,7 +107,7 @@ private fun SplashScreen(
   ) { innerPadding ->
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(innerPadding)
     ) {
       Image(
@@ -111,6 +117,14 @@ private fun SplashScreen(
               .requiredSizeIn(minHeight = 40.dp),
           painter = painterResource(R.drawable.logo_large),
           contentDescription = null,
+      )
+
+      Box(
+          modifier = Modifier
+              .fillMaxWidth()
+              .requiredHeight(24.dp)
+              .align(Alignment.BottomCenter)
+              .background(Color.White)
       )
 
       val composition by rememberLottieComposition(LottieCompositionSpec.Asset("splash_animation.json"))

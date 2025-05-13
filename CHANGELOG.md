@@ -35,6 +35,10 @@
 
 - Display only languages supported by the selected country in the settings screen
 
+### Fixes
+
+- Fix crash when displaying large statin risk percentage text
+
 ## 2025.04.07
 
 ### Internal

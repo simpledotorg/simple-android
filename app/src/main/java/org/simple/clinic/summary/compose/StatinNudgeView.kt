@@ -157,10 +157,13 @@ fun RiskText(
   val totalTextWidth = textWidth + with(LocalDensity.current) { 8.dp.toPx() * 2 }
 
   val calculatedOffsetX = midpoint - (totalTextWidth / 2)
-  val clampedOffsetX = calculatedOffsetX.coerceIn(
-      0f,
-      parentWidth - totalTextWidth - parentPadding
-  )
+  val maxOffsetX = parentWidth - totalTextWidth - parentPadding
+  val clampedOffsetX = if (maxOffsetX >= 0f) {
+    calculatedOffsetX.coerceIn(0f, maxOffsetX)
+  } else {
+    0f
+  }
+
 
   Text(
       modifier = Modifier

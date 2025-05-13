@@ -22,6 +22,8 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarMargin
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
@@ -35,6 +37,9 @@ class RegistrationFullNameScreen :
         RegistrationNameViewEffect>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
+
+  private val appLogoContainer
+    get() = binding.appLogoContainer
 
   private val backButton
     get() = binding.backButton
@@ -95,6 +100,8 @@ class RegistrationFullNameScreen :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    appLogoContainer.applyStatusBarPadding()
+    backButton.applyStatusBarMargin()
     nextButtonFrame.applyInsetsBottomPadding()
 
     backButton.setOnClickListener {

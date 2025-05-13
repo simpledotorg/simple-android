@@ -28,6 +28,7 @@ import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
 import org.simple.clinic.selectstate.SelectStateScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
@@ -59,6 +60,9 @@ class SelectCountryScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: SelectCountryEffectHandler.Factory
+
+  private val simpleLogo
+    get() = binding.simpleLogo
 
   private val countrySelectionViewFlipper
     get() = binding.countrySelectionViewFlipper
@@ -126,6 +130,8 @@ class SelectCountryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    simpleLogo.applyStatusBarPadding()
 
     setupCountriesList()
   }

@@ -8,6 +8,7 @@
   tools:ignore="Overdraw">
 
   <View
+    android:id="@+id/appLogoContainer"
     android:layout_width="match_parent"
     android:layout_height="@dimen/spacing_192"
     android:background="?attr/colorToolbarPrimary"

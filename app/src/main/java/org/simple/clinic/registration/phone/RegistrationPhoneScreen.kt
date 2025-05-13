@@ -27,6 +27,7 @@ import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
@@ -54,6 +55,9 @@ class RegistrationPhoneScreen :
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory
+
+  private val simpleLogo
+    get() = binding.simpleLogo
 
   private val isdCodeEditText
     get() = binding.isdCodeEditText
@@ -108,6 +112,7 @@ class RegistrationPhoneScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    simpleLogo.applyStatusBarPadding()
     nextButtonFrame.applyInsetsBottomPadding()
 
     isdCodeEditText.setText(resources.getString(R.string.registrationphone_country_code, country.isdCode))

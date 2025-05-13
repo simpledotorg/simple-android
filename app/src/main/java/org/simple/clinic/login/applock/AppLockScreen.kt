@@ -22,6 +22,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.security.pin.PinAuthenticated
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -41,6 +42,9 @@ class AppLockScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: AppLockEffectHandler.Factory
+
+  private val appLockLogoContainer
+    get() = binding.applockLogoContainer
 
   private val logoutButton
     get() = binding.logoutButton
@@ -95,6 +99,7 @@ class AppLockScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appLockLogoContainer.applyStatusBarPadding()
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
     }

@@ -26,6 +26,8 @@ import org.simple.clinic.simplevideo.SimpleVideo
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.applyStatusBarMargin
+import org.simple.clinic.util.applyStatusBarPadding
 import javax.inject.Inject
 
 class IntroVideoScreen : BaseScreen<
@@ -65,6 +67,8 @@ class IntroVideoScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    skipButton.applyStatusBarMargin()
+
     introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
   }
 

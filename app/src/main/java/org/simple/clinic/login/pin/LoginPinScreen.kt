@@ -22,6 +22,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.widgets.UiEvent
@@ -49,6 +50,9 @@ class LoginPinScreen : BaseScreen<
 
   private val backButton
     get() = binding.backButton
+
+  private val phoneNumberContainer
+    get() = binding.phoneNumberContainer
 
   private val phoneNumberTextView
     get() = binding.phoneNumberTextView
@@ -87,6 +91,7 @@ class LoginPinScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    phoneNumberContainer.applyStatusBarPadding()
     pinEntryCardView.setForgotButtonVisible(false)
   }
 

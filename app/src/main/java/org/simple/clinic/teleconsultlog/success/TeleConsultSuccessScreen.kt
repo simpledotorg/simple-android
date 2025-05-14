@@ -22,6 +22,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyStatusBarPadding
 import java.util.UUID
 import javax.inject.Inject
 
@@ -38,6 +39,9 @@ class TeleConsultSuccessScreen : BaseScreen<
 
   private val prescriptionYesButton
     get() = binding.prescriptionYesButton
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -79,6 +83,7 @@ class TeleConsultSuccessScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     backClicks()
   }
 

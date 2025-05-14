@@ -13,6 +13,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import javax.inject.Inject
 
 class EnterDrugStockScreen : BaseScreen<
@@ -28,6 +29,9 @@ class EnterDrugStockScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandler: EnterDrugStockEffectHandler
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -56,6 +60,7 @@ class EnterDrugStockScreen : BaseScreen<
   @SuppressLint("SetJavaScriptEnabled")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true

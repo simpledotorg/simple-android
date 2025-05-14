@@ -52,6 +52,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.findCurrentFragment
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -100,6 +101,9 @@ class HomeScreen :
   private val homeTabLayout
     get() = binding.homeTabLayout
 
+  private val appbar
+    get() = binding.appbar
+
   private val toolbar
     get() = binding.toolbar
 
@@ -146,6 +150,8 @@ class HomeScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
+
     setupToolBar()
     setupHelpClicks()
 

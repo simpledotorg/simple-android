@@ -10,6 +10,7 @@ import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import androidx.core.view.updatePadding
+import org.simple.clinic.widgets.setBottomMargin
 import org.simple.clinic.widgets.setTopMargin
 
 data class InsetsInitialPadding(
@@ -34,6 +35,12 @@ fun View.applyStatusBarMargin() {
 fun View.applyInsetsBottomPadding() {
   updateInsetPadding(typeMask = Type.navigationBars() or Type.ime()) { view, insets, initialPadding ->
     view.updatePadding(bottom = initialPadding.bottom + insets.bottom)
+  }
+}
+
+fun View.applyInsetsBottomMargin() {
+  updateInsetMargin(typeMask = Type.navigationBars() or Type.ime()) { view, insets, initialPadding ->
+    view.setBottomMargin(initialPadding.bottom + insets.bottom)
   }
 }
 

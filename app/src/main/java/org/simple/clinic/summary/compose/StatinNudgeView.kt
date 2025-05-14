@@ -47,7 +47,7 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
 
-private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 10
+private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 20
 private const val MIN_AGE_FOR_STATIN = 40
 
 @Composable
@@ -157,10 +157,13 @@ fun RiskText(
   val totalTextWidth = textWidth + with(LocalDensity.current) { 8.dp.toPx() * 2 }
 
   val calculatedOffsetX = midpoint - (totalTextWidth / 2)
-  val clampedOffsetX = calculatedOffsetX.coerceIn(
-      0f,
-      parentWidth - totalTextWidth - parentPadding
-  )
+  val maxOffsetX = parentWidth - totalTextWidth - parentPadding
+  val clampedOffsetX = if (maxOffsetX >= 0f) {
+    calculatedOffsetX.coerceIn(0f, maxOffsetX)
+  } else {
+    0f
+  }
+
 
   Text(
       modifier = Modifier

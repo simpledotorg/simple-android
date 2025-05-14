@@ -156,7 +156,7 @@ moshi-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-interceptor-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 
-openCsv = "com.opencsv:opencsv:5.10"
+openCsv = "com.opencsv:opencsv:5.11"
 
 play-app-update = "com.google.android.play:app-update-ktx:2.1.0"
 play-services-auth = "com.google.android.gms:play-services-auth:21.3.0"

@@ -909,19 +909,9 @@
 
   <string name="htn_warning_dialog_negative_button">இப்போது வேண்டாம்</string>
 
-  <string name="statin_alert_very_high_risk_range"> மிகவும்  ஆபத்தான இடர் மதிப்பெண் %s</string>
-  <string name="statin_alert_refer_to_doctor_diabetic_40">நீரிழிவு நோயாளி, 40 வயதுக்கு மேற்பட்டவர் எனின் ஸ்டேடின்(statin) மருந்துக்கு மருத்துவரை நாடவும்.</string>
-  <string name="statin_alert_refer_to_doctor_diabetic"> நீரிழிவு நோயாளி எனின் ஸ்டேடின் மருந்துக்கு மருத்துவரைப் நாடவும்</string>
-  <string name="statin_alert_add_cholesterol_info"> மிகவும் துல்லியமான இடர் மதிப்பீட்டிற்கு கொலஸ்ரோலை சேர்க்கவும்</string>
-  <string name="statin_alert_add_smoking_and_cholesterol_info"> மிகவும் துல்லியமான இடர் மதிப்பீட்டிற்கு புகைபிடிக்கும் நிலை மற்றும் கொலஸ்ரோலை சேர்க்கவும்.</string>
-
   <string name="purge_notification_desc">தரவுத்தளம் பராமரிப்பில் உள்ளது. இதற்கு ஒரு நிமிடம் மட்டுமே ஆகும்.</string>
 
   <string name="smoking_status_dialog_title_positive_button">முடிந்தது</string>
   <string name="smoking_status_dialog_title_negative_button">ரத்து செய்யவும்</string>
 
-  <!-- Cholesterol entry sheet -->
-  <string name="add_cholesterol_title">கொலஸ்ட்ரால்(mg/dl)</string>
-  <string name="cholesterol_error_upper_limit">கொலஸ்ட்ரால் 1000 க்கு மேல் இருக்கக்கூடாது.</string>
-  <string name="cholesterol_error_lower_limit">கொலஸ்ட்ரால் 25 க்கு குறைவாக இருக்கக்கூடாது</string>
-</resources>
+  </resources>

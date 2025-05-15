@@ -27,6 +27,7 @@
 - Increase lab based risk threshold to 20%
 - Update manifest payload to move countries to top level and add version field
 - Bump Open CSV to v5.11
+- Update lab based statin translations for `si-LK`, `ta-LK`
 
 ### Features
 

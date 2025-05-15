@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Handle window insets when displaying app content in edge-to-edge
+
+## 2025.05.20
+
+### Internal
+
 - Bump Gson to v2.13.1
 - Bump AndroidX Camera to v1.4.2
 - Bump AndroidX Paging to v3.3.6
@@ -27,7 +33,7 @@
 - Increase lab based risk threshold to 20%
 - Update manifest payload to move countries to top level and add version field
 - Bump Open CSV to v5.11
-- Handle window insets when displaying app content in edge-to-edge
+- Update lab based statin translations for `si-LK`, `ta-LK`
 
 ### Features
 

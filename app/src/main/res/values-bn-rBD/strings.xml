@@ -892,8 +892,7 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
   <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
+  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
@@ -942,4 +941,4 @@
   <string name="smoking_status_dialog_title_positive_button">সম্পন্ন</string>
   <string name="smoking_status_dialog_title_negative_button">বাতিল করুন</string>
 
-</resources>
+  </resources>

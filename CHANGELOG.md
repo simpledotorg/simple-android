@@ -39,6 +39,7 @@
 ### Fixes
 
 - Fix crash when displaying large statin risk percentage text
+- Fix visibility for static statin nudge
 
 ## 2025.04.07
 

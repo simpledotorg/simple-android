@@ -121,9 +121,9 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when {
-      isPatientStatinNudgeV1Enabled -> staticStatinNudge(event, model)
       isLabBasedStatinNudgeEnabled -> labBasedStatinNudge(event, model)
       isNonLabBasedStatinNudgeEnabled -> nonLabBasedStatinNudge(event, model)
+      isPatientStatinNudgeV1Enabled -> staticStatinNudge(event, model)
       else -> {
         throw IllegalArgumentException("Unknown case, statin prescription check info is unhandled")
       }

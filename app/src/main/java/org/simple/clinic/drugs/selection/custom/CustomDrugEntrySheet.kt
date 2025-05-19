@@ -30,7 +30,6 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
-import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -163,8 +162,6 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    saveButtonFrame.applyInsetsBottomPadding()
 
     drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
   }

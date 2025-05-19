@@ -123,8 +123,58 @@ class PatientSummaryUpdate(
     return when {
       isLabBasedStatinNudgeEnabled -> labBasedStatinNudge(event, model)
       isNonLabBasedStatinNudgeEnabled -> nonLabBasedStatinNudge(event, model)
+      isPatientStatinNudgeV1Enabled -> staticStatinNudge(event, model)
       else -> {
         throw IllegalArgumentException("Unknown case, statin prescription check info is unhandled")
+      }
+    }
+  }
+
+  private fun staticStatinNudge(
+      event: StatinPrescriptionCheckInfoLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
+    val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
+    val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
+
+    val hasCVD = hasHadStroke || hasHadHeartAttack
+    val areStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val canPrescribeStatin = event.isPatientDead.not() &&
+        event.wasBPMeasuredWithin90Days &&
+        areStatinsPrescribedAlready.not()
+
+    return when {
+      hasCVD -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canShowStatinNudge = canPrescribeStatin,
+                hasCVD = true
+            )
+        )
+
+        next(updatedModel)
+      }
+
+      hasDiabetes && event.age >= minAgeForStatin -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canShowStatinNudge = canPrescribeStatin,
+                hasDiabetes = true
+            )
+        )
+
+        next(updatedModel)
+      }
+
+      else -> {
+        val updatedModel = model.updateStatinInfo(
+            StatinInfo(
+                canShowStatinNudge = false,
+                hasCVD = false
+            )
+        )
+        next(updatedModel)
       }
     }
   }

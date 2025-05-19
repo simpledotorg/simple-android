@@ -19,6 +19,7 @@ import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -36,6 +37,9 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinCreateNewEffectHandler.Factory
+
+  private val topContainer
+    get() = binding.logoContainer
 
   private val createPinEditText
     get() = binding.createPinEditText
@@ -86,6 +90,7 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    topContainer.applyStatusBarPadding()
     createPinEditText.showKeyboard()
   }
 

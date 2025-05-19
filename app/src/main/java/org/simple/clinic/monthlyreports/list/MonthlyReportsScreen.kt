@@ -28,6 +28,7 @@ import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -54,6 +55,9 @@ class MonthlyReportsScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: MonthlyReportsEffectHandler.Factory
+
+  private val monthlyReportsHeader
+    get() = binding.monthlyReportsHeader
 
   private val backButton
     get() = binding.backButton
@@ -111,6 +115,7 @@ class MonthlyReportsScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    monthlyReportsHeader.applyStatusBarPadding()
     monthlyReportsRecyclerView.apply {
       layoutManager = LinearLayoutManager(context)
       adapter = monthlyReportItemAdapter

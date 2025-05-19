@@ -48,6 +48,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomMargin
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -157,6 +158,7 @@ class ScanSimpleIdScreen : BaseScreen<
     // screen with the keyboard open. So, we hide it here.
     binding.root.hideKeyboard()
     appbar.applyStatusBarPadding()
+    enteredCodeContainer.applyInsetsBottomMargin()
     toolBar.setNavigationOnClickListener { router.pop() }
 
     cameraProviderFuture.addListener({

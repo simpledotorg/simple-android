@@ -21,6 +21,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -86,6 +87,16 @@ class FacilityChangeScreen :
         handleFacilityChangeConfirmed(facilityChangeConfirmed)
       }
     }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

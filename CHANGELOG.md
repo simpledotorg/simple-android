@@ -5,6 +5,7 @@
 ### Internal
 
 - Handle window insets when displaying app content in edge-to-edge
+- Enable edge-to-edge support on all versions of Android
 
 ## 2025.05.20
 

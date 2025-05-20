@@ -3,7 +3,10 @@ package org.simple.clinic.registerorlogin
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -78,6 +81,10 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   private lateinit var component: AuthenticationActivityComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge(
+        statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+    )
     super.onCreate(savedInstanceState)
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)

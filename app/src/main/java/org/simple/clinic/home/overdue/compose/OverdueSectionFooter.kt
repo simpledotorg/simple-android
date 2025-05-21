@@ -12,7 +12,7 @@ import org.simple.clinic.R
 import org.simple.clinic.home.overdue.PendingListState
 
 @Composable
-fun OverduePendingListFooter(
+fun OverdueSectionFooter(
     modifier: Modifier = Modifier,
     pendingListState: PendingListState,
     onClick: () -> Unit,

@@ -68,11 +68,11 @@ abstract class BottomSheetActivity : AppCompatActivity() {
     LayoutInflater.from(this).inflate(layoutResId, contentContainer)
   }
 
-  override fun setContentView(view: View) {
+  override fun setContentView(view: View?) {
     contentContainer.addView(view)
   }
 
-  override fun setContentView(view: View, params: ViewGroup.LayoutParams?) {
+  override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
     contentContainer.addView(view, params)
   }
 

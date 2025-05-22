@@ -85,7 +85,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   private val saveButtonFrame
     get() = binding.saveButtonFrame
-    
+
   private val progressIndicator
     get() = binding.progressIndicator
 

@@ -28,6 +28,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
@@ -68,6 +69,9 @@ class EnterOtpScreen : BaseScreen<
 
   private val otpEntryEditText
     get() = binding.otpEntryEditText
+
+  private val enterOtpLogoContainer
+    get() = binding.enterotpLogoContainer
 
   private val backButton
     get() = binding.backButton
@@ -141,6 +145,7 @@ class EnterOtpScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    enterOtpLogoContainer.applyStatusBarPadding()
     backButton.setOnClickListener { goBack() }
   }
 

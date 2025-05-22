@@ -27,6 +27,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -59,6 +60,9 @@ class RecentPatientsScreen : BaseScreen<
   @Named("full_date")
   @Inject
   lateinit var fullDateFormatter: DateTimeFormatter
+
+  private val appbar
+    get() = binding.appbarLayout
 
   private val toolbar
     get() = binding.toolbar
@@ -108,6 +112,7 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
     setupScreen()
   }
 

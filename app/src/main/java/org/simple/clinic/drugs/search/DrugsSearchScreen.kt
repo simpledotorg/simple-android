@@ -27,7 +27,9 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFreque
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.debounce
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
@@ -68,6 +70,9 @@ class DrugsSearchScreen : BaseScreen<
       )
   )
 
+  private val appbar
+    get() = binding.drugSearchAppBar
+
   private val drugSearchToolbar
     get() = binding.drugSearchToolbar
 
@@ -101,6 +106,16 @@ class DrugsSearchScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
+  }
+
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
@@ -109,6 +124,7 @@ class DrugsSearchScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    appbar.applyStatusBarPadding()
     drugSearchToolbar.setNavigationOnClickListener {
       router.pop()
     }

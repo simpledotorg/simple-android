@@ -56,6 +56,7 @@ import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -215,6 +216,16 @@ class OverdueSearchScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenOverdueSearchBinding {

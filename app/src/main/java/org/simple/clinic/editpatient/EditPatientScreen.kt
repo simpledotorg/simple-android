@@ -87,6 +87,7 @@ import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
@@ -373,6 +374,16 @@ class EditPatientScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

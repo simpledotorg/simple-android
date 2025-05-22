@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.ExistingWorkPolicy.REPLACE
 import androidx.work.WorkManager
@@ -184,6 +187,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge(
+        statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+    )
     super.onCreate(savedInstanceState)
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)

@@ -66,6 +66,7 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -301,6 +302,16 @@ class PatientEntryScreen : BaseScreen<
     saveButtonFrame.applyInsetsBottomPadding()
     backButton.setOnClickListener { router.pop() }
     colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun setupUi(inputFields: InputFields) {

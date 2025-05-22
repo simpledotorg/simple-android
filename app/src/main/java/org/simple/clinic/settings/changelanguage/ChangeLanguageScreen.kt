@@ -24,6 +24,7 @@ import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
 import org.simple.clinic.util.applyInsetsBottomMargin
 import org.simple.clinic.util.applyStatusBarPadding
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
@@ -89,6 +90,16 @@ class ChangeLanguageScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

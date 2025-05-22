@@ -39,6 +39,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -58,6 +59,16 @@ class OnboardingScreen : Fragment(), OnboardingUi {
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

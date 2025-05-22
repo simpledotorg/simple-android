@@ -19,6 +19,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.applyStatusBarPadding
 import javax.inject.Inject
 
 class RegistrationPinScreen :
@@ -31,6 +32,9 @@ class RegistrationPinScreen :
         RegistrationPinViewEffect>(),
     RegistrationPinUi,
     RegistrationPinUiActions {
+
+      private val registrationPinLogoContainer
+        get() = binding.registrationpinLogoContainer
 
   private val pinEditText
     get() = binding.pinEditText
@@ -84,6 +88,8 @@ class RegistrationPinScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    registrationPinLogoContainer.applyStatusBarPadding()
+
     pinEditText.isSaveEnabled = false
 
     backButton.setOnClickListener {

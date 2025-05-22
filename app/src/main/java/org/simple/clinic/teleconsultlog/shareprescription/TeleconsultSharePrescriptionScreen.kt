@@ -36,6 +36,8 @@ import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedici
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -68,11 +70,17 @@ class TeleconsultSharePrescriptionScreen :
   private val layoutSharePrescription
     get() = binding.layoutSharePrescription
 
+  private val buttonFrame
+    get() = binding.buttonFrame
+
   private val downloadButton
     get() = binding.downloadButton
 
   private val doneButton
     get() = binding.doneButton
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -167,6 +175,9 @@ class TeleconsultSharePrescriptionScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    appbar.applyStatusBarPadding()
+    buttonFrame.applyInsetsBottomPadding()
 
     showMedicalInstructions()
     medicinesRecyclerView.adapter = teleconsultSharePrescriptionMedicinesAdapter

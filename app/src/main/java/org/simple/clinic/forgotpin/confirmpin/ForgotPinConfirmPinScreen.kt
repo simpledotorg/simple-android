@@ -23,6 +23,7 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
@@ -41,6 +42,9 @@ class ForgotPinConfirmPinScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
+
+  private val topContainer
+    get() = binding.forgotpinConfirmpinLogoContainer
 
   private val pinEntryEditText
     get() = binding.pinEntryEditText
@@ -100,6 +104,7 @@ class ForgotPinConfirmPinScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    topContainer.applyStatusBarPadding()
     pinEntryEditText.showKeyboard()
     backButton.setOnClickListener { goBack() }
   }

@@ -41,6 +41,7 @@ import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -89,6 +90,9 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
+
+  private val appbar
+    get() = binding.appbar
 
   private val toolbar
     get() = binding.toolbar
@@ -145,6 +149,7 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
 
     openEntrySheetAfterTypeIsSelected()
     handleToolbarBackClick()

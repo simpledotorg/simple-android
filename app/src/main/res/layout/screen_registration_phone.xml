@@ -138,6 +138,7 @@
   </com.google.android.material.card.MaterialCardView>
 
   <FrameLayout
+    android:id="@+id/nextButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

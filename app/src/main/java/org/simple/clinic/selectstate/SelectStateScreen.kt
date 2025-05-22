@@ -20,6 +20,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -37,6 +38,9 @@ class SelectStateScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
+
+  private val simpleLogo
+    get() = binding.simpleLogo
 
   private val statesListGroup
     get() = binding.statesListGroup
@@ -72,6 +76,9 @@ class SelectStateScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    simpleLogo.applyStatusBarPadding()
+
     statesList.adapter = statesAdapter
   }
 

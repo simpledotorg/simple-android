@@ -37,6 +37,8 @@ import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateTimeAtZone
 import org.simple.clinic.widgets.UiEvent
@@ -78,6 +80,9 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   var content = mutableMapOf<String, Any?>()
 
+  private val monthlyReportHeader
+    get() = binding.monthlyReportHeader
+
   private val backButton
     get() = binding.backButton
 
@@ -92,6 +97,9 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private val submittedDateAndTimeTextView
     get() = binding.submittedDateAndTimeTextView
+
+  private val buttonFrame
+    get() = binding.buttonFrame
 
   private val submitButton
     get() = binding.submitButton
@@ -135,6 +143,9 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    monthlyReportHeader.applyStatusBarPadding()
+    buttonFrame.applyInsetsBottomPadding()
+
     setToolbarMonth(screenKey.questionnaireResponse)
     setSubmittedView(screenKey.questionnaireResponse)
   }

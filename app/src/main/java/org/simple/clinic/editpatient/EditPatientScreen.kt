@@ -84,7 +84,10 @@ import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
+import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
@@ -252,6 +255,9 @@ class EditPatientScreen : BaseScreen<
   private val addNHIDButton
     get() = binding.addNHIDButton
 
+  private val saveButtonFrame
+    get() = binding.saveButtonFrame
+
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
 
@@ -370,6 +376,16 @@ class EditPatientScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     handleScanIdentifierResult()
@@ -378,6 +394,9 @@ class EditPatientScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setAdapterWhenVillageTypeAheadIsEnabled()
+
+    rootView.applyStatusBarPadding()
+    saveButtonFrame.applyInsetsBottomPadding()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
   }

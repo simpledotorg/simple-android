@@ -19,6 +19,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -52,6 +53,16 @@ class FacilitySelectionScreen :
   override fun onAttach(context: Context) {
     super.onAttach(context)
     requireContext().injector<Injector>().inject(this)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

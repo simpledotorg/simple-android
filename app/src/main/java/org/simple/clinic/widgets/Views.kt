@@ -139,6 +139,12 @@ fun View.setTopMargin(topMargin: Int) {
   layoutParams = marginLayoutParams
 }
 
+fun View.setBottomMargin(bottomMargin: Int) {
+  val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+  marginLayoutParams.bottomMargin = bottomMargin
+  layoutParams = marginLayoutParams
+}
+
 fun TextView.setCompoundDrawableStart(@DrawableRes drawableRes: Int) {
   val drawable = ContextCompat.getDrawable(context, drawableRes)
   setCompoundDrawablesRelativeWithIntrinsicBounds(

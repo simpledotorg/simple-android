@@ -3,8 +3,11 @@ package org.simple.clinic.setup
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
@@ -78,6 +81,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private lateinit var binding: ActivitySetupBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge(
+        statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+        navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+    )
     super.onCreate(savedInstanceState)
     @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {

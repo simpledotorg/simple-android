@@ -2,6 +2,7 @@ package org.simple.clinic.util
 
 import android.os.Parcelable
 import androidx.core.os.bundleOf
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResultListener
@@ -38,4 +39,9 @@ fun FragmentManager.setFragmentResult(requestKey: Parcelable, result: ScreenResu
   setFragmentResult(requestKeyName, bundleOf(
       requestKeyName to result
   ))
+}
+
+fun Fragment.lightStatusBar(enabled: Boolean = false) {
+  val window = requireActivity().window
+  WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = enabled
 }

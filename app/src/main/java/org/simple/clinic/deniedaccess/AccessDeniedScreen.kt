@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import org.simple.clinic.databinding.ScreenAccessDeniedBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.applyStatusBarPadding
 import javax.inject.Inject
 
 class AccessDeniedScreen : BaseScreen<
@@ -21,6 +22,9 @@ class AccessDeniedScreen : BaseScreen<
 
   @Inject
   lateinit var activity: AppCompatActivity
+
+  private val outerContainer
+    get() = binding.outerContainer
 
   private val userFullNameText
     get() = binding.userFullNameText
@@ -37,6 +41,8 @@ class AccessDeniedScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    outerContainer.applyStatusBarPadding()
+
     userFullNameText.text = screenKey.fullName
   }
 }

@@ -56,6 +56,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
@@ -212,6 +213,8 @@ class PatientsTabScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    userStatusViewflipper.applyInsetsBottomPadding()
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())

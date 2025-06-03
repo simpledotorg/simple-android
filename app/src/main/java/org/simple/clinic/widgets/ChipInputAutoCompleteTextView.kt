@@ -164,7 +164,7 @@ class ChipInputAutoCompleteTextView(
       }
 
   private fun removeLastChip() {
-    val lastInput = inputs.last()
+    val lastInput = inputs.lastOrNull() ?: return
     val lastChip = rootView
         .children
         .filterIsInstance<Chip>()

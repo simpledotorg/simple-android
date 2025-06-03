@@ -926,7 +926,6 @@
   <string name="statin_alert_at_risk_patient">අවදානමක් සහිත රෝගීන්</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ස්ටැටින් ප්‍රතිකාර&lt;/b&gt; සදහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
   <string name="statin_alert_refer_to_doctor_diabetic_40"> වයස අවුරුදු 40 ට වැඩි, දියවැඩියා රෝගියෙකු නම් ස්ටැටින් ඖෂධ සඳහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
-  <string name="statin_alert_refer_to_doctor_diabetic"> දියවැඩියා රෝගියෙකු නම් ස්ටැටින් ඖෂධ සඳහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
   <string name="statin_alert_add_smoking">දුම් පානය</string>
   <string name="statin_alert_add_bmi">BMI අගය</string>
   <string name="statin_alert_add_cholesterol">කොලෙස්ටරෝල් අගය එකතු කරන්න</string>

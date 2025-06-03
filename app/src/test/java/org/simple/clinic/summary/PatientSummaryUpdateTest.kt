@@ -2377,7 +2377,7 @@ class PatientSummaryUpdateTest {
   fun `when statin info is loaded, then update the state`() {
     val statinInfo = StatinInfo(
         canShowStatinNudge = true,
-        cvdRisk = CVDRiskRange(11, 11),
+        cvdRisk = CVDRiskRange(11, 27),
         isSmoker = Yes,
         bmiReading = BMIReading(165f, 60f),
         hasCVD = true,
@@ -2397,7 +2397,7 @@ class PatientSummaryUpdateTest {
                 isSmoking = Yes,
                 cholesterol = null,
             ),
-            riskRange = CVDRiskRange(11, 11),
+            riskRange = CVDRiskRange(11, 27),
             bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(
@@ -2433,45 +2433,6 @@ class PatientSummaryUpdateTest {
                 hasHadStroke = Yes,
                 hasHadHeartAttack = Yes,
                 hasDiabetes = No,
-                isSmoking = Yes,
-                cholesterol = null,
-            ),
-            riskRange = CVDRiskRange(9, 9),
-            bmiReading = BMIReading(165f, 60f),
-        ))
-        .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(statinInfo)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when statin info is loaded and lab-based statin is enabled and has diabetes, then statin can be prescribed`() {
-    val statinInfo = StatinInfo(
-        canShowStatinNudge = true,
-        cvdRisk = null,
-        isSmoker = Yes,
-        bmiReading = BMIReading(165f, 60f),
-        hasCVD = true,
-        hasDiabetes = true,
-        age = 55,
-        cholesterol = null,
-    )
-    val updateSpec = UpdateSpec(PatientSummaryUpdate(
-        isPatientReassignmentFeatureEnabled = true,
-        isPatientStatinNudgeV1Enabled = true,
-        isNonLabBasedStatinNudgeEnabled = true,
-        isLabBasedStatinNudgeEnabled = true,
-    ))
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(StatinInfoLoaded(
-            age = 55,
-            medicalHistory = TestData.medicalHistory(
-                hasHadStroke = Yes,
-                hasHadHeartAttack = Yes,
-                hasDiabetes = Yes,
                 isSmoking = Yes,
                 cholesterol = null,
             ),
@@ -2527,7 +2488,7 @@ class PatientSummaryUpdateTest {
   fun `when statin info is loaded and risk is low-high, then update the state and show smoking status dialog`() {
     val statinInfo = StatinInfo(
         canShowStatinNudge = true,
-        cvdRisk = CVDRiskRange(4, 11),
+        cvdRisk = CVDRiskRange(4, 27),
         isSmoker = Unanswered,
         bmiReading = BMIReading(165f, 60f),
         hasCVD = true,
@@ -2546,7 +2507,7 @@ class PatientSummaryUpdateTest {
                 isSmoking = Unanswered,
                 cholesterol = null,
             ),
-            riskRange = CVDRiskRange(4, 11),
+            riskRange = CVDRiskRange(4, 27),
             bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(

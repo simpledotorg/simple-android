@@ -35,7 +35,7 @@ class PatientSummaryUpdate(
     private val isLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74,
-    private val minReqMaxRiskRangeForLabBasedNudge: Int = 10,
+    private val minReqMaxRiskRangeForLabBasedNudge: Int = 20,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(

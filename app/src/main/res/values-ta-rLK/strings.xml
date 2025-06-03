@@ -925,7 +925,6 @@
   <string name="statin_alert_at_risk_patient">ஆபத்தில் உள்ள நோயாளி</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ஸ்டேடின் மருந்துக்காக&lt;/b&gt; மருத்துவரை அணுகவும்</string>
   <string name="statin_alert_refer_to_doctor_diabetic_40">நீரிழிவு நோயாளி, 40 வயதுக்கு மேற்பட்டவர் எனின் ஸ்டேடின்(statin) மருந்துக்கு மருத்துவரை நாடவும்</string>
-  <string name="statin_alert_refer_to_doctor_diabetic"> நீரிழிவு நோயாளி எனின் ஸ்டேடின் மருந்துக்கு மருத்துவரைப் நாடவும்</string>
   <string name="statin_alert_add_smoking">புகைத்தலைச் சேர்க்க</string>
   <string name="statin_alert_add_bmi">உடற் திணிவுச் சுட்டியினை சேர்க்க</string>
   <string name="statin_alert_add_cholesterol">கொலஸ்ட்ரோலின் அளவைக் கூட்டுக</string>

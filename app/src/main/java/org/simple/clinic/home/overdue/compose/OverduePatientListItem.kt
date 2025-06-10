@@ -66,23 +66,13 @@ fun OverduePatientListItem(
           modifier = Modifier
               .fillMaxWidth()
       ) {
-        if (isOverdueSelectAndDownloadEnabled) {
-          Checkbox(
-              modifier = Modifier.size(24.dp),
-              checked = isAppointmentSelected,
-              colors = CheckboxDefaults.colors(
-                  checkedColor = SimpleTheme.colors.material.primary,
-                  uncheckedColor = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f),
-              ),
-              onCheckedChange = { onCheckboxClicked(appointmentUuid) },
-          )
-        } else {
-          Image(
-              painter = painterResource(id = gender.displayIconRes),
-              contentDescription = null,
-              modifier = Modifier.size(24.dp)
-          )
-        }
+        OverduePatientListLeftIcon(
+            isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
+            isAppointmentSelected = isAppointmentSelected,
+            gender = gender,
+            appointmentUuid = appointmentUuid,
+            onCheckboxClicked = onCheckboxClicked
+        )
 
         Column(
             modifier = Modifier
@@ -95,46 +85,9 @@ fun OverduePatientListItem(
               color = SimpleTheme.colors.material.primary
           )
 
-          if (isEligibleForReassignment) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-              Icon(
-                  modifier = Modifier.size(16.dp),
-                  painter = painterResource(id = R.drawable.ic_facility_reassignment),
-                  contentDescription = null,
-                  tint = Color.Unspecified,
-              )
-              Text(
-                  modifier = Modifier.padding(start = 4.dp),
-                  text = stringResource(R.string.patient_facility_reassignment),
-                  style = SimpleTheme.typography.material.body2,
-                  color = colorResource(id = org.simple.clinic.common.R.color.simple_green_500)
-              )
-            }
-          }
+          EligibleForReassignmentView(isEligibleForReassignment)
 
-          if (!villageName.isNullOrBlank()) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-              Text(
-                  modifier = Modifier.padding(end = 8.dp),
-                  text = stringResource(R.string.overdue_list_item_village),
-                  style = SimpleTheme.typography.body2Bold,
-                  color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
-              )
-              Text(
-                  text = villageName,
-                  style = SimpleTheme.typography.material.body2,
-                  color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
-              )
-            }
-          }
+          PatientVillageView(villageName)
 
           Text(
               modifier = Modifier
@@ -145,22 +98,114 @@ fun OverduePatientListItem(
           )
         }
 
-        IconButton(
-            onClick = { onCallClicked(patientUuid) },
-            modifier = Modifier
-                .size(40.dp)
-                .align(alignment = Alignment.CenterVertically)
-        ) {
-          Image(
-              painter = painterResource(
-                  id = if (phoneNumber.isNullOrBlank()) R.drawable.ic_overdue_no_phone_number
-                  else R.drawable.ic_overdue_call
-              ),
-              contentDescription = null,
-          )
-        }
+        OverduePatientListItemRightButton(
+            modifier = Modifier.align(alignment = Alignment.CenterVertically),
+            patientUuid = patientUuid,
+            phoneNumber = phoneNumber,
+            onCallClicked = onCallClicked
+        )
       }
     }
+  }
+}
+
+@Composable
+private fun EligibleForReassignmentView(
+    isEligibleForReassignment: Boolean
+) {
+  if (isEligibleForReassignment) {
+    Row(
+        modifier = Modifier
+            .padding(top = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Icon(
+          modifier = Modifier.size(16.dp),
+          painter = painterResource(id = R.drawable.ic_facility_reassignment),
+          contentDescription = null,
+          tint = Color.Unspecified,
+      )
+      Text(
+          modifier = Modifier.padding(start = 4.dp),
+          text = stringResource(R.string.patient_facility_reassignment),
+          style = SimpleTheme.typography.material.body2,
+          color = colorResource(id = org.simple.clinic.common.R.color.simple_green_500)
+      )
+    }
+  }
+}
+
+@Composable
+private fun PatientVillageView(
+    villageName: String?
+) {
+  if (!villageName.isNullOrBlank()) {
+    Row(
+        modifier = Modifier
+            .padding(top = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+          modifier = Modifier.padding(end = 8.dp),
+          text = stringResource(R.string.overdue_list_item_village),
+          style = SimpleTheme.typography.body2Bold,
+          color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
+      )
+      Text(
+          text = villageName,
+          style = SimpleTheme.typography.material.body2,
+          color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)
+      )
+    }
+  }
+}
+
+@Composable
+fun OverduePatientListLeftIcon(
+    isOverdueSelectAndDownloadEnabled: Boolean,
+    isAppointmentSelected: Boolean,
+    appointmentUuid: UUID,
+    gender: Gender,
+    onCheckboxClicked: (UUID) -> Unit,
+) {
+  if (isOverdueSelectAndDownloadEnabled) {
+    Checkbox(
+        modifier = Modifier.size(24.dp),
+        checked = isAppointmentSelected,
+        colors = CheckboxDefaults.colors(
+            checkedColor = SimpleTheme.colors.material.primary,
+            uncheckedColor = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f),
+        ),
+        onCheckedChange = { onCheckboxClicked(appointmentUuid) },
+    )
+  } else {
+    Image(
+        painter = painterResource(id = gender.displayIconRes),
+        contentDescription = null,
+        modifier = Modifier.size(24.dp)
+    )
+  }
+}
+
+@Composable
+fun OverduePatientListItemRightButton(
+    modifier: Modifier,
+    patientUuid: UUID,
+    phoneNumber: String?,
+    onCallClicked: (UUID) -> Unit
+) {
+  IconButton(
+      onClick = { onCallClicked(patientUuid) },
+      modifier = modifier
+          .size(40.dp)
+  ) {
+    Image(
+        painter = painterResource(
+            id = if (phoneNumber.isNullOrBlank()) R.drawable.ic_overdue_no_phone_number
+            else R.drawable.ic_overdue_call
+        ),
+        contentDescription = null,
+    )
   }
 }
 

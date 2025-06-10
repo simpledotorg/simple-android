@@ -12,8 +12,10 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
 import java.util.Locale
@@ -21,7 +23,7 @@ import java.util.Locale
 @Composable
 fun OverdueSectionHeader(
     modifier: Modifier = Modifier,
-    headerText: String,
+    headerTextRes: Int,
     count: Int,
     isExpanded: Boolean,
     overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle,
@@ -46,7 +48,7 @@ fun OverdueSectionHeader(
   ) {
 
     Text(
-        text = headerText.uppercase(locale),
+        text = stringResource(headerTextRes).uppercase(locale),
         modifier = Modifier.weight(1f),
         style = SimpleTheme.typography.tag.copy(color = SimpleTheme.colors.onSurface67)
     )
@@ -70,7 +72,7 @@ fun OverdueSectionHeader(
 private fun OverdueSectionHeaderPreview(modifier: Modifier = Modifier) {
   SimpleTheme {
     OverdueSectionHeader(
-        headerText = "Pending to call",
+        headerTextRes = R.string.overdue_agreed_to_visit_call_header,
         count = 40,
         isExpanded = false,
         overdueAppointmentSectionTitle = OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE,

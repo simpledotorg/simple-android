@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import org.simple.clinic.common.ui.theme.SimpleRedTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import androidx.compose.material.OutlinedButton as MaterialOutlinedButton
+import androidx.compose.material.TextButton as MaterialTextButton
 
 @Composable
 fun OutlinedButton(
@@ -29,8 +30,9 @@ fun OutlinedButton(
     content: @Composable RowScope.() -> Unit
 ) {
   val minHeight = when (buttonSize) {
-    ButtonSize.Big -> 56.dp
+    ButtonSize.Small -> 40.dp
     ButtonSize.Default -> 48.dp
+    ButtonSize.Big -> 56.dp
   }
 
   MaterialOutlinedButton(
@@ -56,7 +58,6 @@ fun OutlinedButton(
   }
 }
 
-
 @Composable
 fun FilledButton(
     onClick: () -> Unit,
@@ -67,8 +68,9 @@ fun FilledButton(
     content: @Composable RowScope.() -> Unit
 ) {
   val minHeight = when (buttonSize) {
-    ButtonSize.Big -> 56.dp
+    ButtonSize.Small -> 40.dp
     ButtonSize.Default -> 48.dp
+    ButtonSize.Big -> 56.dp
   }
 
   androidx.compose.material.Button(
@@ -90,9 +92,48 @@ fun FilledButton(
   }
 }
 
+@Composable
+fun TextButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    leadingIcon: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true,
+    buttonSize: ButtonSize = ButtonSize.Default,
+    content: @Composable RowScope.() -> Unit
+) {
+  val minHeight = when (buttonSize) {
+    ButtonSize.Small -> 40.dp
+    ButtonSize.Default -> 48.dp
+    ButtonSize.Big -> 56.dp
+  }
+
+  MaterialTextButton(
+      modifier = modifier.defaultMinSize(
+          minWidth = 64.dp,
+          minHeight = minHeight
+      ),
+      onClick = onClick,
+      enabled = enabled,
+  ) {
+    leadingIcon?.let {
+      it()
+      Spacer(modifier = Modifier.requiredWidth(8.dp))
+    }
+    ProvideTextStyle(value = SimpleTheme.typography.buttonBig) {
+      content()
+    }
+    trailingIcon?.let {
+      Spacer(modifier = Modifier.requiredWidth(8.dp))
+      it()
+    }
+  }
+}
+
 sealed interface ButtonSize {
   data object Default : ButtonSize
   data object Big : ButtonSize
+  data object Small : ButtonSize
 }
 
 @Preview(group = "OutlinedButton")
@@ -198,6 +239,92 @@ private fun FilledButtonWithIconPreview() {
     FilledButton(
         modifier = Modifier.fillMaxWidth(),
         icon = {
+          Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+        },
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonPreview() {
+  SimpleTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonSmallPreview() {
+  SimpleTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        buttonSize = ButtonSize.Small,
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonBigPreview() {
+  SimpleTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        buttonSize = ButtonSize.Big,
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonWithDifferentThemePreview() {
+  SimpleRedTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonWithLeadingIconPreview() {
+  SimpleTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        leadingIcon = {
+          Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+        },
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "TextButton")
+@Composable
+private fun TextButtonWithTrailingIconPreview() {
+  SimpleTheme {
+    TextButton(
+        modifier = Modifier.fillMaxWidth(),
+        trailingIcon = {
           Icon(imageVector = Icons.Filled.Add, contentDescription = null)
         },
         onClick = { /*no-op*/ }

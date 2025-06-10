@@ -9,6 +9,7 @@
 - Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
 - Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
 - Add Compose components for Overdue screen
+- Migrate medicines summary view to Jetpack Compose
 
 ## 2025.05.20
 

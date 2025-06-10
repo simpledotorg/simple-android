@@ -10,6 +10,7 @@
 - Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
 - Add Compose components for Overdue screen
 - Migrate medicines summary view to Jetpack Compose
+- Migrate codeclimate config to qlty.sh config
 
 ## 2025.05.20
 

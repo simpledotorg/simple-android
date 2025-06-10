@@ -102,7 +102,7 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when profile summary is loaded, then populate patient profile and show edit button`() {
+  fun `when profile summary is loaded, then populate patient profile and render patient summary toolbar`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
     val patient = TestData.patient(
@@ -131,7 +131,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
@@ -229,7 +229,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).showAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
@@ -269,7 +269,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
@@ -331,7 +331,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
@@ -369,7 +369,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
@@ -456,7 +456,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
@@ -510,7 +510,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
@@ -564,7 +564,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
@@ -633,7 +633,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).showNextAppointmentCard()
@@ -693,7 +693,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
@@ -753,7 +753,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
@@ -834,7 +834,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).populatePatientProfile(patientSummaryProfile)
-    verify(ui).showEditButton()
+    verify(ui).renderPatientSummaryToolbar(patientSummaryProfile)
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()

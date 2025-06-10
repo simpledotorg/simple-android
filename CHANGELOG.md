@@ -8,6 +8,7 @@
 - Enable edge-to-edge support on all versions of Android
 - Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
 - Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
+- Add Compose components for Overdue screen
 
 ## 2025.05.20
 

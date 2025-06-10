@@ -14,22 +14,11 @@
     android:visibility="gone"
     tools:visibility="visible" />
 
-  <org.simple.clinic.util.NestedScrollableHost
+  <androidx.compose.ui.platform.ComposeView
+    android:id="@+id/composeView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/overdueRecyclerView"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:clipToPadding="false"
-      android:paddingStart="@dimen/spacing_8"
-      android:paddingTop="@dimen/spacing_8"
-      android:paddingEnd="@dimen/spacing_8"
-      android:paddingBottom="@dimen/spacing_128"
-      android:visibility="gone" />
-
-  </org.simple.clinic.util.NestedScrollableHost>
+    android:layout_height="match_parent"
+    android:layout_below="@id/overdueProgressBar" />
 
   <LinearLayout
     android:id="@+id/viewForEmptyList"

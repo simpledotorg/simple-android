@@ -21,6 +21,7 @@ fun NoPendingPatients(modifier: Modifier = Modifier) {
   Card(
       modifier = modifier
           .fillMaxWidth()
+          .padding(8.dp)
   ) {
     Column(
         modifier = Modifier

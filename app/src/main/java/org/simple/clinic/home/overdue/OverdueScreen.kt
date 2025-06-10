@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
@@ -17,6 +19,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -24,18 +27,15 @@ import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
-import org.simple.clinic.databinding.ListItemDividerBinding
-import org.simple.clinic.databinding.ListItemNoPendingPatientsBinding
-import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
-import org.simple.clinic.databinding.ListItemOverduePatientBinding
-import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
-import org.simple.clinic.databinding.ListItemSearchOverduePatientButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.overdue.compose.OverdueAppointmentListItem
+import org.simple.clinic.home.overdue.compose.OverdueUiModel
+import org.simple.clinic.home.overdue.compose.OverdueUiModelMapper
 import org.simple.clinic.home.overdue.search.OverdueSearchScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -54,7 +54,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
@@ -115,37 +114,13 @@ class OverdueScreen : BaseScreen<
   @Inject
   lateinit var locale: Locale
 
-  private val overdueListAdapter = ItemAdapter(
-      diffCallback = OverdueAppointmentListItem.DiffCallback(),
-      bindings = mapOf(
-          R.layout.list_item_overdue_patient to { layoutInflater, parent ->
-            ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_item_overdue_list_section_header to { layoutInflater, parent ->
-            ListItemOverdueListSectionHeaderBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_item_overdue_pending_list_footer to { layoutInflater, parent ->
-            ListItemOverduePendingListFooterBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_item_no_pending_patients to { layoutInflater, parent ->
-            ListItemNoPendingPatientsBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_item_divider to { layoutInflater, parent ->
-            ListItemDividerBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_item_search_overdue_patient_button to { layoutInflater, parent ->
-            ListItemSearchOverduePatientButtonBinding.inflate(layoutInflater, parent, false)
-          }
-      )
-  )
-
   private val disposable = CompositeDisposable()
 
   private val viewForEmptyList
     get() = binding.viewForEmptyList
 
-  private val overdueRecyclerView
-    get() = binding.overdueRecyclerView
+  private val composeView
+    get() = binding.composeView
 
   private val overdueProgressBar
     get() = binding.overdueProgressBar
@@ -172,6 +147,8 @@ class OverdueScreen : BaseScreen<
     country.isoCountryCode == Country.INDIA
   }
 
+  private val uiModelsState = mutableStateOf<List<OverdueUiModel>>(emptyList())
+
   override fun defaultModel() = OverdueModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -179,11 +156,13 @@ class OverdueScreen : BaseScreen<
 
   override fun uiRenderer() = OverdueUiRenderer(ui = this)
 
+  private val composeUiEvents = PublishSubject.create<OverdueEvent>()
+
   override fun events() = Observable.mergeArray(
-      overdueListAdapter.itemEvents,
       downloadOverdueListClicks(),
       shareOverdueListClicks(),
-      clearSelectedOverdueAppointmentClicks()
+      clearSelectedOverdueAppointmentClicks(),
+      composeUiEvents,
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(runtimeNetworkStatus::apply)
@@ -218,12 +197,19 @@ class OverdueScreen : BaseScreen<
 
     buttonsFrame.applyInsetsBottomPadding()
 
-    overdueRecyclerView.adapter = overdueListAdapter
-    overdueRecyclerView.layoutManager = LinearLayoutManager(context)
+    composeView.apply {
+      setViewCompositionStrategy(
+          ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+      )
+      setContent {
+        val uiModels by uiModelsState
+        OverdueAppointmentListItem(uiModels = uiModels)
+      }
+    }
   }
 
+
   override fun onDestroyView() {
-    overdueRecyclerView.adapter = null
     disposable.clear()
     super.onDestroyView()
   }
@@ -267,7 +253,7 @@ class OverdueScreen : BaseScreen<
       selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   ) {
-    overdueListAdapter.submitList(OverdueAppointmentListItem.from(
+    uiModelsState.value = OverdueUiModelMapper.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
@@ -277,7 +263,26 @@ class OverdueScreen : BaseScreen<
         selectedOverdueAppointments = selectedOverdueAppointments,
         isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
         locale = locale,
-    ))
+        onCallPatient = { patientId ->
+          composeUiEvents.onNext(CallPatientClicked(patientId))
+        },
+        onOpenPatientDetails = { patientId ->
+          composeUiEvents.onNext(OverduePatientClicked(patientId))
+        },
+        onToggleAppointmentSelection = { appointmentUuid ->
+          composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(appointmentUuid))
+        },
+        onSearchButtonClicked = {
+          composeUiEvents.onNext(OverdueSearchButtonClicked)
+        },
+        onToggleSection = { overdueAppointmentSectionTitle ->
+          composeUiEvents.onNext(ChevronClicked(overdueAppointmentSectionTitle))
+        },
+        onPendingFooterClicked = {
+          composeUiEvents.onNext(PendingListFooterClicked)
+        }
+    )
+
     if (isOverdueListDownloadAndShareEnabled) {
       buttonsFrame.visibility = View.VISIBLE
     }
@@ -316,11 +321,11 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun showOverdueRecyclerView() {
-    overdueRecyclerView.visibility = View.VISIBLE
+    composeView.visibility = View.VISIBLE
   }
 
   override fun hideOverdueRecyclerView() {
-    overdueRecyclerView.visibility = View.GONE
+    composeView.visibility = View.GONE
   }
 
   override fun openOverdueSearch() {

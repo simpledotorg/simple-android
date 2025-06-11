@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
@@ -27,17 +28,17 @@ fun OverdueAppointmentListItem(
     SimpleTheme {
         LazyColumn(
             modifier = Modifier.padding(
-                start = 8.dp,
-                end = 8.dp,
-                top = 8.dp,
-                bottom = 128.dp
+                start = dimensionResource(R.dimen.spacing_8),
+                end = dimensionResource(R.dimen.spacing_8),
+                top = dimensionResource(R.dimen.spacing_8),
+                bottom = dimensionResource(R.dimen.spacing_128)
             )
         ) {
             items(uiModels) { model ->
                 when (model) {
                     is OverdueUiModel.Patient -> {
                         OverduePatientListItem(
-                            modifier = Modifier.padding(bottom = 8.dp),
+                            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.spacing_8)),
                             appointmentUuid = model.appointmentUuid,
                             patientUuid = model.patientUuid,
                             name = model.name,
@@ -76,7 +77,7 @@ fun OverdueAppointmentListItem(
                     is OverdueUiModel.Divider -> {
                         Divider(
                             color = colorResource(R.color.color_on_surface_11),
-                            modifier = Modifier.padding(8.dp)
+                            modifier = Modifier.padding(dimensionResource(R.dimen.spacing_8))
                         )
                     }
 

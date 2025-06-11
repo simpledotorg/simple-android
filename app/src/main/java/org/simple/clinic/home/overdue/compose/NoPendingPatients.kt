@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +27,10 @@ fun NoPendingPatients(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 40.dp, horizontal = 16.dp),
+            .padding(
+                vertical = dimensionResource(R.dimen.spacing_40),
+                horizontal = dimensionResource(R.dimen.spacing_16)
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
       Image(
@@ -35,7 +39,7 @@ fun NoPendingPatients(modifier: Modifier = Modifier) {
       )
 
       Text(
-          modifier = Modifier.padding(top = 16.dp),
+          modifier = Modifier.padding(top = dimensionResource(R.dimen.spacing_16)),
           text = stringResource(id = R.string.overdue_no_pending_patients),
           style = SimpleTheme.typography.body0Medium,
           color = SimpleTheme.colors.material.secondary

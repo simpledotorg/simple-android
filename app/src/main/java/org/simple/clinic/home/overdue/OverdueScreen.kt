@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -147,7 +148,7 @@ class OverdueScreen : BaseScreen<
     country.isoCountryCode == Country.INDIA
   }
 
-  private val uiModelsState = mutableStateOf<List<OverdueUiModel>>(emptyList())
+  private var uiModelsState by mutableStateOf<List<OverdueUiModel>>(emptyList())
 
   override fun defaultModel() = OverdueModel.create()
 
@@ -202,8 +203,7 @@ class OverdueScreen : BaseScreen<
           ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
       )
       setContent {
-        val uiModels by uiModelsState
-        OverdueAppointmentListItem(uiModels = uiModels)
+        OverdueAppointmentListItem(uiModels = uiModelsState)
       }
     }
   }
@@ -253,7 +253,7 @@ class OverdueScreen : BaseScreen<
       selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   ) {
-    uiModelsState.value = OverdueUiModelMapper.from(
+    uiModelsState = OverdueUiModelMapper.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,

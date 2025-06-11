@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -59,7 +60,7 @@ fun OverduePatientListItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 16.dp)
+            .padding(all = dimensionResource(R.dimen.spacing_16))
     ) {
       Row(
           verticalAlignment = Alignment.Top,
@@ -77,7 +78,7 @@ fun OverduePatientListItem(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = dimensionResource(R.dimen.spacing_12)),
         ) {
           Text(
               text = stringResource(R.string.overdue_list_item_name_age, name, age),
@@ -91,7 +92,7 @@ fun OverduePatientListItem(
 
           Text(
               modifier = Modifier
-                  .padding(top = 12.dp),
+                  .padding(top = dimensionResource(R.dimen.spacing_12)),
               text = overdueText,
               style = SimpleTheme.typography.material.body2,
               color = SimpleTheme.colors.material.error,
@@ -116,17 +117,17 @@ private fun EligibleForReassignmentView(
   if (isEligibleForReassignment) {
     Row(
         modifier = Modifier
-            .padding(top = 4.dp),
+            .padding(top = dimensionResource(R.dimen.spacing_4)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
       Icon(
-          modifier = Modifier.size(16.dp),
+          modifier = Modifier.size(dimensionResource(R.dimen.spacing_16)),
           painter = painterResource(id = R.drawable.ic_facility_reassignment),
           contentDescription = null,
           tint = Color.Unspecified,
       )
       Text(
-          modifier = Modifier.padding(start = 4.dp),
+          modifier = Modifier.padding(start = dimensionResource(R.dimen.spacing_4)),
           text = stringResource(R.string.patient_facility_reassignment),
           style = SimpleTheme.typography.material.body2,
           color = colorResource(id = org.simple.clinic.common.R.color.simple_green_500)
@@ -142,11 +143,11 @@ private fun PatientVillageView(
   if (!villageName.isNullOrBlank()) {
     Row(
         modifier = Modifier
-            .padding(top = 12.dp),
+            .padding(top = dimensionResource(R.dimen.spacing_12)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
       Text(
-          modifier = Modifier.padding(end = 8.dp),
+          modifier = Modifier.padding(end = dimensionResource(R.dimen.spacing_8)),
           text = stringResource(R.string.overdue_list_item_village),
           style = SimpleTheme.typography.body2Bold,
           color = SimpleTheme.colors.material.onSurface.copy(alpha = 0.67f)

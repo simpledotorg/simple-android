@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodpressures.view
+package org.simple.clinic.summary.bloodpressures.ui
 
 import android.annotation.SuppressLint
 import android.content.Context

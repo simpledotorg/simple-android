@@ -27,7 +27,7 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP 护照</string>
-  <string name="identifiertype_bangladesh_national_id">国民身份证</string>
+  <string name="identifiertype_bangladesh_national_id">居民身份证号</string>
   <string name="identifiertype_ethiopia_medical_record_number">病历编号</string>
   <string name="identifiertype_unknown">Id</string>
   <string name="identifiertype_india_national_health_id">国民健康身份证</string>
@@ -48,7 +48,7 @@
   <string name="patiententry_phone_number">电话号码</string>
   <string name="patiententry_bangladesh_national_id">身份证号码</string>
   <string name="patiententry_ethiopia_medical_record_number">病历编号</string>
-  <string name="patiententry_sri_lanka_personal_health_number">个人健康号码</string>
+  <string name="patiententry_sri_lanka_personal_health_number">个人健康档案号</string>
   <string name="patiententry_date_of_birth_unfocused">生日</string>
   <string name="patiententry_date_of_birth_focused">日期： 年 月 日</string>
   <string name="patiententry_dateofbirth_and_age_separator">或</string>
@@ -351,7 +351,7 @@
   <string name="scansimpleid_identfier_already_exists">身份证已给另一位病人。\n扫描新的健康 ID。</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP 护照或国民健康身份证</string>
   <string name="scansimpleid_bp_passport_title">BP 护照</string>
-  <string name="scansimpleid_national_id_title">国民身份证</string>
+  <string name="scansimpleid_national_id_title">居民身份证号</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">待同步</string>
@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -457,7 +457,7 @@
   <string name="bloodsugarentry_error_higher_limit_hba1c">值不能超过 25\u0025</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">数值不能超过 55.49 mmol/L</string>
   <string name="bloodsugarentry_error_empty">值不能为空</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">输入有效日期，以 DD/MM/YYYY 为单位</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">请输入有效日期（日/月/年）。</string>
   <string name="bloodsugarentry_error_date_is_in_future">日期不能在未来</string>
   <string name="bloodsugarentry_random_title">随机血糖</string>
   <string name="bloodsugarentry_post_prandial_title">餐后血糖</string>
@@ -518,8 +518,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>
@@ -934,7 +934,6 @@
   <string name="statin_alert_at_risk_patient">高危病人</string>
   <string name="statin_alert_refer_to_doctor">向医生咨询<b>他汀类药物</b></string>
   <string name="statin_alert_refer_to_doctor_diabetic_40">糖尿病患者，年龄在 40 岁以上。请向医生咨询<b>他汀类药物</b></string>
-  <string name="statin_alert_refer_to_doctor_diabetic">糖尿病患者。请向医生咨询<b>他汀类药物</b></string>
   <string name="statin_alert_add_smoking">添加吸烟</string>
   <string name="statin_alert_add_bmi">添加 BMI</string>
   <string name="statin_alert_add_cholesterol">添加胆固醇</string>

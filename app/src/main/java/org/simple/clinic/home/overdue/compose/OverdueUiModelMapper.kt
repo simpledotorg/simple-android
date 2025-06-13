@@ -2,7 +2,6 @@ package org.simple.clinic.home.overdue.compose
 
 import org.simple.clinic.R
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_CALL
@@ -33,16 +32,9 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit,
-        onPendingFooterClicked: () -> Unit,
-        onSearchButtonClicked: () -> Unit,
     ): List<OverdueUiModel> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(
           isOverdueInstantSearchEnabled,
-          onSearchButtonClicked
       )
 
       val pendingToCallListItem = pendingToCallItem(
@@ -54,11 +46,6 @@ class OverdueUiModelMapper {
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
           locale,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection,
-          onToggleSection,
-          onPendingFooterClicked
       )
 
       val agreedToVisitListItem = agreedToVisitItem(
@@ -69,10 +56,6 @@ class OverdueUiModelMapper {
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
           locale,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection,
-          onToggleSection
       )
 
       val remindToCallListItem = remindToCallItem(
@@ -83,10 +66,6 @@ class OverdueUiModelMapper {
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
           locale,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection,
-          onToggleSection
       )
 
       val removedFromOverdueListItem = removedFromOverdueItem(
@@ -97,10 +76,6 @@ class OverdueUiModelMapper {
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
           locale,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection,
-          onToggleSection
       )
 
       val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(
@@ -111,10 +86,6 @@ class OverdueUiModelMapper {
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
           locale,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection,
-          onToggleSection
       )
 
       val dividerListItem = listOf(OverdueUiModel.Divider)
@@ -130,10 +101,9 @@ class OverdueUiModelMapper {
 
     private fun searchOverduePatientItem(
         isOverdueInstantSearchEnabled: Boolean,
-        onSearchButtonClicked: () -> Unit,
     ): List<OverdueUiModel> =
         if (isOverdueInstantSearchEnabled) {
-          listOf(OverdueUiModel.SearchButton(onSearchClicked = onSearchButtonClicked))
+          listOf(OverdueUiModel.SearchButton)
         } else {
           emptyList()
         }
@@ -146,18 +116,14 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit,
     ): List<OverdueUiModel> {
       val moreThanAnOneYearOverdueHeader = listOf(
-          OverdueUiModel.Header(R.string.overdue_no_visit_in_one_year_call_header,
+          OverdueUiModel.Header(
+              R.string.overdue_no_visit_in_one_year_call_header,
               overdueAppointmentSections.moreThanAnYearOverdueAppointments.size,
               overdueListSectionStates.isMoreThanAnOneYearOverdueHeader,
               MORE_THAN_A_YEAR_OVERDUE,
               locale,
-              onToggleSection
           ))
 
       val moreThanAnOneYearOverdueListItems = expandedOverdueAppointmentList(
@@ -167,9 +133,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       return moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
@@ -183,18 +146,14 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit,
     ): List<OverdueUiModel> {
       val removedFromOverdueListHeader = listOf(
-          OverdueUiModel.Header(R.string.overdue_removed_from_list_call_header,
+          OverdueUiModel.Header(
+              R.string.overdue_removed_from_list_call_header,
               overdueAppointmentSections.removedFromOverdueAppointments.size,
               overdueListSectionStates.isRemovedFromOverdueListHeaderExpanded,
               REMOVED_FROM_OVERDUE,
               locale,
-              onToggleSection
           ))
 
       val removedFromOverdueListItems = expandedOverdueAppointmentList(
@@ -204,9 +163,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       return removedFromOverdueListHeader + removedFromOverdueListItems
@@ -220,18 +176,14 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit,
     ): List<OverdueUiModel> {
       val remindToCallHeader = listOf(
-          OverdueUiModel.Header(R.string.overdue_remind_to_call_header,
+          OverdueUiModel.Header(
+              R.string.overdue_remind_to_call_header,
               overdueAppointmentSections.remindToCallLaterAppointments.size,
               overdueListSectionStates.isRemindToCallLaterHeaderExpanded,
               REMIND_TO_CALL,
               locale,
-              onToggleSection
           ))
 
       val remindToCallListItems = expandedOverdueAppointmentList(
@@ -241,9 +193,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       return remindToCallHeader + remindToCallListItems
@@ -257,18 +206,14 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit
     ): List<OverdueUiModel> {
       val agreedToVisitHeader = listOf(
-          OverdueUiModel.Header(R.string.overdue_agreed_to_visit_call_header,
+          OverdueUiModel.Header(
+              R.string.overdue_agreed_to_visit_call_header,
               overdueAppointmentSections.agreedToVisitAppointments.size,
               overdueListSectionStates.isAgreedToVisitHeaderExpanded,
               AGREED_TO_VISIT,
               locale,
-              onToggleSection
           ))
 
       val agreedToVisitListItems = expandedOverdueAppointmentList(
@@ -278,9 +223,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       return agreedToVisitHeader + agreedToVisitListItems
@@ -295,20 +237,15 @@ class OverdueUiModelMapper {
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
         locale: Locale,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
-        onToggleSection: (OverdueAppointmentSectionTitle) -> Unit,
-        onPendingFooterClicked: () -> Unit,
     ): List<OverdueUiModel> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
       val pendingToCallHeader = listOf(
-          OverdueUiModel.Header(R.string.overdue_pending_to_call_header,
+          OverdueUiModel.Header(
+              R.string.overdue_pending_to_call_header,
               overdueAppointmentSections.pendingAppointments.size,
               overdueListSectionStates.isPendingHeaderExpanded,
               PENDING_TO_CALL,
               locale,
-              onToggleSection
           ))
 
       val pendingAppointmentsContent = generatePendingAppointmentsContent(
@@ -319,16 +256,12 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && overdueListSectionStates.isPendingHeaderExpanded
       val pendingListFooterItem = if (showPendingListFooter) {
         listOf(OverdueUiModel.Footer(
             pendingListState = overdueListSectionStates.pendingListState,
-            onClick = onPendingFooterClicked
         ))
       } else {
         emptyList()
@@ -345,9 +278,6 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
     ): List<OverdueUiModel> {
       val pendingAppointmentsList = when (overdueListSectionStates.pendingListState) {
         SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(pendingListDefaultStateSize)
@@ -361,9 +291,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
-          onCallPatient,
-          onOpenPatientDetails,
-          onToggleAppointmentSelection
       )
 
       return if (pendingAppointmentsList.isEmpty() && overdueListSectionStates.isPendingHeaderExpanded) {
@@ -380,9 +307,6 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
     ): List<OverdueUiModel> {
       return if (isListExpanded) {
         overdueAppointment.map {
@@ -393,9 +317,6 @@ class OverdueUiModelMapper {
               isOverdueSelectAndDownloadEnabled,
               isAppointmentSelected,
               isPatientReassignmentFeatureEnabled,
-              onCallPatient,
-              onOpenPatientDetails,
-              onToggleAppointmentSelection
           )
         }
       } else {
@@ -409,9 +330,6 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         isAppointmentSelected: Boolean,
         isPatientReassignmentFeatureEnabled: Boolean,
-        onCallPatient: (UUID) -> Unit,
-        onOpenPatientDetails: (UUID) -> Unit,
-        onToggleAppointmentSelection: (UUID) -> Unit,
     ): OverdueUiModel {
       return OverdueUiModel.Patient(
           appointmentUuid = overdueAppointment.appointment.uuid,
@@ -425,9 +343,6 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
           isAppointmentSelected = isAppointmentSelected,
           isEligibleForReassignment = (overdueAppointment.eligibleForReassignment == Answer.Yes) && isPatientReassignmentFeatureEnabled,
-          onCallClicked = { onCallPatient(overdueAppointment.appointment.patientUuid) },
-          onRowClicked = { onOpenPatientDetails(overdueAppointment.appointment.patientUuid) },
-          onCheckboxClicked = { onToggleAppointmentSelection(overdueAppointment.appointment.uuid) }
       )
     }
 

@@ -203,7 +203,27 @@ class OverdueScreen : BaseScreen<
           ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
       )
       setContent {
-        OverdueAppointmentListItem(uiModels = uiModelsState)
+        OverdueAppointmentListItem(
+            uiModels = uiModelsState,
+            onCallClicked = { patientId ->
+              composeUiEvents.onNext(CallPatientClicked(patientId))
+            },
+            onRowClicked = { patientId ->
+              composeUiEvents.onNext(OverduePatientClicked(patientId))
+            },
+            onCheckboxClicked = { appointmentUuid ->
+              composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(appointmentUuid))
+            },
+            onSearch = {
+              composeUiEvents.onNext(OverdueSearchButtonClicked)
+            },
+            onSectionHeaderClick = { overdueAppointmentSectionTitle ->
+              composeUiEvents.onNext(ChevronClicked(overdueAppointmentSectionTitle))
+            },
+            onSectionFooterClick = {
+              composeUiEvents.onNext(PendingListFooterClicked)
+            }
+        )
       }
     }
   }
@@ -263,24 +283,6 @@ class OverdueScreen : BaseScreen<
         selectedOverdueAppointments = selectedOverdueAppointments,
         isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
         locale = locale,
-        onCallPatient = { patientId ->
-          composeUiEvents.onNext(CallPatientClicked(patientId))
-        },
-        onOpenPatientDetails = { patientId ->
-          composeUiEvents.onNext(OverduePatientClicked(patientId))
-        },
-        onToggleAppointmentSelection = { appointmentUuid ->
-          composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(appointmentUuid))
-        },
-        onSearchButtonClicked = {
-          composeUiEvents.onNext(OverdueSearchButtonClicked)
-        },
-        onToggleSection = { overdueAppointmentSectionTitle ->
-          composeUiEvents.onNext(ChevronClicked(overdueAppointmentSectionTitle))
-        },
-        onPendingFooterClicked = {
-          composeUiEvents.onNext(PendingListFooterClicked)
-        }
     )
 
     if (isOverdueListDownloadAndShareEnabled) {

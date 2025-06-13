@@ -20,9 +20,6 @@ sealed class OverdueUiModel {
       val isOverdueSelectAndDownloadEnabled: Boolean,
       val isAppointmentSelected: Boolean,
       val isEligibleForReassignment: Boolean,
-      val onCallClicked: (UUID) -> Unit,
-      val onRowClicked: (UUID) -> Unit,
-      val onCheckboxClicked: (UUID) -> Unit
   ) : OverdueUiModel()
 
   data class Header(
@@ -31,19 +28,15 @@ sealed class OverdueUiModel {
       val isOverdueSectionHeaderExpanded: Boolean,
       val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle,
       val locale: Locale,
-      val onToggle: (OverdueAppointmentSectionTitle) -> Unit,
   ) : OverdueUiModel()
 
   data class Footer(
       val pendingListState: PendingListState,
-      val onClick: () -> Unit
   ) : OverdueUiModel()
 
   data object Divider : OverdueUiModel()
 
   data object NoPendingPatients : OverdueUiModel()
 
-  data class SearchButton(
-      val onSearchClicked: () -> Unit
-  ) : OverdueUiModel()
+  data object SearchButton : OverdueUiModel()
 }

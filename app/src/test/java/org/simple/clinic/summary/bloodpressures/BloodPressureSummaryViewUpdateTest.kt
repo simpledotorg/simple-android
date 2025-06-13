@@ -114,10 +114,10 @@ class BloodPressureSummaryViewUpdateTest {
 
     updateSpec
         .given(defaultModel.bloodPressuresLoaded(bloodPressures))
-        .whenEvent(BloodPressureClicked(bloodPressureMeasurement))
+        .whenEvent(BloodPressureClicked(bloodPressureMeasurement.uuid))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as BloodPressureSummaryViewEffect)
+            hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement.uuid) as BloodPressureSummaryViewEffect)
         ))
   }
 

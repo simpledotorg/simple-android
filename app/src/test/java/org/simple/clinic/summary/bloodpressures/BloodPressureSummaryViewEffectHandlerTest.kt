@@ -1,15 +1,15 @@
 package org.simple.clinic.summary.bloodpressures
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -100,7 +100,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenBloodPressureUpdateSheet(bloodPressure))
+    testCase.dispatch(OpenBloodPressureUpdateSheet(bloodPressure.uuid))
 
     // then
     testCase.assertNoOutgoingEvents()

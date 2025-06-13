@@ -750,7 +750,6 @@ class PatientSummaryScreen :
 
     val transition = AutoTransition().apply {
       excludeChildren(view, true)
-      excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
       // We are doing this to wait for the router transitions to be done before we start this.
       startDelay = 500
@@ -799,7 +798,6 @@ class PatientSummaryScreen :
 
     val transition = AutoTransition().apply {
       excludeChildren(view, true)
-      excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
     }
     TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)

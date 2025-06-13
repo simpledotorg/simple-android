@@ -3,6 +3,7 @@ package org.simple.clinic.summary.bloodpressures
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 sealed class BloodPressureSummaryViewEvent : UiEvent
 
@@ -16,7 +17,7 @@ data object AddNewBloodPressureClicked : BloodPressureSummaryViewEvent() {
   override val analyticsName = "Patient Summary:Add New BP Clicked"
 }
 
-data class BloodPressureClicked(val measurement: BloodPressureMeasurement) : BloodPressureSummaryViewEvent() {
+data class BloodPressureClicked(val id: UUID) : BloodPressureSummaryViewEvent() {
   override val analyticsName = "Patient Summary:BP Clicked for editing"
 }
 

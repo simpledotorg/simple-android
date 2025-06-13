@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,8 +42,8 @@ fun OverdueSectionHeader(
           .fillMaxWidth()
           .clickable { onClick(overdueAppointmentSectionTitle) }
           .padding(
-              horizontal = 8.dp,
-              vertical = 16.dp
+              horizontal = dimensionResource(R.dimen.spacing_8),
+              vertical = dimensionResource(R.dimen.spacing_16)
           ),
       verticalAlignment = Alignment.CenterVertically
   ) {
@@ -54,7 +55,7 @@ fun OverdueSectionHeader(
     )
 
     Text(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.spacing_8)),
         text = String.format(locale, "%d", count),
         style = SimpleTheme.typography.tag.copy(color = SimpleTheme.colors.material.primary)
     )

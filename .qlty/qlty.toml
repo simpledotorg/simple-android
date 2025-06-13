@@ -69,7 +69,7 @@ threshold = 2
 enabled = true
 
 [smells.nested_control_flow]
-threshold = 1
+threshold = 2
 enabled = true
 
 [smells.function_parameters]

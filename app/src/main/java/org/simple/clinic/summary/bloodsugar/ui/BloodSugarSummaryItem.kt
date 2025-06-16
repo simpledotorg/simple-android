@@ -5,6 +5,7 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,7 +40,6 @@ fun BloodSugarSummaryItem(
     onEdit: () -> Unit,
 ) {
   val interactionSource = remember { MutableInteractionSource() }
-  val context = LocalContext.current
 
   Row(
       modifier = Modifier
@@ -69,37 +69,12 @@ fun BloodSugarSummaryItem(
 
     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_12)))
 
-    val displayUnit = context.getString(item.reading.displayUnit(item.measurementUnit))
-    val displayType = context.getString(item.reading.displayType)
-    val readingPrefix = item.reading.displayValue(item.measurementUnit)
-    val readingSuffix = "$displayUnit $displayType"
+    BloodSugarReadingText(item = item)
 
-    Text(
-        text = "$readingPrefix${item.reading.displayUnitSeparator}$readingSuffix",
-        style = MaterialTheme.typography.body1,
-        color = MaterialTheme.colors.onSurface,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
+    BloodSugarLevelIndicator(
+        isHigh = item.reading.isHigh,
+        isLow = item.reading.isLow,
     )
-
-    if (item.reading.isHigh || item.reading.isLow) {
-      Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
-
-      val bloodSugarLevelText = when {
-        item.reading.isLow -> stringResource(R.string.bloodsugar_level_low)
-        item.reading.isHigh -> stringResource(R.string.bloodsugar_level_high)
-        else -> {
-          throw IllegalStateException("Unknown blood sugar level")
-        }
-      }
-      Text(
-          text = bloodSugarLevelText,
-          style = MaterialTheme.typography.body2,
-          color = MaterialTheme.colors.error,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-      )
-    }
 
     if (item.canEdit) {
       Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
@@ -119,23 +94,69 @@ fun BloodSugarSummaryItem(
 
     Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
 
-    val dateTimeStyle = if (item.time.isNullOrBlank()) {
-      MaterialTheme.typography.body2
-    } else {
-      MaterialTheme.typography.caption
-    }
-    val dateTimeString = if (item.time.isNullOrBlank()) {
-      item.date
-    } else {
-      stringResource(R.string.patientsummary_newbp_date_time, item.date, item.time)
+    BloodSugarDateTimeText(item = item)
+  }
+}
+
+@Composable
+private fun BloodSugarReadingText(item: BloodSugarSummaryItem) {
+  val context = LocalContext.current
+  val displayUnit = context.getString(item.reading.displayUnit(item.measurementUnit))
+  val displayType = context.getString(item.reading.displayType)
+  val readingPrefix = item.reading.displayValue(item.measurementUnit)
+  val readingSuffix = "$displayUnit $displayType"
+
+  Text(
+      text = "$readingPrefix${item.reading.displayUnitSeparator}$readingSuffix",
+      style = MaterialTheme.typography.body1,
+      color = MaterialTheme.colors.onSurface,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+  )
+}
+
+@Composable
+private fun RowScope.BloodSugarDateTimeText(item: BloodSugarSummaryItem) {
+  val dateTimeStyle = if (item.time.isNullOrBlank()) {
+    MaterialTheme.typography.body2
+  } else {
+    MaterialTheme.typography.caption
+  }
+  val dateTimeString = if (item.time.isNullOrBlank()) {
+    item.date
+  } else {
+    stringResource(R.string.patientsummary_newbp_date_time, item.date, item.time)
+  }
+
+  Text(
+      modifier = Modifier.Companion.weight(1f),
+      text = dateTimeString,
+      style = dateTimeStyle,
+      color = SimpleTheme.colors.onSurface67,
+      textAlign = TextAlign.End,
+  )
+}
+
+@Composable
+private fun BloodSugarLevelIndicator(isHigh: Boolean, isLow: Boolean) {
+  if (isHigh || isLow) {
+    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
+
+    @Suppress("KotlinConstantConditions")
+    val bloodSugarLevelText = when {
+      isLow -> stringResource(R.string.bloodsugar_level_low)
+      isHigh -> stringResource(R.string.bloodsugar_level_high)
+      else -> {
+        throw IllegalStateException("Unknown blood sugar level")
+      }
     }
 
     Text(
-        modifier = Modifier.weight(1f),
-        text = dateTimeString,
-        style = dateTimeStyle,
-        color = SimpleTheme.colors.onSurface67,
-        textAlign = TextAlign.End,
+        text = bloodSugarLevelText,
+        style = MaterialTheme.typography.body2,
+        color = MaterialTheme.colors.error,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
   }
 }

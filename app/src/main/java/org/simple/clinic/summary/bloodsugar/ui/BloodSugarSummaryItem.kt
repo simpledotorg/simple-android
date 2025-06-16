@@ -139,26 +139,26 @@ private fun RowScope.BloodSugarDateTimeText(item: BloodSugarSummaryItem) {
 
 @Composable
 private fun BloodSugarLevelIndicator(isHigh: Boolean, isLow: Boolean) {
-  if (isHigh || isLow) {
-    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
+  if (!isHigh && !isLow) return
 
-    @Suppress("KotlinConstantConditions")
-    val bloodSugarLevelText = when {
-      isLow -> stringResource(R.string.bloodsugar_level_low)
-      isHigh -> stringResource(R.string.bloodsugar_level_high)
-      else -> {
-        throw IllegalStateException("Unknown blood sugar level")
-      }
+  Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.spacing_8)))
+
+  @Suppress("KotlinConstantConditions")
+  val bloodSugarLevelText = when {
+    isLow -> stringResource(R.string.bloodsugar_level_low)
+    isHigh -> stringResource(R.string.bloodsugar_level_high)
+    else -> {
+      throw IllegalStateException("Unknown blood sugar level")
     }
-
-    Text(
-        text = bloodSugarLevelText,
-        style = MaterialTheme.typography.body2,
-        color = MaterialTheme.colors.error,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-    )
   }
+
+  Text(
+      text = bloodSugarLevelText,
+      style = MaterialTheme.typography.body2,
+      color = MaterialTheme.colors.error,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+  )
 }
 
 data class BloodSugarSummaryItem(

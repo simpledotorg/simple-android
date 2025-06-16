@@ -311,7 +311,12 @@ class BloodSugarSummaryView(
             bloodSugarTime = bloodSugarTime,
             isBloodSugarEditable = isBloodSugarEditable,
             bloodSugarUnitPreference = bloodSugarUnitPreference.get(),
-        ) { clickedMeasurement -> viewEvents.onNext(BloodSugarClicked(clickedMeasurement)) }
+        ) { clickedMeasurement ->
+          viewEvents.onNext(BloodSugarClicked(
+              id = clickedMeasurement.uuid,
+              measurementType = clickedMeasurement.reading.type
+          ))
+        }
 
         bloodSugarItemView
       }

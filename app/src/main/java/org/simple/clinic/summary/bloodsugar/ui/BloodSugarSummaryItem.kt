@@ -125,7 +125,7 @@ private fun RowScope.BloodSugarDateTimeText(item: BloodSugarSummaryItem) {
   val dateTimeString = if (item.time.isNullOrBlank()) {
     item.date
   } else {
-    stringResource(R.string.patientsummary_newbp_date_time, item.date, item.time)
+    stringResource(R.string.bloodpressurehistory_blood_sugar_date_time, item.date, item.time)
   }
 
   Text(

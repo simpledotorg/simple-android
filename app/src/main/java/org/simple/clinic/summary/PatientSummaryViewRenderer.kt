@@ -23,9 +23,9 @@ class PatientSummaryViewRenderer(
     with(ui) {
       if (model.hasLoadedPatientSummaryProfile) {
         populatePatientProfile(model.patientSummaryProfile!!)
-        showEditButton()
         setupUiForAssignedFacility(model)
         renderPatientDiedStatus(model)
+        renderPatientSummaryToolbar(model.patientSummaryProfile)
       }
 
       if (model.hasLoadedCurrentFacility) {

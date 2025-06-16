@@ -3,14 +3,17 @@ package org.simple.clinic.summary.prescribeddrugs
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.DrugsSummaryViewBinding
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
@@ -24,12 +27,10 @@ import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.prescribeddrugs.ui.DrugSummary
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.setPaddingBottom
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -39,17 +40,6 @@ class DrugSummaryView(
     context: Context,
     attributeSet: AttributeSet
 ) : MaterialCardView(context, attributeSet), DrugSummaryUi, DrugSummaryUiActions, PatientSummaryChildView {
-
-  private var binding: DrugsSummaryViewBinding? = null
-
-  private val updateButton
-    get() = binding!!.updateButton
-
-  private val drugsSummaryContainer
-    get() = binding!!.drugsSummaryContainer
-
-  private val emptyMedicinesTextView
-    get() = binding!!.emptyMedicinesTextView
 
   @Inject
   @Named("full_date")
@@ -105,10 +95,7 @@ class DrugSummaryView(
     )
   }
 
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = DrugsSummaryViewBinding.inflate(layoutInflater, this, true)
-  }
+  private var prescribedDrugs by mutableStateOf<List<PrescribedDrug>>(emptyList())
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
@@ -135,15 +122,28 @@ class DrugSummaryView(
     }
 
     context.injector<DrugSummaryViewInjector>().inject(this)
+
+    addView(ComposeView(context).apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+
+      setContent {
+        SimpleTheme {
+          DrugSummary(
+              prescribedDrugs = prescribedDrugs,
+              drugDateFormatter = fullDateFormatter,
+              userClock = userClock,
+              onEditMedicinesClick = {
+                internalEvents.onNext(PatientSummaryUpdateDrugsClicked())
+              }
+          )
+        }
+      }
+    })
   }
 
   override fun populatePrescribedDrugs(prescribedDrugs: List<PrescribedDrug>) {
     val alphabeticallySortedPrescribedDrugs = prescribedDrugs.sortedBy { it.name }
-    bind(
-        prescriptions = alphabeticallySortedPrescribedDrugs,
-        dateFormatter = fullDateFormatter,
-        userClock = userClock
-    )
+    this.prescribedDrugs = alphabeticallySortedPrescribedDrugs
   }
 
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
@@ -155,60 +155,5 @@ class DrugSummaryView(
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
     modelUpdateCallback = callback
-  }
-
-  private fun bind(
-      prescriptions: List<PrescribedDrug>,
-      dateFormatter: DateTimeFormatter,
-      userClock: UserClock
-  ) {
-    updateButton.setOnClickListener { internalEvents.onNext(PatientSummaryUpdateDrugsClicked()) }
-
-    drugsSummaryContainer.visibleOrGone(prescriptions.isNotEmpty())
-    emptyMedicinesTextView.visibleOrGone(prescriptions.isEmpty())
-
-    setButtonText(prescriptions)
-    setButtonIcon(prescriptions)
-
-    drugsSummaryContainer.removeAllViews()
-
-    if (prescriptions.isNotEmpty()) {
-      prescriptions
-          .map { drug ->
-            val drugItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_prescripton_drug, this, false) as DrugSummaryItemView
-            drugItemView.render(
-                drugName = drug.name,
-                drugDosage = drug.dosage,
-                drugFrequency = drug.frequency,
-                dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone))
-            )
-            drugItemView
-          }
-          .forEach(drugsSummaryContainer::addView)
-    }
-
-    val itemContainerBottomPadding = if (prescriptions.size > 1) {
-      R.dimen.patientsummary_drug_summary_item_container_bottom_padding_8
-    } else {
-      R.dimen.patientsummary_drug_summary_item_container_bottom_padding_24
-    }
-    drugsSummaryContainer.setPaddingBottom(itemContainerBottomPadding)
-  }
-
-  private fun setButtonText(prescriptions: List<PrescribedDrug>) {
-    updateButton.text = if (prescriptions.isEmpty()) {
-      context.getString(R.string.patientsummary_prescriptions_add)
-    } else {
-      context.getString(R.string.patientsummary_prescriptions_update)
-    }
-  }
-
-  private fun setButtonIcon(prescriptions: List<PrescribedDrug>) {
-    val drawableRes = if (prescriptions.isEmpty()) {
-      R.drawable.ic_add_circle_blue1_24dp
-    } else {
-      R.drawable.ic_edit_medicine
-    }
-    updateButton.setIconResource(drawableRes)
   }
 }

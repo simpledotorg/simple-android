@@ -19,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.ButtonSize
 import org.simple.clinic.common.ui.components.TextButton
@@ -80,7 +79,6 @@ fun BloodPressureSummary(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.spacing_8)),
-        thickness = 1.dp,
         color = SimpleTheme.colors.onSurface11,
     )
 

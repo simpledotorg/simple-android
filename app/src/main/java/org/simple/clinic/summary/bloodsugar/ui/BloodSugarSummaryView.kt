@@ -1,4 +1,4 @@
-package org.simple.clinic.summary.bloodsugar.view
+package org.simple.clinic.summary.bloodsugar.ui
 
 import android.annotation.SuppressLint
 import android.content.Context

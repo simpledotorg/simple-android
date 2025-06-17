@@ -86,7 +86,6 @@ fun BloodSugarSummary(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(id = R.dimen.spacing_8)),
-        thickness = 1.dp,
         color = SimpleTheme.colors.onSurface11,
     )
 

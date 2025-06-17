@@ -52,7 +52,7 @@ data class TeleconsultRecord(
     fun getAll(): List<TeleconsultRecord>
 
     @Query("SELECT * FROM TeleconsultRecord WHERE id = :teleconsultRecordId")
-    fun getCompleteTeleconsultLog(teleconsultRecordId: UUID): TeleconsultRecord
+    fun getCompleteTeleconsultLog(teleconsultRecordId: UUID): TeleconsultRecord?
 
     @Query("UPDATE TeleconsultRecord SET record_medicalOfficerNumber = :medicalOfficerNumber, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE id = :teleconsultRecordId")
     fun updateMedicalRegistrationId(

@@ -34,7 +34,6 @@ fun OverdueAppointmentListItem(
     onSectionFooterClick: () -> Unit,
 
     ) {
-  SimpleTheme {
     LazyColumn(
         modifier = modifier.padding(
             start = dimensionResource(R.dimen.spacing_8),
@@ -43,77 +42,76 @@ fun OverdueAppointmentListItem(
             bottom = dimensionResource(R.dimen.spacing_128)
         )
     ) {
-      items(uiModels) { model ->
-        when (model) {
-          is OverdueUiModel.Patient -> {
-            OverduePatientListItem(
-                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.spacing_8)),
-                appointmentUuid = model.appointmentUuid,
-                patientUuid = model.patientUuid,
-                name = model.name,
-                gender = model.gender,
-                age = model.age,
-                phoneNumber = model.phoneNumber,
-                overdueDays = model.overdueDays,
-                villageName = model.villageName,
-                isOverdueSelectAndDownloadEnabled = model.isOverdueSelectAndDownloadEnabled,
-                isAppointmentSelected = model.isAppointmentSelected,
-                isEligibleForReassignment = model.isEligibleForReassignment,
-                onCallClicked = onCallClicked,
-                onRowClicked = onRowClicked,
-                onCheckboxClicked = onCheckboxClicked
-            )
-          }
+        items(uiModels) { model ->
+            when (model) {
+                is OverdueUiModel.Patient -> {
+                    OverduePatientListItem(
+                        modifier = Modifier.padding(bottom = dimensionResource(R.dimen.spacing_8)),
+                        appointmentUuid = model.appointmentUuid,
+                        patientUuid = model.patientUuid,
+                        name = model.name,
+                        gender = model.gender,
+                        age = model.age,
+                        phoneNumber = model.phoneNumber,
+                        overdueDays = model.overdueDays,
+                        villageName = model.villageName,
+                        isOverdueSelectAndDownloadEnabled = model.isOverdueSelectAndDownloadEnabled,
+                        isAppointmentSelected = model.isAppointmentSelected,
+                        isEligibleForReassignment = model.isEligibleForReassignment,
+                        onCallClicked = onCallClicked,
+                        onRowClicked = onRowClicked,
+                        onCheckboxClicked = onCheckboxClicked
+                    )
+                }
 
-          is OverdueUiModel.Header -> {
-            OverdueSectionHeader(
-                headerTextRes = model.headerTextRes,
-                count = model.count,
-                isExpanded = model.isOverdueSectionHeaderExpanded,
-                overdueAppointmentSectionTitle = model.overdueAppointmentSectionTitle,
-                locale = model.locale,
-                onClick = onSectionHeaderClick
-            )
-          }
+                is OverdueUiModel.Header -> {
+                    OverdueSectionHeader(
+                        headerTextRes = model.headerTextRes,
+                        count = model.count,
+                        isExpanded = model.isOverdueSectionHeaderExpanded,
+                        overdueAppointmentSectionTitle = model.overdueAppointmentSectionTitle,
+                        locale = model.locale,
+                        onClick = onSectionHeaderClick
+                    )
+                }
 
-          is OverdueUiModel.Footer -> {
-            OverdueSectionFooter(
-                pendingListState = model.pendingListState,
-                onClick = onSectionFooterClick
-            )
-          }
+                is OverdueUiModel.Footer -> {
+                    OverdueSectionFooter(
+                        pendingListState = model.pendingListState,
+                        onClick = onSectionFooterClick
+                    )
+                }
 
-          is OverdueUiModel.Divider -> {
-            Divider(
-                color = colorResource(R.color.color_on_surface_11),
-                modifier = Modifier.padding(dimensionResource(R.dimen.spacing_8))
-            )
-          }
+                is OverdueUiModel.Divider -> {
+                    Divider(
+                        color = colorResource(R.color.color_on_surface_11),
+                        modifier = Modifier.padding(dimensionResource(R.dimen.spacing_8))
+                    )
+                }
 
-          is OverdueUiModel.NoPendingPatients -> {
-            NoPendingPatients()
-          }
+                is OverdueUiModel.NoPendingPatients -> {
+                    NoPendingPatients()
+                }
 
-          is OverdueUiModel.SearchButton -> {
-            OutlinedButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                buttonSize = ButtonSize.Big,
-                icon = {
-                  Icon(
-                      imageVector = Icons.Outlined.Search,
-                      contentDescription = "Search Overdue Patient"
-                  )
-                },
-                onClick = onSearch,
-            ) {
-              ProvideTextStyle(value = SimpleTheme.typography.body0) {
-                Text(text = stringResource(id = R.string.overdue_search_patient_name_or_village))
-              }
+                is OverdueUiModel.SearchButton -> {
+                    OutlinedButton(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        buttonSize = ButtonSize.Big,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Search,
+                                contentDescription = "Search Overdue Patient"
+                            )
+                        },
+                        onClick = onSearch,
+                    ) {
+                        ProvideTextStyle(value = SimpleTheme.typography.body0) {
+                            Text(text = stringResource(id = R.string.overdue_search_patient_name_or_village))
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
 }

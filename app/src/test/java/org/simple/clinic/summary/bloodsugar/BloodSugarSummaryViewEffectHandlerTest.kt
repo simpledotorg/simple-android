@@ -97,7 +97,7 @@ class BloodSugarSummaryViewEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(OpenBloodSugarUpdateSheet(bloodSugar))
+    testCase.dispatch(OpenBloodSugarUpdateSheet(bloodSugar.uuid, bloodSugar.reading.type))
 
     // then
     testCase.assertNoOutgoingEvents()

@@ -83,7 +83,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8" />
 
-      <org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryView
+      <org.simple.clinic.summary.bloodsugar.ui.BloodSugarSummaryView
         android:id="@+id/bloodSugarSummaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -32,7 +32,7 @@ class BloodSugarSummaryViewEffectHandler @AssistedInject constructor(
         .addTransformer(FetchBloodSugarCount::class.java, fetchBloodSugarMeasurementsCount(schedulersProvider.io()))
         .addTransformer(OpenBloodSugarTypeSelector::class.java, openBloodSugarSelector(schedulersProvider))
         .addConsumer(ShowBloodSugarHistoryScreen::class.java, { uiActions.showBloodSugarHistoryScreen(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.measurement.uuid, it.measurement.reading.type) }, schedulersProvider.ui())
+        .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.id, it.measurementType) }, schedulersProvider.ui())
         .build()
   }
 

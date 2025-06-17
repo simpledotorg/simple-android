@@ -24,6 +24,7 @@ import java.util.UUID
 
 @Composable
 fun OverdueAppointmentListItem(
+    modifier: Modifier = Modifier,
     uiModels: List<OverdueUiModel>,
     onCallClicked: (UUID) -> Unit,
     onRowClicked: (UUID) -> Unit,
@@ -35,7 +36,7 @@ fun OverdueAppointmentListItem(
     ) {
   SimpleTheme {
     LazyColumn(
-        modifier = Modifier.padding(
+        modifier = modifier.padding(
             start = dimensionResource(R.dimen.spacing_8),
             end = dimensionResource(R.dimen.spacing_8),
             top = dimensionResource(R.dimen.spacing_8),

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.SpannedString
-import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -19,8 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
-import androidx.core.text.buildSpannedString
-import androidx.core.text.inSpans
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.transition.AutoTransition
 import androidx.transition.Transition
@@ -59,12 +55,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -77,11 +68,11 @@ import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
+import org.simple.clinic.summary.ui.PatientSummaryToolbar
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.applyInsetsBottomPadding
-import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
@@ -89,7 +80,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.spring
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -136,9 +126,6 @@ class PatientSummaryScreen :
   private val summaryViewsContainer
     get() = binding.summaryViewsContainer
 
-  private val editPatientButton
-    get() = binding.editPatientButton
-
   private val doneButton
     get() = binding.doneButton
 
@@ -151,29 +138,11 @@ class PatientSummaryScreen :
   private val logTeleconsultButtonFrame
     get() = binding.logTeleconsultButtonFrame
 
-  private val backButton
-    get() = binding.backButton
-
-  private val contactTextView
-    get() = binding.contactTextView
-
   private val facilityNameAndDateTextView
     get() = binding.facilityNameAndDateTextView
 
   private val labelRegistered
     get() = binding.labelRegistered
-
-  private val addressTextView
-    get() = binding.addressTextView
-
-  private val fullNameTextView
-    get() = binding.fullNameTextView
-
-  private val bpPassportTextView
-    get() = binding.bpPassportTextView
-
-  private val alternateIdTextView
-    get() = binding.alternateIdTextView
 
   private val doneButtonFrame
     get() = binding.doneButtonFrame
@@ -258,8 +227,6 @@ class PatientSummaryScreen :
             backClicks(),
             doneClicks(),
             bloodPressureSaves(),
-            editButtonClicks(),
-            phoneNumberClicks(),
             contactDoctorClicks(),
             hotEvents,
             logTeleconsultClicks(),
@@ -323,7 +290,6 @@ class PatientSummaryScreen :
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
-    appbar.applyStatusBarPadding()
     doneButtonFrame.applyInsetsBottomPadding()
     logTeleconsultButtonFrame.applyInsetsBottomPadding()
 
@@ -411,8 +377,6 @@ class PatientSummaryScreen :
     }
   }
 
-  private fun editButtonClicks(): Observable<UiEvent> = editPatientButton.clicks().map { PatientSummaryEditClicked }
-
   private fun createEditPatientScreenKey(
       patientSummaryProfile: PatientSummaryProfile
   ): EditPatientScreen.Key {
@@ -435,9 +399,7 @@ class PatientSummaryScreen :
   private fun logTeleconsultClicks() = logTeleconsultButton.clicks().map { LogTeleconsultClicked }
 
   private fun backClicks(): Observable<UiEvent> {
-    return backButton
-        .clicks()
-        .mergeWith(hardwareBackClicks)
+    return hardwareBackClicks
         .throttleFirst(500, TimeUnit.MILLISECONDS)
         .map {
           PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
@@ -481,21 +443,44 @@ class PatientSummaryScreen :
     }
   }
 
-  private fun phoneNumberClicks(): Observable<UiEvent> {
-    return contactTextView.clicks().map { ContactPatientClicked }
-  }
-
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
     val ageValue = patient.ageDetails.estimateAge(userClock)
 
-    displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayRegistrationFacilityName(patientSummaryProfile)
-    displayPhoneNumber(patientSummaryProfile.phoneNumber)
-    displayPatientAddress(patientSummaryProfile.address)
-    displayBpPassport(patientSummaryProfile.bpPassport)
-    displayAlternativeId(patientSummaryProfile.alternativeId, patientSummaryProfile.bpPassport != null)
+  }
+
+  override fun renderPatientSummaryToolbar(patientSummaryProfile: PatientSummaryProfile) {
+    val patient = patientSummaryProfile.patient
+    val ageValue = patient.ageDetails.estimateAge(userClock)
+
+    appbar.apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+
+      setContent {
+        SimpleTheme {
+          PatientSummaryToolbar(
+              patientName = patient.fullName,
+              gender = patient.gender,
+              age = ageValue,
+              address = patientSummaryProfile.address.completeAddress,
+              phoneNumber = patientSummaryProfile.phoneNumber,
+              bpPassport = patientSummaryProfile.bpPassport,
+              alternativeId = patientSummaryProfile.alternativeId,
+              onBack = {
+                hotEvents.onNext(PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp))
+              },
+              onContact = {
+                hotEvents.onNext(ContactPatientClicked)
+              },
+              onEditPatient = {
+                hotEvents.onNext(PatientSummaryEditClicked)
+              }
+          )
+        }
+      }
+    }
   }
 
   private fun displayRegistrationFacilityName(patientSummaryProfile: PatientSummaryProfile) {
@@ -512,69 +497,6 @@ class PatientSummaryScreen :
     } else {
       facilityNameAndDateTextView.visibility = GONE
       labelRegistered.visibility = GONE
-    }
-  }
-
-  private fun displayPatientAddress(address: PatientAddress) {
-    addressTextView.text = address.completeAddress
-  }
-
-  private fun displayPhoneNumber(phoneNumber: PatientPhoneNumber?) {
-    if (phoneNumber == null) {
-      contactTextView.visibility = GONE
-
-    } else {
-      contactTextView.text = phoneNumber.number
-      contactTextView.visibility = VISIBLE
-    }
-  }
-
-  private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
-    val genderLetter = resources.getString(gender.displayLetterRes)
-    fullNameTextView.text = resources.getString(R.string.patientsummary_toolbar_title, name, genderLetter, age.toString())
-  }
-
-  private fun displayBpPassport(bpPassport: BusinessId?) {
-    bpPassportTextView.visibleOrGone(bpPassport != null)
-
-    bpPassportTextView.text = when (bpPassport) {
-      null -> ""
-      else -> {
-        val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
-        val identifier = bpPassport.identifier
-        val bpPassportLabel = identifier.displayType(resources)
-
-        buildSpannedString {
-          append("$bpPassportLabel: ")
-
-          inSpans(identifierNumericSpan) {
-            append(identifier.displayValue())
-          }
-        }
-      }
-    }
-  }
-
-  private fun displayAlternativeId(alternateId: BusinessId?, isBpPassportVisible: Boolean) {
-    alternateIdTextView.visibleOrGone(alternateId != null)
-
-    alternateIdTextView.text = when (alternateId) {
-      null -> ""
-      else -> generateAlternativeId(alternateId)
-    }
-  }
-
-  private fun generateAlternativeId(alternateId: BusinessId): SpannedString {
-    val alternateIdLabel = alternateId.identifier.displayType(resources)
-    val identifierNumericSpan = TextAppearanceSpan(requireContext(), R.style.TextAppearance_Simple_Body2_Numeric)
-    val identifier = alternateId.identifier
-
-    return buildSpannedString {
-      append("$alternateIdLabel: ")
-
-      inSpans(identifierNumericSpan) {
-        append(identifier.displayValue())
-      }
     }
   }
 
@@ -612,10 +534,6 @@ class PatientSummaryScreen :
     router.push(LinkIdWithPatientSheetKey(patientUuid = patientUuid,
         identifier = identifier,
         openedFrom = screenKey))
-  }
-
-  override fun showEditButton() {
-    editPatientButton.visibility = VISIBLE
   }
 
   override fun showDiabetesView() {
@@ -832,9 +750,7 @@ class PatientSummaryScreen :
 
     val transition = AutoTransition().apply {
       excludeChildren(view, true)
-      excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
-      excludeTarget(R.id.drugsSummaryContainer, true)
       // We are doing this to wait for the router transitions to be done before we start this.
       startDelay = 500
     }
@@ -882,9 +798,7 @@ class PatientSummaryScreen :
 
     val transition = AutoTransition().apply {
       excludeChildren(view, true)
-      excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
-      excludeTarget(R.id.drugsSummaryContainer, true)
     }
     TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 

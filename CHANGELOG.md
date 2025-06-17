@@ -7,6 +7,16 @@
 - Handle window insets when displaying app content in edge-to-edge
 - Enable edge-to-edge support on all versions of Android
 - Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
+- Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
+- Add Compose components for Overdue screen
+- Migrate medicines summary view to Jetpack Compose
+- Migrate codeclimate config to qlty.sh config
+- Migrate `OverdueScreen` patient list to Jetpack Compose
+- Migrate blood pressure summary view to Jetpack Compose
+
+### Fixes
+
+- Fix app crashing when opening un-synced teleconsult request
 
 ## 2025.05.20
 

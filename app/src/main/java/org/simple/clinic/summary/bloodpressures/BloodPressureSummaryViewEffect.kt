@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.bloodpressures
 
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import java.util.UUID
 
@@ -18,7 +17,7 @@ data class OpenBloodPressureEntrySheet(
     val currentFacility: Facility
 ) : BloodPressureSummaryViewEffect()
 
-data class OpenBloodPressureUpdateSheet(val measurement: BloodPressureMeasurement) : BloodPressureSummaryViewEffect()
+data class OpenBloodPressureUpdateSheet(val id: UUID) : BloodPressureSummaryViewEffect()
 
 data class ShowBloodPressureHistoryScreen(val patientUuid: UUID) : BloodPressureSummaryViewEffect()
 

@@ -74,7 +74,7 @@ import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.assignedfacility.AssignedFacilityView
-import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInjector
+import org.simple.clinic.summary.bloodpressures.ui.BloodPressureSummaryViewInjector
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector

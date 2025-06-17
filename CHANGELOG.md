@@ -14,6 +14,10 @@
 - Migrate `OverdueScreen` patient list to Jetpack Compose
 - Migrate blood pressure summary view to Jetpack Compose
 
+### Fixes
+
+- Fix app crashing when opening un-synced teleconsult request
+
 ## 2025.05.20
 
 ### Internal

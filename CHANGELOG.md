@@ -40,6 +40,7 @@
 
 - Fix crash when displaying large statin risk percentage text
 - Fix visibility for static statin nudge
+- Fix app crashing when opening un-synced teleconsult request
 
 ## 2025.04.07
 

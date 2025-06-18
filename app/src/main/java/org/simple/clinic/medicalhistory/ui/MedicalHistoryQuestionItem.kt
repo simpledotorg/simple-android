@@ -54,7 +54,13 @@ fun MedicalHistoryQuestionItem(
 
       AnswerChipsGroup(
         selectedAnswer = selectedAnswer,
-        onSelectionChange = onSelectionChange
+        onSelectionChange = { newAnswer ->
+          if (newAnswer == selectedAnswer) {
+            onSelectionChange(Answer.Unanswered)
+          } else {
+            onSelectionChange(newAnswer)
+          }
+        }
       )
     }
 

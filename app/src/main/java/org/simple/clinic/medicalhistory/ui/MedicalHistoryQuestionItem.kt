@@ -24,10 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 
 @Composable
 fun MedicalHistoryQuestionItem(
-  questionText: String,
+  question: MedicalHistoryQuestion,
   selectedAnswer: Answer?,
   modifier: Modifier = Modifier,
   showDivider: Boolean = true,
@@ -45,7 +46,7 @@ fun MedicalHistoryQuestionItem(
     ) {
       Text(
         modifier = Modifier.weight(1f),
-        text = questionText,
+        text = stringResource(question.questionRes),
         style = MaterialTheme.typography.body1,
         color = MaterialTheme.colors.onSurface,
         maxLines = 1,
@@ -127,7 +128,7 @@ private fun MedicalHistoryAnswerChip(
 private fun MedicalHistoryQuestionItemPreview() {
   SimpleTheme {
     MedicalHistoryQuestionItem(
-      questionText = stringResource(R.string.medicalhistory_question_heartattack),
+      question = MedicalHistoryQuestion.DiagnosedWithHypertension,
       selectedAnswer = null,
       showDivider = true,
       onSelectionChange = {
@@ -142,7 +143,7 @@ private fun MedicalHistoryQuestionItemPreview() {
 private fun MedicalHistoryQuestionItemYesPreview() {
   SimpleTheme {
     MedicalHistoryQuestionItem(
-      questionText = stringResource(R.string.medicalhistory_question_heartattack),
+      question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
       selectedAnswer = Answer.Yes,
       showDivider = true,
       onSelectionChange = {

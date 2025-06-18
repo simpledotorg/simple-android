@@ -39,8 +39,7 @@ fun MedicalHistoryQuestionItem(
       .background(MaterialTheme.colors.surface)
   ) {
     Row(
-      modifier = Modifier
-        .padding(vertical = dimensionResource(R.dimen.spacing_8)),
+      modifier = Modifier,
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_16))
     ) {

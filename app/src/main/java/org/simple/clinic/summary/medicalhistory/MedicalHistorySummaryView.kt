@@ -156,14 +156,6 @@ class MedicalHistorySummaryView(
     this.diabetesManagementEnabled = false
   }
 
-  override fun showDiabetesHistorySection() {
-    // no-op -> remove
-  }
-
-  override fun hideDiabetesHistorySection() {
-    // no-op -> remove
-  }
-
   override fun showCurrentSmokerQuestion() {
     showSmokerQuestion = true
   }

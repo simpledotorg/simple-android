@@ -13,6 +13,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
@@ -30,13 +31,12 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreat
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.widgets.UiEvent
-import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.clinic.widgets.UiEvent
+import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
 import java.util.UUID
 
@@ -97,7 +97,6 @@ class MedicalHistorySummaryLogicTest {
 
     // then
     verify(ui).hideDiagnosisView()
-    verify(ui).showDiabetesHistorySection()
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
@@ -143,7 +142,6 @@ class MedicalHistorySummaryLogicTest {
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -159,7 +157,6 @@ class MedicalHistorySummaryLogicTest {
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
-    verify(ui).showDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -179,7 +176,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -199,7 +195,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -219,7 +214,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -239,7 +233,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -259,7 +252,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -279,7 +271,6 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
-    verify(ui).hideDiabetesHistorySection()
     verify(ui).showCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -295,7 +286,6 @@ class MedicalHistorySummaryLogicTest {
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
-    verify(ui).showDiabetesHistorySection()
     verify(ui).hideCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -311,7 +301,6 @@ class MedicalHistorySummaryLogicTest {
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
-    verify(ui).showDiabetesHistorySection()
     verify(ui).showCurrentSmokerQuestion()
     verifyNoMoreInteractions(ui)
   }

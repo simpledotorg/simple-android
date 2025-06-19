@@ -1,8 +1,8 @@
 package org.simple.clinic.home.overdue.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -13,6 +13,7 @@ import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
 import java.util.UUID
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun OverdueScreenView(
     showDownloadAndShareButton: Boolean,
@@ -45,11 +46,10 @@ fun OverdueScreenView(
         }
       }
 
-  ) { innerPadding ->
+  ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
     ) {
       if (showLoader) {
         Box(

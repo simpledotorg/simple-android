@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +14,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.simple.clinic.R
+import org.simple.clinic.common.ui.components.ButtonSize
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.components.TextButton
 import org.simple.clinic.common.ui.theme.SimpleGreenTheme
@@ -29,9 +30,9 @@ fun OverdueScreenBottomActionView(
 ) {
   Column(
       modifier = Modifier
-          .fillMaxWidth()
-          .background(SimpleTheme.colors.material.primaryVariant)
-          .padding(dimensionResource(R.dimen.spacing_12)),
+              .fillMaxWidth()
+              .background(SimpleTheme.colors.material.primaryVariant)
+              .padding(dimensionResource(R.dimen.spacing_12)),
   ) {
     if (showSelectedOverdueCountView) {
       OverdueSelectedItemsCountView(
@@ -54,8 +55,8 @@ fun OverdueSelectedItemsCountView(
 ) {
   Row(
       modifier = Modifier
-          .fillMaxWidth()
-          .padding(bottom = dimensionResource(R.dimen.spacing_12)),
+              .fillMaxWidth()
+              .padding(bottom = dimensionResource(R.dimen.spacing_12)),
       verticalAlignment = Alignment.CenterVertically
   ) {
     Text(
@@ -65,6 +66,7 @@ fun OverdueSelectedItemsCountView(
         color = SimpleTheme.colors.material.onBackground
     )
     TextButton(
+        buttonSize = ButtonSize.Small,
         onClick = onClearSelected
     ) {
       Text(
@@ -89,14 +91,18 @@ fun DownloadAndShareButtonView(
         modifier = Modifier.weight(1f),
         onClick = onDownload
     ) {
-      Text(text = stringResource(R.string.overdue_download))
+      Text(
+          text = stringResource(R.string.overdue_download).uppercase(),
+      )
     }
     SimpleGreenTheme {
       FilledButton(
           modifier = Modifier.weight(1f),
           onClick = onShare
       ) {
-        Text(text = stringResource(R.string.overdue_share))
+        Text(
+            text = stringResource(R.string.overdue_share).uppercase(),
+        )
       }
     }
   }

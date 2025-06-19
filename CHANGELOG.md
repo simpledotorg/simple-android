@@ -11,7 +11,7 @@
 - Add Compose components for Overdue screen
 - Migrate medicines summary view to Jetpack Compose
 - Migrate codeclimate config to qlty.sh config
-- Migrate `OverdueScreen` patient list to Jetpack Compose
+- Migrate `OverdueScreen` to Jetpack Compose
 - Migrate blood pressure summary view to Jetpack Compose
 - Migrate blood sugar summary view to Jetpack Compose
 - Migrate medical history summary view to Jetpack Compose

@@ -54,7 +54,6 @@ import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -106,7 +105,7 @@ class OverdueScreen : BaseScreen<
   lateinit var lastSyncedState: Preference<LastSyncedState>
 
   @Inject
-  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<OverdueEvent>
 
   @Inject
   lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
@@ -144,7 +143,7 @@ class OverdueScreen : BaseScreen<
       composeUiEvents,
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
-      //      .compose(runtimeNetworkStatus::apply)
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .share()
       .cast<OverdueEvent>()

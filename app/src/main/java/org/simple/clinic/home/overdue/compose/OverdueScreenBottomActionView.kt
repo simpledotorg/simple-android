@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,24 +30,26 @@ fun OverdueScreenBottomActionView(
     onDownload: () -> Unit,
     onShare: () -> Unit,
 ) {
-  Column(
-      modifier = Modifier
-              .fillMaxWidth()
-              .background(SimpleTheme.colors.material.primaryVariant)
-              .padding(dimensionResource(R.dimen.spacing_12)),
-  ) {
-    if (showSelectedOverdueCountView) {
-      OverdueSelectedItemsCountView(
-          selectedOverdueCount = selectedOverdueCount,
-          onClearSelected = onClearSelected
-      )
-    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(SimpleTheme.colors.material.primaryVariant)
+            .padding(dimensionResource(R.dimen.spacing_12))
+            .navigationBarsPadding()
+            .imePadding(),
+    ) {
+        if (showSelectedOverdueCountView) {
+            OverdueSelectedItemsCountView(
+                selectedOverdueCount = selectedOverdueCount,
+                onClearSelected = onClearSelected
+            )
+        }
 
-    DownloadAndShareButtonView(
-        onDownload = onDownload,
-        onShare = onShare
-    )
-  }
+        DownloadAndShareButtonView(
+            onDownload = onDownload,
+            onShare = onShare
+        )
+    }
 }
 
 @Composable
@@ -53,28 +57,28 @@ fun OverdueSelectedItemsCountView(
     selectedOverdueCount: Int,
     onClearSelected: () -> Unit
 ) {
-  Row(
-      modifier = Modifier
-              .fillMaxWidth()
-              .padding(bottom = dimensionResource(R.dimen.spacing_12)),
-      verticalAlignment = Alignment.CenterVertically
-  ) {
-    Text(
-        modifier = Modifier.weight(1f),
-        text = stringResource(R.string.selected_overdue_count, selectedOverdueCount),
-        style = SimpleTheme.typography.material.body1,
-        color = SimpleTheme.colors.material.onBackground
-    )
-    TextButton(
-        buttonSize = ButtonSize.Small,
-        onClick = onClearSelected
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = dimensionResource(R.dimen.spacing_12)),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-      Text(
-          text = stringResource(R.string.selected_overdue_clear),
-          style = SimpleTheme.typography.tag
-      )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(R.string.selected_overdue_count, selectedOverdueCount),
+            style = SimpleTheme.typography.material.body1,
+            color = SimpleTheme.colors.material.onBackground
+        )
+        TextButton(
+            buttonSize = ButtonSize.Small,
+            onClick = onClearSelected
+        ) {
+            Text(
+                text = stringResource(R.string.selected_overdue_clear),
+                style = SimpleTheme.typography.tag
+            )
+        }
     }
-  }
 }
 
 @Composable
@@ -83,63 +87,63 @@ fun DownloadAndShareButtonView(
     onShare: () -> Unit
 ) {
 
-  Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_16))
-  ) {
-    FilledButton(
-        modifier = Modifier.weight(1f),
-        onClick = onDownload
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_16))
     ) {
-      Text(
-          text = stringResource(R.string.overdue_download).uppercase(),
-      )
+        FilledButton(
+            modifier = Modifier.weight(1f),
+            onClick = onDownload
+        ) {
+            Text(
+                text = stringResource(R.string.overdue_download).uppercase(),
+            )
+        }
+        SimpleGreenTheme {
+            FilledButton(
+                modifier = Modifier.weight(1f),
+                onClick = onShare
+            ) {
+                Text(
+                    text = stringResource(R.string.overdue_share).uppercase(),
+                )
+            }
+        }
     }
-    SimpleGreenTheme {
-      FilledButton(
-          modifier = Modifier.weight(1f),
-          onClick = onShare
-      ) {
-        Text(
-            text = stringResource(R.string.overdue_share).uppercase(),
-        )
-      }
-    }
-  }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun OverdueScreenBottomActionView_Preview() {
-  SimpleTheme {
-    OverdueScreenBottomActionView(
-        showSelectedOverdueCountView = true,
-        selectedOverdueCount = 10,
-        onShare = {},
-        onDownload = {},
-        onClearSelected = {}
-    )
-  }
+    SimpleTheme {
+        OverdueScreenBottomActionView(
+            showSelectedOverdueCountView = true,
+            selectedOverdueCount = 10,
+            onShare = {},
+            onDownload = {},
+            onClearSelected = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun OverdueSelectedItemsCountView_Preview() {
-  SimpleTheme {
-    OverdueSelectedItemsCountView(
-        selectedOverdueCount = 12,
-        onClearSelected = {}
-    )
-  }
+    SimpleTheme {
+        OverdueSelectedItemsCountView(
+            selectedOverdueCount = 12,
+            onClearSelected = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DownloadAndShareButtonView_Preview() {
-  SimpleTheme {
-    DownloadAndShareButtonView(
-        onDownload = {},
-        onShare = {},
-    )
-  }
+    SimpleTheme {
+        DownloadAndShareButtonView(
+            onDownload = {},
+            onShare = {},
+        )
+    }
 }

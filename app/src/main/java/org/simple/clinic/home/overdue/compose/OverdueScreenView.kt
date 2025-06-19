@@ -19,6 +19,7 @@ fun OverdueScreenView(
     showDownloadAndShareButton: Boolean,
     showSelectedOverdueCountView: Boolean,
     showEmptyListView: Boolean,
+    showAppointmentSections: Boolean,
     showLoader: Boolean,
     uiModels: List<OverdueUiModel>,
     selectedOverdueCount: Int,
@@ -33,96 +34,100 @@ fun OverdueScreenView(
     onShare: () -> Unit,
 
     ) {
-  Scaffold(
-      bottomBar = {
-        if (showDownloadAndShareButton) {
-          OverdueScreenBottomActionView(
-              showSelectedOverdueCountView = showSelectedOverdueCountView,
-              selectedOverdueCount = selectedOverdueCount,
-              onDownload = onDownload,
-              onShare = onShare,
-              onClearSelected = onClearSelected
-          )
+    Scaffold(
+        bottomBar = {
+            if (showDownloadAndShareButton) {
+                OverdueScreenBottomActionView(
+                    showSelectedOverdueCountView = showSelectedOverdueCountView,
+                    selectedOverdueCount = selectedOverdueCount,
+                    onDownload = onDownload,
+                    onShare = onShare,
+                    onClearSelected = onClearSelected
+                )
+            }
         }
-      }
 
-  ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
     ) {
-      if (showLoader) {
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-          CircularProgressIndicator()
+            if (showLoader) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            if (showEmptyListView) {
+                OverdueScreenEmptyView()
+            }
+
+            if (showAppointmentSections) {
+                OverdueAppointmentSections(
+                    modifier = Modifier.fillMaxSize(),
+                    uiModels = uiModels,
+                    onCallClicked = onCall,
+                    onRowClicked = onOpen,
+                    onCheckboxClicked = onToggleSelection,
+                    onSearch = onSearch,
+                    onSectionHeaderClick = onToggleSection,
+                    onSectionFooterClick = onToggleFooter
+                )
+            }
         }
-      }
-
-      OverdueAppointmentListItem(
-          modifier = Modifier.fillMaxSize(),
-          uiModels = uiModels,
-          onCallClicked = onCall,
-          onRowClicked = onOpen,
-          onCheckboxClicked = onToggleSelection,
-          onSearch = onSearch,
-          onSectionHeaderClick = onToggleSection,
-          onSectionFooterClick = onToggleFooter
-      )
-
-      if (showEmptyListView) {
-        OverdueScreenEmptyView()
-      }
     }
-  }
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun OverdueScreenEmptyViewPreview(modifier: Modifier = Modifier) {
-  SimpleTheme {
-    OverdueScreenView(
-        showDownloadAndShareButton = true,
-        showSelectedOverdueCountView = false,
-        showEmptyListView = false,
-        showLoader = false,
-        uiModels = emptyList(),
-        selectedOverdueCount = 0,
-        onCall = {},
-        onOpen = {},
-        onToggleSelection = {},
-        onSearch = {},
-        onToggleSection = {},
-        onToggleFooter = {},
-        onClearSelected = {},
-        onDownload = {},
-        onShare = {}
-    )
-  }
+    SimpleTheme {
+        OverdueScreenView(
+            showDownloadAndShareButton = true,
+            showSelectedOverdueCountView = false,
+            showEmptyListView = false,
+            showLoader = false,
+            showAppointmentSections = false,
+            uiModels = emptyList(),
+            selectedOverdueCount = 0,
+            onCall = {},
+            onOpen = {},
+            onToggleSelection = {},
+            onSearch = {},
+            onToggleSection = {},
+            onToggleFooter = {},
+            onClearSelected = {},
+            onDownload = {},
+            onShare = {}
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun OverdueScreenLoaderViewPreview(modifier: Modifier = Modifier) {
-  SimpleTheme {
-    OverdueScreenView(
-        showDownloadAndShareButton = false,
-        showSelectedOverdueCountView = false,
-        showEmptyListView = false,
-        showLoader = true,
-        uiModels = emptyList(),
-        selectedOverdueCount = 0,
-        onCall = {},
-        onOpen = {},
-        onToggleSelection = {},
-        onSearch = {},
-        onToggleSection = {},
-        onToggleFooter = {},
-        onClearSelected = {},
-        onDownload = {},
-        onShare = {}
-    )
-  }
+    SimpleTheme {
+        OverdueScreenView(
+            showDownloadAndShareButton = false,
+            showSelectedOverdueCountView = false,
+            showEmptyListView = false,
+            showLoader = true,
+            showAppointmentSections = false,
+            uiModels = emptyList(),
+            selectedOverdueCount = 0,
+            onCall = {},
+            onOpen = {},
+            onToggleSelection = {},
+            onSearch = {},
+            onToggleSection = {},
+            onToggleFooter = {},
+            onClearSelected = {},
+            onDownload = {},
+            onShare = {}
+        )
+    }
 }

@@ -25,7 +25,7 @@ import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
 import java.util.UUID
 
 @Composable
-fun OverdueAppointmentListItem(
+fun OverdueAppointmentSections(
     modifier: Modifier = Modifier,
     uiModels: List<OverdueUiModel>,
     onCallClicked: (UUID) -> Unit,

@@ -20,6 +20,6 @@ interface OverdueUi {
   fun showNoOverduePatientsView()
   fun hideNoOverduePatientsView()
 
-  fun showOverdueRecyclerView()
-  fun hideOverdueRecyclerView()
+  fun showOverdueAppointmentSections()
+  fun hideOverdueAppointmentSections()
 }

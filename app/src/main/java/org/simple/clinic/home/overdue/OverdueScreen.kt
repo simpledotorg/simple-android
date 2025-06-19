@@ -127,6 +127,7 @@ class OverdueScreen : BaseScreen<
   private var uiModelsState by mutableStateOf<List<OverdueUiModel>>(emptyList())
   private var showLoader by mutableStateOf(false)
   private var showEmptyListView by mutableStateOf(false)
+  private var showAppointmentSections by mutableStateOf(false)
   private var showDownloadAndShareButton by mutableStateOf(false)
   private var showSelectedOverdueCountView by mutableStateOf(false)
   private var selectedOverdueCount by mutableIntStateOf(0)
@@ -185,6 +186,7 @@ class OverdueScreen : BaseScreen<
               showSelectedOverdueCountView = showSelectedOverdueCountView,
               showEmptyListView = showEmptyListView,
               showLoader = showLoader,
+              showAppointmentSections = showAppointmentSections,
               selectedOverdueCount = selectedOverdueCount,
               uiModels = uiModelsState,
               onCall = { composeUiEvents.onNext(CallPatientClicked(it)) },
@@ -296,12 +298,12 @@ class OverdueScreen : BaseScreen<
     showEmptyListView = false
   }
 
-  override fun showOverdueRecyclerView() {
-    composeView.visibility = View.VISIBLE
+  override fun showOverdueAppointmentSections() {
+    showAppointmentSections = true
   }
 
-  override fun hideOverdueRecyclerView() {
-    composeView.visibility = View.GONE
+  override fun hideOverdueAppointmentSections() {
+    showAppointmentSections = false
   }
 
   override fun openOverdueSearch() {

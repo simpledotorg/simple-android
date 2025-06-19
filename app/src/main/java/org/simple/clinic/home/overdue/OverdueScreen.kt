@@ -27,7 +27,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
@@ -180,26 +179,24 @@ class OverdueScreen : BaseScreen<
           ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
       )
       setContent {
-        SimpleTheme {
-          OverdueScreenView(
-              showDownloadAndShareButton = showDownloadAndShareButton,
-              showSelectedOverdueCountView = showSelectedOverdueCountView,
-              showEmptyListView = showEmptyListView,
-              showLoader = showLoader,
-              showAppointmentSections = showAppointmentSections,
-              selectedOverdueCount = selectedOverdueCount,
-              uiModels = uiModelsState,
-              onCall = { composeUiEvents.onNext(CallPatientClicked(it)) },
-              onOpen = { composeUiEvents.onNext(OverduePatientClicked(it)) },
-              onToggleSelection = { composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(it)) },
-              onSearch = { composeUiEvents.onNext(OverdueSearchButtonClicked) },
-              onToggleSection = { composeUiEvents.onNext(ChevronClicked(it)) },
-              onToggleFooter = { composeUiEvents.onNext(PendingListFooterClicked) },
-              onClearSelected = { composeUiEvents.onNext(ClearSelectedOverdueAppointmentsClicked) },
-              onDownload = { composeUiEvents.onNext(DownloadOverdueListClicked()) },
-              onShare = { composeUiEvents.onNext(ShareOverdueListClicked()) }
-          )
-        }
+        OverdueScreenView(
+            showDownloadAndShareButton = showDownloadAndShareButton,
+            showSelectedOverdueCountView = showSelectedOverdueCountView,
+            showEmptyListView = showEmptyListView,
+            showLoader = showLoader,
+            showAppointmentSections = showAppointmentSections,
+            selectedOverdueCount = selectedOverdueCount,
+            uiModels = uiModelsState,
+            onCall = { composeUiEvents.onNext(CallPatientClicked(it)) },
+            onOpen = { composeUiEvents.onNext(OverduePatientClicked(it)) },
+            onToggleSelection = { composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(it)) },
+            onSearch = { composeUiEvents.onNext(OverdueSearchButtonClicked) },
+            onToggleSection = { composeUiEvents.onNext(ChevronClicked(it)) },
+            onToggleFooter = { composeUiEvents.onNext(PendingListFooterClicked) },
+            onClearSelected = { composeUiEvents.onNext(ClearSelectedOverdueAppointmentsClicked) },
+            onDownload = { composeUiEvents.onNext(DownloadOverdueListClicked()) },
+            onShare = { composeUiEvents.onNext(ShareOverdueListClicked()) }
+        )
       }
     }
   }

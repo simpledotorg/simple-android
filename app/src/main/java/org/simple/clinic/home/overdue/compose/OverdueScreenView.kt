@@ -3,8 +3,9 @@ package org.simple.clinic.home.overdue.compose
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,7 +14,7 @@ import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
 import java.util.UUID
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OverdueScreenView(
     showDownloadAndShareButton: Boolean,
@@ -34,48 +35,52 @@ fun OverdueScreenView(
     onShare: () -> Unit,
 
     ) {
-    Scaffold(
-        bottomBar = {
-            if (showDownloadAndShareButton) {
-                OverdueScreenBottomActionView(
-                    showSelectedOverdueCountView = showSelectedOverdueCountView,
-                    selectedOverdueCount = selectedOverdueCount,
-                    onDownload = onDownload,
-                    onShare = onShare,
-                    onClearSelected = onClearSelected
-                )
-            }
-        }
-
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            if (showLoader) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+    SimpleTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            backgroundColor = SimpleTheme.colors.material.background,
+            bottomBar = {
+                if (showDownloadAndShareButton) {
+                    OverdueScreenBottomActionView(
+                        showSelectedOverdueCountView = showSelectedOverdueCountView,
+                        selectedOverdueCount = selectedOverdueCount,
+                        onDownload = onDownload,
+                        onShare = onShare,
+                        onClearSelected = onClearSelected
+                    )
                 }
             }
 
-            if (showEmptyListView) {
-                OverdueScreenEmptyView()
-            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                if (showLoader) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
 
-            if (showAppointmentSections) {
-                OverdueAppointmentSections(
-                    modifier = Modifier.fillMaxSize(),
-                    uiModels = uiModels,
-                    onCallClicked = onCall,
-                    onRowClicked = onOpen,
-                    onCheckboxClicked = onToggleSelection,
-                    onSearch = onSearch,
-                    onSectionHeaderClick = onToggleSection,
-                    onSectionFooterClick = onToggleFooter
-                )
+                if (showEmptyListView) {
+                    OverdueScreenEmptyView()
+                }
+
+                if (showAppointmentSections) {
+                    OverdueAppointmentSections(
+                        modifier = Modifier.fillMaxSize(),
+                        uiModels = uiModels,
+                        onCallClicked = onCall,
+                        onRowClicked = onOpen,
+                        onCheckboxClicked = onToggleSelection,
+                        onSearch = onSearch,
+                        onSectionHeaderClick = onToggleSection,
+                        onSectionFooterClick = onToggleFooter
+                    )
+                }
             }
         }
     }

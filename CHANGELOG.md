@@ -14,6 +14,7 @@
 - Migrate `OverdueScreen` patient list to Jetpack Compose
 - Migrate blood pressure summary view to Jetpack Compose
 - Migrate blood sugar summary view to Jetpack Compose
+- Migrate medical history summary view to Jetpack Compose
 
 ### Fixes
 

@@ -3,32 +3,32 @@ package org.simple.clinic.summary.medicalhistory
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.MedicalhistorySummaryViewBinding
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.medicalhistory.ui.MedicalHistorySummary
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -39,36 +39,11 @@ class MedicalHistorySummaryView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), MedicalHistorySummaryUi, PatientSummaryChildView {
 
-  private var binding: MedicalhistorySummaryViewBinding? = null
-
-  private val heartAttackQuestionView
-    get() = binding!!.heartAttackQuestionView
-
-  private val strokeQuestionView
-    get() = binding!!.strokeQuestionView
-
-  private val kidneyDiseaseQuestionView
-    get() = binding!!.kidneyDiseaseQuestionView
-
-  private val diabetesQuestionView
-    get() = binding!!.diabetesQuestionView
-
-  private val hypertensionDiagnosisView
-    get() = binding!!.hypertensionDiagnosisView
-
-  private val diabetesDiagnosisView
-    get() = binding!!.diabetesDiagnosisView
-
-  private val diagnosisViewContainer
-    get() = binding!!.diagnosisViewContainer
-
-  private val currentSmokerQuestionView
-    get() = binding!!.currentSmokerQuestionView
-
-  private val currentSmokerQuestionContainer
-    get() = binding!!.currentSmokerQuestionContainer
-
   private val internalEvents = PublishSubject.create<MedicalHistorySummaryEvent>()
+
+  private var medicalHistory by mutableStateOf<MedicalHistory?>(null)
+  private var diabetesManagementEnabled by mutableStateOf(false)
+  private var showSmokerQuestion by mutableStateOf(false)
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -81,11 +56,6 @@ class MedicalHistorySummaryView(
 
   @Inject
   lateinit var features: Features
-
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = MedicalhistorySummaryViewBinding.inflate(layoutInflater, this, true)
-  }
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
@@ -127,6 +97,31 @@ class MedicalHistorySummaryView(
     }
 
     context.injector<MedicalHistorySummaryViewInjector>().inject(this)
+
+    addView(ComposeView(context).apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+
+      setContent {
+        SimpleTheme {
+          AnimatedVisibility(
+              visible = medicalHistory != null
+          ) {
+            MedicalHistorySummary(
+                hypertensionAnswer = medicalHistory?.diagnosedWithHypertension,
+                diabetesAnswer = medicalHistory?.diagnosedWithDiabetes,
+                heartAttackAnswer = medicalHistory?.hasHadHeartAttack,
+                strokeAnswer = medicalHistory?.hasHadStroke,
+                kidneyAnswer = medicalHistory?.hasHadKidneyDisease,
+                smokerAnswer = medicalHistory?.isSmoking,
+                diabetesManagementEnabled = diabetesManagementEnabled,
+                showSmokerQuestion = showSmokerQuestion,
+            ) { question, answer ->
+              answerToggled(question, answer)
+            }
+          }
+        }
+      }
+    })
   }
 
   override fun onAttachedToWindow() {
@@ -150,50 +145,23 @@ class MedicalHistorySummaryView(
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated)
 
   override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
-    renderMedicalHistory(medicalHistory)
-    renderDiagnosis(medicalHistory)
-  }
-
-  private fun renderMedicalHistory(medicalHistory: MedicalHistory) {
-    heartAttackQuestionView.render(HasHadAHeartAttack, medicalHistory.hasHadHeartAttack, ::answerToggled)
-    strokeQuestionView.render(HasHadAStroke, medicalHistory.hasHadStroke, ::answerToggled)
-    kidneyDiseaseQuestionView.render(HasHadAKidneyDisease, medicalHistory.hasHadKidneyDisease, ::answerToggled)
-    diabetesQuestionView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
-    currentSmokerQuestionView.render(IsSmoking, medicalHistory.isSmoking, ::answerToggled)
-  }
-
-  private fun renderDiagnosis(medicalHistory: MedicalHistory) {
-    hypertensionDiagnosisView.render(DiagnosedWithHypertension, medicalHistory.diagnosedWithHypertension, ::answerToggled)
-    diabetesDiagnosisView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+    this.medicalHistory = medicalHistory
   }
 
   override fun showDiagnosisView() {
-    diagnosisViewContainer.visibility = VISIBLE
-    diabetesDiagnosisView.hideDivider()
+    this.diabetesManagementEnabled = true
   }
 
   override fun hideDiagnosisView() {
-    diagnosisViewContainer.visibility = GONE
-  }
-
-  override fun showDiabetesHistorySection() {
-    diabetesQuestionView.visibility = VISIBLE
-    kidneyDiseaseQuestionView.showDivider()
-    diabetesQuestionView.hideDivider()
-  }
-
-  override fun hideDiabetesHistorySection() {
-    diabetesQuestionView.visibility = GONE
-    kidneyDiseaseQuestionView.hideDivider()
+    this.diabetesManagementEnabled = false
   }
 
   override fun showCurrentSmokerQuestion() {
-    currentSmokerQuestionContainer.visibility = VISIBLE
-    currentSmokerQuestionView.hideDivider()
+    showSmokerQuestion = true
   }
 
   override fun hideCurrentSmokerQuestion() {
-    currentSmokerQuestionContainer.visibility = GONE
+    showSmokerQuestion = false
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

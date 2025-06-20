@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -34,7 +34,7 @@ import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
-import org.simple.clinic.home.overdue.compose.OverdueAppointmentListItem
+import org.simple.clinic.home.overdue.compose.OverdueScreenView
 import org.simple.clinic.home.overdue.compose.OverdueUiModel
 import org.simple.clinic.home.overdue.compose.OverdueUiModelMapper
 import org.simple.clinic.home.overdue.search.OverdueSearchScreen
@@ -53,9 +53,7 @@ import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -107,7 +105,7 @@ class OverdueScreen : BaseScreen<
   lateinit var lastSyncedState: Preference<LastSyncedState>
 
   @Inject
-  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<OverdueEvent>
 
   @Inject
   lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
@@ -117,38 +115,20 @@ class OverdueScreen : BaseScreen<
 
   private val disposable = CompositeDisposable()
 
-  private val viewForEmptyList
-    get() = binding.viewForEmptyList
-
   private val composeView
     get() = binding.composeView
-
-  private val overdueProgressBar
-    get() = binding.overdueProgressBar
-
-  private val buttonsFrame
-    get() = binding.buttonsFrame
-
-  private val downloadOverdueListButton
-    get() = binding.downloadOverdueListButton
-
-  private val shareOverdueListButton
-    get() = binding.shareOverdueListButton
-
-  private val selectedOverdueCountView
-    get() = binding.selectedOverdueCountView
-
-  private val selectedOverdueAppointmentsCountTextView
-    get() = binding.selectedOverdueAppointmentsTextView
-
-  private val clearSelectedOverdueAppointmentsButton
-    get() = binding.clearSelectedOverdueAppointmentsButton
 
   private val isOverdueListDownloadAndShareEnabled by unsafeLazy {
     country.isoCountryCode == Country.INDIA
   }
 
   private var uiModelsState by mutableStateOf<List<OverdueUiModel>>(emptyList())
+  private var showLoader by mutableStateOf(false)
+  private var showEmptyListView by mutableStateOf(false)
+  private var showAppointmentSections by mutableStateOf(false)
+  private var showDownloadAndShareButton by mutableStateOf(false)
+  private var showSelectedOverdueCountView by mutableStateOf(false)
+  private var selectedOverdueCount by mutableIntStateOf(0)
 
   override fun defaultModel() = OverdueModel.create()
 
@@ -160,9 +140,6 @@ class OverdueScreen : BaseScreen<
   private val composeUiEvents = PublishSubject.create<OverdueEvent>()
 
   override fun events() = Observable.mergeArray(
-      downloadOverdueListClicks(),
-      shareOverdueListClicks(),
-      clearSelectedOverdueAppointmentClicks(),
       composeUiEvents,
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -196,33 +173,28 @@ class OverdueScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    buttonsFrame.applyInsetsBottomPadding()
-
     composeView.apply {
       setViewCompositionStrategy(
           ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
       )
       setContent {
-        OverdueAppointmentListItem(
+        OverdueScreenView(
+            showDownloadAndShareButton = showDownloadAndShareButton,
+            showSelectedOverdueCountView = showSelectedOverdueCountView,
+            showEmptyListView = showEmptyListView,
+            showLoader = showLoader,
+            showAppointmentSections = showAppointmentSections,
+            selectedOverdueCount = selectedOverdueCount,
             uiModels = uiModelsState,
-            onCallClicked = { patientId ->
-              composeUiEvents.onNext(CallPatientClicked(patientId))
-            },
-            onRowClicked = { patientId ->
-              composeUiEvents.onNext(OverduePatientClicked(patientId))
-            },
-            onCheckboxClicked = { appointmentUuid ->
-              composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(appointmentUuid))
-            },
-            onSearch = {
-              composeUiEvents.onNext(OverdueSearchButtonClicked)
-            },
-            onSectionHeaderClick = { overdueAppointmentSectionTitle ->
-              composeUiEvents.onNext(ChevronClicked(overdueAppointmentSectionTitle))
-            },
-            onSectionFooterClick = {
-              composeUiEvents.onNext(PendingListFooterClicked)
-            }
+            onCall = { composeUiEvents.onNext(CallPatientClicked(it)) },
+            onOpen = { composeUiEvents.onNext(OverduePatientClicked(it)) },
+            onToggleSelection = { composeUiEvents.onNext(OverdueAppointmentCheckBoxClicked(it)) },
+            onSearch = { composeUiEvents.onNext(OverdueSearchButtonClicked) },
+            onToggleSection = { composeUiEvents.onNext(ChevronClicked(it)) },
+            onToggleFooter = { composeUiEvents.onNext(PendingListFooterClicked) },
+            onClearSelected = { composeUiEvents.onNext(ClearSelectedOverdueAppointmentsClicked) },
+            onDownload = { composeUiEvents.onNext(DownloadOverdueListClicked()) },
+            onShare = { composeUiEvents.onNext(ShareOverdueListClicked()) }
         )
       }
     }
@@ -286,7 +258,7 @@ class OverdueScreen : BaseScreen<
     )
 
     if (isOverdueListDownloadAndShareEnabled) {
-      buttonsFrame.visibility = View.VISIBLE
+      showDownloadAndShareButton = true
     }
   }
 
@@ -295,60 +267,44 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun showSelectedOverdueAppointmentCount(selectedOverdueAppointments: Int) {
-    selectedOverdueCountView.visibility = View.VISIBLE
-    selectedOverdueAppointmentsCountTextView.text = getString(R.string.selected_overdue_count, selectedOverdueAppointments)
+    showSelectedOverdueCountView = true
+    selectedOverdueCount = selectedOverdueAppointments
   }
 
   override fun hideSelectedOverdueAppointmentCount() {
-    selectedOverdueCountView.visibility = View.GONE
+    showSelectedOverdueCountView = false
   }
 
   override fun showProgress() {
-    overdueProgressBar.visibility = View.VISIBLE
+    showLoader = true
   }
 
   override fun hideProgress() {
-    overdueProgressBar.visibility = View.GONE
+    showLoader = false
   }
 
   override fun showNoOverduePatientsView() {
-    viewForEmptyList.visibility = View.VISIBLE
+    showEmptyListView = true
     if (isOverdueListDownloadAndShareEnabled) {
-      buttonsFrame.visibility = View.GONE
+      showDownloadAndShareButton = false
     }
   }
 
   override fun hideNoOverduePatientsView() {
-    viewForEmptyList.visibility = View.GONE
+    showEmptyListView = false
   }
 
-  override fun showOverdueRecyclerView() {
-    composeView.visibility = View.VISIBLE
+  override fun showOverdueAppointmentSections() {
+    showAppointmentSections = true
   }
 
-  override fun hideOverdueRecyclerView() {
-    composeView.visibility = View.GONE
+  override fun hideOverdueAppointmentSections() {
+    showAppointmentSections = false
   }
 
   override fun openOverdueSearch() {
     router.push(OverdueSearchScreen.Key())
   }
-
-  private fun downloadOverdueListClicks(): Observable<UiEvent> {
-    return downloadOverdueListButton
-        .clicks()
-        .map { DownloadOverdueListClicked() }
-  }
-
-  private fun shareOverdueListClicks(): Observable<UiEvent> {
-    return shareOverdueListButton
-        .clicks()
-        .map { ShareOverdueListClicked() }
-  }
-
-  private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton
-      .clicks()
-      .map { ClearSelectedOverdueAppointmentsClicked }
 
   interface Injector {
     fun inject(target: OverdueScreen)

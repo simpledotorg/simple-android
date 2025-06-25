@@ -15,6 +15,7 @@
 - Migrate blood pressure summary view to Jetpack Compose
 - Migrate blood sugar summary view to Jetpack Compose
 - Migrate medical history summary view to Jetpack Compose
+- Replace `traceur` library with `rxjava3-extension`
 
 ### Fixes
 

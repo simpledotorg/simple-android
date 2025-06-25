@@ -192,7 +192,7 @@ threeten-extra = "org.threeten:threeten-extra:1.8.0"
 
 timber = "com.jakewharton.timber:timber:5.0.1"
 
-traceur = "com.github.qoqa:Traceur:2.2.12"
+rx-java-extensions = "com.github.akarnokd:rxjava3-extensions:3.1.1"
 
 truth = "com.google.truth:truth:1.4.4"
 

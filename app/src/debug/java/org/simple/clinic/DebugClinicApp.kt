@@ -10,7 +10,7 @@ import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 import com.facebook.soloader.SoLoader
-import com.tspoon.traceur.Traceur
+import hu.akarnokd.rxjava3.debug.RxJavaAssemblyTracking
 import io.github.inflationx.viewpump.ViewPump
 import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
 import org.simple.clinic.di.AppComponent
@@ -44,7 +44,7 @@ class DebugClinicApp : ClinicApp() {
 
   override fun onCreate() {
     addStrictModeChecks()
-    Traceur.enableLogging()
+    RxJavaAssemblyTracking.enable()
     super.onCreate()
     SoLoader.init(this, false)
 

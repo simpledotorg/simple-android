@@ -28,6 +28,7 @@
 - Update manifest payload to move countries to top level and add version field
 - Bump Open CSV to v5.11
 - Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
+- Replace `traceur` library with `rxjava3-extension`
 
 ### Features
 

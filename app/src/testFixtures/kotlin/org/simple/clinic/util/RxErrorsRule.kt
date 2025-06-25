@@ -1,6 +1,6 @@
 package org.simple.clinic.util
 
-import com.tspoon.traceur.Traceur
+import hu.akarnokd.rxjava3.debug.RxJavaAssemblyTracking
 import io.reactivex.plugins.RxJavaPlugins
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -25,14 +25,14 @@ class RxErrorsRule : TestRule {
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
-        Traceur.enableLogging()
+        RxJavaAssemblyTracking.enable()
         RxJavaPlugins.setErrorHandler { t -> errors.add(t) }
 
         try {
           base.evaluate()
 
         } finally {
-          Traceur.disableLogging()
+          RxJavaAssemblyTracking.disable()
           RxJavaPlugins.setErrorHandler(null)
           assertNoErrors()
         }

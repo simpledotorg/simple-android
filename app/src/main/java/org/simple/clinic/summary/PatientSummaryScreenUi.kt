@@ -3,8 +3,8 @@ package org.simple.clinic.summary
 import org.simple.clinic.cvdrisk.StatinInfo
 
 interface PatientSummaryScreenUi {
+  fun renderPatientSummaryToolbar(patientSummaryProfile: PatientSummaryProfile)
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile)
-  fun showEditButton()
   fun showDiabetesView()
   fun hideDiabetesView()
   fun showTeleconsultButton()

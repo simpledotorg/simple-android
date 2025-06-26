@@ -18,6 +18,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.util.applyStatusBarMargin
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import javax.inject.Inject
@@ -81,6 +82,7 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    loaderBack.applyStatusBarMargin()
     loaderBack.setOnClickListener {
       router.pop()
     }

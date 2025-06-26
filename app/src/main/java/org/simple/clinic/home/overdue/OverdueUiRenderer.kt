@@ -35,17 +35,17 @@ class OverdueUiRenderer(private val ui: OverdueUi) : ViewRenderer<OverdueModel> 
 
   private fun renderOverdueListLoadingViews() {
     ui.showProgress()
-    ui.hideOverdueRecyclerView()
+    ui.hideOverdueAppointmentSections()
     ui.hideNoOverduePatientsView()
   }
 
   private fun renderOverdueListLoadedViews(model: OverdueModel) {
     if (model.isOverdueAppointmentSectionsListEmpty) {
       ui.showNoOverduePatientsView()
-      ui.hideOverdueRecyclerView()
+      ui.hideOverdueAppointmentSections()
     } else {
       ui.hideNoOverduePatientsView()
-      ui.showOverdueRecyclerView()
+      ui.showOverdueAppointmentSections()
     }
   }
 }

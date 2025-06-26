@@ -4,6 +4,21 @@
 
 ### Internal
 
+- Handle window insets when displaying app content in edge-to-edge
+- Enable edge-to-edge support on all versions of Android
+- Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
+- Add Compose components for Overdue screen
+- Migrate medicines summary view to Jetpack Compose
+- Migrate codeclimate config to qlty.sh config
+- Migrate `OverdueScreen` to Jetpack Compose
+- Migrate blood pressure summary view to Jetpack Compose
+- Migrate blood sugar summary view to Jetpack Compose
+- Migrate medical history summary view to Jetpack Compose
+
+## 2025.05.20
+
+### Internal
+
 - Bump Gson to v2.13.1
 - Bump AndroidX Camera to v1.4.2
 - Bump AndroidX Paging to v3.3.6
@@ -27,6 +42,7 @@
 - Increase lab based risk threshold to 20%
 - Update manifest payload to move countries to top level and add version field
 - Bump Open CSV to v5.11
+- Update lab based statin translations for `si-LK`, `ta-LK`
 - Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
 - Replace `traceur` library with `rxjava3-extension`
 

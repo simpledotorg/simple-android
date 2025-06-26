@@ -6,9 +6,6 @@ interface MedicalHistorySummaryUi {
   fun populateMedicalHistory(medicalHistory: MedicalHistory)
   fun showDiagnosisView()
   fun hideDiagnosisView()
-  fun showDiabetesHistorySection()
-  fun hideDiabetesHistorySection()
   fun showCurrentSmokerQuestion()
   fun hideCurrentSmokerQuestion()
-
 }

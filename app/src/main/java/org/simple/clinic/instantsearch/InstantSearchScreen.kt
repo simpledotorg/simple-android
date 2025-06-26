@@ -54,6 +54,9 @@ import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomPadding
+import org.simple.clinic.util.applyStatusBarPadding
+import org.simple.clinic.util.lightStatusBar
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
@@ -107,6 +110,9 @@ class InstantSearchScreen :
   private val loadStateChanges = PublishSubject.create<SearchResultsLoadStateChanged>()
   private val lifecycleEvents = PublishSubject.create<UiEvent>()
 
+  private val appbar
+    get() = binding.instantSearchAppBar
+
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
 
@@ -115,6 +121,9 @@ class InstantSearchScreen :
 
   private val searchResultsView
     get() = binding.searchResultsView
+
+  private val newPatientContainer
+    get() = binding.newPatientContainer
 
   private val newPatientButton
     get() = binding.newPatientButton
@@ -196,6 +205,8 @@ class InstantSearchScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    appbar.applyStatusBarPadding()
+    newPatientContainer.applyInsetsBottomPadding()
 
     instantSearchToolbar.setNavigationOnClickListener {
       router.pop()
@@ -213,6 +224,16 @@ class InstantSearchScreen :
   override fun onStart() {
     super.onStart()
     lifecycleEvents.onNext(InstantSearchScreenShown)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    lightStatusBar(enabled = true)
+  }
+
+  override fun onStop() {
+    lightStatusBar(enabled = false)
+    super.onStop()
   }
 
   override fun onDestroyView() {

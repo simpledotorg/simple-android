@@ -92,10 +92,10 @@ class BloodSugarSummaryViewUpdateTest {
 
     spec
         .given(defaultModel.summaryFetched(bloodSugars))
-        .whenEvent(BloodSugarClicked(bloodSugarMeasurement))
+        .whenEvent(BloodSugarClicked(bloodSugarMeasurement.uuid, bloodSugarMeasurement.reading.type))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenBloodSugarUpdateSheet(bloodSugarMeasurement) as BloodSugarSummaryViewEffect)
+            hasEffects(OpenBloodSugarUpdateSheet(bloodSugarMeasurement.uuid, bloodSugarMeasurement.reading.type) as BloodSugarSummaryViewEffect)
         ))
   }
 

@@ -48,6 +48,8 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.BitmapUtils
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.applyInsetsBottomMargin
+import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -90,6 +92,9 @@ class ScanSimpleIdScreen : BaseScreen<
 
   @Inject
   lateinit var viewEffectHandlerFactory: ScanSimpleIdViewEffectHandler.Factory
+
+  private val appbar
+    get() = binding.appbarLayout
 
   private val toolBar
     get() = binding.toolBar
@@ -152,6 +157,8 @@ class ScanSimpleIdScreen : BaseScreen<
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     binding.root.hideKeyboard()
+    appbar.applyStatusBarPadding()
+    enteredCodeContainer.applyInsetsBottomMargin()
     toolBar.setNavigationOnClickListener { router.pop() }
 
     cameraProviderFuture.addListener({

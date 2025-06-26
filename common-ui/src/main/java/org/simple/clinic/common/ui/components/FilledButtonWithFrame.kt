@@ -3,6 +3,8 @@ package org.simple.clinic.common.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,8 @@ fun FilledButtonWithFrame(
           .then(modifier)
           .background(SimpleTheme.colors.material.primaryVariant)
           .padding(12.dp)
+          .navigationBarsPadding()
+          .imePadding()
   ) {
     FilledButton(
         modifier = Modifier

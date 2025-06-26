@@ -96,6 +96,7 @@ fun StatinNudge(
           Spacer(modifier = Modifier.height(16.dp))
           DescriptionText(
               isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+              isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
               statinInfo = statinInfo
           )
 
@@ -262,17 +263,22 @@ fun RiskProgressBar(
 fun DescriptionText(
     statinInfo: StatinInfo,
     isLabBasedStatinNudgeEnabled: Boolean,
+    isNonLabBasedStatinNudgeEnabled: Boolean,
 ) {
   val text = descriptionText(
       isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+      isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
       statinInfo = statinInfo,
   )
 
   val textColor = when {
-    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH || statinInfo.hasDiabetes
-      -> SimpleTheme.colors.material.error
+    statinInfo.hasDiabetes || statinInfo.hasCVD -> SimpleTheme.colors.material.error
+    isLabBasedStatinNudgeEnabled && (statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.VERY_HIGH) -> SimpleTheme.colors.material.error
+    isNonLabBasedStatinNudgeEnabled && (statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH) -> SimpleTheme.colors.material.error
+    isLabBasedStatinNudgeEnabled && (statinInfo.isSmoker == Answer.Unanswered || statinInfo.cholesterol == null) ->
+      SimpleTheme.colors.onSurface67
 
-    statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null || statinInfo.cholesterol == null ->
+    isNonLabBasedStatinNudgeEnabled && (statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null) ->
       SimpleTheme.colors.onSurface67
 
     else -> SimpleTheme.colors.material.error
@@ -294,46 +300,67 @@ fun DescriptionText(
 @Composable
 @ReadOnlyComposable
 private fun descriptionText(
+    isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
     statinInfo: StatinInfo
 ): AnnotatedString {
-  val maxCvdRiskRange = statinInfo.cvdRisk?.max ?: 0
-
   return when {
     statinInfo.hasCVD -> stringResource(R.string.statin_alert_refer_to_doctor)
 
-    statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN && isLabBasedStatinNudgeEnabled.not() ->
+    statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN ->
       stringResource(R.string.statin_alert_refer_to_doctor_diabetic_40)
 
-    statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN && isLabBasedStatinNudgeEnabled && maxCvdRiskRange < LAB_BASED_MIN_REQ_MAX_RISK_RANGE ->
-      stringResource(R.string.statin_alert_refer_to_doctor_diabetic_40)
+    isLabBasedStatinNudgeEnabled -> labBasedDescriptionText(statinInfo)
+    isNonLabBasedStatinNudgeEnabled -> nonLabBasedDescriptionText(statinInfo)
+
+    else -> stringResource(R.string.statin_alert_refer_to_doctor)
+  }.toAnnotatedString()
+}
+
+@Composable
+@ReadOnlyComposable
+private fun labBasedDescriptionText(
+    statinInfo: StatinInfo
+): String {
+  return when {
+
+    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.VERY_HIGH ->
+      stringResource(R.string.statin_alert_refer_to_doctor)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol == null ->
+      stringResource(R.string.statin_alert_add_smoking_and_cholesterol_info)
+
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol != null ->
+      stringResource(R.string.statin_alert_add_smoking_info)
+
+    statinInfo.isSmoker != Answer.Unanswered && statinInfo.cholesterol == null ->
+      stringResource(R.string.statin_alert_add_cholesterol_info)
+
+    else -> stringResource(R.string.statin_alert_refer_to_doctor)
+  }
+}
+
+@Composable
+@ReadOnlyComposable
+private fun nonLabBasedDescriptionText(
+    statinInfo: StatinInfo
+): String {
+  return when {
 
     statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH ->
       stringResource(R.string.statin_alert_refer_to_doctor)
 
-    statinInfo.hasDiabetes && isLabBasedStatinNudgeEnabled ->
-      stringResource(R.string.statin_alert_refer_to_doctor_diabetic)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null && isLabBasedStatinNudgeEnabled.not() ->
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null ->
       stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
 
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null && isLabBasedStatinNudgeEnabled.not() ->
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null ->
       stringResource(R.string.statin_alert_add_smoking_info)
 
-    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null && isLabBasedStatinNudgeEnabled.not() ->
+    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null ->
       stringResource(R.string.statin_alert_add_bmi_info)
 
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol == null && isLabBasedStatinNudgeEnabled ->
-      stringResource(R.string.statin_alert_add_smoking_and_cholesterol_info)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol != null && isLabBasedStatinNudgeEnabled ->
-      stringResource(R.string.statin_alert_add_smoking_info)
-
-    statinInfo.isSmoker != Answer.Unanswered && statinInfo.cholesterol == null && isLabBasedStatinNudgeEnabled ->
-      stringResource(R.string.statin_alert_add_cholesterol_info)
-
     else -> stringResource(R.string.statin_alert_refer_to_doctor)
-  }.toAnnotatedString()
+  }
 }
 
 @Composable

@@ -1093,7 +1093,6 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="statin_alert_at_risk_patient">AT RISK PATIENT</string>
   <string name="statin_alert_refer_to_doctor">Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
   <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetic patient, age above 40. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
-  <string name="statin_alert_refer_to_doctor_diabetic">Diabetic patient. Refer to doctor for &lt;b&gt;statin medicine&lt;/b&gt;</string>
   <string name="statin_alert_add_smoking">Add smoking</string>
   <string name="statin_alert_add_bmi">Add BMI</string>
   <string name="statin_alert_add_cholesterol">Add cholesterol</string>

@@ -375,7 +375,7 @@ dependencies {
 
   implementation(libs.threeten.extra)
 
-  implementation(libs.traceur)
+  implementation(libs.rx.java.extensions)
 
   implementation(libs.uuid.generator)
 
@@ -405,7 +405,7 @@ dependencies {
   testFixturesImplementation(libs.kotlin.stdlib)
   testFixturesImplementation(libs.junit)
   testFixturesImplementation(libs.faker)
-  testFixturesImplementation(libs.traceur)
+  testFixturesImplementation(libs.rx.java.extensions)
   testFixturesImplementation(libs.rx.java)
   testFixturesImplementation(libs.retrofit.retrofit)
   testFixturesImplementation(libs.okhttp.okhttp)

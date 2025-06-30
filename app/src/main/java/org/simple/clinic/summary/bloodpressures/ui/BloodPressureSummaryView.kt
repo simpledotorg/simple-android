@@ -1,25 +1,26 @@
-package org.simple.clinic.summary.bloodpressures.view
+package org.simple.clinic.summary.bloodpressures.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.card.MaterialCardView
-import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
-import org.simple.clinic.databinding.PatientsummaryBpsummaryContentBinding
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -53,7 +54,6 @@ import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.setPaddingBottom
 import java.time.Duration
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -67,20 +67,6 @@ class BloodPressureSummaryView(
     context: Context,
     attrs: AttributeSet
 ) : MaterialCardView(context, attrs), BloodPressureSummaryViewUi, BloodPressureSummaryViewUiActions, PatientSummaryChildView {
-
-  private var binding: PatientsummaryBpsummaryContentBinding? = null
-
-  private val newBPItemContainer
-    get() = binding!!.newBPItemContainer
-
-  private val placeHolderMessageTextView
-    get() = binding!!.placeHolderMessageTextView
-
-  private val seeAll
-    get() = binding!!.seeAll
-
-  private val addNewBP
-    get() = binding!!.addNewBP
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -119,15 +105,13 @@ class BloodPressureSummaryView(
 
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
+  private var summaryItems by mutableStateOf(emptyList<BloodPressureSummaryItem>())
+  private var canShowSeeAllButton by mutableStateOf(false)
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val events: Observable<BloodPressureSummaryViewEvent> by unsafeLazy {
-    Observable
-        .merge(
-            addNewBpClicked(),
-            seeAllClicked(),
-            viewEvents
-        )
+    viewEvents
         .compose(ReportAnalyticsEvents())
         .cast<BloodPressureSummaryViewEvent>()
   }
@@ -153,11 +137,6 @@ class BloodPressureSummaryView(
 
   var bpRecorded: BpRecorded? = null
 
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = PatientsummaryBpsummaryContentBinding.inflate(layoutInflater, this, true)
-  }
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -168,6 +147,28 @@ class BloodPressureSummaryView(
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed }
 
     setupBpRecordedEvents(screenDestroys)
+
+    addView(ComposeView(context).apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+
+      setContent {
+        SimpleTheme {
+          BloodPressureSummary(
+              summaryItems = summaryItems,
+              canShowSeeAllButton = canShowSeeAllButton,
+              onSeeAllClick = {
+                viewEvents.onNext(SeeAllClicked)
+              },
+              onAddBPClick = {
+                viewEvents.onNext(AddNewBloodPressureClicked)
+              },
+              onEditBPClick = { id ->
+                viewEvents.onNext(BloodPressureClicked(id))
+              }
+          )
+        }
+      }
+    })
   }
 
   override fun onAttachedToWindow() {
@@ -188,16 +189,8 @@ class BloodPressureSummaryView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  override fun showNoBloodPressuresView() {
-    newBPItemContainer.visibility = View.GONE
-    placeHolderMessageTextView.visibility = View.VISIBLE
-  }
-
   override fun showBloodPressures(bloodPressures: List<BloodPressureMeasurement>) {
-    newBPItemContainer.visibility = View.VISIBLE
-    placeHolderMessageTextView.visibility = View.GONE
-
-    render(
+    val bpSummaryItems = generateBPSummaryItems(
         measurements = bloodPressures,
         canEditFor = patientSummaryConfig.bpEditableDuration,
         utcClock = utcClock,
@@ -205,14 +198,20 @@ class BloodPressureSummaryView(
         dateFormatter = dateFormatter,
         timeFormatter = timeFormatter
     )
+
+    summaryItems = bpSummaryItems
+  }
+
+  override fun showNoBloodPressuresView() {
+    summaryItems = emptyList()
   }
 
   override fun showSeeAllButton() {
-    seeAll.visibility = View.VISIBLE
+    canShowSeeAllButton = true
   }
 
   override fun hideSeeAllButton() {
-    seeAll.visibility = View.GONE
+    canShowSeeAllButton = false
   }
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID, currentFacility: Facility) {
@@ -248,49 +247,14 @@ class BloodPressureSummaryView(
         .subscribe { bpRecorded?.invoke() }
   }
 
-  private fun addNewBpClicked(): Observable<BloodPressureSummaryViewEvent> {
-    return addNewBP.clicks().map { AddNewBloodPressureClicked }
-  }
-
-  private fun seeAllClicked(): Observable<BloodPressureSummaryViewEvent> {
-    return seeAll.clicks().map { SeeAllClicked }
-  }
-
-  private fun render(
+  private fun generateBPSummaryItems(
       measurements: List<BloodPressureMeasurement>,
       canEditFor: Duration,
       utcClock: UtcClock,
       userClock: UserClock,
       dateFormatter: DateTimeFormatter,
       timeFormatter: DateTimeFormatter
-  ) {
-    val listItemViews = generateBpViews(
-        measurements = measurements,
-        canEditFor = canEditFor,
-        utcClock = utcClock,
-        userClock = userClock,
-        dateFormatter = dateFormatter,
-        timeFormatter = timeFormatter
-    )
-    val itemContainerBottomPadding = if (listItemViews.size > 1) {
-      R.dimen.patientsummary_bp_summary_item_container_bottom_padding_8
-    } else {
-      R.dimen.patientsummary_bp_summary_item_container_bottom_padding_24
-    }
-
-    newBPItemContainer.removeAllViews()
-    listItemViews.forEach(newBPItemContainer::addView)
-    newBPItemContainer.setPaddingBottom(itemContainerBottomPadding)
-  }
-
-  private fun generateBpViews(
-      measurements: List<BloodPressureMeasurement>,
-      canEditFor: Duration,
-      utcClock: UtcClock,
-      userClock: UserClock,
-      dateFormatter: DateTimeFormatter,
-      timeFormatter: DateTimeFormatter
-  ): List<View> {
+  ): List<BloodPressureSummaryItem> {
     val measurementByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
     return measurementByDate.mapValues { (_, measurementsList) ->
@@ -304,15 +268,15 @@ class BloodPressureSummaryView(
           null
         }
 
-        val bloodPressureItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_bp_measurement, this, false) as BloodPressureItemView
-        bloodPressureItemView.render(
-            measurement = measurement,
-            isBpEditable = isBpEditable,
-            bpDate = dateFormatter.format(recordedAt),
-            bpTime = bpTime,
-            editMeasurementClicked = { clickedMeasurement -> viewEvents.onNext(BloodPressureClicked(clickedMeasurement)) }
+        BloodPressureSummaryItem(
+            id = measurement.uuid,
+            systolic = measurement.reading.systolic,
+            diastolic = measurement.reading.diastolic,
+            date = dateFormatter.format(recordedAt),
+            time = bpTime,
+            isHigh = measurement.level.isHigh,
+            canEdit = isBpEditable
         )
-        bloodPressureItemView
       }
     }.values.flatten()
   }

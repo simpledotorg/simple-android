@@ -62,7 +62,7 @@ class OverdueUiRendererTest {
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
     verify(ui).hideNoOverduePatientsView()
-    verify(ui).showOverdueRecyclerView()
+    verify(ui).showOverdueAppointmentSections()
   }
 
   @Test
@@ -107,7 +107,7 @@ class OverdueUiRendererTest {
     verify(ui).showOverdueCount(0)
     verify(ui).hideProgress()
     verify(ui).showNoOverduePatientsView()
-    verify(ui).hideOverdueRecyclerView()
+    verify(ui).hideOverdueAppointmentSections()
   }
 
   @Test
@@ -122,7 +122,7 @@ class OverdueUiRendererTest {
     // then
     verify(ui).showProgress()
     verify(ui).hideNoOverduePatientsView()
-    verify(ui).hideOverdueRecyclerView()
+    verify(ui).hideOverdueAppointmentSections()
   }
 
   @Test
@@ -165,7 +165,7 @@ class OverdueUiRendererTest {
     verify(ui).showOverdueCount(2)
     verify(ui).hideProgress()
     verify(ui).hideNoOverduePatientsView()
-    verify(ui).showOverdueRecyclerView()
+    verify(ui).showOverdueAppointmentSections()
     verify(ui).showSelectedOverdueAppointmentCount(2)
     verifyNoMoreInteractions(ui)
   }
@@ -205,7 +205,7 @@ class OverdueUiRendererTest {
     verify(ui).showOverdueCount(2)
     verify(ui).hideProgress()
     verify(ui).hideNoOverduePatientsView()
-    verify(ui).showOverdueRecyclerView()
+    verify(ui).showOverdueAppointmentSections()
     verify(ui).hideSelectedOverdueAppointmentCount()
     verifyNoMoreInteractions(ui)
   }

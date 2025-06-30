@@ -19,7 +19,7 @@ class BloodPressureSummaryViewUpdate(
       is BloodPressuresCountLoaded -> next(model.bloodPressuresCountLoaded(event.count))
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility), loadBloodPressures(model.patientUuid, event.facility.config))
       is AddNewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid, model.facility!!))
-      is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.measurement))
+      is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.id))
       is SeeAllClicked -> dispatch(ShowBloodPressureHistoryScreen(model.patientUuid))
     }
   }

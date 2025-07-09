@@ -1,11 +1,13 @@
 package org.simple.clinic.common.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
@@ -30,6 +32,7 @@ fun OutlinedButton(
     content: @Composable RowScope.() -> Unit
 ) {
   val minHeight = when (buttonSize) {
+    ButtonSize.ExtraSmall -> 32.dp
     ButtonSize.Small -> 40.dp
     ButtonSize.Default -> 48.dp
     ButtonSize.Big -> 56.dp
@@ -68,6 +71,7 @@ fun FilledButton(
     content: @Composable RowScope.() -> Unit
 ) {
   val minHeight = when (buttonSize) {
+    ButtonSize.ExtraSmall -> 32.dp
     ButtonSize.Small -> 40.dp
     ButtonSize.Default -> 48.dp
     ButtonSize.Big -> 56.dp
@@ -103,6 +107,7 @@ fun TextButton(
     content: @Composable RowScope.() -> Unit
 ) {
   val minHeight = when (buttonSize) {
+    ButtonSize.ExtraSmall -> 32.dp
     ButtonSize.Small -> 40.dp
     ButtonSize.Default -> 48.dp
     ButtonSize.Big -> 56.dp
@@ -134,6 +139,7 @@ sealed interface ButtonSize {
   data object Default : ButtonSize
   data object Big : ButtonSize
   data object Small : ButtonSize
+  data object ExtraSmall : ButtonSize
 }
 
 @Preview(group = "OutlinedButton")

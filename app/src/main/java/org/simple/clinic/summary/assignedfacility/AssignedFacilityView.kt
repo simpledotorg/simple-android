@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,7 +12,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.Observable
 import org.simple.clinic.common.ui.theme.SimpleTheme
-import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.DeferredEventSource
@@ -38,14 +36,7 @@ class AssignedFacilityView(
   var changeAssignedFacilityClicks: ChangeAssignedFacilityClicked? = null
   var assignedFacilityChanges: AssignedFacilityChanges? = null
 
-  private var binding: PatientsummaryAssignedFacilityContentBinding? = null
-
   private var assignedFacilityName by mutableStateOf("")
-
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = PatientsummaryAssignedFacilityContentBinding.inflate(layoutInflater, this, true)
-  }
 
   @Inject
   lateinit var router: Router

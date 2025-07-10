@@ -67,6 +67,7 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.clinicaldecisionsupport.ui.ClinicalDecisionHighBpAlert
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
@@ -200,6 +201,9 @@ class PatientSummaryScreen :
 
   private var showPatientDiedStatusView by mutableStateOf(false)
 
+  private var showClinicalDecisionAlert by mutableStateOf(false)
+  private var animateClinicalDecisionSupportAlert by mutableStateOf(false)
+
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
   }
@@ -302,6 +306,16 @@ class PatientSummaryScreen :
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
         SimpleTheme {
+          ClinicalDecisionHighBpAlert(
+              showAlert = showClinicalDecisionAlert,
+              animateExit = animateClinicalDecisionSupportAlert,
+              modifier = Modifier.padding(
+                  start = dimensionResource(R.dimen.spacing_8),
+                  end = dimensionResource(R.dimen.spacing_8),
+                  top = dimensionResource(R.dimen.spacing_8),
+              ),
+          )
+
           StatinNudge(
               statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
@@ -743,15 +757,17 @@ class PatientSummaryScreen :
   }
 
   override fun showClinicalDecisionSupportAlert() {
-    showWithAnimation(clinicalDecisionSupportAlertView)
+    showClinicalDecisionAlert = true
   }
 
   override fun hideClinicalDecisionSupportAlert() {
-    hideWithAnimation(clinicalDecisionSupportAlertView, R.id.tag_clinical_decision_pending_end_listener)
+    showClinicalDecisionAlert = false
+    animateClinicalDecisionSupportAlert = true
   }
 
   override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
-    clinicalDecisionSupportAlertView.visibility = GONE
+    showClinicalDecisionAlert = false
+    animateClinicalDecisionSupportAlert = false
   }
 
   override fun updateStatinAlert(statinInfo: StatinInfo) {

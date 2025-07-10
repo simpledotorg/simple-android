@@ -20,10 +20,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.transition.AutoTransition
-import androidx.transition.Transition
-import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
@@ -84,7 +80,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.compose.PatientStatusView
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.spring
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -154,9 +149,6 @@ class PatientSummaryScreen :
 
   private val nextAppointmentFacilityView
     get() = binding.nextAppointmentFacilityView
-
-  private val clinicalDecisionSupportAlertView
-    get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
   private val composeView
     get() = binding.composeView
@@ -773,67 +765,6 @@ class PatientSummaryScreen :
   override fun updateStatinAlert(statinInfo: StatinInfo) {
     this.statinInfo = statinInfo
   }
-
-  private fun showWithAnimation(view: View) {
-    view.translationY = view.height.unaryMinus().toFloat()
-
-    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(view, true)
-      // We are doing this to wait for the router transitions to be done before we start this.
-      startDelay = 500
-    }
-    val transitionListener = object : Transition.TransitionListener {
-      override fun onTransitionStart(transition: Transition) {
-      }
-
-      override fun onTransitionEnd(transition: Transition) {
-        transition.removeListener(this)
-        spring.animateToFinalPosition(0f)
-      }
-
-      override fun onTransitionCancel(transition: Transition) {
-      }
-
-      override fun onTransitionPause(transition: Transition) {
-      }
-
-      override fun onTransitionResume(transition: Transition) {
-      }
-    }
-    transition.addListener(transitionListener)
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    view.visibility = VISIBLE
-  }
-
-  private fun hideWithAnimation(view: View, tag: Int) {
-    if (view.visibility != VISIBLE) return
-
-    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
-    (view.getTag(tag) as?
-        DynamicAnimation.OnAnimationEndListener)?.let {
-      spring.removeEndListener(it)
-    }
-
-    val listener = object : DynamicAnimation.OnAnimationEndListener {
-      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
-        spring.removeEndListener(this)
-        view.visibility = GONE
-      }
-    }
-    spring.addEndListener(listener)
-    view.setTag(tag, listener)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(view, true)
-    }
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    spring.animateToFinalPosition(view.height.unaryMinus().toFloat())
-  }
-
 
   override fun showReassignPatientWarningSheet(
       patientUuid: UUID,

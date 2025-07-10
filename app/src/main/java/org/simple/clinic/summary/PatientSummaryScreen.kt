@@ -16,6 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.transition.AutoTransition
@@ -77,6 +80,7 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.compose.PatientStatusView
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.spring
@@ -147,17 +151,14 @@ class PatientSummaryScreen :
   private val doneButtonFrame
     get() = binding.doneButtonFrame
 
-  private val patientDiedStatusView
-    get() = binding.patientDiedStatusView
-
   private val nextAppointmentFacilityView
     get() = binding.nextAppointmentFacilityView
 
   private val clinicalDecisionSupportAlertView
     get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
-  private val statinComposeView
-    get() = binding.statinComposeView
+  private val composeView
+    get() = binding.composeView
 
   @Inject
   lateinit var router: Router
@@ -196,6 +197,8 @@ class PatientSummaryScreen :
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
   private var statinInfo by mutableStateOf(StatinInfo.default())
+
+  private var showPatientDiedStatusView by mutableStateOf(false)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -295,7 +298,7 @@ class PatientSummaryScreen :
 
     subscriptions.add(setupChildViewVisibility())
 
-    statinComposeView.apply {
+    composeView.apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
         SimpleTheme {
@@ -308,6 +311,18 @@ class PatientSummaryScreen :
               addBMIClick = { additionalEvents.notify(AddBMIClicked) },
               addCholesterol = { additionalEvents.notify(AddCholesterolClicked) }
           )
+
+          if (showPatientDiedStatusView) {
+            PatientStatusView(
+                modifier = Modifier.padding(
+                    start = dimensionResource(R.dimen.spacing_8),
+                    end = dimensionResource(R.dimen.spacing_8),
+                    top = dimensionResource(R.dimen.spacing_8),
+                ),
+                text = stringResource(R.string.patient_status_died),
+                icon = painterResource(R.drawable.ic_patient_dead_32dp)
+            )
+          }
         }
       }
     }
@@ -708,11 +723,11 @@ class PatientSummaryScreen :
   }
 
   override fun hidePatientDiedStatus() {
-    patientDiedStatusView.visibility = GONE
+    showPatientDiedStatusView = false
   }
 
   override fun showPatientDiedStatus() {
-    patientDiedStatusView.visibility = VISIBLE
+    showPatientDiedStatusView = true
   }
 
   override fun showNextAppointmentCard() {

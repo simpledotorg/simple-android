@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.Observable
-import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.mobius.DeferredEventSource
@@ -17,6 +21,7 @@ import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.assignedfacility.ui.AssignedFacility
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -31,18 +36,7 @@ class AssignedFacilityView(
   var changeAssignedFacilityClicks: ChangeAssignedFacilityClicked? = null
   var assignedFacilityChanges: AssignedFacilityChanges? = null
 
-  private var binding: PatientsummaryAssignedFacilityContentBinding? = null
-
-  private val assignedFacilityTextView
-    get() = binding!!.assignedFacilityTextView
-
-  private val changeAssignedFacilityButton
-    get() = binding!!.changeAssignedFacilityButton
-
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = PatientsummaryAssignedFacilityContentBinding.inflate(layoutInflater, this, true)
-  }
+  private var assignedFacilityName by mutableStateOf("")
 
   @Inject
   lateinit var router: Router
@@ -83,9 +77,20 @@ class AssignedFacilityView(
     }
 
     context.injector<Injector>().inject(this)
-    changeAssignedFacilityButton.setOnClickListener {
-      changeAssignedFacilityClicks?.invoke()
-    }
+
+    addView(ComposeView(context).apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+
+      setContent {
+        SimpleTheme {
+          AssignedFacility(
+              facilityName = assignedFacilityName
+          ) {
+            changeAssignedFacilityClicks?.invoke()
+          }
+        }
+      }
+    })
   }
 
   override fun onAttachedToWindow() {
@@ -107,7 +112,7 @@ class AssignedFacilityView(
   }
 
   override fun renderAssignedFacilityName(facilityName: String) {
-    assignedFacilityTextView.text = facilityName
+    assignedFacilityName = facilityName
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

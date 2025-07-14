@@ -3,17 +3,18 @@ package org.simple.clinic.summary.nextappointment
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
-import androidx.core.text.buildSpannedString
-import androidx.core.text.color
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.PatientsummaryNextAppointmentCardBinding
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
@@ -23,9 +24,8 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.Unicode
+import org.simple.clinic.summary.nextappointment.ui.NextAppointment
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.unsafeLazy
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -67,19 +67,13 @@ class NextAppointmentCardView(
     LocalDate.now(userClock)
   }
 
-  private var binding: PatientsummaryNextAppointmentCardBinding? = null
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   var nextAppointmentActionClicks: NextAppointmentActionClicked? = null
 
-  private val appointmentDateTextView
-    get() = binding!!.appointmentDateTextView
-
-  private val appointmentFacilityTextView
-    get() = binding!!.appointmentFacilityTextView
-
-  private val nextAppointmentActionsButton
-    get() = binding!!.nextAppointmentActionButton
+  private var appointmentFacilityName by mutableStateOf("")
+  private var actionButtonText by mutableStateOf("")
+  private var appointmentSate by mutableStateOf<NextAppointmentState>(NextAppointmentState.NoAppointment)
 
   private val hotEvents = PublishSubject.create<NextAppointmentEvent>()
 
@@ -105,11 +99,6 @@ class NextAppointmentCardView(
     )
   }
 
-  init {
-    val layoutInflater = LayoutInflater.from(context)
-    binding = PatientsummaryNextAppointmentCardBinding.inflate(layoutInflater, this, true)
-  }
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -117,9 +106,22 @@ class NextAppointmentCardView(
     }
     context.injector<Injector>().inject(this)
 
-    nextAppointmentActionsButton.setOnClickListener {
-      nextAppointmentActionClicks?.invoke()
-    }
+    addView(ComposeView(context).apply {
+      setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+
+      setContent {
+        SimpleTheme {
+          NextAppointment(
+              state = appointmentSate,
+              dateTimeFormatter = fullDateFormatter,
+              facilityName = appointmentFacilityName,
+              actionButtonText = actionButtonText
+          ) {
+            nextAppointmentActionClicks?.invoke()
+          }
+        }
+      }
+    })
   }
 
   override fun onAttachedToWindow() {
@@ -145,78 +147,35 @@ class NextAppointmentCardView(
   }
 
   override fun showNoAppointment() {
-    appointmentDateTextView.text = buildSpannedString {
-      color(context.resolveColor(colorRes = R.color.color_on_surface_67)) {
-        append(context.getString(R.string.next_appointment_none))
-      }
-    }
+    appointmentSate = NextAppointmentState.NoAppointment
   }
 
   override fun showAppointmentDate(date: LocalDate) {
-    appointmentDateTextView.text = buildSpannedString {
-      color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
-        append(fullDateFormatter.format(date))
-      }
-
-      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
-
-      color(context.resolveColor(colorRes = R.color.simple_green_500)) {
-        append(context.getString(R.string.next_appointment_today))
-      }
-    }
+    appointmentSate = NextAppointmentState.Today(date)
   }
 
   override fun showAppointmentDateWithRemainingDays(date: LocalDate, daysRemaining: Int) {
-    appointmentDateTextView.text = buildSpannedString {
-      color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
-        append(fullDateFormatter.format(date))
-      }
-
-      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
-
-      color(context.resolveColor(colorRes = R.color.simple_green_500)) {
-        append(resources.getQuantityString(
-            R.plurals.next_appointment_plurals,
-            daysRemaining,
-            daysRemaining
-        ))
-      }
-    }
+    appointmentSate = NextAppointmentState.Scheduled(date, daysRemaining)
   }
 
   override fun showAppointmentDateWithOverdueDays(date: LocalDate, overdueDays: Int) {
-    appointmentDateTextView.text = buildSpannedString {
-      color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
-        append(fullDateFormatter.format(date))
-      }
-
-      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
-
-      color(context.resolveColor(attrRes = R.attr.colorError)) {
-        append(resources.getQuantityString(
-            R.plurals.next_appointment_overdue_plurals,
-            overdueDays,
-            overdueDays
-        ))
-      }
-    }
+    appointmentSate = NextAppointmentState.Overdue(date, overdueDays)
   }
 
   override fun showAddAppointmentButton() {
-    nextAppointmentActionsButton.text = context.getString(R.string.next_appointment_view_add)
+    actionButtonText = context.getString(R.string.next_appointment_view_add)
   }
 
   override fun showChangeAppointmentButton() {
-    nextAppointmentActionsButton.text = context.getString(R.string.next_appointment_view_change)
+    actionButtonText = context.getString(R.string.next_appointment_view_change)
   }
 
   override fun showAppointmentFacility(name: String) {
-    appointmentFacilityTextView.visibility = View.VISIBLE
-    appointmentFacilityTextView.text = context.getString(R.string.next_appointment_appointment_at_facility, name)
+    appointmentFacilityName = context.getString(R.string.next_appointment_appointment_at_facility, name)
   }
 
   override fun hideAppointmentFacility() {
-    appointmentFacilityTextView.visibility = View.GONE
+    appointmentFacilityName = ""
   }
 
   override fun openScheduleAppointmentSheet(patientUUID: UUID) {

@@ -14,6 +14,9 @@
 - Migrate blood pressure summary view to Jetpack Compose
 - Migrate blood sugar summary view to Jetpack Compose
 - Migrate medical history summary view to Jetpack Compose
+- Migrate assigned facility view to Jetpack Compose
+- Migrate next appointment view to Jetpack Compose
+- Migrate patient status view to Jetpack Compose
 
 ## 2025.05.20
 

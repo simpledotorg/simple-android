@@ -18,6 +18,7 @@
 - Migrate next appointment view to Jetpack Compose
 - Migrate patient status view to Jetpack Compose
 - Migrate clinical decision support alert to Jetpack Compose
+- Bump sqlite-android version to 3.49.0
 
 ## 2025.05.20
 

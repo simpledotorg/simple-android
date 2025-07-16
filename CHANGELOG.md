@@ -20,6 +20,7 @@
 - Migrate clinical decision support alert to Jetpack Compose
 - Bump sqlite-android version to 3.49.0
 - Replace `android-database-sqlcipher` library with `sqlcipher-android`
+- Replace Flipper with Chucker for network inspection
 
 ## 2025.05.20
 

@@ -11,6 +11,7 @@ androidx-viewmodel = "2.8.7"
 androidx-lifecycle = "2.8.7"
 androidx-activity = "1.10.1"
 
+chucker = "4.2.0"
 dagger = "2.56.2"
 
 kotlin = "2.1.20"
@@ -94,6 +95,9 @@ androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmod
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 
 asm = "org.ow2.asm:asm:9.7.1"
+
+chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
 
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }

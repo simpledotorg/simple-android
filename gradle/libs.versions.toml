@@ -13,8 +13,6 @@ androidx-activity = "1.10.1"
 
 dagger = "2.56.2"
 
-flipper = "0.273.0"
-
 kotlin = "2.1.20"
 
 ktlint = "0.36.0"
@@ -108,9 +106,6 @@ faker = "com.github.blocoio:faker:2.0.4"
 firebase-config = "com.google.firebase:firebase-config:22.1.0"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.4.0"
 
-flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
-flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
-
 gson = "com.google.code.gson:gson:2.13.1"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
@@ -184,8 +179,6 @@ sentry-android = "io.sentry:sentry-android:8.11.0"
 
 signaturepad = "com.github.gcacace:signature-pad:1.3.1"
 
-soloader = "com.facebook.soloader:soloader:0.12.1"
-
 sqlite-android = "com.github.requery:sqlite-android:3.49.0"
 
 threeten-extra = "org.threeten:threeten-extra:1.8.0"
@@ -241,8 +234,6 @@ androidx-paging = ["androidx-paging-common", "androidx-paging-runtime", "android
 androidx-room = ["androidx-room-runtime", "androidx-room-rx2", "androidx-room-paging"]
 androidx-test = ["androidx-test-junit", "androidx-test-runner", "androidx-test-rules"]
 androidx-work = ["androidx-work-runtime", "androidx-work-rxjava", "androidx-work-gcm"]
-
-flipper = ["flipper-flipper", "flipper-networkPlugin"]
 
 lint = ["lint-api", "lint-checks"]
 

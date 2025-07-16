@@ -285,9 +285,7 @@ dependencies {
    * Debug dependencies
    */
   debugImplementation(libs.faker)
-  debugImplementation(libs.bundles.flipper)
   debugImplementation(libs.leakcanary)
-  debugImplementation(libs.soloader)
 
   /**
    * Prod dependencies

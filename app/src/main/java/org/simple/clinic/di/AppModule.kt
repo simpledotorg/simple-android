@@ -86,7 +86,6 @@ import javax.inject.Named
   HttpInterceptorsModule::class,
   RetrofitModule::class,
   ClearPatientDataModule::class,
-  FlipperModule::class,
   PinVerificationModule::class,
   SessionModule::class,
   UuidGeneratorModule::class,

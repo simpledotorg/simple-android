@@ -4,13 +4,14 @@ import android.app.Application
 import androidx.room.Room
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.Moshi
-import net.sqlcipher.database.SupportFactory
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.FakeMinimumMemoryChecker
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.storage.DatabaseEncryptor.State.DOES_NOT_EXIST
 import org.simple.clinic.storage.DatabaseEncryptor.State.ENCRYPTED
@@ -19,7 +20,6 @@ import org.simple.clinic.storage.DatabaseEncryptor.State.UNENCRYPTED
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.MinimumMemoryChecker
-import org.simple.clinic.TestData
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -94,7 +94,7 @@ class DatabaseEncryptorTest {
     val encryptedDatabase = Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
         .allowMainThreadQueries()
         .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
-        .openHelperFactory(SupportFactory(passphrase, null, false))
+        .openHelperFactory(SupportOpenHelperFactory(passphrase))
         .build()
 
     val encryptedUser = encryptedDatabase.userDao().userImmediate()
@@ -104,7 +104,7 @@ class DatabaseEncryptorTest {
   }
 
   @Test
-  fun if_device_doesnt_have_min_req_memory_then_skip_database_encryption() {
+  fun if_device_does_not_have_min_req_memory_then_skip_database_encryption() {
     // given
     (minimumMemoryChecker as FakeMinimumMemoryChecker).hasMinMemory = false
 
@@ -113,5 +113,50 @@ class DatabaseEncryptorTest {
 
     // then
     assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(SKIPPED)
+  }
+
+  @Test
+  fun when_database_is_already_encrypted_it_should_do_nothing() {
+    // given
+    val passphrase = databaseEncryptor.passphrase
+    val encryptedDatabase = Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
+        .allowMainThreadQueries()
+        .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
+        .openHelperFactory(SupportOpenHelperFactory(passphrase))
+        .build()
+
+    val expectedUser = TestData.loggedInUser(uuid = UUID.randomUUID())
+    encryptedDatabase.userDao().createOrUpdate(expectedUser)
+    encryptedDatabase.close()
+
+    assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(ENCRYPTED)
+
+    // when
+    databaseEncryptor.execute(databaseName = DB_NAME)
+
+    // then
+    assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(ENCRYPTED)
+
+    val reOpenedEncryptedDb = Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
+        .allowMainThreadQueries()
+        .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
+        .openHelperFactory(SupportOpenHelperFactory(passphrase))
+        .build()
+
+    val actualUser = reOpenedEncryptedDb.userDao().userImmediate()
+    assertThat(actualUser).isEqualTo(expectedUser)
+    reOpenedEncryptedDb.close()
+  }
+
+  @Test
+  fun when_database_does_not_exist_it_should_do_nothing() {
+    // given
+    assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(DOES_NOT_EXIST)
+
+    // when
+    databaseEncryptor.execute(databaseName = DB_NAME)
+
+    // then
+    assertThat(databaseEncryptor.databaseState(DB_NAME)).isEqualTo(DOES_NOT_EXIST)
   }
 }

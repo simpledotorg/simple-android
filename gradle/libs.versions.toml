@@ -43,7 +43,7 @@ composeThemeAdapter = "0.36.0"
 
 ksp = "2.1.20-1.0.31"
 
-sqlCipher = "4.5.4"
+sqlCipher = "4.9.0"
 
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -220,7 +220,7 @@ androidx-compose-livedata = { module = "androidx.compose.runtime:runtime-livedat
 androidx-compose-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
-sqlCipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "sqlCipher" }
+sqlCipher = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlCipher" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

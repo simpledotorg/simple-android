@@ -285,9 +285,8 @@ dependencies {
    * Debug dependencies
    */
   debugImplementation(libs.faker)
-  debugImplementation(libs.bundles.flipper)
   debugImplementation(libs.leakcanary)
-  debugImplementation(libs.soloader)
+  debugImplementation(libs.chucker)
 
   /**
    * Prod dependencies
@@ -476,6 +475,8 @@ dependencies {
   runtimeOnly(libs.jackson.core)
 
   androidTestImplementation(libs.apache.commons.math)
+
+  releaseImplementation(libs.chucker.no.op)
 }
 
 tasks.withType<Test> {

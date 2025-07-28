@@ -6,8 +6,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import net.sqlcipher.database.SQLiteDatabase
-import net.sqlcipher.database.SQLiteStatement
+import net.zetetic.database.sqlcipher.SQLiteDatabase
+import net.zetetic.database.sqlcipher.SQLiteStatement
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.DatabaseEncryptor.State.ENCRYPTED
 import org.simple.clinic.storage.DatabaseEncryptor.State.SKIPPED
@@ -45,7 +45,7 @@ class DatabaseEncryptor @Inject constructor(
       .distinctUntilChanged()
 
   init {
-    SQLiteDatabase.loadLibs(appContext)
+    System.loadLibrary("sqlcipher");
   }
 
   fun execute(databaseName: String) {
@@ -79,7 +79,7 @@ class DatabaseEncryptor @Inject constructor(
     val databasePath = appContext.getDatabasePath(databaseName)
     if (databasePath.exists()) {
       val newFile = File.createTempFile("simple_database_encryption", "tmp", appContext.cacheDir)
-      var db = SQLiteDatabase.openDatabase(databasePath.absolutePath, "", null, SQLiteDatabase.OPEN_READWRITE)
+      var db = SQLiteDatabase.openDatabase(databasePath.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
       val version = db.version
 
       db.close()
@@ -123,8 +123,7 @@ class DatabaseEncryptor @Inject constructor(
     if (databasePath.exists()) {
       var db: SQLiteDatabase? = null
       return try {
-        db = SQLiteDatabase.openDatabase(databasePath.absolutePath, "",
-            null, SQLiteDatabase.OPEN_READONLY)
+        db = SQLiteDatabase.openDatabase(databasePath.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
         db.version
         State.UNENCRYPTED
       } catch (e: Exception) {

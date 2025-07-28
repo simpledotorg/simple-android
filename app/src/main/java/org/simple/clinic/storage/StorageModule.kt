@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.requery.android.database.sqlite.SQLiteGlobal
-import net.sqlcipher.database.SupportFactory
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.DATABASE_NAME
 import org.simple.clinic.di.AppScope
@@ -51,7 +51,7 @@ class StorageModule {
 
     val helperFactory = if (minimumMemoryChecker.hasMinimumRequiredMemory()) {
       val passphrase = databaseEncryptor.passphrase
-      SupportFactory(passphrase)
+      SupportOpenHelperFactory(passphrase)
     } else {
       factory
     }

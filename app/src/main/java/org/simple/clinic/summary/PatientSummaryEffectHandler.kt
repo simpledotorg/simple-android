@@ -286,10 +286,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             )
             val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
             val riskRange = cvdRiskRepository.getCVDRiskImmediate(patientUuid)?.riskScore
+            val canPrescribeStatin = if (country.isoCountryCode == Country.SRI_LANKA) {
+              riskRange?.canPrescribeStatinInSriLanka ?: false
+            } else {
+              riskRange?.canPrescribeStatin ?: false
+            }
 
             StatinInfoLoaded(
                 age = patient!!.ageDetails.estimateAge(userClock),
                 medicalHistory = medicalHistory,
+                canPrescribeStatin = canPrescribeStatin,
                 riskRange = riskRange,
                 bmiReading = patientAttribute?.bmiReading,
             )

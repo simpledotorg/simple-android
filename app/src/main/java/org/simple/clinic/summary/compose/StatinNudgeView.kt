@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,20 +40,17 @@ import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.theme.SimpleInverseTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
-import org.simple.clinic.cvdrisk.CVDRiskLevel
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.util.toAnnotatedString
-
-private const val LAB_BASED_MIN_REQ_MAX_RISK_RANGE = 20
-private const val MIN_AGE_FOR_STATIN = 40
 
 @Composable
 fun StatinNudge(
     statinInfo: StatinInfo,
     isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
+    useVeryHighRiskAsThreshold: Boolean,
     addSmokingClick: () -> Unit,
     addBMIClick: () -> Unit,
     addCholesterol: () -> Unit,
@@ -84,8 +80,6 @@ fun StatinNudge(
               endOffset = endOffset,
               cvdRiskRange = statinInfo.cvdRisk,
               hasCVD = statinInfo.hasCVD,
-              hasDiabetes = statinInfo.hasDiabetes,
-              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
               parentWidth = constraints.maxWidth,
           )
           Spacer(modifier = Modifier.height(12.dp))
@@ -97,7 +91,8 @@ fun StatinNudge(
           DescriptionText(
               isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
               isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
-              statinInfo = statinInfo
+              statinInfo = statinInfo,
+              useVeryHighRiskAsThreshold = useVeryHighRiskAsThreshold
           )
 
           val onlyOneTypeOfNudgeIsEnabled = isLabBasedStatinNudgeEnabled xor isNonLabBasedStatinNudgeEnabled
@@ -124,9 +119,7 @@ fun RiskText(
     endOffset: Float,
     cvdRiskRange: CVDRiskRange?,
     hasCVD: Boolean,
-    hasDiabetes: Boolean,
     parentWidth: Int,
-    isLabBasedStatinNudgeEnabled: Boolean,
     parentPadding: Float = 16f
 ) {
   val midpoint = (startOffset + endOffset) / 2
@@ -140,10 +133,7 @@ fun RiskText(
   val riskText = when {
     hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
 
-    cvdRiskRange == null ||
-        (hasDiabetes && (cvdRiskRange.max < LAB_BASED_MIN_REQ_MAX_RISK_RANGE && isLabBasedStatinNudgeEnabled)) -> {
-      stringResource(R.string.statin_alert_at_risk_patient)
-    }
+    cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
 
     else -> stringResource(cvdRiskRange.level.displayStringResId, riskPercentage)
   }
@@ -259,107 +249,31 @@ fun RiskProgressBar(
   }
 }
 
+
 @Composable
 fun DescriptionText(
     statinInfo: StatinInfo,
     isLabBasedStatinNudgeEnabled: Boolean,
     isNonLabBasedStatinNudgeEnabled: Boolean,
+    useVeryHighRiskAsThreshold: Boolean,
 ) {
-  val text = descriptionText(
+  val descriptionState = rememberStatinNudgeDescriptionState(
+      statinInfo = statinInfo,
       isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
       isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
-      statinInfo = statinInfo,
+      useVeryHighRiskAsThreshold = useVeryHighRiskAsThreshold
   )
-
-  val textColor = when {
-    statinInfo.hasDiabetes || statinInfo.hasCVD -> SimpleTheme.colors.material.error
-    isLabBasedStatinNudgeEnabled && (statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.VERY_HIGH) -> SimpleTheme.colors.material.error
-    isNonLabBasedStatinNudgeEnabled && (statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH) -> SimpleTheme.colors.material.error
-    isLabBasedStatinNudgeEnabled && (statinInfo.isSmoker == Answer.Unanswered || statinInfo.cholesterol == null) ->
-      SimpleTheme.colors.onSurface67
-
-    isNonLabBasedStatinNudgeEnabled && (statinInfo.isSmoker == Answer.Unanswered || statinInfo.bmiReading == null) ->
-      SimpleTheme.colors.onSurface67
-
-    else -> SimpleTheme.colors.material.error
-  }
 
   Box(
       modifier = Modifier.fillMaxWidth(),
       contentAlignment = Alignment.Center
   ) {
     Text(
-        text = text,
-        color = textColor,
+        text = stringResource(id = descriptionState.textResId).toAnnotatedString(),
+        color = descriptionState.color,
         style = SimpleTheme.typography.material.body2,
         textAlign = TextAlign.Center,
     )
-  }
-}
-
-@Composable
-@ReadOnlyComposable
-private fun descriptionText(
-    isNonLabBasedStatinNudgeEnabled: Boolean,
-    isLabBasedStatinNudgeEnabled: Boolean,
-    statinInfo: StatinInfo
-): AnnotatedString {
-  return when {
-    statinInfo.hasCVD -> stringResource(R.string.statin_alert_refer_to_doctor)
-
-    statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN ->
-      stringResource(R.string.statin_alert_refer_to_doctor_diabetic_40)
-
-    isLabBasedStatinNudgeEnabled -> labBasedDescriptionText(statinInfo)
-    isNonLabBasedStatinNudgeEnabled -> nonLabBasedDescriptionText(statinInfo)
-
-    else -> stringResource(R.string.statin_alert_refer_to_doctor)
-  }.toAnnotatedString()
-}
-
-@Composable
-@ReadOnlyComposable
-private fun labBasedDescriptionText(
-    statinInfo: StatinInfo
-): String {
-  return when {
-
-    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.VERY_HIGH ->
-      stringResource(R.string.statin_alert_refer_to_doctor)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol == null ->
-      stringResource(R.string.statin_alert_add_smoking_and_cholesterol_info)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol != null ->
-      stringResource(R.string.statin_alert_add_smoking_info)
-
-    statinInfo.isSmoker != Answer.Unanswered && statinInfo.cholesterol == null ->
-      stringResource(R.string.statin_alert_add_cholesterol_info)
-
-    else -> stringResource(R.string.statin_alert_refer_to_doctor)
-  }
-}
-
-@Composable
-@ReadOnlyComposable
-private fun nonLabBasedDescriptionText(
-    statinInfo: StatinInfo
-): String {
-  return when {
-
-    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level == CVDRiskLevel.HIGH ->
-      stringResource(R.string.statin_alert_refer_to_doctor)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null ->
-      stringResource(R.string.statin_alert_add_smoking_and_bmi_info)
-
-    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading != null ->
-      stringResource(R.string.statin_alert_add_smoking_info)
-
-    statinInfo.isSmoker != Answer.Unanswered && statinInfo.bmiReading == null ->
-      stringResource(R.string.statin_alert_add_bmi_info)
-
-    else -> stringResource(R.string.statin_alert_refer_to_doctor)
   }
 }
 
@@ -477,7 +391,8 @@ fun StatinNudgePreview() {
         isLabBasedStatinNudgeEnabled = true,
         addSmokingClick = {},
         addBMIClick = {},
-        addCholesterol = {}
+        addCholesterol = {},
+        useVeryHighRiskAsThreshold = false,
     )
   }
 }

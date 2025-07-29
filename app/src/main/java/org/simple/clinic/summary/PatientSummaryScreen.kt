@@ -34,6 +34,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.cvdrisk.StatinInfo
@@ -181,6 +182,9 @@ class PatientSummaryScreen :
   @Inject
   lateinit var configReader: ConfigReader
 
+  @Inject
+  lateinit var country: Country
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val hotEvents = PublishSubject.create<PatientSummaryEvent>()
@@ -315,7 +319,8 @@ class PatientSummaryScreen :
               isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
               addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
               addBMIClick = { additionalEvents.notify(AddBMIClicked) },
-              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) }
+              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) },
+              useVeryHighRiskAsThreshold = country.isoCountryCode == Country.SRI_LANKA
           )
 
           if (showPatientDiedStatusView) {

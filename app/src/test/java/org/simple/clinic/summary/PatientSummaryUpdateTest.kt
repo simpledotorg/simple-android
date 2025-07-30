@@ -2478,7 +2478,7 @@ class PatientSummaryUpdateTest {
                 cholesterol = null,
             ),
             canPrescribeStatin = false,
-            riskRange = CVDRiskRange(9, 9),
+            riskRange = null,
             bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(

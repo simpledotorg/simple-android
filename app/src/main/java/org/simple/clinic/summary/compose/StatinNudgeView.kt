@@ -321,7 +321,7 @@ fun StainNudgeAddButtons(
 
       if (isNonLabBasedStatinNudgeEnabled && statinInfo.bmiReading == null) {
         FilledButton(
-            modifier = modifier
+            modifier = Modifier
                 .testTag("STATIN_NUDGE_ADD_BMI")
                 .height(36.dp)
                 .fillMaxWidth()
@@ -338,7 +338,7 @@ fun StainNudgeAddButtons(
 
       if (isLabBasedStatinNudgeEnabled && statinInfo.cholesterol == null) {
         FilledButton(
-            modifier = modifier
+            modifier = Modifier
                 .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
                 .height(36.dp)
                 .fillMaxWidth()

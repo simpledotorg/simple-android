@@ -268,7 +268,9 @@ class PatientSummaryUpdate(
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
                 canShowStatinNudge = canPrescribeStatin,
-                hasCVD = hasCVD
+                hasCVD = hasCVD,
+                hasDiabetes = hasDiabetes,
+                age = event.age
             )
         )
         next(updatedModel)

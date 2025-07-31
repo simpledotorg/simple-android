@@ -78,8 +78,7 @@ fun StatinNudge(
           RiskText(
               startOffset = startOffset,
               endOffset = endOffset,
-              cvdRiskRange = statinInfo.cvdRisk,
-              hasCVD = statinInfo.hasCVD,
+              statinInfo = statinInfo,
               parentWidth = constraints.maxWidth,
           )
           Spacer(modifier = Modifier.height(12.dp))
@@ -95,8 +94,14 @@ fun StatinNudge(
               useVeryHighRiskAsThreshold = useVeryHighRiskAsThreshold
           )
 
-          val onlyOneTypeOfNudgeIsEnabled = isLabBasedStatinNudgeEnabled xor isNonLabBasedStatinNudgeEnabled
-          if (statinInfo.cvdRisk != null && onlyOneTypeOfNudgeIsEnabled) {
+          val shouldShowButtonsForNonLabNudge = isNonLabBasedStatinNudgeEnabled && !statinInfo.hasDiabetes
+          val shouldShowButtonsForLabNudge = isLabBasedStatinNudgeEnabled &&
+              statinInfo.cvdRisk?.canPrescribeStatin == true
+
+          val shouldShowAddButtons = !statinInfo.hasCVD &&
+              (shouldShowButtonsForNonLabNudge || shouldShowButtonsForLabNudge)
+
+          if (shouldShowAddButtons) {
             StainNudgeAddButtons(
                 modifier = Modifier.padding(top = 16.dp),
                 statinInfo = statinInfo,
@@ -117,28 +122,31 @@ fun StatinNudge(
 fun RiskText(
     startOffset: Float,
     endOffset: Float,
-    cvdRiskRange: CVDRiskRange?,
-    hasCVD: Boolean,
+    statinInfo: StatinInfo,
     parentWidth: Int,
     parentPadding: Float = 16f
 ) {
   val midpoint = (startOffset + endOffset) / 2
 
-  val riskPercentage = if (cvdRiskRange?.min == cvdRiskRange?.max) {
-    "${cvdRiskRange?.min}%"
+  val riskPercentage = if (statinInfo.cvdRisk?.min == statinInfo.cvdRisk?.max) {
+    "${statinInfo.cvdRisk?.min}%"
   } else {
-    "${cvdRiskRange?.min}-${cvdRiskRange?.max}%"
+    "${statinInfo.cvdRisk?.min}-${statinInfo.cvdRisk?.max}%"
   }
 
   val riskText = when {
-    hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
+    statinInfo.hasCVD -> stringResource(R.string.statin_alert_very_high_risk_patient)
 
-    cvdRiskRange == null -> stringResource(R.string.statin_alert_at_risk_patient)
+    statinInfo.cvdRisk == null -> stringResource(R.string.statin_alert_at_risk_patient)
 
-    else -> stringResource(cvdRiskRange.level.displayStringResId, riskPercentage)
+    statinInfo.hasDiabetes && !statinInfo.cvdRisk.canPrescribeStatin -> {
+      stringResource(R.string.statin_alert_at_risk_patient)
+    }
+
+    else -> stringResource(statinInfo.cvdRisk.level.displayStringResId, riskPercentage)
   }
 
-  val riskColor = cvdRiskRange?.level?.color ?: SimpleTheme.colors.material.error
+  val riskColor = statinInfo.cvdRisk?.level?.color ?: SimpleTheme.colors.material.error
 
   val textMeasurer = rememberTextMeasurer()
   val textWidth = textMeasurer.measure(
@@ -289,7 +297,7 @@ fun StainNudgeAddButtons(
 ) {
   SimpleInverseTheme {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       if (statinInfo.isSmoker == Answer.Unanswered) {

@@ -2200,7 +2200,7 @@ class PatientSummaryUpdateTest {
   fun `when statin prescription check info is loaded and person has cvd, then update the state with true`() {
     val updateSpec = UpdateSpec(PatientSummaryUpdate(
         isPatientReassignmentFeatureEnabled = false,
-        isPatientStatinNudgeV1Enabled = true,
+        isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
     ))
@@ -2224,7 +2224,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = true))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = true, hasDiabetes = false, age = 39))),
             hasNoEffects()
         ))
   }
@@ -2257,7 +2257,7 @@ class PatientSummaryUpdateTest {
             wasCVDCalculatedWithin90Days = false,
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = false))),
+            hasModel(defaultModel.updateStatinInfo(StatinInfo(canShowStatinNudge = true, hasCVD = false, hasDiabetes = true, age = 40))),
             hasNoEffects()
         ))
   }

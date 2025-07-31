@@ -24,68 +24,72 @@ internal fun rememberStatinNudgeDescriptionState(
     statinInfo: StatinInfo,
     useVeryHighRiskAsThreshold: Boolean,
 ): StatinNudgeDescriptionState {
-    val errorColor = SimpleTheme.colors.material.error
-    val subduedColor = SimpleTheme.colors.onSurface67
 
-    if (statinInfo.hasCVD) {
-        return StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, errorColor)
+  val highRiskThreshold = if (useVeryHighRiskAsThreshold) {
+    CVDRiskLevel.VERY_HIGH
+  } else {
+    CVDRiskLevel.HIGH
+  }
+
+  return when {
+    statinInfo.hasCVD -> {
+      StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, SimpleTheme.colors.material.error)
     }
 
-    if (statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN) {
-        return StatinNudgeDescriptionState(
-            R.string.statin_alert_refer_to_doctor_diabetic_40, errorColor
-        )
+    statinInfo.hasDiabetes && statinInfo.age >= MIN_AGE_FOR_STATIN -> {
+      StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor_diabetic_40, SimpleTheme.colors.material.error)
     }
 
-    val highRiskThreshold = if (useVeryHighRiskAsThreshold) {
-        CVDRiskLevel.VERY_HIGH
-    } else {
-        CVDRiskLevel.HIGH
+    statinInfo.cvdRisk == null || statinInfo.cvdRisk.level >= highRiskThreshold -> {
+      StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, SimpleTheme.colors.material.error)
     }
 
-    if (statinInfo.cvdRisk == null || statinInfo.cvdRisk.level >= highRiskThreshold) {
-        return StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, errorColor)
-    }
+    isLabBasedStatinNudgeEnabled -> labBasedDescriptionState(statinInfo)
 
-    val isSmokingMissing = statinInfo.isSmoker == Answer.Unanswered
-    if (isLabBasedStatinNudgeEnabled) {
-        val isCholesterolMissing = statinInfo.cholesterol == null
-        return when {
-            isSmokingMissing && isCholesterolMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_smoking_and_cholesterol_info, subduedColor
-            )
+    isNonLabBasedStatinNudgeEnabled -> nonLabBasedDescriptionState(statinInfo)
 
-            isSmokingMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_smoking_info, subduedColor
-            )
+    else -> StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, SimpleTheme.colors.material.error)
+  }
 
-            isCholesterolMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_cholesterol_info, subduedColor
-            )
+}
 
-            else -> StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, errorColor)
-        }
-    }
+@Composable
+@ReadOnlyComposable
+private fun labBasedDescriptionState(statinInfo: StatinInfo): StatinNudgeDescriptionState {
+  return when {
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.cholesterol == null -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_smoking_and_cholesterol_info, SimpleTheme.colors.onSurface67
+    )
 
-    if (isNonLabBasedStatinNudgeEnabled) {
-        val isBmiMissing = statinInfo.bmiReading == null
-        return when {
-            isSmokingMissing && isBmiMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_smoking_and_bmi_info, subduedColor
-            )
+    statinInfo.isSmoker == Answer.Unanswered -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_smoking_info, SimpleTheme.colors.onSurface67
+    )
 
-            isSmokingMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_smoking_info, subduedColor
-            )
+    statinInfo.cholesterol == null -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_cholesterol_info, SimpleTheme.colors.onSurface67
+    )
 
-            isBmiMissing -> StatinNudgeDescriptionState(
-                R.string.statin_alert_add_bmi_info, subduedColor
-            )
+    else -> StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, SimpleTheme.colors.material.error)
+  }
+}
 
-            else -> StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, errorColor)
-        }
-    }
+@Composable
+@ReadOnlyComposable
+private fun nonLabBasedDescriptionState(statinInfo: StatinInfo): StatinNudgeDescriptionState {
+  return when {
+    statinInfo.isSmoker == Answer.Unanswered && statinInfo.bmiReading == null -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_smoking_and_bmi_info, SimpleTheme.colors.onSurface67
+    )
 
-    return StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, errorColor)
+    statinInfo.isSmoker == Answer.Unanswered -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_smoking_info, SimpleTheme.colors.onSurface67
+    )
+
+    statinInfo.bmiReading == null -> StatinNudgeDescriptionState(
+        R.string.statin_alert_add_bmi_info, SimpleTheme.colors.onSurface67
+    )
+
+    else -> StatinNudgeDescriptionState(R.string.statin_alert_refer_to_doctor, SimpleTheme.colors.material.error)
+  }
 }
 

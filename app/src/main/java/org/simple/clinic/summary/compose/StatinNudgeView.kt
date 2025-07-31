@@ -259,7 +259,6 @@ fun RiskProgressBar(
   }
 }
 
-
 @Composable
 fun DescriptionText(
     statinInfo: StatinInfo,

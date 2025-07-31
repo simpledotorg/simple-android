@@ -28,6 +28,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -166,6 +167,7 @@ fun RiskText(
 
   Text(
       modifier = Modifier
+          .testTag("STATIN_NUDGE_RISK_TEXT")
           .offset {
             IntOffset(
                 x = clampedOffsetX.toInt(),
@@ -277,6 +279,7 @@ fun DescriptionText(
       contentAlignment = Alignment.Center
   ) {
     Text(
+        modifier = Modifier.testTag("STATIN_NUDGE_DESCRIPTION"),
         text = stringResource(id = descriptionState.textResId).toAnnotatedString(),
         color = descriptionState.color,
         style = SimpleTheme.typography.material.body2,
@@ -302,7 +305,8 @@ fun StainNudgeAddButtons(
     ) {
       if (statinInfo.isSmoker == Answer.Unanswered) {
         FilledButton(
-            modifier = modifier
+            modifier = Modifier
+                .testTag("STATIN_NUDGE_ADD_SMOKING")
                 .height(36.dp)
                 .fillMaxWidth()
                 .weight(1f)
@@ -319,6 +323,7 @@ fun StainNudgeAddButtons(
       if (isNonLabBasedStatinNudgeEnabled && statinInfo.bmiReading == null) {
         FilledButton(
             modifier = modifier
+                .testTag("STATIN_NUDGE_ADD_BMI")
                 .height(36.dp)
                 .fillMaxWidth()
                 .weight(1f)
@@ -335,6 +340,7 @@ fun StainNudgeAddButtons(
       if (isLabBasedStatinNudgeEnabled && statinInfo.cholesterol == null) {
         FilledButton(
             modifier = modifier
+                .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
                 .height(36.dp)
                 .fillMaxWidth()
                 .weight(1f)

@@ -737,8 +737,8 @@ class StatinNudgeTest {
     }
 
     private fun showSmokingAndBmiButtons() {
-            .assertTextEquals(context.getString(R.string.statin_alert_add_smoking))
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_TOBACCO_USE")
+            .assertTextEquals(context.getString(R.string.statin_alert_add_tobacco_use))
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_BMI")
@@ -750,8 +750,8 @@ class StatinNudgeTest {
     }
 
     private fun showSmokingAndCholesterolButtons() {
-            .assertTextEquals(context.getString(R.string.statin_alert_add_smoking))
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_TOBACCO_USE")
+            .assertTextEquals(context.getString(R.string.statin_alert_add_tobacco_use))
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_CHOLESTEROL")

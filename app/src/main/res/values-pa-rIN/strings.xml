@@ -911,8 +911,4 @@
   <string name="htn_warning_dialog_negative_button">ਹੁਣੇ ਨਹੀਂ</string>
 
   <string name="purge_notification_desc">ਡੇਟਾਬੇਸ ਮੇਨਟੀਨੈਂਸ ਚੱਲ ਰਿਹਾ ਹੈ। ਇਸ ਨੂੰ ਸਿਰਫ਼ ਇੱਕ ਮਿੰਟ ਲੱਗੇਗਾ।</string>
-
-  <string name="smoking_status_dialog_title_positive_button">ਹੋ ਗਿਆ</string>
-  <string name="smoking_status_dialog_title_negative_button">ਰੱਦ ਕਰੋ</string>
-
   </resources>

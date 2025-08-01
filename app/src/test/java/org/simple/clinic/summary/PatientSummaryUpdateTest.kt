@@ -2515,8 +2515,8 @@ class PatientSummaryUpdateTest {
             bmiReading = BMIReading(165f, 60f),
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.updateStatinInfo(statinInfo).showSmokingStatusDialog()),
-            hasEffects(ShowSmokingStatusDialog)
+            hasModel(defaultModel.updateStatinInfo(statinInfo).showTobaccoUseDialog()),
+            hasEffects(ShowTobaccoStatusDialog)
         ))
   }
 
@@ -2524,9 +2524,9 @@ class PatientSummaryUpdateTest {
   fun `when add smoking button is clicked, then show the smoking status dialog`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(AddSmokingClicked)
+        .whenEvent(AddTobaccoUseClicked)
         .then(assertThatNext(
-            hasEffects(ShowSmokingStatusDialog),
+            hasEffects(ShowTobaccoStatusDialog),
             hasNoModel()
         ))
   }

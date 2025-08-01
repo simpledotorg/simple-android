@@ -285,9 +285,8 @@ dependencies {
    * Debug dependencies
    */
   debugImplementation(libs.faker)
-  debugImplementation(libs.bundles.flipper)
   debugImplementation(libs.leakcanary)
-  debugImplementation(libs.soloader)
+  debugImplementation(libs.chucker)
 
   /**
    * Prod dependencies
@@ -375,7 +374,7 @@ dependencies {
 
   implementation(libs.threeten.extra)
 
-  implementation(libs.traceur)
+  implementation(libs.rx.java.extensions)
 
   implementation(libs.uuid.generator)
 
@@ -405,7 +404,7 @@ dependencies {
   testFixturesImplementation(libs.kotlin.stdlib)
   testFixturesImplementation(libs.junit)
   testFixturesImplementation(libs.faker)
-  testFixturesImplementation(libs.traceur)
+  testFixturesImplementation(libs.rx.java.extensions)
   testFixturesImplementation(libs.rx.java)
   testFixturesImplementation(libs.retrofit.retrofit)
   testFixturesImplementation(libs.okhttp.okhttp)
@@ -476,6 +475,8 @@ dependencies {
   runtimeOnly(libs.jackson.core)
 
   androidTestImplementation(libs.apache.commons.math)
+
+  releaseImplementation(libs.chucker.no.op)
 }
 
 tasks.withType<Test> {

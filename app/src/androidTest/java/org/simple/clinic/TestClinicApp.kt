@@ -2,7 +2,7 @@ package org.simple.clinic
 
 import android.app.Application
 import androidx.test.platform.app.InstrumentationRegistry
-import com.tspoon.traceur.Traceur
+import hu.akarnokd.rxjava3.debug.RxJavaAssemblyTracking
 import io.sentry.SentryLevel
 import io.sentry.SentryOptions
 import io.sentry.android.core.SentryAndroid
@@ -80,7 +80,7 @@ class TestClinicApp : Application() {
   override fun onCreate() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
-    Traceur.enableLogging()
+    RxJavaAssemblyTracking.enable()
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)

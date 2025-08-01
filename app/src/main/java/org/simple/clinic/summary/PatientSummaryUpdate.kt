@@ -5,7 +5,6 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.cvdrisk.CVDRiskLevel
-import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescribedDrug
@@ -35,7 +34,6 @@ class PatientSummaryUpdate(
     private val isLabBasedStatinNudgeEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74,
-    private val minReqMaxRiskRangeForLabBasedNudge: Int = 20,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
@@ -270,7 +268,9 @@ class PatientSummaryUpdate(
         val updatedModel = model.updateStatinInfo(
             StatinInfo(
                 canShowStatinNudge = canPrescribeStatin,
-                hasCVD = hasCVD
+                hasCVD = hasCVD,
+                hasDiabetes = hasDiabetes,
+                age = event.age
             )
         )
         next(updatedModel)
@@ -318,26 +318,16 @@ class PatientSummaryUpdate(
     val cholesterol = medicalHistory.cholesterol
     val bmiReading = event.bmiReading
     val calculatedRiskRange = event.riskRange
-    val canPrescribeStatin = if (isLabBasedStatinNudgeEnabled) {
-      calculatedRiskRange?.canPrescribeLabBasedStatin ?: false
-    } else {
-      calculatedRiskRange?.canPrescribeNonLabBasedStatin ?: false
-    }
 
-    val canShowSmokingStatusDialog = canPrescribeStatin &&
+    val canShowSmokingStatusDialog = event.canPrescribeStatin &&
         (calculatedRiskRange?.level == CVDRiskLevel.LOW_HIGH ||
             calculatedRiskRange?.level == CVDRiskLevel.MEDIUM_HIGH) &&
         medicalHistory.isSmoking == MedicalHistoryAnswer.Unanswered &&
         !model.hasShownSmokingStatusDialog
 
-    val riskRange = when {
-      isLabBasedStatinNudgeEnabled -> labBasedRiskRange(calculatedRiskRange)
-      else -> calculatedRiskRange
-    }
-
     val statinInfo = StatinInfo(
-        canShowStatinNudge = canPrescribeStatin,
-        cvdRisk = riskRange,
+        canShowStatinNudge = event.canPrescribeStatin,
+        cvdRisk = calculatedRiskRange,
         isSmoker = medicalHistory.isSmoking,
         bmiReading = bmiReading,
         hasCVD = hasCVD,
@@ -350,16 +340,6 @@ class PatientSummaryUpdate(
       next(model.updateStatinInfo(statinInfo).showSmokingStatusDialog(), ShowSmokingStatusDialog)
     } else {
       next(model.updateStatinInfo(statinInfo))
-    }
-  }
-
-  private fun labBasedRiskRange(calculatedRiskRange: CVDRiskRange?): CVDRiskRange? {
-    if (calculatedRiskRange == null) return null
-
-    return if (calculatedRiskRange.max < minReqMaxRiskRangeForLabBasedNudge) {
-      null
-    } else {
-      calculatedRiskRange
     }
   }
 

@@ -6,7 +6,6 @@
 
 - Handle window insets when displaying app content in edge-to-edge
 - Enable edge-to-edge support on all versions of Android
-- Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
 - Migrate `PatientSummaryScreen` toolbar to Jetpack Compose
 - Add Compose components for Overdue screen
 - Migrate medicines summary view to Jetpack Compose
@@ -15,10 +14,14 @@
 - Migrate blood pressure summary view to Jetpack Compose
 - Migrate blood sugar summary view to Jetpack Compose
 - Migrate medical history summary view to Jetpack Compose
-
-### Fixes
-
-- Fix app crashing when opening un-synced teleconsult request
+- Migrate assigned facility view to Jetpack Compose
+- Migrate next appointment view to Jetpack Compose
+- Migrate patient status view to Jetpack Compose
+- Migrate clinical decision support alert to Jetpack Compose
+- Bump sqlite-android version to 3.49.0
+- Replace `android-database-sqlcipher` library with `sqlcipher-android`
+- Replace Flipper with Chucker for network inspection
+- Update statin risk threshold to 20% for sri Lanka
 
 ## 2025.05.20
 
@@ -48,6 +51,8 @@
 - Update manifest payload to move countries to top level and add version field
 - Bump Open CSV to v5.11
 - Update lab based statin translations for `si-LK`, `ta-LK`
+- Handle nullable inputs when removing last chip in the `ChipInputAutoCompleteTextView`
+- Replace `traceur` library with `rxjava3-extension`
 
 ### Features
 
@@ -61,6 +66,7 @@
 
 - Fix crash when displaying large statin risk percentage text
 - Fix visibility for static statin nudge
+- Fix app crashing when opening un-synced teleconsult request
 
 ## 2025.04.07
 

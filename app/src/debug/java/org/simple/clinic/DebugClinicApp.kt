@@ -3,14 +3,7 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.StrictMode
-import com.facebook.flipper.android.AndroidFlipperClient
-import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
-import com.facebook.flipper.plugins.inspector.DescriptorMapping
-import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
-import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
-import com.facebook.soloader.SoLoader
-import com.tspoon.traceur.Traceur
+import hu.akarnokd.rxjava3.debug.RxJavaAssemblyTracking
 import io.github.inflationx.viewpump.ViewPump
 import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
 import org.simple.clinic.di.AppComponent
@@ -21,18 +14,9 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import timber.log.Timber
-import javax.inject.Inject
 
 @SuppressLint("Registered")
 class DebugClinicApp : ClinicApp() {
-
-  /*
-  We are injecting this because we need to share the same instance with the OkHttp interceptor.
-
-  See debug/HttpInterceptorsModule for more info.
-  */
-  @Inject
-  lateinit var networkFlipperPlugin: NetworkFlipperPlugin
 
   private lateinit var signature: AppSignature
 
@@ -44,13 +28,10 @@ class DebugClinicApp : ClinicApp() {
 
   override fun onCreate() {
     addStrictModeChecks()
-    Traceur.enableLogging()
+    RxJavaAssemblyTracking.enable()
     super.onCreate()
-    SoLoader.init(this, false)
 
     appComponent().inject(this)
-
-    setupFlipper()
 
     Timber.plant(Timber.DebugTree())
     showDebugNotification()
@@ -60,22 +41,6 @@ class DebugClinicApp : ClinicApp() {
         .build())
 
     signature = AppSignature(this)
-  }
-
-  private fun setupFlipper() {
-    val context = this
-
-    with(AndroidFlipperClient.getInstance(this)) {
-      addPlugin(InspectorFlipperPlugin(context, DescriptorMapping.withDefaults()))
-      addPlugin(networkFlipperPlugin)
-
-      val databasePlugin = DatabasesFlipperPlugin(ReadOnlySqliteDatabaseDriver(context))
-      addPlugin(databasePlugin)
-
-      addPlugin(SharedPreferencesFlipperPlugin(context, "${context.packageName}_preferences"))
-
-      start()
-    }
   }
 
   private fun showDebugNotification() {

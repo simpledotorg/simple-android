@@ -1,7 +1,7 @@
 package org.simple.clinic.di.network
 
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
+import android.app.Application
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dagger.Module
 import dagger.Provides
 import io.sentry.okhttp.SentryOkHttpInterceptor
@@ -14,11 +14,16 @@ import org.simple.clinic.user.LoggedInUserHttpInterceptor
 class HttpInterceptorsModule {
 
   @Provides
+  fun chuckerInterceptor(context: Application): ChuckerInterceptor {
+    return ChuckerInterceptor(context)
+  }
+
+  @Provides
   fun providerInterceptors(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
-      networkPlugin: NetworkFlipperPlugin,
-      compressRequestInterceptor: CompressRequestInterceptor
+      compressRequestInterceptor: CompressRequestInterceptor,
+      chuckerInterceptor: ChuckerInterceptor,
   ): List<Interceptor> {
     val loggingInterceptor = HttpLoggingInterceptor().apply {
       level = BODY
@@ -29,8 +34,8 @@ class HttpInterceptorsModule {
         loggedInInterceptor,
         appInfoHttpInterceptor,
         loggingInterceptor,
-        FlipperOkhttpInterceptor(networkPlugin),
-        compressRequestInterceptor
+        compressRequestInterceptor,
+        chuckerInterceptor,
     )
   }
 }

@@ -16,11 +16,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.transition.AutoTransition
-import androidx.transition.Transition
-import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
@@ -35,6 +34,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.cvdrisk.StatinInfo
@@ -64,6 +64,7 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addcholesterol.CholesterolEntrySheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.clinicaldecisionsupport.ui.ClinicalDecisionHighBpAlert
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
@@ -77,9 +78,9 @@ import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.compose.PatientStatusView
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.spring
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -147,17 +148,11 @@ class PatientSummaryScreen :
   private val doneButtonFrame
     get() = binding.doneButtonFrame
 
-  private val patientDiedStatusView
-    get() = binding.patientDiedStatusView
-
   private val nextAppointmentFacilityView
     get() = binding.nextAppointmentFacilityView
 
-  private val clinicalDecisionSupportAlertView
-    get() = binding.clinicalDecisionSupportBpHighAlert.rootView
-
-  private val statinComposeView
-    get() = binding.statinComposeView
+  private val composeView
+    get() = binding.composeView
 
   @Inject
   lateinit var router: Router
@@ -187,6 +182,9 @@ class PatientSummaryScreen :
   @Inject
   lateinit var configReader: ConfigReader
 
+  @Inject
+  lateinit var country: Country
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val hotEvents = PublishSubject.create<PatientSummaryEvent>()
@@ -196,6 +194,11 @@ class PatientSummaryScreen :
   private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
   private var statinInfo by mutableStateOf(StatinInfo.default())
+
+  private var showPatientDiedStatusView by mutableStateOf(false)
+
+  private var showClinicalDecisionAlert by mutableStateOf(false)
+  private var animateClinicalDecisionSupportAlert by mutableStateOf(false)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -295,10 +298,20 @@ class PatientSummaryScreen :
 
     subscriptions.add(setupChildViewVisibility())
 
-    statinComposeView.apply {
+    composeView.apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
         SimpleTheme {
+          ClinicalDecisionHighBpAlert(
+              showAlert = showClinicalDecisionAlert,
+              animateExit = animateClinicalDecisionSupportAlert,
+              modifier = Modifier.padding(
+                  start = dimensionResource(R.dimen.spacing_8),
+                  end = dimensionResource(R.dimen.spacing_8),
+                  top = dimensionResource(R.dimen.spacing_8),
+              ),
+          )
+
           StatinNudge(
               statinInfo = statinInfo,
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
@@ -306,8 +319,21 @@ class PatientSummaryScreen :
               isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
               addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
               addBMIClick = { additionalEvents.notify(AddBMIClicked) },
-              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) }
+              addCholesterol = { additionalEvents.notify(AddCholesterolClicked) },
+              useVeryHighRiskAsThreshold = country.isoCountryCode == Country.SRI_LANKA
           )
+
+          if (showPatientDiedStatusView) {
+            PatientStatusView(
+                modifier = Modifier.padding(
+                    start = dimensionResource(R.dimen.spacing_8),
+                    end = dimensionResource(R.dimen.spacing_8),
+                    top = dimensionResource(R.dimen.spacing_8),
+                ),
+                text = stringResource(R.string.patient_status_died),
+                icon = painterResource(R.drawable.ic_patient_dead_32dp)
+            )
+          }
         }
       }
     }
@@ -708,11 +734,11 @@ class PatientSummaryScreen :
   }
 
   override fun hidePatientDiedStatus() {
-    patientDiedStatusView.visibility = GONE
+    showPatientDiedStatusView = false
   }
 
   override fun showPatientDiedStatus() {
-    patientDiedStatusView.visibility = VISIBLE
+    showPatientDiedStatusView = true
   }
 
   override fun showNextAppointmentCard() {
@@ -728,81 +754,22 @@ class PatientSummaryScreen :
   }
 
   override fun showClinicalDecisionSupportAlert() {
-    showWithAnimation(clinicalDecisionSupportAlertView)
+    showClinicalDecisionAlert = true
   }
 
   override fun hideClinicalDecisionSupportAlert() {
-    hideWithAnimation(clinicalDecisionSupportAlertView, R.id.tag_clinical_decision_pending_end_listener)
+    showClinicalDecisionAlert = false
+    animateClinicalDecisionSupportAlert = true
   }
 
   override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
-    clinicalDecisionSupportAlertView.visibility = GONE
+    showClinicalDecisionAlert = false
+    animateClinicalDecisionSupportAlert = false
   }
 
   override fun updateStatinAlert(statinInfo: StatinInfo) {
     this.statinInfo = statinInfo
   }
-
-  private fun showWithAnimation(view: View) {
-    view.translationY = view.height.unaryMinus().toFloat()
-
-    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(view, true)
-      // We are doing this to wait for the router transitions to be done before we start this.
-      startDelay = 500
-    }
-    val transitionListener = object : Transition.TransitionListener {
-      override fun onTransitionStart(transition: Transition) {
-      }
-
-      override fun onTransitionEnd(transition: Transition) {
-        transition.removeListener(this)
-        spring.animateToFinalPosition(0f)
-      }
-
-      override fun onTransitionCancel(transition: Transition) {
-      }
-
-      override fun onTransitionPause(transition: Transition) {
-      }
-
-      override fun onTransitionResume(transition: Transition) {
-      }
-    }
-    transition.addListener(transitionListener)
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    view.visibility = VISIBLE
-  }
-
-  private fun hideWithAnimation(view: View, tag: Int) {
-    if (view.visibility != VISIBLE) return
-
-    val spring = view.spring(DynamicAnimation.TRANSLATION_Y)
-    (view.getTag(tag) as?
-        DynamicAnimation.OnAnimationEndListener)?.let {
-      spring.removeEndListener(it)
-    }
-
-    val listener = object : DynamicAnimation.OnAnimationEndListener {
-      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
-        spring.removeEndListener(this)
-        view.visibility = GONE
-      }
-    }
-    spring.addEndListener(listener)
-    view.setTag(tag, listener)
-
-    val transition = AutoTransition().apply {
-      excludeChildren(view, true)
-    }
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
-
-    spring.animateToFinalPosition(view.height.unaryMinus().toFloat())
-  }
-
 
   override fun showReassignPatientWarningSheet(
       patientUuid: UUID,

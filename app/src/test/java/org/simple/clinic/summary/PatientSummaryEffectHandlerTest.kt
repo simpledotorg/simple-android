@@ -16,7 +16,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
-import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -1024,12 +1023,12 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when show smoking status dialog view effect is received, then show the smoking status dialog`() {
     // when
-    testCase.dispatch(ShowSmokingStatusDialog)
+    testCase.dispatch(ShowTobaccoStatusDialog)
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).showSmokingStatusDialog()
+    verify(uiActions).showTobaccoStatusDialog()
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -918,8 +918,4 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="htn_warning_dialog_negative_button">Amma miti</string>
 
   <string name="purge_notification_desc">Suphaan daataa guddachaa jira. Kini daqiiqaa qofa fuadhata</string>
-
-  <string name="smoking_status_dialog_title_positive_button">Taasifameera</string>
-  <string name="smoking_status_dialog_title_negative_button">Adda kuti</string>
-
   </resources>

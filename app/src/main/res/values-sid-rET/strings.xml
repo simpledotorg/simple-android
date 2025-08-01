@@ -910,8 +910,4 @@
   <string name="htn_warning_dialog_negative_button">Di’xaa</string>
 
   <string name="purge_notification_desc">Database maintenance in progress. Tini shima bixilisa adhitano</string>
-
-  <string name="smoking_status_dialog_title_positive_button">Gofino</string>
-  <string name="smoking_status_dialog_title_negative_button">Hoola</string>
-
   </resources>

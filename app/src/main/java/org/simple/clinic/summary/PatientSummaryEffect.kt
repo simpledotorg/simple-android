@@ -138,7 +138,7 @@ data object ShowDiabetesDiagnosisWarning : PatientSummaryViewEffect()
 
 data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryViewEffect()
 
-data object ShowSmokingStatusDialog : PatientSummaryViewEffect()
+data object ShowTobaccoStatusDialog : PatientSummaryViewEffect()
 
 data class OpenBMIEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()
 

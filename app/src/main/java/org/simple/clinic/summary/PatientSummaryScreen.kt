@@ -317,7 +317,7 @@ class PatientSummaryScreen :
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
               isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
               isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
-              addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
+              addTobaccoUseClicked = { additionalEvents.notify(AddTobaccoUseClicked) },
               addBMIClick = { additionalEvents.notify(AddBMIClicked) },
               addCholesterol = { additionalEvents.notify(AddCholesterolClicked) },
               useVeryHighRiskAsThreshold = country.isoCountryCode == Country.SRI_LANKA
@@ -695,25 +695,35 @@ class PatientSummaryScreen :
         .show()
   }
 
-  override fun showSmokingStatusDialog() {
-    val options = arrayOf(
-        getString(R.string.smoking_status_dialog_option_yes),
-        getString(R.string.smoking_status_dialog_option_no))
-    var selectedOption = 1
+  override fun showTobaccoStatusDialog() {
+    val options = if (country.isoCountryCode == Country.ETHIOPIA) {
+      arrayOf(
+          getString(R.string.tobacco_status_dialog_option_smoker),
+          getString(R.string.tobacco_status_dialog_option_no)
+      )
+    } else {
+      arrayOf(
+          getString(R.string.tobacco_status_dialog_option_smoker),
+          getString(R.string.tobacco_status_dialog_option_smokeless),
+          getString(R.string.tobacco_status_dialog_option_no)
+      )
+    }
+
+    val checkedItems = BooleanArray(options.size)
 
     MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_CheckedItem)
-        .setTitle(R.string.smoking_status_dialog_title)
-        .setSingleChoiceItems(options, selectedOption) { _, indexSelected ->
-          selectedOption = indexSelected
+        .setTitle(R.string.tobacco_status_dialog_title)
+        .setMultiChoiceItems(options, checkedItems) { _, index, isChecked ->
+          checkedItems[index] = isChecked
         }
-        .setPositiveButton(R.string.smoking_status_dialog_title_positive_button) { _, _ ->
-          when (selectedOption) {
-            0 -> hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
-            1 -> hotEvents.onNext(SmokingStatusAnswered(Answer.No))
-            else -> {}
+        .setPositiveButton(R.string.tobacco_status_dialog_title_positive_button) { _, _ ->
+          if (checkedItems[0]) {
+            hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
+          } else {
+            hotEvents.onNext(SmokingStatusAnswered(Answer.No))
           }
         }
-        .setNegativeButton(R.string.smoking_status_dialog_title_negative_button, null)
+        .setNegativeButton(R.string.tobacco_status_dialog_title_negative_button, null)
         .show()
   }
 

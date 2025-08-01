@@ -910,8 +910,4 @@
   <string name="htn_warning_dialog_negative_button">ಈಗ ಬೇಡ</string>
 
   <string name="purge_notification_desc">ಡೇಟಾಬೇಸ್ ನಿರ್ವಹಣೆಯು ಪ್ರಗತಿಯಲ್ಲಿದೆ. ಇದಕ್ಕೆ ಕೇವಲ ಒಂದು ನಿಮಿಷ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.</string>
-
-  <string name="smoking_status_dialog_title_positive_button">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
-  <string name="smoking_status_dialog_title_negative_button">ರದ್ದುಮಾಡಿ</string>
-
   </resources>

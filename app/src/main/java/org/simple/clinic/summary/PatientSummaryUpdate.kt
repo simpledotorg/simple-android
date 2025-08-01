@@ -105,7 +105,7 @@ class PatientSummaryUpdate(
       is CVDRiskCalculated -> saveOrUpdateCVDRisk(event, model)
       is CVDRiskUpdated -> dispatch(LoadStatinInfo(model.patientUuid))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
-      is AddSmokingClicked -> dispatch(ShowSmokingStatusDialog)
+      is AddTobaccoUseClicked -> dispatch(ShowTobaccoStatusDialog)
       is SmokingStatusAnswered -> dispatch(UpdateSmokingStatus(model.patientUuid, event.isSmoker))
       is BMIReadingAdded -> dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
@@ -319,11 +319,11 @@ class PatientSummaryUpdate(
     val bmiReading = event.bmiReading
     val calculatedRiskRange = event.riskRange
 
-    val canShowSmokingStatusDialog = event.canPrescribeStatin &&
+    val canShowTobaccoUseDialog = event.canPrescribeStatin &&
         (calculatedRiskRange?.level == CVDRiskLevel.LOW_HIGH ||
             calculatedRiskRange?.level == CVDRiskLevel.MEDIUM_HIGH) &&
         medicalHistory.isSmoking == MedicalHistoryAnswer.Unanswered &&
-        !model.hasShownSmokingStatusDialog
+        !model.hasShownTobaccoUseDialog
 
     val statinInfo = StatinInfo(
         canShowStatinNudge = event.canPrescribeStatin,
@@ -336,8 +336,8 @@ class PatientSummaryUpdate(
         cholesterol = cholesterol,
     )
 
-    return if (canShowSmokingStatusDialog) {
-      next(model.updateStatinInfo(statinInfo).showSmokingStatusDialog(), ShowSmokingStatusDialog)
+    return if (canShowTobaccoUseDialog) {
+      next(model.updateStatinInfo(statinInfo).showTobaccoUseDialog(), ShowTobaccoStatusDialog)
     } else {
       next(model.updateStatinInfo(statinInfo))
     }

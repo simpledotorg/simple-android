@@ -52,7 +52,7 @@ fun StatinNudge(
     isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
     useVeryHighRiskAsThreshold: Boolean,
-    addSmokingClick: () -> Unit,
+    addTobaccoUseClicked: () -> Unit,
     addBMIClick: () -> Unit,
     addCholesterol: () -> Unit,
     modifier: Modifier = Modifier,
@@ -108,7 +108,7 @@ fun StatinNudge(
                 statinInfo = statinInfo,
                 isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
                 isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
-                addSmokingClick = addSmokingClick,
+                addTobaccoUseClicked = addTobaccoUseClicked,
                 addBMIClick = addBMIClick,
                 addCholesterol = addCholesterol,
             )
@@ -293,7 +293,7 @@ fun StainNudgeAddButtons(
     statinInfo: StatinInfo,
     isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
-    addSmokingClick: () -> Unit,
+    addTobaccoUseClicked: () -> Unit,
     addBMIClick: () -> Unit,
     addCholesterol: () -> Unit,
 ) {
@@ -305,15 +305,15 @@ fun StainNudgeAddButtons(
       if (statinInfo.isSmoker == Answer.Unanswered) {
         FilledButton(
             modifier = Modifier
-                .testTag("STATIN_NUDGE_ADD_SMOKING")
+                .testTag("STATIN_NUDGE_ADD_TOBACCO_USE")
                 .height(36.dp)
                 .fillMaxWidth()
                 .weight(1f)
                 .clip(RoundedCornerShape(50)),
-            onClick = { addSmokingClick.invoke() }
+            onClick = { addTobaccoUseClicked.invoke() }
         ) {
           Text(
-              text = stringResource(R.string.statin_alert_add_smoking),
+              text = stringResource(R.string.statin_alert_add_tobacco_use),
               fontSize = 14.sp,
           )
         }
@@ -402,7 +402,7 @@ fun StatinNudgePreview() {
         statinInfo = StatinInfo(canShowStatinNudge = true, hasDiabetes = true),
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
-        addSmokingClick = {},
+        addTobaccoUseClicked = {},
         addBMIClick = {},
         addCholesterol = {},
         useVeryHighRiskAsThreshold = false,

@@ -35,7 +35,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = true,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -71,7 +71,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = true,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -108,7 +108,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -145,7 +145,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -182,7 +182,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -223,7 +223,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = true,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -260,7 +260,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = true,
                 isLabBasedStatinNudgeEnabled = false,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -301,7 +301,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -339,7 +339,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -377,7 +377,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -420,7 +420,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -463,7 +463,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -506,7 +506,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -548,7 +548,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -585,7 +585,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -622,7 +622,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -663,7 +663,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = true,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -700,7 +700,7 @@ class StatinNudgeTest {
                 isNonLabBasedStatinNudgeEnabled = false,
                 isLabBasedStatinNudgeEnabled = true,
                 useVeryHighRiskAsThreshold = false,
-                addSmokingClick = { },
+                addTobaccoUseClicked = { },
                 addBMIClick = { },
                 addCholesterol = { }
             )
@@ -726,7 +726,7 @@ class StatinNudgeTest {
     }
 
     private fun hideButtons() {
-        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_SMOKING")
+        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_TOBACCO_USE")
             .assertDoesNotExist()
 
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_BMI")
@@ -737,8 +737,8 @@ class StatinNudgeTest {
     }
 
     private fun showSmokingAndBmiButtons() {
-        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_SMOKING")
             .assertTextEquals(context.getString(R.string.statin_alert_add_smoking))
+        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_TOBACCO_USE")
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_BMI")
@@ -750,8 +750,8 @@ class StatinNudgeTest {
     }
 
     private fun showSmokingAndCholesterolButtons() {
-        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_SMOKING")
             .assertTextEquals(context.getString(R.string.statin_alert_add_smoking))
+        composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_TOBACCO_USE")
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithTag("STATIN_NUDGE_ADD_CHOLESTEROL")

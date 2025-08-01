@@ -317,7 +317,7 @@ class PatientSummaryScreen :
               modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 8.dp),
               isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
               isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
-              addSmokingClick = { additionalEvents.notify(AddSmokingClicked) },
+              addTobaccoUseClicked = { additionalEvents.notify(AddTobaccoUseClicked) },
               addBMIClick = { additionalEvents.notify(AddBMIClicked) },
               addCholesterol = { additionalEvents.notify(AddCholesterolClicked) },
               useVeryHighRiskAsThreshold = country.isoCountryCode == Country.SRI_LANKA
@@ -695,11 +695,11 @@ class PatientSummaryScreen :
         .show()
   }
 
-  override fun showSmokingStatusDialog() {
     val options = arrayOf(
         getString(R.string.smoking_status_dialog_option_yes),
         getString(R.string.smoking_status_dialog_option_no))
     var selectedOption = 1
+  override fun showTobaccoStatusDialog() {
 
     MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_CheckedItem)
         .setTitle(R.string.smoking_status_dialog_title)

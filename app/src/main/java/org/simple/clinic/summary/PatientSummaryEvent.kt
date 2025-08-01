@@ -165,6 +165,7 @@ data object CVDRiskUpdated : PatientSummaryEvent()
 data class StatinInfoLoaded(
     val age: Int,
     val medicalHistory: MedicalHistory,
+    val canPrescribeStatin: Boolean,
     val riskRange: CVDRiskRange?,
     val bmiReading: BMIReading?,
 ) : PatientSummaryEvent()

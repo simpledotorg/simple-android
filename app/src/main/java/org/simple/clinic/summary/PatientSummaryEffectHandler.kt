@@ -49,7 +49,6 @@ import java.util.UUID
 import java.util.function.Function
 import javax.inject.Provider
 import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
-import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
     private val clock: UtcClock,
@@ -286,10 +285,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             )
             val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
             val riskRange = cvdRiskRepository.getCVDRiskImmediate(patientUuid)?.riskScore
+            val canPrescribeStatin = if (country.isoCountryCode == Country.SRI_LANKA) {
+              riskRange?.canPrescribeStatinInSriLanka ?: false
+            } else {
+              riskRange?.canPrescribeStatin ?: false || medicalHistory.diagnosedWithDiabetes == MedicalHistoryAnswer.Yes
+            }
 
             StatinInfoLoaded(
                 age = patient!!.ageDetails.estimateAge(userClock),
                 medicalHistory = medicalHistory,
+                canPrescribeStatin = canPrescribeStatin,
                 riskRange = riskRange,
                 bmiReading = patientAttribute?.bmiReading,
             )
@@ -317,7 +322,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     )
     val updatedMedicalHistory = medicalHistory.answered(
         question = MedicalHistoryQuestion.DiagnosedWithHypertension,
-        answer = MedicalhistoryAnswer.Yes
+        answer = MedicalHistoryAnswer.Yes
     )
 
     medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
@@ -330,7 +335,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     )
     val updatedMedicalHistory = medicalHistory.answered(
         question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
-        answer = MedicalhistoryAnswer.Yes
+        answer = MedicalHistoryAnswer.Yes
     )
 
     medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))

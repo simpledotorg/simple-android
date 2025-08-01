@@ -917,8 +917,4 @@
   <string name="htn_warning_dialog_negative_button">Hadda ma aha</string>
 
   <string name="purge_notification_desc">Dayactirka keydka macluumaadka ayaa socda. Tani waxay qaadan doontaa oo kaliya daqiiqad.</string>
-
-  <string name="smoking_status_dialog_title_positive_button">La dhameeyay</string>
-  <string name="smoking_status_dialog_title_negative_button">Baaji</string>
-
   </resources>

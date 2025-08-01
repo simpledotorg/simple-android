@@ -921,8 +921,4 @@
   <string name="htn_warning_dialog_negative_button">Ahora no</string>
 
   <string name="purge_notification_desc">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
-
-  <string name="smoking_status_dialog_title_positive_button">Listo</string>
-  <string name="smoking_status_dialog_title_negative_button">Cancelar</string>
-
   </resources>

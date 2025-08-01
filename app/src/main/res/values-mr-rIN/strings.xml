@@ -911,7 +911,4 @@
 
   <string name="purge_notification_desc">डेटाबेस व्‍यवस्‍थापन प्रगतीत आहे. यास फक्‍त मिनिट लागेल.</string>
 
-  <string name="smoking_status_dialog_title_positive_button">पूर्ण झाले</string>
-  <string name="smoking_status_dialog_title_negative_button">रद्द करा</string>
-
   </resources>

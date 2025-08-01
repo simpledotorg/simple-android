@@ -911,8 +911,4 @@
   <string name="htn_warning_dialog_negative_button">ሕዚ ኣይኮነን</string>
 
   <string name="purge_notification_desc">ምትዕርራይ ናይ ዳታ ቤዝ ኣብ መስርሕ ኣሎ እዚ ሓደ ደቐቕ ጥራይ’ዩ ዝወስድ</string>
-
-  <string name="smoking_status_dialog_title_positive_button">ተሰሪሑ</string>
-  <string name="smoking_status_dialog_title_negative_button"> ሰርዝ</string>
-
   </resources>

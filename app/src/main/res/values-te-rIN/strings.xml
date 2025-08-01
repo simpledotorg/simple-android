@@ -910,8 +910,4 @@
   <string name="htn_warning_dialog_negative_button">ఇప్పుడు కాదు</string>
 
   <string name="purge_notification_desc">డేటా నిర్వహణ జరుగుతోంది. నిమిషంలో అయిపోతుంది.</string>
-
-  <string name="smoking_status_dialog_title_positive_button">పూర్తయింది</string>
-  <string name="smoking_status_dialog_title_negative_button">రద్దు చేయి</string>
-
   </resources>

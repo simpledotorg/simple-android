@@ -1015,6 +1015,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(StatinInfoLoaded(
         age = 55,
         medicalHistory = medicalHistory,
+        canPrescribeStatin = true,
         riskRange = CVDRiskRange(27, 27),
         bmiReading = bmiReading,
     ))

@@ -21,6 +21,7 @@
 - Bump sqlite-android version to 3.49.0
 - Replace `android-database-sqlcipher` library with `sqlcipher-android`
 - Replace Flipper with Chucker for network inspection
+- Update statin risk threshold to 20% for sri Lanka
 
 ## 2025.05.20
 

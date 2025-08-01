@@ -15,10 +15,10 @@ data class CVDRiskRange(
   val level: CVDRiskLevel
     get() = CVDRiskLevel.compute(this)
 
-  val canPrescribeNonLabBasedStatin: Boolean
+  val canPrescribeStatin: Boolean
     get() = max >= 10
 
-  val canPrescribeLabBasedStatin: Boolean
+  val canPrescribeStatinInSriLanka: Boolean
     get() = max >= 20
 
   class RoomTypeConverter {

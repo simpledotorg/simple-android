@@ -926,7 +926,6 @@
   <string name="statin_alert_at_risk_patient">අවදානමක් සහිත රෝගීන්</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ස්ටැටින් ප්‍රතිකාර&lt;/b&gt; සදහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
   <string name="statin_alert_refer_to_doctor_diabetic_40"> වයස අවුරුදු 40 ට වැඩි, දියවැඩියා රෝගියෙකු නම් ස්ටැටින් ඖෂධ සඳහා වෛද්‍යවරයා වෙත යොමු කරන්න</string>
-  <string name="statin_alert_add_smoking">දුම් පානය</string>
   <string name="statin_alert_add_bmi">BMI අගය</string>
   <string name="statin_alert_add_cholesterol">කොලෙස්ටරෝල් අගය එකතු කරන්න</string>
   <string name="statin_alert_add_smoking_info">නිවැරදිව අවදානම ගණනයට දුම් පානය කරන්නේද යන්න ඇතුලත් කරන්න</string>
@@ -942,13 +941,6 @@
   <string name="bmi_entry_height_in_cm">උස (සෙ.මී.)</string>
   <string name="bmi_entry_weight_in_kg">බර (කි.ග්රෑ.)</string>
   <string name="bmi_x">බීඑම්අයි: %s</string>
-
-  <!-- Add Smoking Status Dialog -->
-  <string name="smoking_status_dialog_title">රෝගියා දුම්පානය කරන්නෙක්ද?</string>
-  <string name="smoking_status_dialog_option_yes">ඔව්, දුම්පානය කරන්නෙක්</string>
-  <string name="smoking_status_dialog_option_no">දුම්පානය නොකරන්නෙක්</string>
-  <string name="smoking_status_dialog_title_positive_button">අවසන්</string>
-  <string name="smoking_status_dialog_title_negative_button">අවලංගු කරන්න</string>
 
   <!-- Cholesterol entry sheet -->
   <string name="add_cholesterol_title"> කොලෙස්ටරෝල් මට්ටම  (mg/dL)</string>

@@ -29,7 +29,7 @@ data class PatientSummaryModel(
     val scheduledAppointment: ParcelableOptional<Appointment>?,
     val hasShownDiagnosisWarningDialog: Boolean,
     val statinInfo: StatinInfo?,
-    val hasShownSmokingStatusDialog: Boolean,
+    val hasShownTobaccoUseDialog: Boolean,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -49,7 +49,7 @@ data class PatientSummaryModel(
           scheduledAppointment = null,
           hasShownDiagnosisWarningDialog = false,
           statinInfo = null,
-          hasShownSmokingStatusDialog = false,
+          hasShownTobaccoUseDialog = false,
       )
     }
   }
@@ -135,7 +135,7 @@ data class PatientSummaryModel(
     return copy(statinInfo = statinInfo)
   }
 
-  fun showSmokingStatusDialog(): PatientSummaryModel {
-    return copy(hasShownSmokingStatusDialog = true)
+  fun showTobaccoUseDialog(): PatientSummaryModel {
+    return copy(hasShownTobaccoUseDialog = true)
   }
 }

@@ -23,6 +23,7 @@
 - Replace Flipper with Chucker for network inspection
 - Update statin risk threshold to 20% for sri Lanka
 - Update smoking dialog to a multi-choice tobacco dialog
+- Bump AndroidX Room to v2.7.2
 
 ## 2025.05.20
 

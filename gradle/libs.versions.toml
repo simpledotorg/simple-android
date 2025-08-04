@@ -4,7 +4,7 @@ agp = "8.8.2"
 androidx-cameraView = "1.4.2"
 androidx-camera = "1.4.2"
 androidx-paging = "3.3.6"
-androidx-room = "2.7.1"
+androidx-room = "2.7.2"
 androidx-work = "2.10.1"
 androidx-security-crypto = "1.1.0-alpha07"
 androidx-viewmodel = "2.8.7"
@@ -36,7 +36,7 @@ coroutines = "1.10.2"
 
 compose-compiler = "1.5.13"
 
-androidx-compose-bom = "2023.07.00-alpha02"
+androidx-compose-bom = "2025.07.00"
 
 composeThemeAdapter = "0.36.0"
 
@@ -203,7 +203,7 @@ zxing = "com.google.zxing:core:3.3.3"
 
 apache-commons-math = "org.apache.commons:commons-math3:3.6.1"
 
-androidx-compose-bom = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -230,7 +230,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
-sentry = { id = "io.sentry.android.gradle", version = "5.1.0" }
+sentry = { id = "io.sentry.android.gradle", version = "5.8.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

@@ -17,7 +17,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -289,7 +293,7 @@ fun DescriptionText(
 
 @Composable
 fun StainNudgeAddButtons(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     statinInfo: StatinInfo,
     isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
@@ -303,56 +307,64 @@ fun StainNudgeAddButtons(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       if (statinInfo.isSmoker == Answer.Unanswered) {
-        FilledButton(
+        StainNudgeAddButton(
+            text = stringResource(R.string.statin_alert_add_tobacco_use),
             modifier = Modifier
                 .testTag("STATIN_NUDGE_ADD_TOBACCO_USE")
-                .height(36.dp)
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(50)),
-            onClick = { addTobaccoUseClicked.invoke() }
-        ) {
-          Text(
-              text = stringResource(R.string.statin_alert_add_tobacco_use),
-              fontSize = 14.sp,
-          )
-        }
+                .weight(1f),
+            onClick = addTobaccoUseClicked
+        )
       }
 
       if (isNonLabBasedStatinNudgeEnabled && statinInfo.bmiReading == null) {
-        FilledButton(
+        StainNudgeAddButton(
+            text = stringResource(R.string.statin_alert_add_bmi),
             modifier = Modifier
                 .testTag("STATIN_NUDGE_ADD_BMI")
-                .height(36.dp)
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(50)),
-            onClick = { addBMIClick.invoke() }
-        ) {
-          Text(
-              text = stringResource(R.string.statin_alert_add_bmi),
-              fontSize = 14.sp,
-          )
-        }
+                .weight(1f),
+            onClick = addBMIClick
+        )
       }
 
       if (isLabBasedStatinNudgeEnabled && statinInfo.cholesterol == null) {
-        FilledButton(
+        StainNudgeAddButton(
+            text = stringResource(R.string.statin_alert_add_cholesterol),
             modifier = Modifier
                 .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
-                .height(36.dp)
-                .fillMaxWidth()
-                .weight(1f)
-                .clip(RoundedCornerShape(50)),
-            onClick = { addCholesterol() }
-        ) {
-          Text(
-              text = stringResource(R.string.statin_alert_add_cholesterol),
-              fontSize = 14.sp,
-          )
-        }
+                .weight(1f),
+            onClick = addCholesterol
+        )
       }
     }
+  }
+}
+
+@Composable
+fun StainNudgeAddButton(
+    modifier: Modifier,
+    text: String,
+    onClick: () -> Unit,
+) {
+  FilledButton(
+      modifier = modifier
+          .height(36.dp)
+          .fillMaxWidth()
+          .clip(RoundedCornerShape(50)),
+      onClick = onClick
+  ) {
+    BasicText(
+        text = text,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        autoSize = TextAutoSize.StepBased(
+            minFontSize = 10.sp,
+            maxFontSize = 14.sp
+        ),
+        style = SimpleTheme.typography.buttonBig.copy(
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onPrimary
+        )
+    )
   }
 }
 
@@ -408,4 +420,17 @@ fun StatinNudgePreview() {
         useVeryHighRiskAsThreshold = false,
     )
   }
+}
+
+@Preview
+@Composable
+fun StatinNudgeButtonsPreview() {
+  StainNudgeAddButtons(
+      statinInfo = StatinInfo(canShowStatinNudge = true),
+      isNonLabBasedStatinNudgeEnabled = true,
+      isLabBasedStatinNudgeEnabled = false,
+      addTobaccoUseClicked = {},
+      addBMIClick = {},
+      addCholesterol = {},
+  )
 }

@@ -1114,7 +1114,7 @@ The Simple app contains private health information of patients (“Data”).\n\n
 
   <!-- Add Smoking Status Dialog -->
   <string name="tobacco_status_dialog_title">Tobacco use?</string>
-  <string name="tobacco_status_dialog_option_smoker">Smoker</string>
+  <string name="tobacco_status_dialog_option_smokes">Smokes</string>
   <string name="tobacco_status_dialog_option_smokeless">Smokeless tobacco</string>
   <string name="tobacco_status_dialog_option_no">No</string>
   <string name="tobacco_status_dialog_title_positive_button">Done</string>

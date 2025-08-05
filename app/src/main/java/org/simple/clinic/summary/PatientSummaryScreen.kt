@@ -698,12 +698,12 @@ class PatientSummaryScreen :
   override fun showTobaccoStatusDialog() {
     val options = if (country.isoCountryCode == Country.ETHIOPIA) {
       arrayOf(
-          getString(R.string.tobacco_status_dialog_option_smoker),
+          getString(R.string.tobacco_status_dialog_option_smokes),
           getString(R.string.tobacco_status_dialog_option_no)
       )
     } else {
       arrayOf(
-          getString(R.string.tobacco_status_dialog_option_smoker),
+          getString(R.string.tobacco_status_dialog_option_smokes),
           getString(R.string.tobacco_status_dialog_option_smokeless),
           getString(R.string.tobacco_status_dialog_option_no)
       )

@@ -397,7 +397,7 @@
   <string name="medicalhistory_question_is_on_hypertension_treatment">Did patient take BP medicines any time in the last month? (Required)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment_sri_lanka" translatable="false">Is patient starting Simple treatment protocol for Hypertension? (Required)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Did patient take diabetes medicines any time in the last month? (Required)</string>
-  <string name="medicalhistory_question_is_current_smoker">Current smoker?</string>
+  <string name="medicalhistory_question_is_current_smoker">Smokes?</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>
@@ -1114,7 +1114,7 @@ The Simple app contains private health information of patients (“Data”).\n\n
 
   <!-- Add Smoking Status Dialog -->
   <string name="tobacco_status_dialog_title">Tobacco use?</string>
-  <string name="tobacco_status_dialog_option_smoker">Smoker</string>
+  <string name="tobacco_status_dialog_option_smokes">Smokes</string>
   <string name="tobacco_status_dialog_option_smokeless">Smokeless tobacco</string>
   <string name="tobacco_status_dialog_option_no">No</string>
   <string name="tobacco_status_dialog_title_positive_button">Done</string>

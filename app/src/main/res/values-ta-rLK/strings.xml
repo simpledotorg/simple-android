@@ -338,7 +338,7 @@
   <string name="newmedicalhistory_history">வரலாறு</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
-  <string name="medicalhistory_question_is_current_smoker">தற்போது புகைப்பிடிப்பவர்</string>
+  <string name="medicalhistory_question_is_current_smoker"> புகைபிடிக்கிறதா?</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">எதுவுமில்லை</string>
@@ -925,6 +925,7 @@
   <string name="statin_alert_at_risk_patient">ஆபத்தில் உள்ள நோயாளி</string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;ஸ்டேடின் மருந்துக்காக&lt;/b&gt; மருத்துவரை அணுகவும்</string>
   <string name="statin_alert_refer_to_doctor_diabetic_40">நீரிழிவு நோயாளி, 40 வயதுக்கு மேற்பட்டவர் எனின் ஸ்டேடின்(statin) மருந்துக்கு மருத்துவரை நாடவும்</string>
+  <string name="statin_alert_add_tobacco_use">புகையிலை பயன்பாட்டைச் சேர்க்கவும்</string>
   <string name="statin_alert_add_bmi">உடற் திணிவுச் சுட்டியினை சேர்க்க</string>
   <string name="statin_alert_add_cholesterol">கொலஸ்ட்ரோலின் அளவைக் கூட்டுக</string>
   <string name="statin_alert_add_smoking_info">மேலும் துல்லியமான ஆபத்து மதிப்பெண்ணுக்கு புகைத்தல் நிலையைச் சேர்க்க</string>
@@ -940,6 +941,14 @@
   <string name="bmi_entry_height_in_cm">உயரம்</string>
   <string name="bmi_entry_weight_in_kg">எடை / நிறை</string>
   <string name="bmi_x">உடற் திணிவு சுட்டி %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title"> புகையிலை பயன்பாடு?</string>
+  <string name="tobacco_status_dialog_option_smokes"> சுருட்டு புகை</string>
+  <string name="tobacco_status_dialog_option_smokeless"> புகையற்ற புகையிலை</string>
+  <string name="tobacco_status_dialog_option_no">இல்லை</string>
+  <string name="tobacco_status_dialog_title_positive_button">முடிந்தது</string>
+  <string name="tobacco_status_dialog_title_negative_button">ரத்துசெய்</string>
 
   <!-- Cholesterol entry sheet -->
   <string name="add_cholesterol_title">கொலஸ்ட்ரால்(mg/dl)</string>

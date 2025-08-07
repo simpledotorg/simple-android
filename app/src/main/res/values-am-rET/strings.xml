@@ -918,7 +918,4 @@
 
   <string name="purge_notification_desc">ዳታ ቤዝ ጥገና በሂደት ላይ ነው፤ ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
 
-  <string name="tobacco_status_dialog_title_positive_button">ተጠናቅቋል</string>
-  <string name="tobacco_status_dialog_title_negative_button">ይቅር</string>
-
   </resources>

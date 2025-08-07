@@ -338,6 +338,8 @@
   <string name="newmedicalhistory_history">ইতিহাস</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">গত মাসে রোগী কি কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
+  <string name="medicalhistory_question_is_current_smoker">তিনি কি ধূমপান করেন ?</string>
+
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">কোনটিই নয়</string>
   <string name="prescribed_drugs_dosage_remove">অপসারণ করুন</string>
@@ -892,8 +894,7 @@
   <!--Monthly screen reports-->
   <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
   <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
+  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
@@ -920,8 +921,11 @@
   <string name="statin_alert_medium_high_risk_patient_x">মাঝারি-উচ্চ ঝুঁকি %s</string>
   <string name="statin_alert_high_risk_patient_x">উচ্চ ঝুঁকি %s</string>
   <string name="statin_alert_very_high_risk_patient">অত্যন্ত উচ্চ ঝুঁকির রোগী</string>
+  <string name="statin_alert_very_high_risk_range">খুব উচ্চ ঝুঁকি %s</string>
   <string name="statin_alert_at_risk_patient">রোগী ঝুঁকিতে আছেন </string>
   <string name="statin_alert_refer_to_doctor">&lt;b&gt;স্ট্যাটিন ওষুধের&lt;/b&gt; জন্য ডাক্তারের কাছে পাঠান</string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">ডায়াবেটিক রোগী, বয়স ৪০ বছরের উপরে। স্ট্যাটিন ওষুধের জন্য একজন চিকিৎসকের পরামর্শ নিতে অনুরোধ করা হলো।</string>
+  <string name="statin_alert_add_tobacco_use">তামাক সেবনের তথ্য যোগ করুন</string>
   <string name="statin_alert_add_bmi">বিএমআই যোগ করুন</string>
   <string name="statin_alert_add_smoking_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য ধূমপানের অবস্থা যোগ করুন।</string>
   <string name="statin_alert_add_bmi_info">আরও নির্ভুল ঝুঁকি স্কোরের জন্য বিএমআই যোগ করুন।</string>
@@ -933,4 +937,13 @@
   <string name="bmi_entry_height_in_cm">উচ্চতা (সেমি)</string>
   <string name="bmi_entry_weight_in_kg">ওজন (কেজি)</string>
   <string name="bmi_x">বিএমআই: %s</string>
-</resources>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title">তামাক সেবন করেন?</string>
+  <string name="tobacco_status_dialog_option_smokes">ধূমপান</string>
+  <string name="tobacco_status_dialog_option_smokeless"> ধোঁয়াবিহীন তামাক</string>
+  <string name="tobacco_status_dialog_option_no">না</string>
+  <string name="tobacco_status_dialog_title_positive_button">সম্পন্ন</string>
+  <string name="tobacco_status_dialog_title_negative_button">বাতিল করুন</string>
+
+  </resources>

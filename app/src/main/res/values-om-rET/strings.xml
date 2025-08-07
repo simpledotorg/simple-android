@@ -908,8 +908,8 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
 
   <!-- Data protection consent -->
   <string name="data_protection_consent_title">Dambii Itti Fayyadamaa</string>
-  <string name="data_protection_consent_subtitle">Simple app tti fayyadamuun dura dambiiwwan armaan gadii dubbisuu fi irratti walii galuuf <b>\"AGREE AND CONTINUE\"</b> cuqaasuu qabdu. Simple app odeeffannoowwan dhukkubsattootaa (data) of keessaa qaba. Ragawwaan kunuunsa dhukkubsattoota dhaabbata fayyaa isin kessatti hojjataniif barbaachisan qofa argachuu maltu. Ragaa dhukkubsattootaa dhimma biraatiif ilaaluun dhorkaadha. Ragaa argitan iccitiin eeguu qabdu. Ragaa kana qaamolee biroof qooduun dhorkaadha. Koodii (security code) siple app seenuuf fayyadamtan iccitiin kaa\'uu qabdu. Yeroo simple app hin fayyadamnetti keessaa bahuu (log out) qabdu. Namni biraa koodii keessaniin simple app seenee akka fayyadamu gochuun dhorkaadha. Yeroo yerootti ragaa \'sync\' gochuu, ragaawwan barbaachisoo guutuu fi haaromsawwan biroo raawwachuun barbaachisaadha. Simple app yeroo seentan ofuma isaatiin seenuu keessan kan galmeessu ta\'uu baruu qabdu. Dambiiwwan kana hojiirra oolchuu dhabuun simple app irraa dhorkamuu yookiin tarkaafiiwwan biroo geessisuu danda\'a.</string>
-  <string name="data_protection_consent_accept_button">\"Waliigalii itti fufi \"</string>
+  <string name="data_protection_consent_subtitle">Simple app tti fayyadamuun dura dambiiwwan armaan gadii dubbisuu fi irratti walii galuuf <b>\\"AGREE AND CONTINUE\\"</b> cuqaasuu qabdu. Simple app odeeffannoowwan dhukkubsattootaa (data) of keessaa qaba. Ragawwaan kunuunsa dhukkubsattoota dhaabbata fayyaa isin kessatti hojjataniif barbaachisan qofa argachuu maltu. Ragaa dhukkubsattootaa dhimma biraatiif ilaaluun dhorkaadha. Ragaa argitan iccitiin eeguu qabdu. Ragaa kana qaamolee biroof qooduun dhorkaadha. Koodii (security code) siple app seenuuf fayyadamtan iccitiin kaa\\'uu qabdu. Yeroo simple app hin fayyadamnetti keessaa bahuu (log out) qabdu. Namni biraa koodii keessaniin simple app seenee akka fayyadamu gochuun dhorkaadha. Yeroo yerootti ragaa \\'sync\\' gochuu, ragaawwan barbaachisoo guutuu fi haaromsawwan biroo raawwachuun barbaachisaadha. Simple app yeroo seentan ofuma isaatiin seenuu keessan kan galmeessu ta\\'uu baruu qabdu. Dambiiwwan kana hojiirra oolchuu dhabuun simple app irraa dhorkamuu yookiin tarkaafiiwwan biroo geessisuu danda\\'a.</string>
+  <string name="data_protection_consent_accept_button">\\"Waliigalii itti fufi \\"</string>
 
   <string name="change_patient_facility">Jijjiiri</string>
 
@@ -918,4 +918,5 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="htn_warning_dialog_negative_button">Amma miti</string>
 
   <string name="purge_notification_desc">Suphaan daataa guddachaa jira. Kini daqiiqaa qofa fuadhata</string>
+
   </resources>

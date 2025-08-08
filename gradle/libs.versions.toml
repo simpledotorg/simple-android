@@ -40,7 +40,7 @@ androidx-compose-bom = "2025.07.00"
 
 composeThemeAdapter = "0.36.0"
 
-ksp = "2.1.20-1.0.31"
+ksp = "2.2.0-2.0.2"
 
 sqlCipher = "4.9.0"
 

@@ -30,6 +30,8 @@
 - Update min sdk version to 26 (Android 8.0)
 - Bump AGP to v8.12.0
 - Bump Lint to v31.12.0
+- Bump Kotlin to v2.2.0
+- Bump KSP to v2.2.0-2.0.2
 
 ## 2025.05.20
 

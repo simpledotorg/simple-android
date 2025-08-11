@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.MenuItem
@@ -27,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnDetach
+import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.DynamicAnimation.ALPHA
@@ -52,7 +52,6 @@ import io.reactivex.Observable
 import org.simple.clinic.R
 import timber.log.Timber
 import java.time.Duration
-import androidx.core.view.isGone
 
 fun EditText.showKeyboard() {
   val openKeyboard = Runnable {
@@ -284,12 +283,7 @@ fun dpToPx(dp: Float): Float {
 fun dpToPx(dp: Int) = dpToPx(dp.toFloat())
 
 fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    setTextAppearance(resourceId)
-  } else {
-    @Suppress("DEPRECATION")
-    setTextAppearance(context, resourceId)
-  }
+  setTextAppearance(resourceId)
 }
 
 fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
@@ -306,7 +300,7 @@ fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
 }
 
 fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
-  val runnable=  Runnable { onScrollComplete() }
+  val runnable = Runnable { onScrollComplete() }
   post {
     val distanceToScrollFromTop = view.topRelativeTo(this)
 

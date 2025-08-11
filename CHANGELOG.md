@@ -34,6 +34,7 @@
 - Bump KSP to v2.2.0-2.0.2
 - Bump dagger to v2.57
 - Bump okhttp to v5.1.0
+- Bump retrofit to v3.0.0
 
 ## 2025.05.20
 

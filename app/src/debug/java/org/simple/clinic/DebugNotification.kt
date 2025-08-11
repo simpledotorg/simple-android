@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import org.simple.clinic.sync.DataSync
 import javax.inject.Inject
@@ -19,15 +18,10 @@ object DebugNotification {
   fun show(context: Context, appSignature: String) {
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      notificationManager.createNotificationChannel(NotificationChannel(NOTIF_CHANNEL_ID, "Debug", NotificationManager.IMPORTANCE_MIN))
-    }
+    notificationManager.createNotificationChannel(NotificationChannel(NOTIF_CHANNEL_ID, "Debug", NotificationManager.IMPORTANCE_MIN))
 
-    val syncPendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-    } else {
-      PendingIntent.FLAG_CANCEL_CURRENT
-    }
+    val syncPendingIntentFlags =
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
     val syncPendingIntent = PendingIntent.getBroadcast(
         context,
         0,

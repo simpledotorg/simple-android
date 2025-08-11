@@ -6,9 +6,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
@@ -62,7 +61,7 @@ class AppUpdateNotificationWorker(
           .build()
     }
 
-     private fun notificationScheduledTime(scheduledDateTime: LocalDateTime, currentDateTime: LocalDateTime): LocalDateTime {
+    private fun notificationScheduledTime(scheduledDateTime: LocalDateTime, currentDateTime: LocalDateTime): LocalDateTime {
       return if (currentDateTime.isAfter(scheduledDateTime)) {
         scheduledDateTime.plusDays(1)
       } else {
@@ -104,7 +103,8 @@ class AppUpdateNotificationWorker(
           when (result) {
             is ShowAppUpdate -> showAppUpdateNotificationBasedOnThePriority(result)
             is AppUpdateState.AppUpdateStateError -> resetPreferences()
-            DontShowAppUpdate -> { /* no-op */ }
+            DontShowAppUpdate -> { /* no-op */
+            }
           }.exhaustive()
 
           Result.success()
@@ -139,13 +139,11 @@ class AppUpdateNotificationWorker(
   }
 
   private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      notificationManager.createNotificationChannel(NotificationChannel(
-          NOTIFICATION_CHANNEL_ID,
-          NOTIFICATION_CHANNEL_NAME,
-          NotificationManager.IMPORTANCE_HIGH
-      ))
-    }
+    notificationManager.createNotificationChannel(NotificationChannel(
+        NOTIFICATION_CHANNEL_ID,
+        NOTIFICATION_CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_HIGH
+    ))
   }
 
   private fun showLightAppUpdateNotification() {
@@ -179,13 +177,10 @@ class AppUpdateNotificationWorker(
   }
 
   private fun openSimpleInPlayStorePendingIntent(): PendingIntent {
-    val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-    } else {
-      PendingIntent.FLAG_CANCEL_CURRENT
-    }
+    val flag =
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
 
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+    val intent = Intent(Intent.ACTION_VIEW, PLAY_STORE_URL_FOR_SIMPLE.toUri())
 
     return PendingIntent.getActivity(context, 0, intent, flag)
   }

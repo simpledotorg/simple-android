@@ -14,6 +14,8 @@
 - Bump AndroidX AppCompat to v1.7.1
 - Bump AndroidX Fragment KTX to v1.8.8
 - Bump asm to v9.8
+- Bump firebase remote config to v23.0.0
+- Bump Firebase Analytics KTX to v22.5.0
 
 ### Changes
 

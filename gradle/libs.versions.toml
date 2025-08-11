@@ -14,7 +14,9 @@ androidx-activity = "1.10.1"
 chucker = "4.2.0"
 dagger = "2.56.2"
 
-kotlin = "2.1.20"
+kotlin = "2.2.0"
+
+ksp = "2.2.0-2.0.2"
 
 ktlint = "0.36.0"
 
@@ -39,8 +41,6 @@ compose-compiler = "1.5.13"
 androidx-compose-bom = "2025.07.00"
 
 composeThemeAdapter = "0.36.0"
-
-ksp = "2.1.20-1.0.31"
 
 sqlCipher = "4.9.0"
 

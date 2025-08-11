@@ -26,6 +26,7 @@
 - Bump AndroidX Room to v2.7.2
 - Rename `Smoker` to `Smokes`
 - Update tobacco translations for `bn-BD`, `ta-LK` and `si-LK`
+- Bump AndroidX Work to v2.10.3
 
 ## 2025.05.20
 

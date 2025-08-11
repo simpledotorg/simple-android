@@ -2,6 +2,9 @@
 
 ## Next Release
 
+### Internal
+- Bump AGP to v8.12.0
+
 ### Changes
 
 - Update min sdk version to 26 (Android 8.0)

@@ -37,6 +37,7 @@
 - Bump retrofit to v3.0.0
 - Bump sqlcipher to v4.10.0
 - Bump AndroidX AppCompat to v1.7.1
+- Bump AndroidX Fragment KTX to v1.8.8
 
 ## 2025.05.20
 

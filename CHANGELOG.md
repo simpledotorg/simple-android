@@ -26,6 +26,7 @@
 - Bump AndroidX Room to v2.7.2
 - Rename `Smoker` to `Smokes`
 - Update tobacco translations for `bn-BD`, `ta-LK` and `si-LK`
+- Remove `LongTeleconsultMessageBuilder_Old.kt`
 
 ## 2025.05.20
 

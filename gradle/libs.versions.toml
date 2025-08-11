@@ -42,7 +42,7 @@ androidx-compose-bom = "2025.07.00"
 
 composeThemeAdapter = "0.36.0"
 
-sqlCipher = "4.9.0"
+sqlCipher = "4.10.0"
 
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.1.5"

@@ -7,6 +7,7 @@
 - Bump Lint to v31.12.0
 - Bump Kotlin to v2.2.0
 - Bump KSP to v2.2.0-2.0.2
+- Bump dagger to v2.57
 
 ### Changes
 

@@ -68,7 +68,6 @@ import org.simple.clinic.summary.clinicaldecisionsupport.ui.ClinicalDecisionHigh
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
-import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.ui.PatientSummaryToolbar
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
@@ -169,9 +168,6 @@ class PatientSummaryScreen :
 
   @Inject
   lateinit var effectHandlerFactory: PatientSummaryEffectHandler.Factory
-
-  @Inject
-  lateinit var longTeleconsultMessageBuilder: LongTeleconsultMessageBuilder_Old
 
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender

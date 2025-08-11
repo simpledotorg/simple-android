@@ -23,6 +23,7 @@
 - Bump Sentry to v8.20.0
 - Bump Kotlin to v2.2.10
 - Bump KSP to v2.2.10-2.0.2
+- Bump AndroidX Work to v2.10.3
 
 ### Changes
 

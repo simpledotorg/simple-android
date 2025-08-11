@@ -27,6 +27,7 @@
 - Rename `Smoker` to `Smokes`
 - Update tobacco translations for `bn-BD`, `ta-LK` and `si-LK`
 - Remove `LongTeleconsultMessageBuilder_Old.kt`
+- Update min sdk version to 26 (Android 8.0)
 
 ## 2025.05.20
 

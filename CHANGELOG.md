@@ -11,6 +11,7 @@
 - Bump okhttp to v5.1.0
 - Bump retrofit to v3.0.0
 - Bump sqlcipher to v4.10.0
+- Bump AndroidX AppCompat to v1.7.1
 
 ### Changes
 

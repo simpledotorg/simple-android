@@ -29,6 +29,7 @@
 - Remove `LongTeleconsultMessageBuilder_Old.kt`
 - Update min sdk version to 26 (Android 8.0)
 - Bump AGP to v8.12.0
+- Bump Lint to v31.12.0
 
 ## 2025.05.20
 

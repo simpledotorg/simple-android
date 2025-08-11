@@ -42,6 +42,7 @@
 - Bump firebase remote config to v23.0.0
 - Bump Firebase Analytics KTX to v22.5.0
 - Bump itext7 to v9.2.0
+- Bump Jackson Core to v2.19.2
 
 ## 2025.05.20
 

@@ -28,7 +28,7 @@ moshi = "1.15.2"
 
 okhttp = "5.1.0"
 
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 
 room-metadataGenerator = "2.1.0"
 

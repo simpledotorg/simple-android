@@ -16,6 +16,7 @@
 - Bump asm to v9.8
 - Bump firebase remote config to v23.0.0
 - Bump Firebase Analytics KTX to v22.5.0
+- Bump Jackson Core to v2.19.2
 
 ### Changes
 

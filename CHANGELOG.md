@@ -35,6 +35,7 @@
 - Bump dagger to v2.57
 - Bump okhttp to v5.1.0
 - Bump retrofit to v3.0.0
+- Bump sqlcipher to v4.10.0
 
 ## 2025.05.20
 

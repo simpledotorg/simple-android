@@ -41,6 +41,7 @@
 - Bump asm to v9.8
 - Bump firebase remote config to v23.0.0
 - Bump Firebase Analytics KTX to v22.5.0
+- Bump itext7 to v9.2.0
 
 ## 2025.05.20
 

@@ -6,6 +6,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.core.content.withStyledAttributes
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -64,7 +65,7 @@ class FacilityPickerView(
       )
   )
 
-  private val pickFrom: PickFrom
+  private lateinit var pickFrom: PickFrom
 
   private var binding: ViewFacilitypickerBinding? = null
 
@@ -87,9 +88,9 @@ class FacilityPickerView(
     val layoutInflater = LayoutInflater.from(context)
     binding = ViewFacilitypickerBinding.inflate(layoutInflater, this)
 
-    val typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.FacilityPickerView)
-    pickFrom = PickFrom.forAttribute(typedArray)
-    typedArray.recycle()
+    context.withStyledAttributes(attributeSet, R.styleable.FacilityPickerView) {
+      pickFrom = PickFrom.forAttribute(this)
+    }
 
     context.injector<Injector>().inject(this)
 

@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.createBitmap
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -21,6 +22,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.ListItemTeleconsultSharePrescriptionMedicineBinding
 import org.simple.clinic.databinding.ScreenTeleconsultSharePrescriptionBinding
 import org.simple.clinic.di.injector
@@ -28,13 +31,11 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
-import org.simple.clinic.activity.permissions.RequestPermissions
-import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
@@ -306,7 +307,7 @@ class TeleconsultSharePrescriptionScreen :
 
     val bitmapWidth = (sourceWidth * scaleFactor).toInt()
     val bitmapHeight = (sourceHeight * scaleFactor).toInt()
-    val bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(bitmapWidth, bitmapHeight)
     val canvas = Canvas(bitmap).apply {
       drawColor(Color.WHITE)
     }

@@ -3,7 +3,6 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
@@ -17,6 +16,7 @@ import android.widget.ArrayAdapter
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.use
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
@@ -233,7 +233,7 @@ class ChipInputAutoCompleteTextView(
   private fun dropDownConfig() {
     autoCompleteTextView.onItemClickListener = this
     autoCompleteTextView.dropDownWidth = MATCH_PARENT
-    autoCompleteTextView.setDropDownBackgroundDrawable(ColorDrawable(Color.WHITE))
+    autoCompleteTextView.setDropDownBackgroundDrawable(Color.WHITE.toDrawable())
   }
 
   override fun onSaveInstanceState(): Parcelable {

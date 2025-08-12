@@ -3,12 +3,11 @@ package org.simple.clinic.appupdate.dialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 
@@ -40,7 +39,7 @@ class AppUpdateDialog : DialogFragment() {
 
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(ACTION_VIEW).apply {
-      data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)
+      data = PLAY_STORE_URL_FOR_SIMPLE.toUri()
     }
     startActivity(intent)
   }

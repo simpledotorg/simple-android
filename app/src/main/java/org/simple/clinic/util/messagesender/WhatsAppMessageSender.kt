@@ -1,8 +1,8 @@
 package org.simple.clinic.util.messagesender
 
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import java.net.URLEncoder
 import javax.inject.Inject
 
@@ -15,7 +15,7 @@ class WhatsAppMessageSender @Inject constructor(
     val encodedMessage = URLEncoder.encode(message, "UTF-8")
     val intent = Intent().apply {
       action = Intent.ACTION_VIEW
-      data = Uri.parse("https://wa.me/$whatsAppPhoneNumber?text=$encodedMessage")
+      data = "https://wa.me/$whatsAppPhoneNumber?text=$encodedMessage".toUri()
     }
     activity.startActivity(intent)
   }

@@ -6,7 +6,6 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -151,11 +150,11 @@ class FacilityPickerView(
   }
 
   override fun showProgressIndicator() {
-    progressIndicator.visibility = RelativeLayout.VISIBLE
+    progressIndicator.visibility = VISIBLE
   }
 
   override fun hideProgressIndicator() {
-    progressIndicator.visibility = RelativeLayout.GONE
+    progressIndicator.visibility = GONE
   }
 
   override fun updateFacilities(facilityItems: List<FacilityListItem>) {

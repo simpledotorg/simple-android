@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.withStyledAttributes
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -54,9 +55,9 @@ class PinEntryCardView(
   @Inject
   lateinit var verificationMethods: Map<Method, @JvmSuppressWildcards PinVerificationMethod>
 
-  val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
+  val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create()
 
-  private val method: Method
+  private lateinit var method: Method
 
   private var binding: PinEntryCardBinding? = null
 
@@ -88,15 +89,14 @@ class PinEntryCardView(
     setPinEntryMode(PinEntryUi.Mode.PinEntry)
     setForgotButtonVisible(true)
 
-    with(context.obtainStyledAttributes(attrs, R.styleable.PinEntryCardView)) {
+    context.withStyledAttributes(attrs, R.styleable.PinEntryCardView) {
       val methodIndex = getInt(R.styleable.PinEntryCardView_verificationMethod, -1)
 
       if (methodIndex < 0) {
         throw RuntimeException("No verification method defined!")
       }
-      method = Method.values()[methodIndex]
+      method = Method.entries.toTypedArray()[methodIndex]
 
-      recycle()
     }
   }
 

@@ -3,7 +3,6 @@ package org.simple.clinic.home.patients
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
@@ -336,7 +336,7 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openSimpleOnPlaystore() {
     val packageManager = requireContext().packageManager
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+    val intent = Intent(Intent.ACTION_VIEW, PLAY_STORE_URL_FOR_SIMPLE.toUri())
 
     if (intent.resolveActivity(packageManager) != null) {
       requireContext().startActivity(intent)

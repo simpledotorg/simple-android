@@ -3,6 +3,7 @@ package org.simple.clinic.user
 import android.content.SharedPreferences
 import android.os.Parcelable
 import androidx.annotation.WorkerThread
+import androidx.core.content.edit
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -15,7 +16,6 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.plumbing.infrastructure.Infrastructure
-import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.storage.SharedPreferencesMode
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
@@ -126,14 +126,14 @@ class UserSession @Inject constructor(
       // Retain the saved country when clearing the shared preferences
       val savedCountryData = sharedPreferences.getString(selectedCountryPreference.key(), "")
 
-      sharedPreferences.edit().clear().apply()
+      sharedPreferences.edit { clear() }
       // When we clear all shared preferences, we also end up clearing the flag that states whether
       // the user has completed the onboarding flow or not. This means that if the user opens the
       // again after getting logged out and before logging in, they will be shown the Onboarding
       // screen instead of the Registration phone screen. This is a workaround that sets the flag
       // again after clearing the shared preferences to fix this.
       onboardingComplete.set(true)
-      sharedPreferences.edit().putString(selectedCountryPreference.key(), savedCountryData).apply()
+      sharedPreferences.edit { putString(selectedCountryPreference.key(), savedCountryData) }
     }
   }
 

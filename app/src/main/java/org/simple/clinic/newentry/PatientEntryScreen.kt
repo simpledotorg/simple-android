@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -243,7 +244,7 @@ class PatientEntryScreen : BaseScreen<
 
   // FIXME This is temporally coupled to `scrollToFirstFieldWithError()`.
   private val allTextInputFields: List<EditText> by unsafeLazy {
-    val ageOrDateOfBirthEditText = if (ageEditTextInputLayout.visibility == View.VISIBLE) {
+    val ageOrDateOfBirthEditText = if (ageEditTextInputLayout.isVisible) {
       ageEditText
     } else {
       dateOfBirthEditText
@@ -697,7 +698,7 @@ class PatientEntryScreen : BaseScreen<
     val firstFieldWithError = views
         .filter {
           when {
-            isGenderErrorView(it) -> it.visibility == View.VISIBLE
+            isGenderErrorView(it) -> it.isVisible
             it is TextInputLayout -> it.error.isNullOrBlank().not()
             else -> throw AssertionError()
           }

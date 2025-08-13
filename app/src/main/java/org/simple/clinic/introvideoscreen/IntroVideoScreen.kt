@@ -3,11 +3,11 @@ package org.simple.clinic.introvideoscreen
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -96,7 +96,7 @@ class IntroVideoScreen : BaseScreen<
 
   private fun openYoutubeLinkForSimpleVideo() {
     val packageManager = requireContext().packageManager
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
+    val intent = Intent(Intent.ACTION_VIEW, simpleVideo.url.toUri())
 
     if (intent.resolveActivity(packageManager) != null) {
       requireContext().startActivity(intent)

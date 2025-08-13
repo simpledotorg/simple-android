@@ -1,8 +1,8 @@
 package org.simple.clinic.util.messagesender
 
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import javax.inject.Inject
 
 class SmsMessageSender @Inject constructor(
@@ -10,7 +10,7 @@ class SmsMessageSender @Inject constructor(
 ) : MessageSender {
 
   override fun send(phoneNumber: String, message: String) {
-    val uri = Uri.parse("smsto:$phoneNumber")
+    val uri = "smsto:$phoneNumber".toUri()
     val intent = Intent(Intent.ACTION_SENDTO, uri).apply {
       putExtra("sms_body", message)
     }

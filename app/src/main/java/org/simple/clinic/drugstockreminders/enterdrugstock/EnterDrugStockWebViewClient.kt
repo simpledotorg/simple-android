@@ -1,11 +1,9 @@
 package org.simple.clinic.drugstockreminders.enterdrugstock
 
-import android.os.Build
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 
 class EnterDrugStockWebViewClient(
     private val backClicked: () -> Unit
@@ -20,7 +18,6 @@ class EnterDrugStockWebViewClient(
     return false
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   override fun onReceivedError(
       view: WebView?,
       request: WebResourceRequest?,

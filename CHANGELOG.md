@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Changes
+
+- Update min sdk version to 26 (Android 8.0)
+
 ## 2025.08.13
 
 ### Internal

@@ -13,5 +13,4 @@
   android:textColor="?attr/colorOnSurface"
   app:drawableStartCompat="@drawable/patient_id_card"
   app:drawableTint="@color/color_on_surface_67"
-  tools:targetApi="m"
   tools:text="1234123412341234" />

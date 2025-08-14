@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -63,8 +62,7 @@ fun Configuration.withLocale(
 
 private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
   return when {
-    Build.VERSION.SDK_INT >= 24 && !this.locales.isEmpty -> true
-    Build.VERSION.SDK_INT < 24 && this.locale != null -> true
+    !this.locales.isEmpty -> true
     else -> false
   }
 }

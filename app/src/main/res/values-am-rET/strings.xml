@@ -916,8 +916,34 @@
 
   <string name="htn_warning_dialog_negative_button">አሁን አይሆንም</string>
 
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">ዝቅተኛ-ከፍተኛ ስጋት %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">መካከለኛ-ከፍተኛ ስጋት%s</string>
+  <string name="statin_alert_high_risk_patient_x">ከፍተኛ አደጋ%s</string>
+  <string name="statin_alert_very_high_risk_patient">በጣም ከፍተኛ ስጋት ያለበት በሺተኛ</string>
+  <string name="statin_alert_very_high_risk_range">በጣም ከፍተኛ ስጋት%s</string>
+  <string name="statin_alert_at_risk_patient">በአደጋ ላይ ያለ ታካሚ</string>
+  <string name="statin_alert_refer_to_doctor">ለስታስቲን መድኃኒት ሐኪም ያማክሩ</string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">የስኳር ህመምተኛ, እድሜው ከ 40 በላይ ነው. ለስታስቲን መድሃኒት ሐኪም ያመልክቱ</string>
+  <string name="statin_alert_add_tobacco_use">የትምባሆ አጠቃቀምን ይጨምሩ</string>
+  <string name="statin_alert_add_bmi">ቢ ምአ ይ ያስገቡ</string>
+  <string name="statin_alert_add_cholesterol">ኮሌስትሮል ያስገቡ</string>
+  <string name="statin_alert_add_smoking_info">ለተሻለ ዉጤት የ ሲጋራ ሱስ መረጃ ያስገቡ</string>
+  <string name="statin_alert_add_bmi_info">ለተሻለ ዉጤት የ ቢ ምአ ይ መረጃ ያስገቡ</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">ለተሻለ ዉጤት የ ሲጋራ ሱስ መረጃ ያስገቡ</string>
   <string name="purge_notification_desc">ዳታ ቤዝ ጥገና በሂደት ላይ ነው፤ ይህ አንድ ደቂቃ ብቻ ይወስዳል።</string>
 
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">ቢ ምአ ይ</string>
+  <string name="bmi_entry_height_in_cm">ቁመት (ሴሜ)</string>
+  <string name="bmi_entry_weight_in_kg">ከብደት (ኪግ)</string>
+  <string name="bmi_x">ቢ ምአ ይ: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title">ቶባኮ አጠቃቀም?</string>
+  <string name="tobacco_status_dialog_option_smokes">ማጨስ</string>
+  <string name="tobacco_status_dialog_option_smokeless">ጭስ አልባ ቶባኮ</string>
+  <string name="tobacco_status_dialog_option_no">አይ</string>
   <string name="tobacco_status_dialog_title_positive_button">ተጠናቅቋል</string>
   <string name="tobacco_status_dialog_title_negative_button">ይቅር</string>
 

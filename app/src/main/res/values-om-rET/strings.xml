@@ -917,5 +917,35 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
 
   <string name="htn_warning_dialog_negative_button">Amma miti</string>
 
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">BALAA GADI AANAA-OL\'AANAA %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">BALAA GIDDUGALEESSA-OL\'AANAA %s</string>
+  <string name="statin_alert_high_risk_patient_x">balaa guddaa qaba%s</string>
+  <string name="statin_alert_very_high_risk_patient">DHUKKUBSATAA BALAA BAAY\'EE OL\'AANAA</string>
+  <string name="statin_alert_very_high_risk_range">BALAA BAAY\'EE OL\'AANAA %s</string>
+  <string name="statin_alert_at_risk_patient">dhukkubsataa balaadhaaf saaxilame</string>
+  <string name="statin_alert_refer_to_doctor">Qoricha statin argachuuf doktora ilaalaa</string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">Dhukkubsataa dhukkuba sukkaaraa, umriin isaa 40 ol. Qoricha statin argachuuf doktora ilaali</string>
+  <string name="statin_alert_add_tobacco_use">Fayyadama tamboo itti dabali</string>
+  <string name="statin_alert_add_bmi">BMI itti dabali</string>
+  <string name="statin_alert_add_cholesterol">Kolestroolii itti dabali</string>
+  <string name="statin_alert_add_smoking_info">Qabxii balaa caalaa sirrii ta’eef haala tamboo xuuxuu dabali</string>
+  <string name="statin_alert_add_bmi_info"> Qabxii balaa caalaa sirrii ta’eef BMI itti dabali.</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">Qabxii balaa caalaa sirrii ta’eef haala tamboo xuuxuu fi BMI itti dabali.</string>
   <string name="purge_notification_desc">Suphaan daataa guddachaa jira. Kini daqiiqaa qofa fuadhata</string>
+
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">Dheerina (cm)</string>
+  <string name="bmi_entry_weight_in_kg">Ulfaatina (kg)</string>
+  <string name="bmi_x">BMI: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title">Fayyadama tamboo?</string>
+  <string name="tobacco_status_dialog_option_smokes">Aara</string>
+  <string name="tobacco_status_dialog_option_smokeless">Tamboo aara hin qabne</string>
+  <string name="tobacco_status_dialog_option_no">Lakki</string>
+  <string name="tobacco_status_dialog_title_positive_button">Taasifameera</string>
+  <string name="tobacco_status_dialog_title_negative_button">Adda kuti</string>
+
   </resources>

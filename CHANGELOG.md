@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## 2025.08.13
 
 ### Internal
 
@@ -27,6 +27,7 @@
 - Rename `Smoker` to `Smokes`
 - Update tobacco translations for `bn-BD`, `ta-LK` and `si-LK`
 - Remove `LongTeleconsultMessageBuilder_Old.kt`
+- Update statin translations for `om-ET` and `sid-ET`
 
 ## 2025.05.20
 

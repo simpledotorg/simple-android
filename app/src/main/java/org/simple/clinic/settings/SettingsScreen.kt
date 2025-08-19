@@ -2,7 +2,6 @@ package org.simple.clinic.settings
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
@@ -122,7 +122,7 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
 
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
-      data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)
+      data = PLAY_STORE_URL_FOR_SIMPLE.toUri()
     }
     requireContext().startActivity(intent)
   }

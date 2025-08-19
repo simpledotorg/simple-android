@@ -1,7 +1,5 @@
 package org.simple.clinic.feature
 
-import android.os.Build
-
 enum class Feature(
     val enabledByDefault: Boolean,
     val remoteConfigKey: String = ""
@@ -19,7 +17,7 @@ enum class Feature(
    * There's a corresponding activity [org.simple.clinic.WebviewTestActivity], which you
    * can run to verify the fix.
    **/
-  ChangeLanguage(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M),
+  ChangeLanguage(true),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),

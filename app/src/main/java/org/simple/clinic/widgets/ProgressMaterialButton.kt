@@ -3,6 +3,7 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.core.content.withStyledAttributes
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.button.MaterialButton
 import org.simple.clinic.R
@@ -16,7 +17,7 @@ class ProgressMaterialButton(
     InProgress, Enabled, Disabled
   }
 
-  private var buttonState: ButtonState
+  private lateinit var buttonState: ButtonState
   private var buttonText: String? = null
   private var buttonIcon: Drawable? = null
   private var buttonIconGravity: Int
@@ -28,12 +29,12 @@ class ProgressMaterialButton(
     buttonIcon = icon
     buttonIconGravity = iconGravity
 
-    val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ProgressMaterialButton)
-    buttonState = ButtonState.values()[typeArray.getInt(R.styleable.ProgressMaterialButton_buttonState, 0)]
+    context.withStyledAttributes(attrs, R.styleable.ProgressMaterialButton) {
+      buttonState = ButtonState.entries.toTypedArray()[getInt(R.styleable.ProgressMaterialButton_buttonState, 0)]
 
-    setButtonState(buttonState)
+      setButtonState(buttonState)
 
-    typeArray.recycle()
+    }
   }
 
   fun setButtonState(buttonState: ButtonState) {
@@ -47,6 +48,7 @@ class ProgressMaterialButton(
 
         progressDrawable.start()
       }
+
       ButtonState.Enabled -> {
         isEnabled = true
         isClickable = true
@@ -56,6 +58,7 @@ class ProgressMaterialButton(
 
         progressDrawable.stop()
       }
+
       ButtonState.Disabled -> {
         isEnabled = false
         icon = buttonIcon

@@ -51,8 +51,8 @@ import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.applyStatusBarPadding
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.findCurrentFragment
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
@@ -207,6 +207,7 @@ class HomeScreen :
             router.push(SettingsScreen.Key())
             true
           }
+
           else -> false
         }
       }

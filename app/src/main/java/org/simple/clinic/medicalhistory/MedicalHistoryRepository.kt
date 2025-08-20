@@ -168,7 +168,7 @@ class MedicalHistoryRepository @Inject constructor(
           hasHadKidneyDisease = hasHadKidneyDisease,
           diagnosedWithDiabetes = hasDiabetes,
           isSmoking = isSmoking,
-          isUsingSmokelessTobacco = Unanswered,
+          isUsingSmokelessTobacco = isUsingSmokelessTobacco,
           cholesterol = cholesterol,
           syncStatus = syncStatus,
           createdAt = createdAt,

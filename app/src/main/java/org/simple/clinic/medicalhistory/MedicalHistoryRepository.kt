@@ -6,7 +6,6 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
@@ -34,6 +33,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = Unanswered,
         diagnosedWithDiabetes = Unanswered,
         isSmoking = Unanswered,
+        isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
@@ -75,6 +75,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = Unanswered,
         diagnosedWithDiabetes = Unanswered,
         isSmoking = Unanswered,
+        isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
@@ -100,6 +101,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
         diagnosedWithDiabetes = historyEntry.hasDiabetes,
         isSmoking = historyEntry.isSmoking,
+        isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
         syncStatus = SyncStatus.PENDING,
         createdAt = Instant.now(utcClock),
@@ -166,6 +168,7 @@ class MedicalHistoryRepository @Inject constructor(
           hasHadKidneyDisease = hasHadKidneyDisease,
           diagnosedWithDiabetes = hasDiabetes,
           isSmoking = isSmoking,
+          isUsingSmokelessTobacco = Unanswered,
           cholesterol = cholesterol,
           syncStatus = syncStatus,
           createdAt = createdAt,

@@ -30,6 +30,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
@@ -99,6 +100,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -143,6 +145,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -158,6 +161,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -177,6 +181,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -196,6 +201,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -215,6 +221,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -234,6 +241,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -253,6 +261,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -272,6 +281,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).showCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -287,6 +297,7 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -302,6 +313,59 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideDiagnosisView()
     verify(ui).showCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the is smokeless tobacco answer is changed, do not clear the diagnosis error`() {
+    // given
+    val updatedMedicalHistory = medicalHistory.answered(IsSmoking, Yes)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(facility = facilityWithDiabetesManagementEnabled, showCurrentSmokerQuestion = true, showSmokelessTobaccoQuestion = true)
+    events.onNext(SummaryMedicalHistoryAnswerToggled(IsUsingSmokelessTobacco, Yes))
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
+    verify(ui).showDiagnosisView()
+    verify(ui).showCurrentSmokerQuestion()
+    verify(ui).showSmokelessTobaccoQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when show smokeless tobacco question is disabled, then hide the show smokeless tobacco question view`() {
+    // given
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(showSmokelessTobaccoQuestion = false)
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).hideDiagnosisView()
+    verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when show smokeless tobacco question is enabled, then show the show smokeless tobacco question view`() {
+    // given
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+
+    // when
+    setupController(showCurrentSmokerQuestion = true, showSmokelessTobaccoQuestion = true)
+
+    // then
+    verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).hideDiagnosisView()
+    verify(ui).showCurrentSmokerQuestion()
+    verify(ui).showSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -325,6 +389,7 @@ class MedicalHistorySummaryLogicTest {
   private fun setupController(
       facility: Facility = facilityWithDiabetesManagementDisabled,
       showCurrentSmokerQuestion: Boolean = false,
+      showSmokelessTobaccoQuestion: Boolean = false,
   ) {
     val effectHandler = MedicalHistorySummaryEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
@@ -337,7 +402,7 @@ class MedicalHistorySummaryLogicTest {
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)
     testFixture = MobiusTestFixture(
         events = events.ofType(),
-        defaultModel = MedicalHistorySummaryModel.create(patientUuid, showCurrentSmokerQuestion),
+        defaultModel = MedicalHistorySummaryModel.create(patientUuid, showCurrentSmokerQuestion, showSmokelessTobaccoQuestion),
         init = MedicalHistorySummaryInit(),
         update = MedicalHistorySummaryUpdate(),
         effectHandler = effectHandler.build(),

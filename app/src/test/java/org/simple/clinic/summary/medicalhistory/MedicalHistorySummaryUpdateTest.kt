@@ -5,9 +5,9 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
-import org.simple.clinic.TestData
 import java.util.UUID
 
 class MedicalHistorySummaryUpdateTest {
@@ -28,7 +28,7 @@ class MedicalHistorySummaryUpdateTest {
         isSmoking = Answer.No
     )
     val medicalHistoryLoadedModel = MedicalHistorySummaryModel
-        .create(patientUuid, true)
+        .create(patientUuid, showIsSmokingQuestion = true, showSmokelessTobaccoQuestion = true)
         .medicalHistoryLoaded(medicalHistory)
 
     val updatedMedicalHistory = medicalHistory

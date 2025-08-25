@@ -4,6 +4,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
@@ -15,7 +16,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttac
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
-import org.simple.clinic.TestData
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import java.util.UUID
 
 class NewMedicalHistoryUiRendererTest {
@@ -280,6 +281,7 @@ class NewMedicalHistoryUiRendererTest {
         .answerChanged(HasHadAStroke, No)
         .answerChanged(HasHadAKidneyDisease, Unanswered)
         .answerChanged(IsSmoking, No)
+        .answerChanged(IsUsingSmokelessTobacco, No)
 
     // when
     uiRenderer.render(model)
@@ -296,6 +298,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).renderAnswerForQuestion(IsSmoking, No)
+    verify(ui).renderAnswerForQuestion(IsUsingSmokelessTobacco, No)
     verifyNoMoreInteractions(ui)
   }
 

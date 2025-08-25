@@ -54,6 +54,7 @@ class MedicalHistoryRepositoryAndroidTest {
         hasHadKidneyDisease = Yes,
         hasDiabetes = No,
         isSmoking = No,
+        isUsingSmokelessTobacco = No,
     )
 
     repository.save(

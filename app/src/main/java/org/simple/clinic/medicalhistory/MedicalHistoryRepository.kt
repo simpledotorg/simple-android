@@ -101,7 +101,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
         diagnosedWithDiabetes = historyEntry.hasDiabetes,
         isSmoking = historyEntry.isSmoking,
-        isUsingSmokelessTobacco = Unanswered,
+        isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
         syncStatus = SyncStatus.PENDING,
         createdAt = Instant.now(utcClock),

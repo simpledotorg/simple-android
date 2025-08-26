@@ -3,6 +3,7 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ViewFlipper
+import androidx.core.content.withStyledAttributes
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -21,9 +22,9 @@ class ViewFlipperWithLayoutEditorPreview(
 
   init {
     if (isInEditMode) {
-      val attributes = context.obtainStyledAttributes(attrs, R.styleable.ViewFlipperWithLayoutEditorPreview)
-      childToDisplayPostInflate = attributes.getInt(R.styleable.ViewFlipperWithLayoutEditorPreview_debug_displayedChild, 0)
-      attributes.recycle()
+      context.withStyledAttributes(attrs, R.styleable.ViewFlipperWithLayoutEditorPreview) {
+        childToDisplayPostInflate = getInt(R.styleable.ViewFlipperWithLayoutEditorPreview_debug_displayedChild, 0)
+      }
     }
     displayedChildChangesSubject.onNext(displayedChild)
   }

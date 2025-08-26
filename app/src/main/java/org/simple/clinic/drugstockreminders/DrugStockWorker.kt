@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -146,23 +145,17 @@ class DrugStockWorker(
 
   private fun openAppToHomeScreen(): PendingIntent? {
     val intent = Intent(context, SetupActivity::class.java)
-    val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-    } else {
-      PendingIntent.FLAG_CANCEL_CURRENT
-    }
+    val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
 
     return PendingIntent.getActivity(context, 0, intent, flag)
   }
 
   private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      notificationManager.createNotificationChannel(
-          NotificationChannel(
-              NOTIFICATION_CHANNEL_ID,
-              NOTIFICATION_CHANNEL_NAME,
-              NotificationManager.IMPORTANCE_HIGH
-          ))
-    }
+    notificationManager.createNotificationChannel(
+        NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_HIGH
+        ))
   }
 }

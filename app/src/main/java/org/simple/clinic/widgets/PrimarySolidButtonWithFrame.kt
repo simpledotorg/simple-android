@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.Button
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
+import androidx.core.content.withStyledAttributes
 import org.simple.clinic.R
 
 class PrimarySolidButtonWithFrame(
@@ -27,14 +28,14 @@ class PrimarySolidButtonWithFrame(
   private var buttonBackgroundDisabledResId: Int = 0
 
   init {
-    val attrs = context.obtainStyledAttributes(attributeSet, R.styleable.PrimarySolidButtonWithFrame)
+    context.withStyledAttributes(attributeSet, R.styleable.PrimarySolidButtonWithFrame) {
 
-    frameBackgroundEnabledResId = attrs.getColor(R.styleable.PrimarySolidButtonWithFrame_frameBackgroundEnabled, frameBackgroundEnabledResId)
-    frameBackgroundDisabledResId = attrs.getColor(R.styleable.PrimarySolidButtonWithFrame_frameBackgroundDisabled, frameBackgroundDisabledResId)
-    buttonBackgroundEnabledResId = attrs.getColor(R.styleable.PrimarySolidButtonWithFrame_buttonBackgroundEnabled, buttonBackgroundEnabledResId)
-    buttonBackgroundDisabledResId = attrs.getColor(R.styleable.PrimarySolidButtonWithFrame_buttonBackgroundDisabled, buttonBackgroundDisabledResId)
+      frameBackgroundEnabledResId = getColor(R.styleable.PrimarySolidButtonWithFrame_frameBackgroundEnabled, frameBackgroundEnabledResId)
+      frameBackgroundDisabledResId = getColor(R.styleable.PrimarySolidButtonWithFrame_frameBackgroundDisabled, frameBackgroundDisabledResId)
+      buttonBackgroundEnabledResId = getColor(R.styleable.PrimarySolidButtonWithFrame_buttonBackgroundEnabled, buttonBackgroundEnabledResId)
+      buttonBackgroundDisabledResId = getColor(R.styleable.PrimarySolidButtonWithFrame_buttonBackgroundDisabled, buttonBackgroundDisabledResId)
 
-    attrs.recycle()
+    }
 
     verifyColorsSet()
   }

@@ -3,7 +3,6 @@ package org.simple.clinic.scanid.qrcodeanalyzer
 import android.graphics.ImageFormat.YUV_420_888
 import android.graphics.ImageFormat.YUV_422_888
 import android.graphics.ImageFormat.YUV_444_888
-import android.os.Build
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.zxing.BarcodeFormat
@@ -35,9 +34,7 @@ class ZxingQrCodeAnalyzer(
   private val yuvFormats = mutableListOf(YUV_420_888)
 
   init {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      yuvFormats.addAll(listOf(YUV_422_888, YUV_444_888))
-    }
+    yuvFormats.addAll(listOf(YUV_422_888, YUV_444_888))
   }
 
   override fun analyze(image: ImageProxy) {

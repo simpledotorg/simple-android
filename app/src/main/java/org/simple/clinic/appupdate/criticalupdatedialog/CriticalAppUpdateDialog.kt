@@ -3,13 +3,13 @@ package org.simple.clinic.appupdate.criticalupdatedialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -148,7 +148,7 @@ class CriticalAppUpdateDialog : BaseDialog<
 
   override fun openContactUrl(url: String) {
     val packageManager = requireContext().packageManager
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
 
     if (intent.resolveActivity(packageManager) != null) {
       requireContext().startActivity(intent)
@@ -159,7 +159,7 @@ class CriticalAppUpdateDialog : BaseDialog<
 
   override fun openSimpleInGooglePlay() {
     val packageManager = requireContext().packageManager
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+    val intent = Intent(Intent.ACTION_VIEW, PLAY_STORE_URL_FOR_SIMPLE.toUri())
 
     if (intent.resolveActivity(packageManager) != null) {
       requireContext().startActivity(intent)

@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ServiceInfo
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequest
@@ -78,9 +77,7 @@ class PurgeWorker(
   }
 
   private fun createForegroundInfo(): ForegroundInfo {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      createChannel()
-    }
+    createChannel()
 
     val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
         .setContentTitle(applicationContext.getString(R.string.purge_notification_title))
@@ -97,7 +94,6 @@ class PurgeWorker(
     }
   }
 
-  @RequiresApi(Build.VERSION_CODES.O)
   private fun createChannel() {
     notificationManager.createNotificationChannel(NotificationChannel(
         NOTIFICATION_CHANNEL_ID,

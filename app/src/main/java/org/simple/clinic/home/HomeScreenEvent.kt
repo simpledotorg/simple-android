@@ -1,13 +1,10 @@
 package org.simple.clinic.home
 
-import android.Manifest
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.util.Optional
 import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import java.util.Optional
 
 sealed class HomeScreenEvent : UiEvent
 

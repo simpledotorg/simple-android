@@ -2,6 +2,22 @@
 
 ## Next Release
 
+### Internal
+- Bump AGP to v8.12.0
+- Bump Lint to v31.12.0
+- Bump Kotlin to v2.2.0
+- Bump KSP to v2.2.0-2.0.2
+- Bump dagger to v2.57
+- Bump okhttp to v5.1.0
+- Bump retrofit to v3.0.0
+- Bump sqlcipher to v4.10.0
+- Bump AndroidX AppCompat to v1.7.1
+- Bump AndroidX Fragment KTX to v1.8.8
+- Bump asm to v9.8
+- Bump firebase remote config to v23.0.0
+- Bump Firebase Analytics KTX to v22.5.0
+- Bump Jackson Core to v2.19.2
+
 ### Changes
 
 - Update min sdk version to 26 (Android 8.0)
@@ -57,6 +73,7 @@
 - Bump Sentry to v8.11.0
 - Bump Dagger to v2.56.2
 - Bump Coroutines to v1.10.2
+- Bump AGP to v8.9.2
 - Skip Sentry config during app startup in the debug mode
 - Show spanish language option in non-production builds only
 - Increase lab based risk threshold to 20%

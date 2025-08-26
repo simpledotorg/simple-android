@@ -44,7 +44,11 @@ class NewMedicalHistoryUiRendererTest {
       )
 
   private val country = TestData.country(isoCountryCode = Country.INDIA)
-  private val defaultModel = NewMedicalHistoryModel.default(country, false)
+  private val defaultModel = NewMedicalHistoryModel.default(
+      country = country,
+      showIsSmokingQuestion = false,
+      showSmokelessTobaccoQuestion = false
+  )
 
   private val ui = mock<NewMedicalHistoryUi>()
   private val uiRenderer = NewMedicalHistoryUiRenderer(ui)
@@ -72,6 +76,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -165,7 +170,11 @@ class NewMedicalHistoryUiRendererTest {
   fun `when patient has hypertension and country is not from india, then don't show hypertension treatment question`() {
     // given
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
-    val model = NewMedicalHistoryModel.default(country = bangladesh, false)
+    val model = NewMedicalHistoryModel.default(
+        country = bangladesh,
+        showIsSmokingQuestion = false,
+        showSmokelessTobaccoQuestion = false
+    )
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DiagnosedWithHypertension, Yes)
 
@@ -231,7 +240,11 @@ class NewMedicalHistoryUiRendererTest {
   fun `when diabetes management is enabled and patient has diabetes and is not from india, then don't show diabetes treatment question`() {
     // given
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
-    val model = NewMedicalHistoryModel.default(country = bangladesh, false)
+    val model = NewMedicalHistoryModel.default(
+        country = bangladesh,
+        showIsSmokingQuestion = false,
+        showSmokelessTobaccoQuestion = false
+    )
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DiagnosedWithDiabetes, Yes)
 
@@ -275,7 +288,11 @@ class NewMedicalHistoryUiRendererTest {
   @Test
   fun `when show smoker question is enabled, then show current smoker question`() {
     // given
-    val model = NewMedicalHistoryModel.default(country, true)
+    val model = NewMedicalHistoryModel.default(
+        country = country,
+        showIsSmokingQuestion = true,
+        showSmokelessTobaccoQuestion = false
+    )
         .answerChanged(DiagnosedWithHypertension, Unanswered)
         .answerChanged(HasHadAHeartAttack, Yes)
         .answerChanged(HasHadAStroke, No)
@@ -297,15 +314,19 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).showCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verify(ui).renderAnswerForQuestion(IsSmoking, No)
-    verify(ui).renderAnswerForQuestion(IsUsingSmokelessTobacco, No)
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when show smoker question is disabled, then hide current smoker question`() {
     // given
-    val model = NewMedicalHistoryModel.default(country, false)
+    val model = NewMedicalHistoryModel.default(
+        country = country,
+        showIsSmokingQuestion = false,
+        showSmokelessTobaccoQuestion = false,
+    )
         .answerChanged(DiagnosedWithHypertension, Unanswered)
         .answerChanged(HasHadAHeartAttack, Yes)
         .answerChanged(HasHadAStroke, No)
@@ -325,14 +346,50 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `when show smokeless tobacco question is enabled, then show smokeless tobacco question`() {
+    // given
+    val model = NewMedicalHistoryModel.default(
+        country = country,
+        showIsSmokingQuestion = true,
+        showSmokelessTobaccoQuestion = true
+    )
+        .answerChanged(DiagnosedWithHypertension, Unanswered)
+        .answerChanged(HasHadAHeartAttack, Yes)
+        .answerChanged(HasHadAStroke, No)
+        .answerChanged(HasHadAKidneyDisease, Unanswered)
+        .answerChanged(IsSmoking, No)
+        .answerChanged(IsUsingSmokelessTobacco, No)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
+    verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
+    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
+    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).hideDiabetesDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
+    verify(ui).showCurrentSmokerQuestion()
+    verify(ui).showSmokelessTobaccoQuestion()
+    verify(ui).renderAnswerForQuestion(IsSmoking, No)
+    verify(ui).renderAnswerForQuestion(IsUsingSmokelessTobacco, No)
+    verifyNoMoreInteractions(ui)
+  }
 
   private fun verifyImplicitRenders() {
     verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Unanswered)
     verify(ui).renderAnswerForQuestion(HasHadAStroke, Unanswered)
     verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
     verify(ui).hideCurrentSmokerQuestion()
+    verify(ui).hideSmokelessTobaccoQuestion()
   }
 }

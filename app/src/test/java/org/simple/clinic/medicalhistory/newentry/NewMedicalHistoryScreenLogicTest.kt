@@ -327,7 +327,11 @@ class NewMedicalHistoryScreenLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel.default(country, true),
+        defaultModel = NewMedicalHistoryModel.default(
+            country = country,
+            showIsSmokingQuestion = true,
+            showSmokelessTobaccoQuestion = true
+        ),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = effectHandler,

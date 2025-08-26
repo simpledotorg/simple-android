@@ -1,15 +1,14 @@
 package org.simple.clinic.util
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build
 import android.util.Base64
+import androidx.annotation.RequiresApi
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.util.Arrays
 
 private const val HASH_TYPE = "SHA-256"
 private const val NUM_HASHED_BYTES = 9
@@ -45,7 +44,7 @@ class AppSignature(private val context: Context) {
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.P)
+  @RequiresApi(Build.VERSION_CODES.P)
   private fun signaturesV28(packageManager: PackageManager, packageName: String): List<Signature> {
     val signingInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo ?: return emptyList()
 
@@ -67,7 +66,7 @@ class AppSignature(private val context: Context) {
     var hashSignature = messageDigest.digest()
 
     // Truncated into NUM_HASHED_BYTES
-    hashSignature = Arrays.copyOfRange(hashSignature, 0, NUM_HASHED_BYTES)
+    hashSignature = hashSignature.copyOfRange(0, NUM_HASHED_BYTES)
 
     val base64Hash = Base64.encodeToString(hashSignature, Base64.NO_PADDING or Base64.NO_WRAP)
 

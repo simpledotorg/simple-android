@@ -21,6 +21,7 @@ data class NewMedicalHistoryModel(
     val nextButtonState: ButtonState?,
     val hasShownChangeDiagnosisError: Boolean,
     val showIsSmokingQuestion: Boolean,
+    val showSmokelessTobaccoQuestion: Boolean,
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -72,14 +73,19 @@ data class NewMedicalHistoryModel(
     get() = facilityDiabetesManagementEnabled && !hasShownChangeDiagnosisError && hasNoHypertension && hasNoDiabetes
 
   companion object {
-    fun default(country: Country, showIsSmokingQuestion: Boolean): NewMedicalHistoryModel = NewMedicalHistoryModel(
+    fun default(
+        country: Country,
+        showIsSmokingQuestion: Boolean,
+        showSmokelessTobaccoQuestion: Boolean
+    ): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,
         nextButtonState = null,
         hasShownChangeDiagnosisError = false,
-        showIsSmokingQuestion = showIsSmokingQuestion
+        showIsSmokingQuestion = showIsSmokingQuestion,
+        showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
     )
   }
 

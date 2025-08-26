@@ -99,24 +99,10 @@
 
       </com.google.android.material.card.MaterialCardView>
 
-      <com.google.android.material.card.MaterialCardView
-        android:id="@+id/currentSmokerQuestionContainer"
+      <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_8"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:layout_marginEnd="@dimen/spacing_8"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-          android:id="@+id/currentSmokerQuestionView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingHorizontal="@dimen/spacing_16"
-          android:paddingVertical="@dimen/spacing_8" />
-
-      </com.google.android.material.card.MaterialCardView>
+        android:layout_height="match_parent" />
 
     </LinearLayout>
 

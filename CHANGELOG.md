@@ -23,6 +23,7 @@
 
 - Update min sdk version to 26 (Android 8.0)
 - Update statin translations for `om-ET` and `sid-ET`
+- Update tobacco use dialog to single option select in Ethiopia
 
 ## 2025.08.13
 

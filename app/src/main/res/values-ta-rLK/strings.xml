@@ -338,7 +338,6 @@
   <string name="newmedicalhistory_history">வரலாறு</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
-  <string name="medicalhistory_question_is_current_smoker"> புகைபிடிக்கிறதா?</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">எதுவுமில்லை</string>

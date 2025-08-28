@@ -18,6 +18,7 @@
 - Bump Firebase Analytics KTX to v22.5.0
 - Bump Jackson Core to v2.19.2
 - Bump Lottie Compose to v6.6.7
+- Add `isUsingSmokelessTobacco` in `MedicalHistory` table
 
 ### Changes
 

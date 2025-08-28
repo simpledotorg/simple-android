@@ -11,7 +11,11 @@ import org.simple.clinic.appconfig.Country
 class NewMedicalHistoryInitTest {
 
   private val country = TestData.country(isoCountryCode = Country.INDIA)
-  private val defaultModel = NewMedicalHistoryModel.default(country, false)
+  private val defaultModel = NewMedicalHistoryModel.default(
+      country = country,
+      showIsSmokingQuestion = false,
+      showSmokelessTobaccoQuestion = false
+  )
 
   private val initSpec = InitSpec(NewMedicalHistoryInit())
 

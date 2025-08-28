@@ -19,6 +19,7 @@ import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.ui.MedicalHistoryQuestionItem
+import org.simple.clinic.medicalhistory.ui.TobaccoQuestion
 
 @Composable
 fun MedicalHistorySummary(
@@ -27,9 +28,11 @@ fun MedicalHistorySummary(
     heartAttackAnswer: Answer?,
     strokeAnswer: Answer?,
     kidneyAnswer: Answer?,
-    smokerAnswer: Answer?,
+    isSmokingAnswer: Answer?,
+    isUsingSmokelessTobaccoAnswer: Answer?,
     diabetesManagementEnabled: Boolean,
     showSmokerQuestion: Boolean,
+    showSmokelessTobaccoQuestion: Boolean,
     modifier: Modifier = Modifier,
     onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -58,32 +61,13 @@ fun MedicalHistorySummary(
     )
 
     if (showSmokerQuestion) {
-      SmokerContainer(
-          smokerAnswer = smokerAnswer,
+      TobaccoQuestion(
+          isSmokingAnswer = isSmokingAnswer,
+          isUsingSmokelessTobaccoAnswer = isUsingSmokelessTobaccoAnswer,
+          showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
           onAnswerChange = onAnswerChange
       )
     }
-  }
-}
-
-@Composable
-fun SmokerContainer(
-    smokerAnswer: Answer?,
-    modifier: Modifier = Modifier,
-    onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
-) {
-  Card(modifier = modifier) {
-    MedicalHistoryQuestionItem(
-        modifier = Modifier
-            .padding(horizontal = dimensionResource(R.dimen.spacing_16))
-            .padding(vertical = dimensionResource(R.dimen.spacing_8)),
-        question = MedicalHistoryQuestion.IsSmoking,
-        selectedAnswer = smokerAnswer,
-        showDivider = false,
-        onSelectionChange = {
-          onAnswerChange(MedicalHistoryQuestion.IsSmoking, it)
-        }
-    )
   }
 }
 
@@ -204,9 +188,11 @@ private fun MedicalHistorySummaryPreview() {
         heartAttackAnswer = Answer.Yes,
         strokeAnswer = Answer.No,
         kidneyAnswer = null,
-        smokerAnswer = null,
+        isSmokingAnswer = null,
+        isUsingSmokelessTobaccoAnswer = null,
         diabetesManagementEnabled = true,
         showSmokerQuestion = false,
+        showSmokelessTobaccoQuestion = false,
         onAnswerChange = { _, _ ->
           // no-op
         }
@@ -224,9 +210,11 @@ private fun MedicalHistorySummaryNoDiabetesManagementPreview() {
         heartAttackAnswer = Answer.Yes,
         strokeAnswer = Answer.No,
         kidneyAnswer = null,
-        smokerAnswer = null,
+        isSmokingAnswer = null,
+        isUsingSmokelessTobaccoAnswer = null,
         diabetesManagementEnabled = false,
         showSmokerQuestion = false,
+        showSmokelessTobaccoQuestion = false,
         onAnswerChange = { _, _ ->
           // no-op
         }
@@ -244,9 +232,33 @@ private fun MedicalHistorySummarySmokerPreview() {
         heartAttackAnswer = Answer.Yes,
         strokeAnswer = Answer.No,
         kidneyAnswer = null,
-        smokerAnswer = Answer.Yes,
+        isSmokingAnswer = Answer.Yes,
+        isUsingSmokelessTobaccoAnswer = Answer.Yes,
         diabetesManagementEnabled = true,
         showSmokerQuestion = true,
+        showSmokelessTobaccoQuestion = false,
+        onAnswerChange = { _, _ ->
+          // no-op
+        }
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun MedicalHistorySummaryTobaccoUsePreview() {
+  SimpleTheme {
+    MedicalHistorySummary(
+        hypertensionAnswer = Answer.Yes,
+        diabetesAnswer = null,
+        heartAttackAnswer = Answer.Yes,
+        strokeAnswer = Answer.No,
+        kidneyAnswer = null,
+        isSmokingAnswer = Answer.Yes,
+        isUsingSmokelessTobaccoAnswer = Answer.Yes,
+        diabetesManagementEnabled = true,
+        showSmokerQuestion = true,
+        showSmokelessTobaccoQuestion = true,
         onAnswerChange = { _, _ ->
           // no-op
         }

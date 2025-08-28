@@ -15,12 +15,18 @@ data class MedicalHistorySummaryModel(
     val medicalHistory: MedicalHistory? = null,
     val currentFacility: Facility? = null,
     val showIsSmokingQuestion: Boolean,
+    val showSmokelessTobaccoQuestion: Boolean,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
-    fun create(patientUuid: UUID, showIsSmokingQuestion: Boolean): MedicalHistorySummaryModel = MedicalHistorySummaryModel(
+    fun create(
+        patientUuid: UUID,
+        showIsSmokingQuestion: Boolean,
+        showSmokelessTobaccoQuestion: Boolean,
+    ): MedicalHistorySummaryModel = MedicalHistorySummaryModel(
         patientUuid = patientUuid,
-        showIsSmokingQuestion = showIsSmokingQuestion
+        showIsSmokingQuestion = showIsSmokingQuestion,
+        showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
     )
   }
 

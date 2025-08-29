@@ -110,7 +110,7 @@ import org.simple.clinic.patient.Answer as PatientAnswer
     views = [
       PatientSearchResult::class
     ],
-    version = 120,
+    version = 121,
     exportSchema = true
 )
 @TypeConverters(

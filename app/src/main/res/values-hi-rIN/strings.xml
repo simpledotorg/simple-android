@@ -488,7 +488,6 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">इतिहास</string>
   <string name="medicalhistorysummaryview_diagnosis">निदान (आवश्यक)</string>
-
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">कोई दवाएं जोड़ी नहीं गईं</string>
 
@@ -916,4 +915,5 @@
   <string name="htn_warning_dialog_negative_button">अभी नहीं</string>
 
   <string name="purge_notification_desc">डेटाबेस रखरखाव प्रगति में है। इसमें सिर्फ़ एक मिनट लगेगा।</string>
+
   </resources>

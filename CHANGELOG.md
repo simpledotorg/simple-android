@@ -20,6 +20,7 @@
 - Bump Lottie Compose to v6.6.7
 - Add `isUsingSmokelessTobacco` in `MedicalHistory` table
 - Bump AGP to v8.12.2
+- Bump Sentry to v8.20.0
 
 ### Changes
 

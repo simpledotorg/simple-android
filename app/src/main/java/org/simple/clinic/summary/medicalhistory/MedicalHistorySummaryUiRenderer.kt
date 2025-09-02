@@ -14,6 +14,8 @@ class MedicalHistorySummaryUiRenderer(
 
   private val smokerQuestionVisibilityChangedCallback = ValueChangedCallback<Boolean>()
 
+  private val smokelessTobaccoQuestionVisibilityChangedCallback = ValueChangedCallback<Boolean>()
+
   override fun render(model: MedicalHistorySummaryModel) {
     if (model.hasLoadedMedicalHistory) {
       medicalHistoryChangedCallback.pass(model.medicalHistory!!, ui::populateMedicalHistory)
@@ -28,6 +30,14 @@ class MedicalHistorySummaryUiRenderer(
         ui.showCurrentSmokerQuestion()
       } else {
         ui.hideCurrentSmokerQuestion()
+      }
+    }
+
+    smokelessTobaccoQuestionVisibilityChangedCallback.pass(model.showSmokelessTobaccoQuestion) { show ->
+      if (show) {
+        ui.showSmokelessTobaccoQuestion()
+      } else {
+        ui.hideSmokelessTobaccoQuestion()
       }
     }
   }

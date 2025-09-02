@@ -6,6 +6,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttac
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
@@ -26,6 +27,7 @@ class NewMedicalHistoryUiRenderer(
     }
 
     renderSmokingQuestion(model)
+    renderSmokelessTobaccoQuestion(model)
 
     renderNextButton(model)
   }
@@ -79,6 +81,15 @@ class NewMedicalHistoryUiRenderer(
       ui.renderAnswerForQuestion(IsSmoking, model.ongoingMedicalHistoryEntry.isSmoking)
     } else {
       ui.hideCurrentSmokerQuestion()
+    }
+  }
+
+  private fun renderSmokelessTobaccoQuestion(model: NewMedicalHistoryModel) {
+    if (model.showSmokelessTobaccoQuestion) {
+      ui.showSmokelessTobaccoQuestion()
+      ui.renderAnswerForQuestion(IsUsingSmokelessTobacco, model.ongoingMedicalHistoryEntry.isUsingSmokelessTobacco)
+    } else {
+      ui.hideSmokelessTobaccoQuestion()
     }
   }
 

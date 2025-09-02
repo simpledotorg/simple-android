@@ -46,6 +46,9 @@ data class MedicalHistoryPayload(
     @Json(name = "smoking")
     val isSmoking: Answer,
 
+    @Json(name = "smokeless_tobacco")
+    val isUsingSmokelessTobacco: Answer,
+
     @Json(name = "cholesterol")
     val cholesterol: Float?,
 

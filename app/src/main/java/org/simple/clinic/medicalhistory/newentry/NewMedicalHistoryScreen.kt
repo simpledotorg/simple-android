@@ -8,6 +8,15 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.dimensionResource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -19,6 +28,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -32,10 +42,10 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDise
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
+import org.simple.clinic.medicalhistory.ui.TobaccoQuestion
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -100,27 +110,27 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val diabetesQuestionView
     get() = binding.diabetesQuestionView
 
-  private val scrollView
-    get() = binding.scrollView
-
   private val hypertensionDiagnosis
     get() = binding.hypertensionDiagnosis
 
   private val diabetesDiagnosis
     get() = binding.diabetesDiagnosis
 
-  private val currentSmokerQuestionContainer
-    get() = binding.currentSmokerQuestionContainer
+  private var showSmokerQuestion by mutableStateOf(false)
+  private var isSmoking by mutableStateOf<Answer>(Answer.Unanswered)
+  private var showSmokelessTobaccoQuestion by mutableStateOf(false)
+  private var isUsingSmokelessTobacco by mutableStateOf<Answer>(Answer.Unanswered)
 
-  private val currentSmokerQuestionView
-    get() = binding.currentSmokerQuestionView
+  private val composeView
+    get() = binding.composeView
 
   private val hotEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
   override fun defaultModel() = NewMedicalHistoryModel.default(
       country = country,
       showIsSmokingQuestion = features.isEnabled(Feature.NonLabBasedStatinNudge) ||
-          features.isEnabled(Feature.LabBasedStatinNudge)
+          features.isEnabled(Feature.LabBasedStatinNudge),
+      showSmokelessTobaccoQuestion = country.isoCountryCode != Country.ETHIOPIA
   )
 
   override fun bindView(
@@ -164,6 +174,31 @@ class NewMedicalHistoryScreen : BaseScreen<
     toolbar.setNavigationOnClickListener {
       router.pop()
     }
+
+    composeView.apply {
+      setViewCompositionStrategy(
+          ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+      )
+      setContent {
+        SimpleTheme {
+          Column(
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(dimensionResource(R.dimen.spacing_8)),
+          ) {
+            if (showSmokerQuestion) {
+              TobaccoQuestion(
+                  isSmokingAnswer = isSmoking,
+                  isUsingSmokelessTobaccoAnswer = isUsingSmokelessTobacco,
+                  showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
+              ) { question, answer ->
+                hotEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   private fun saveClicks() = nextButton
@@ -184,12 +219,19 @@ class NewMedicalHistoryScreen : BaseScreen<
       HasHadAStroke -> strokeQuestionView
       HasHadAKidneyDisease -> kidneyDiseaseQuestionView
       DiagnosedWithDiabetes -> diabetesQuestionView
-      IsSmoking -> currentSmokerQuestionView
       else -> null
     }
 
     view?.render(question, answer) { questionForView, newAnswer ->
       hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+    }
+
+    if (question == MedicalHistoryQuestion.IsSmoking) {
+      isSmoking = answer
+    }
+
+    if (question == MedicalHistoryQuestion.IsUsingSmokelessTobacco) {
+      isUsingSmokelessTobacco = answer
     }
   }
 
@@ -268,12 +310,19 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showCurrentSmokerQuestion() {
-    currentSmokerQuestionContainer.visibility = VISIBLE
-    currentSmokerQuestionView.hideDivider()
+    showSmokerQuestion = true
   }
 
   override fun hideCurrentSmokerQuestion() {
-    currentSmokerQuestionContainer.visibility = GONE
+    showSmokerQuestion = false
+  }
+
+  override fun showSmokelessTobaccoQuestion() {
+    showSmokelessTobaccoQuestion = true
+  }
+
+  override fun hideSmokelessTobaccoQuestion() {
+    showSmokelessTobaccoQuestion = false
   }
 
   override fun showOngoingHypertensionTreatmentErrorDialog() {

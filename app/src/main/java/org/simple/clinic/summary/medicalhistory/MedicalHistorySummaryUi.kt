@@ -8,4 +8,7 @@ interface MedicalHistorySummaryUi {
   fun hideDiagnosisView()
   fun showCurrentSmokerQuestion()
   fun hideCurrentSmokerQuestion()
+
+  fun showSmokelessTobaccoQuestion()
+  fun hideSmokelessTobaccoQuestion()
 }

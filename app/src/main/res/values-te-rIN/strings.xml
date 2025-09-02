@@ -488,7 +488,6 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">చరిత్ర</string>
   <string name="medicalhistorysummaryview_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
-
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">మందులు జోడించలేదు</string>
 
@@ -910,4 +909,5 @@
   <string name="htn_warning_dialog_negative_button">ఇప్పుడు కాదు</string>
 
   <string name="purge_notification_desc">డేటా నిర్వహణ జరుగుతోంది. నిమిషంలో అయిపోతుంది.</string>
+
   </resources>

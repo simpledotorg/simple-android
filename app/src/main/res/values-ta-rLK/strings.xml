@@ -489,6 +489,7 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">வரலாறு</string>
   <string name="medicalhistorysummaryview_diagnosis">நோய் கண்டறிதல் (தேவை)</string>
+  <string name="medicalhistorysummaryview_tobacco_use"> புகையிலை பாவனை</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">குளிகைகள் எதுவும் சேர்க்கப்படவில்லை</string>

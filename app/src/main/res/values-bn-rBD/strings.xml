@@ -489,6 +489,7 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ইতিহাস</string>
   <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
+  <string name="medicalhistorysummaryview_tobacco_use"> তামাক সেবন</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">কোনো ওষুধ যোগ করা হয়নি</string>

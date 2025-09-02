@@ -489,6 +489,7 @@
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ඉතිහාසය</string>
   <string name="medicalhistorysummaryview_diagnosis">රෝග නිශ්චය (අවශ්‍යයි)</string>
+  <string name="medicalhistorysummaryview_tobacco_use">දුම්කොළ ආශ්‍රිත නිෂ්පාදන භාවිතය</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">කිසිදු ඖෂධයක් එකතු කර නැත</string>

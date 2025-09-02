@@ -6,6 +6,7 @@ import android.text.Spanned
 import android.text.TextPaint
 import android.text.style.TextAppearanceSpan
 import androidx.annotation.StyleRes
+import androidx.core.content.withStyledAttributes
 
 /**
  * The platform [TextAppearanceSpan] does not support setting letter spacing for the spanned text.
@@ -24,12 +25,12 @@ class TextAppearanceWithLetterSpacingSpan(
     @StyleRes textAppearanceResId: Int
 ) : TextAppearanceSpan(context, textAppearanceResId) {
 
-  private val letterSpacing: Float
+  private var letterSpacing: Float = 0.0f
 
   init {
-    val typedArray = context.obtainStyledAttributes(textAppearanceResId, intArrayOf(android.R.attr.letterSpacing))
-    letterSpacing = typedArray.getFloat(0, 0F)
-    typedArray.recycle()
+    context.withStyledAttributes(textAppearanceResId, intArrayOf(android.R.attr.letterSpacing)) {
+      letterSpacing = getFloat(0, 0F)
+    }
   }
 
   override fun updateMeasureState(ds: TextPaint) {

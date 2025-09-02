@@ -58,8 +58,7 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.Simple"
     tools:ignore="AllowBackup,DataExtractionRules,GoogleAppIndexingWarning,LockedOrientationActivity"
-    tools:replace="android:allowBackup"
-    tools:targetApi="n">
+    tools:replace="android:allowBackup">
 
     <meta-data
       android:name="com.google.mlkit.vision.DEPENDENCIES"
@@ -128,9 +127,7 @@
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize"
       tools:ignore="DiscouragedApi">
-      <intent-filter
-        android:autoVerify="true"
-        tools:targetApi="m">
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />

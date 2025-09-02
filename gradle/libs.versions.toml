@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.2"
+agp = "8.12.0"
 
 androidx-cameraView = "1.4.2"
 androidx-camera = "1.4.2"
@@ -12,21 +12,23 @@ androidx-lifecycle = "2.8.7"
 androidx-activity = "1.10.1"
 
 chucker = "4.2.0"
-dagger = "2.56.2"
+dagger = "2.57"
 
-kotlin = "2.1.20"
+kotlin = "2.2.0"
+
+ksp = "2.2.0-2.0.2"
 
 ktlint = "0.36.0"
 
-lint = "31.9.2"
+lint = "31.12.0"
 
 mobius = "2.1.1"
 
 moshi = "1.15.2"
 
-okhttp = "4.12.0"
+okhttp = "5.1.0"
 
-retrofit = "2.11.0"
+retrofit = "3.0.0"
 
 room-metadataGenerator = "2.1.0"
 
@@ -40,9 +42,7 @@ androidx-compose-bom = "2025.07.00"
 
 composeThemeAdapter = "0.36.0"
 
-ksp = "2.1.20-1.0.31"
-
-sqlCipher = "4.9.0"
+sqlCipher = "4.10.0"
 
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -51,13 +51,13 @@ androidx-annotation-annotation = "androidx.annotation:annotation:1.9.1"
 
 # When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
 # can be enabled again.
-androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"
+androidx-appcompat = "androidx.appcompat:appcompat:1.7.1"
 
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
 androidx-cardview = "androidx.cardview:cardview:1.0.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.1"
 androidx-core-ktx = "androidx.core:core-ktx:1.16.0"
-androidx-fragment = "androidx.fragment:fragment-ktx:1.8.6"
+androidx-fragment = "androidx.fragment:fragment-ktx:1.8.8"
 androidx-preference = "androidx.preference:preference:1.2.1"
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
 androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0"
@@ -94,7 +94,7 @@ androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmod
 
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 
-asm = "org.ow2.asm:asm:9.7.1"
+asm = "org.ow2.asm:asm:9.8"
 
 chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
 chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
@@ -107,8 +107,8 @@ edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
 faker = "com.github.blocoio:faker:2.0.4"
 
-firebase-config = "com.google.firebase:firebase-config:22.1.2"
-firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.4.0"
+firebase-config = "com.google.firebase:firebase-config:23.0.0"
+firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.5.0"
 
 gson = "com.google.code.gson:gson:2.13.1"
 
@@ -116,7 +116,7 @@ itemanimators = "com.mikepenz:itemanimators:1.1.0"
 
 itext7 = "com.itextpdf:itext7-core:7.2.5"
 
-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.18.2"
+jackson-core = "com.fasterxml.jackson.core:jackson-core:2.19.2"
 
 jbcrypt = "org.mindrot:jbcrypt:0.4"
 
@@ -138,7 +138,7 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 #noinspection GradleDependency
 logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
-lottie = "com.airbnb.android:lottie-compose:6.6.2"
+lottie = "com.airbnb.android:lottie-compose:6.6.7"
 
 material = "com.google.android.material:material:1.12.0"
 

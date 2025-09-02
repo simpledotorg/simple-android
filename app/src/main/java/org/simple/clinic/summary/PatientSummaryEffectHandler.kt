@@ -111,7 +111,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
         .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
-        .addConsumer(UpdateSmokingStatus::class.java, { updateSmokingStatus(it.patientId, it.isSmoker) }, schedulersProvider.io())
+        .addConsumer(UpdateTobaccoUse::class.java, { updateTobaccoUse(it.patientId, it.isSmoker, it.isUsingSmokelessTobacco) }, schedulersProvider.io())
         .build()
   }
 
@@ -302,7 +302,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updateSmokingStatus(patientUuid: UUID, isSmoker: MedicalHistoryAnswer) {
+  private fun updateTobaccoUse(
+      patientUuid: UUID,
+      isSmoker: MedicalHistoryAnswer,
+      isUsingSmokelessTobacco: MedicalHistoryAnswer
+  ) {
     val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
         patientUuid = patientUuid,
         defaultHistoryUuid = uuidGenerator.v4()
@@ -310,6 +314,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     val updatedMedicalHistory = medicalHistory.answered(
         question = MedicalHistoryQuestion.IsSmoking,
         answer = isSmoker
+    ).answered(
+        question = MedicalHistoryQuestion.IsUsingSmokelessTobacco,
+        answer = isUsingSmokelessTobacco
     )
 
     medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))

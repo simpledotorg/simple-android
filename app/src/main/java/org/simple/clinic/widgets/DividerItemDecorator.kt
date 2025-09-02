@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.core.content.res.use
+import androidx.core.graphics.withSave
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -39,20 +40,20 @@ class DividerItemDecorator(
   }
 
   private fun drawDividers(canvas: Canvas, parent: RecyclerView) {
-    canvas.save()
-    val left = marginStart
-    val right = parent.width - marginEnd
+    canvas.withSave {
+      val left = marginStart
+      val right = parent.width - marginEnd
 
-    val childCount = parent.childCount
-    for (i in 0 until childCount - 1) {
-      val child = parent.getChildAt(i)
-      parent.getDecoratedBoundsWithMargins(child, mBounds)
-      val bottom: Int = mBounds.bottom + child.translationY.roundToInt()
-      val top: Int = bottom - divider!!.intrinsicHeight
-      divider!!.setBounds(left, top, right, bottom)
-      divider!!.draw(canvas)
+      val childCount = parent.childCount
+      for (i in 0 until childCount - 1) {
+        val child = parent.getChildAt(i)
+        parent.getDecoratedBoundsWithMargins(child, mBounds)
+        val bottom: Int = mBounds.bottom + child.translationY.roundToInt()
+        val top: Int = bottom - divider!!.intrinsicHeight
+        divider!!.setBounds(left, top, right, bottom)
+        divider!!.draw(this)
+      }
     }
-    canvas.restore()
   }
 
   override fun getItemOffsets(

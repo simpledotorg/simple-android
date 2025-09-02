@@ -138,6 +138,7 @@ class LookupPatientOnline @Inject constructor(
           hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,
           diagnosedWithDiabetes = response.medicalHistory.hasDiabetes,
           isSmoking = response.medicalHistory.isSmoking,
+          isUsingSmokelessTobacco = response.medicalHistory.isUsingSmokelessTobacco,
           cholesterol = response.medicalHistory.cholesterol,
           syncStatus = SyncStatus.DONE,
           createdAt = response.medicalHistory.createdAt,

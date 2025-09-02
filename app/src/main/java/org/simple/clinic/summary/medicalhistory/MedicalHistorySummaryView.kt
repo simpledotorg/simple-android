@@ -15,6 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -44,6 +45,7 @@ class MedicalHistorySummaryView(
   private var medicalHistory by mutableStateOf<MedicalHistory?>(null)
   private var diabetesManagementEnabled by mutableStateOf(false)
   private var showSmokerQuestion by mutableStateOf(false)
+  private var showSmokelessTobaccoQuestion by mutableStateOf(false)
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -56,6 +58,9 @@ class MedicalHistorySummaryView(
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var country: Country
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
@@ -78,7 +83,8 @@ class MedicalHistorySummaryView(
         defaultModel = MedicalHistorySummaryModel.create(
             patientUuid = screenKey.patientUuid,
             showIsSmokingQuestion = features.isEnabled(Feature.NonLabBasedStatinNudge) ||
-                features.isEnabled(Feature.LabBasedStatinNudge)
+                features.isEnabled(Feature.LabBasedStatinNudge),
+            showSmokelessTobaccoQuestion = country.isoCountryCode != Country.ETHIOPIA
         ),
         update = MedicalHistorySummaryUpdate(),
         init = MedicalHistorySummaryInit(),
@@ -112,9 +118,11 @@ class MedicalHistorySummaryView(
                 heartAttackAnswer = medicalHistory?.hasHadHeartAttack,
                 strokeAnswer = medicalHistory?.hasHadStroke,
                 kidneyAnswer = medicalHistory?.hasHadKidneyDisease,
-                smokerAnswer = medicalHistory?.isSmoking,
+                isSmokingAnswer = medicalHistory?.isSmoking,
+                isUsingSmokelessTobaccoAnswer = medicalHistory?.isUsingSmokelessTobacco,
                 diabetesManagementEnabled = diabetesManagementEnabled,
                 showSmokerQuestion = showSmokerQuestion,
+                showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
             ) { question, answer ->
               answerToggled(question, answer)
             }
@@ -162,6 +170,14 @@ class MedicalHistorySummaryView(
 
   override fun hideCurrentSmokerQuestion() {
     showSmokerQuestion = false
+  }
+
+  override fun showSmokelessTobaccoQuestion() {
+    showSmokelessTobaccoQuestion = true
+  }
+
+  override fun hideSmokelessTobaccoQuestion() {
+    showSmokelessTobaccoQuestion = false
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

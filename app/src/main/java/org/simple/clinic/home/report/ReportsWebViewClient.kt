@@ -1,11 +1,9 @@
 package org.simple.clinic.home.report
 
-import android.os.Build
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 
 class ReportsWebViewClient(
     private val backClicked: () -> Unit
@@ -36,7 +34,6 @@ class ReportsWebViewClient(
     super.onPageFinished(view, url)
   }
 
-  @RequiresApi(Build.VERSION_CODES.M)
   override fun onReceivedError(
       view: WebView?,
       request: WebResourceRequest?,

@@ -10,6 +10,7 @@ import android.content.pm.ServiceInfo
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
@@ -122,13 +123,11 @@ class OverdueDownloadWorker(
   }
 
   private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      notificationManager.createNotificationChannel(NotificationChannel(
-          NOTIFICATION_CHANNEL_ID,
-          NOTIFICATION_CHANNEL_NAME,
-          NotificationManager.IMPORTANCE_HIGH
-      ))
-    }
+    notificationManager.createNotificationChannel(NotificationChannel(
+        NOTIFICATION_CHANNEL_ID,
+        NOTIFICATION_CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_HIGH
+    ))
   }
 
   private fun downloadInProgressNotification(): ForegroundInfo {
@@ -166,11 +165,8 @@ class OverdueDownloadWorker(
   }
 
   private fun downloadSucceededNotification(uri: Uri, fileFormat: OverdueListFileFormat): Notification {
-    val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-    } else {
-      PendingIntent.FLAG_CANCEL_CURRENT
-    }
+    val flag =
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
 
     var intent = Intent(Intent.ACTION_VIEW).apply {
       setDataAndType(uri, fileFormat.mimeType)
@@ -185,7 +181,7 @@ class OverdueDownloadWorker(
     if (fileFormat == CSV) intent.setPackage(GOOGLE_SHEETS_PACKAGE_NAME)
 
     if (intent.resolveActivity(context.packageManager) == null) {
-      intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+      intent = Intent(Intent.ACTION_VIEW, playStoreUrl.toUri())
     }
 
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, flag)

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.0"
+agp = "8.12.2"
 
 androidx-cameraView = "1.4.2"
 androidx-camera = "1.4.2"

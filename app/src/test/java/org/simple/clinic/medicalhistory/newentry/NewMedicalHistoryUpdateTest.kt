@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import junitparams.JUnitParamsRunner
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
@@ -19,14 +20,17 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHype
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.TestData
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
   private val country = TestData.country(isoCountryCode = Country.INDIA)
-  private val defaultModel = NewMedicalHistoryModel.default(country, false)
+  private val defaultModel = NewMedicalHistoryModel.default(
+      country = country,
+      showIsSmokingQuestion = false,
+      showSmokelessTobaccoQuestion = false
+  )
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
       facilityConfig = FacilityConfig(
@@ -224,7 +228,11 @@ class NewMedicalHistoryUpdateTest {
   @Test
   fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is not india, then register patient`() {
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
-    val model = NewMedicalHistoryModel.default(country = bangladesh, false)
+    val model = NewMedicalHistoryModel.default(
+        country = bangladesh,
+        showIsSmokingQuestion = false,
+        showSmokelessTobaccoQuestion = false
+    )
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .answerChanged(DiagnosedWithHypertension, Yes)

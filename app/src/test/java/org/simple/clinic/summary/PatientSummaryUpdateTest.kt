@@ -2535,11 +2535,12 @@ class PatientSummaryUpdateTest {
   fun `when smoking is answered, then update the smoking status`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(SmokingStatusAnswered(
-            isSmoker = No
+        .whenEvent(TobaccoUseAnswered(
+            isSmoker = No,
+            isUsingSmokelessTobacco = Yes
         ))
         .then(assertThatNext(
-            hasEffects(UpdateSmokingStatus(patientId = patientUuid, isSmoker = No)),
+            hasEffects(UpdateTobaccoUse(patientId = patientUuid, isSmoker = No, isUsingSmokelessTobacco = Yes)),
             hasNoModel()
         ))
   }

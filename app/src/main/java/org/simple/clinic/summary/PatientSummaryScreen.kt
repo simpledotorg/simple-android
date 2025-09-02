@@ -714,11 +714,14 @@ class PatientSummaryScreen :
           checkedItems[index] = isChecked
         }
         .setPositiveButton(R.string.tobacco_status_dialog_title_positive_button) { _, _ ->
-          if (checkedItems[0]) {
-            hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
-          } else {
-            hotEvents.onNext(SmokingStatusAnswered(Answer.No))
-          }
+          val answeredNo = checkedItems[2]
+          val isSmoker = if (checkedItems[0] && !answeredNo) Answer.Yes else Answer.No
+          val isUsingSmokeless = if (checkedItems[1] && !answeredNo) Answer.Yes else Answer.No
+
+          hotEvents.onNext(TobaccoUseAnswered(
+              isSmoker = isSmoker,
+              isUsingSmokelessTobacco = isUsingSmokeless
+          ))
         }
         .setNegativeButton(R.string.tobacco_status_dialog_title_negative_button, null)
         .show()
@@ -738,8 +741,8 @@ class PatientSummaryScreen :
         }
         .setPositiveButton(R.string.tobacco_status_dialog_title_positive_button) { _, _ ->
           when (selectedOption) {
-            0 -> hotEvents.onNext(SmokingStatusAnswered(Answer.Yes))
-            1 -> hotEvents.onNext(SmokingStatusAnswered(Answer.No))
+            0 -> hotEvents.onNext(TobaccoUseAnswered(Answer.Yes))
+            1 -> hotEvents.onNext(TobaccoUseAnswered(Answer.No))
             else -> {}
           }
         }

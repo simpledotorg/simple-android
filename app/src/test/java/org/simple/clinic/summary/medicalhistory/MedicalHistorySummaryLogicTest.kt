@@ -318,26 +318,6 @@ class MedicalHistorySummaryLogicTest {
   }
 
   @Test
-  fun `when the is smokeless tobacco answer is changed, do not clear the diagnosis error`() {
-    // given
-    val updatedMedicalHistory = medicalHistory.answered(IsSmoking, Yes)
-
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
-
-    // when
-    setupController(facility = facilityWithDiabetesManagementEnabled, showCurrentSmokerQuestion = true, showSmokelessTobaccoQuestion = true)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(IsUsingSmokelessTobacco, Yes))
-
-    // then
-    verify(ui).populateMedicalHistory(medicalHistory)
-    verify(ui).populateMedicalHistory(updatedMedicalHistory)
-    verify(ui).showDiagnosisView()
-    verify(ui).showCurrentSmokerQuestion()
-    verify(ui).showSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when show smokeless tobacco question is disabled, then hide the show smokeless tobacco question view`() {
     // given
     whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)

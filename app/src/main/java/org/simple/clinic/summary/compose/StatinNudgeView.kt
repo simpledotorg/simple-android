@@ -7,7 +7,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,11 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +34,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -41,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.theme.SimpleInverseTheme
@@ -72,55 +78,62 @@ fun StatinNudge(
     Card(
         modifier = modifier
     ) {
-      BoxWithConstraints(
-          modifier = Modifier.padding(16.dp)
+      var startOffset by remember { mutableFloatStateOf(0f) }
+      var endOffset by remember { mutableFloatStateOf(0f) }
+      var columnWidth by remember { mutableIntStateOf(0) }
+
+      Column(
+          modifier = Modifier
+                  .padding(16.dp)
+                  .onSizeChanged { intSize ->
+                      val size = intSize.toSize()
+                      val (start, end) = getOffsets(statinInfo.cvdRisk, size)
+                      startOffset = start
+                      endOffset = end
+                      columnWidth = intSize.width
+                  }
       ) {
-        val constraints = constraints
-        val size = Size(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat())
-        val (startOffset, endOffset) = getOffsets(statinInfo.cvdRisk, size)
+        RiskText(
+            startOffset = startOffset,
+            endOffset = endOffset,
+            statinInfo = statinInfo,
+            parentWidth = columnWidth,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        RiskProgressBar(
+            startOffset = startOffset,
+            endOffset = endOffset
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        DescriptionText(
+            isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+            isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
+            statinInfo = statinInfo,
+            useVeryHighRiskAsThreshold = useVeryHighRiskAsThreshold
+        )
 
-        Column {
-          RiskText(
-              startOffset = startOffset,
-              endOffset = endOffset,
+        val shouldShowButtonsForNonLabNudge = isNonLabBasedStatinNudgeEnabled && !statinInfo.hasDiabetes
+        val shouldShowButtonsForLabNudge = isLabBasedStatinNudgeEnabled &&
+            statinInfo.cvdRisk?.canPrescribeStatin == true
+
+        val shouldShowAddButtons = !statinInfo.hasCVD &&
+            (shouldShowButtonsForNonLabNudge || shouldShowButtonsForLabNudge)
+
+        if (shouldShowAddButtons) {
+          StainNudgeAddButtons(
+              modifier = Modifier.padding(top = 16.dp),
               statinInfo = statinInfo,
-              parentWidth = constraints.maxWidth,
-          )
-          Spacer(modifier = Modifier.height(12.dp))
-          RiskProgressBar(
-              startOffset = startOffset,
-              endOffset = endOffset
-          )
-          Spacer(modifier = Modifier.height(16.dp))
-          DescriptionText(
-              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
               isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
-              statinInfo = statinInfo,
-              useVeryHighRiskAsThreshold = useVeryHighRiskAsThreshold
+              isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
+              addTobaccoUseClicked = addTobaccoUseClicked,
+              addBMIClick = addBMIClick,
+              addCholesterol = addCholesterol,
           )
-
-          val shouldShowButtonsForNonLabNudge = isNonLabBasedStatinNudgeEnabled && !statinInfo.hasDiabetes
-          val shouldShowButtonsForLabNudge = isLabBasedStatinNudgeEnabled &&
-              statinInfo.cvdRisk?.canPrescribeStatin == true
-
-          val shouldShowAddButtons = !statinInfo.hasCVD &&
-              (shouldShowButtonsForNonLabNudge || shouldShowButtonsForLabNudge)
-
-          if (shouldShowAddButtons) {
-            StainNudgeAddButtons(
-                modifier = Modifier.padding(top = 16.dp),
-                statinInfo = statinInfo,
-                isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
-                isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
-                addTobaccoUseClicked = addTobaccoUseClicked,
-                addBMIClick = addBMIClick,
-                addCholesterol = addCholesterol,
-            )
-          }
         }
       }
     }
   }
+  //  }
 }
 
 @Composable
@@ -171,15 +184,15 @@ fun RiskText(
 
   Text(
       modifier = Modifier
-          .testTag("STATIN_NUDGE_RISK_TEXT")
-          .offset {
-            IntOffset(
-                x = clampedOffsetX.toInt(),
-                y = 0
-            )
-          }
-          .background(riskColor, shape = RoundedCornerShape(50))
-          .padding(horizontal = 8.dp, vertical = 4.dp),
+              .testTag("STATIN_NUDGE_RISK_TEXT")
+              .offset {
+                  IntOffset(
+                          x = clampedOffsetX.toInt(),
+                          y = 0
+                  )
+              }
+              .background(riskColor, shape = RoundedCornerShape(50))
+              .padding(horizontal = 8.dp, vertical = 4.dp),
       style = SimpleTheme.typography.material.button,
       color = SimpleTheme.colors.onToolbarPrimary,
       text = riskText
@@ -200,64 +213,70 @@ fun RiskProgressBar(
   )
 
   val indicatorColor = Color(0xFF2F363D)
+  var progressBarWidth by remember { mutableFloatStateOf(0f) }
 
-  BoxWithConstraints(
+  Box(
       modifier = Modifier
-          .fillMaxWidth()
-          .height(14.dp)
-          .drawWithContent {
-            drawContent()
+              .fillMaxWidth()
+              .height(14.dp)
+              .onSizeChanged { intSize ->
+                  progressBarWidth = intSize.width.toFloat()
+              }
+              .drawWithContent {
+                  drawContent()
 
-            drawLine(
-                color = indicatorColor,
-                start = Offset(startOffset, 0f),
-                end = Offset(startOffset, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
-            drawLine(
-                color = indicatorColor,
-                start = Offset(endOffset, 0f),
-                end = Offset(endOffset, size.height),
-                strokeWidth = 2.dp.toPx()
-            )
-          },
+                  drawLine(
+                          color = indicatorColor,
+                          start = Offset(startOffset, 0f),
+                          end = Offset(startOffset, size.height),
+                          strokeWidth = 2.dp.toPx()
+                  )
+                  drawLine(
+                          color = indicatorColor,
+                          start = Offset(endOffset, 0f),
+                          end = Offset(endOffset, size.height),
+                          strokeWidth = 2.dp.toPx()
+                  )
+              },
       contentAlignment = Alignment.Center,
   ) {
-    val totalSegments = riskColors.size
-    val segmentWidthPx = constraints.maxWidth.toFloat() / totalSegments
+    if (progressBarWidth > 0f) {
+      val totalSegments = riskColors.size
+      val segmentWidthPx = progressBarWidth / totalSegments
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(4.dp)
-            .clip(RoundedCornerShape(50))
-    ) {
-      riskColors.forEachIndexed { index, color ->
-        val segmentStartPx = index * segmentWidthPx
-        val segmentEndPx = (index + 1) * segmentWidthPx
+      Row(
+          modifier = Modifier
+                  .fillMaxWidth()
+                  .height(4.dp)
+                  .clip(RoundedCornerShape(50))
+      ) {
+        riskColors.forEachIndexed { index, color ->
+          val segmentStartPx = index * segmentWidthPx
+          val segmentEndPx = (index + 1) * segmentWidthPx
 
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .drawWithContent {
-                  drawRect(color.copy(alpha = 0.5f))
+          Box(
+              modifier = Modifier
+                      .weight(1f)
+                      .fillMaxHeight()
+                      .drawWithContent {
+                          drawRect(color.copy(alpha = 0.5f))
 
-                  val visibleStart = maxOf(segmentStartPx, startOffset)
-                  val visibleEnd = minOf(segmentEndPx, endOffset)
+                          val visibleStart = maxOf(segmentStartPx, startOffset)
+                          val visibleEnd = minOf(segmentEndPx, endOffset)
 
-                  if (visibleStart < visibleEnd) {
-                    drawRect(
-                        color = color.copy(alpha = 1.0f),
-                        topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
-                        size = Size(
-                            width = visibleEnd - visibleStart,
-                            height = size.height
-                        )
-                    )
-                  }
-                }
-        )
+                          if (visibleStart < visibleEnd) {
+                              drawRect(
+                                      color = color.copy(alpha = 1.0f),
+                                      topLeft = Offset(x = visibleStart - segmentStartPx, y = 0f),
+                                      size = Size(
+                                              width = visibleEnd - visibleStart,
+                                              height = size.height
+                                      )
+                              )
+                          }
+                      }
+          )
+        }
       }
     }
   }
@@ -310,8 +329,8 @@ fun StainNudgeAddButtons(
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_tobacco_use),
             modifier = Modifier
-                .testTag("STATIN_NUDGE_ADD_TOBACCO_USE")
-                .weight(1f),
+                    .testTag("STATIN_NUDGE_ADD_TOBACCO_USE")
+                    .weight(1f),
             onClick = addTobaccoUseClicked
         )
       }
@@ -320,8 +339,8 @@ fun StainNudgeAddButtons(
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_bmi),
             modifier = Modifier
-                .testTag("STATIN_NUDGE_ADD_BMI")
-                .weight(1f),
+                    .testTag("STATIN_NUDGE_ADD_BMI")
+                    .weight(1f),
             onClick = addBMIClick
         )
       }
@@ -330,8 +349,8 @@ fun StainNudgeAddButtons(
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_cholesterol),
             modifier = Modifier
-                .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
-                .weight(1f),
+                    .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
+                    .weight(1f),
             onClick = addCholesterol
         )
       }
@@ -347,9 +366,9 @@ fun StainNudgeAddButton(
 ) {
   FilledButton(
       modifier = modifier
-          .height(36.dp)
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(50)),
+              .height(36.dp)
+              .fillMaxWidth()
+              .clip(RoundedCornerShape(50)),
       onClick = onClick
   ) {
     BasicText(

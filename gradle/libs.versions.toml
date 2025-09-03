@@ -14,9 +14,9 @@ androidx-activity = "1.10.1"
 chucker = "4.2.0"
 dagger = "2.57"
 
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.10-2.0.2"
 
 ktlint = "0.36.0"
 

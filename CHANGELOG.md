@@ -21,6 +21,8 @@
 - Add `isUsingSmokelessTobacco` in `MedicalHistory` table
 - Bump AGP to v8.12.2
 - Bump Sentry to v8.20.0
+- Bump Kotlin to v2.2.10
+- Bump KSP to v2.2.10-2.0.2
 
 ### Changes
 

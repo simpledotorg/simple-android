@@ -121,7 +121,6 @@ fun StatinNudge(
 
         if (shouldShowAddButtons) {
           StainNudgeAddButtons(
-              modifier = Modifier.padding(top = 16.dp),
               statinInfo = statinInfo,
               isNonLabBasedStatinNudgeEnabled = isNonLabBasedStatinNudgeEnabled,
               isLabBasedStatinNudgeEnabled = isLabBasedStatinNudgeEnabled,
@@ -312,7 +311,6 @@ fun DescriptionText(
 
 @Composable
 fun StainNudgeAddButtons(
-    modifier: Modifier = Modifier,
     statinInfo: StatinInfo,
     isNonLabBasedStatinNudgeEnabled: Boolean,
     isLabBasedStatinNudgeEnabled: Boolean,
@@ -322,13 +320,14 @@ fun StainNudgeAddButtons(
 ) {
   SimpleInverseTheme {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       if (statinInfo.isSmoker == Answer.Unanswered) {
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_tobacco_use),
             modifier = Modifier
+                    .padding(top = 16.dp)
                     .testTag("STATIN_NUDGE_ADD_TOBACCO_USE")
                     .weight(1f),
             onClick = addTobaccoUseClicked
@@ -339,6 +338,7 @@ fun StainNudgeAddButtons(
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_bmi),
             modifier = Modifier
+                    .padding(top = 16.dp)
                     .testTag("STATIN_NUDGE_ADD_BMI")
                     .weight(1f),
             onClick = addBMIClick
@@ -349,6 +349,7 @@ fun StainNudgeAddButtons(
         StainNudgeAddButton(
             text = stringResource(R.string.statin_alert_add_cholesterol),
             modifier = Modifier
+                    .padding(top = 16.dp)
                     .testTag("STATIN_NUDGE_ADD_CHOLESTEROL")
                     .weight(1f),
             onClick = addCholesterol

@@ -338,6 +338,8 @@
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
+  <string name="medicalhistory_question_is_smoking">දුම් පානය කරයි</string>
+  <string name="medicalhistory_question_is_using_smokeless_tobacco"> දුම රහිත දුම්කොළ ආශ්‍රිත නිෂ්පාදන</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">කිසිවක් නැත</string>

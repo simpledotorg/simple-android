@@ -338,6 +338,9 @@
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
+  <string name="medicalhistory_question_is_smoking">ማጨስ</string>
+  <string name="medicalhistory_question_is_using_smokeless_tobacco">ጭስ አልባ ቶባኮ</string>
+
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
   <string name="prescribed_drugs_dosage_remove">ያስወግዱ</string>

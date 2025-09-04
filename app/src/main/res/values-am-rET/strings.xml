@@ -335,7 +335,6 @@
   <string name="newmedicalhistory_next">ቀጣይ</string>
   <string name="newmedicalhistory_yes">አዎ</string>
   <string name="newmedicalhistory_no">አይ</string>
-  <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
   <string name="medicalhistory_question_is_smoking">ማጨስ</string>

@@ -5,7 +5,7 @@ androidx-cameraView = "1.4.2"
 androidx-camera = "1.4.2"
 androidx-paging = "3.3.6"
 androidx-room = "2.7.2"
-androidx-work = "2.10.1"
+androidx-work = "2.10.3"
 androidx-security-crypto = "1.1.0-alpha07"
 androidx-viewmodel = "2.8.7"
 androidx-lifecycle = "2.8.7"
@@ -57,7 +57,7 @@ androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
 androidx-cardview = "androidx.cardview:cardview:1.0.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.2.1"
 androidx-core-ktx = "androidx.core:core-ktx:1.16.0"
-androidx-fragment = "androidx.fragment:fragment-ktx:1.8.8"
+androidx-fragment = "androidx.fragment:fragment-ktx:1.8.9"
 androidx-preference = "androidx.preference:preference:1.2.1"
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.4.0"
 androidx-viewpager2 = "androidx.viewpager2:viewpager2:1.1.0"
@@ -229,8 +229,8 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
-sentry = { id = "io.sentry.android.gradle", version = "5.8.0" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
+sentry = { id = "io.sentry.android.gradle", version = "5.9.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

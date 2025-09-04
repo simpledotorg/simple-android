@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Internal
-- Bump AGP to v8.12.0
+- Bump AGP to v8.12.2
 - Bump Lint to v31.12.0
 - Bump Kotlin to v2.2.0
 - Bump KSP to v2.2.0-2.0.2
@@ -12,17 +12,19 @@
 - Bump retrofit to v3.0.0
 - Bump sqlcipher to v4.10.0
 - Bump AndroidX AppCompat to v1.7.1
-- Bump AndroidX Fragment KTX to v1.8.8
+- Bump AndroidX Fragment KTX to v1.8.9
 - Bump asm to v9.8
 - Bump firebase remote config to v23.0.0
 - Bump Firebase Analytics KTX to v22.5.0
 - Bump Jackson Core to v2.19.2
 - Bump Lottie Compose to v6.6.7
 - Add `isUsingSmokelessTobacco` in `MedicalHistory` table
-- Bump AGP to v8.12.2
 - Bump Sentry to v8.20.0
 - Bump Kotlin to v2.2.10
 - Bump KSP to v2.2.10-2.0.2
+- Bump AndroidX Work to v2.10.3
+- Bump Google Service to v4.4.3
+- Bump Sentry Android to v5.9.0
 
 ### Changes
 

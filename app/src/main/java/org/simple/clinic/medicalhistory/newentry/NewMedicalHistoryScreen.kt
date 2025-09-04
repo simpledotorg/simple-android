@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,14 +38,13 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
+import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
+import org.simple.clinic.medicalhistory.ui.HistoryContainer
 import org.simple.clinic.medicalhistory.ui.TobaccoQuestion
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -98,18 +98,6 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val nextButton
     get() = binding.nextButton
 
-  private val heartAttackQuestionView
-    get() = binding.heartAttackQuestionView
-
-  private val strokeQuestionView
-    get() = binding.strokeQuestionView
-
-  private val kidneyDiseaseQuestionView
-    get() = binding.kidneyDiseaseQuestionView
-
-  private val diabetesQuestionView
-    get() = binding.diabetesQuestionView
-
   private val hypertensionDiagnosis
     get() = binding.hypertensionDiagnosis
 
@@ -117,9 +105,9 @@ class NewMedicalHistoryScreen : BaseScreen<
     get() = binding.diabetesDiagnosis
 
   private var showSmokerQuestion by mutableStateOf(false)
-  private var isSmoking by mutableStateOf<Answer>(Answer.Unanswered)
   private var showSmokelessTobaccoQuestion by mutableStateOf(false)
-  private var isUsingSmokelessTobacco by mutableStateOf<Answer>(Answer.Unanswered)
+  private var showDiabetesQuestion by mutableStateOf(false)
+  private var ongoingMedicalHistoryEntry by mutableStateOf<OngoingMedicalHistoryEntry?>(null)
 
   private val composeView
     get() = binding.composeView
@@ -183,13 +171,23 @@ class NewMedicalHistoryScreen : BaseScreen<
         SimpleTheme {
           Column(
               modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(dimensionResource(R.dimen.spacing_8)),
+                      .fillMaxWidth()
+                      .padding(dimensionResource(R.dimen.spacing_8)),
+              verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
           ) {
+            HistoryContainer(
+                heartAttackAnswer = ongoingMedicalHistoryEntry?.hasHadHeartAttack,
+                strokeAnswer = ongoingMedicalHistoryEntry?.hasHadStroke,
+                kidneyAnswer = ongoingMedicalHistoryEntry?.hasHadKidneyDisease,
+                diabetesAnswer = ongoingMedicalHistoryEntry?.hasDiabetes,
+                showDiabetesQuestion = showDiabetesQuestion,
+            ) { question, answer ->
+              hotEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
+            }
             if (showSmokerQuestion) {
               TobaccoQuestion(
-                  isSmokingAnswer = isSmoking,
-                  isUsingSmokelessTobaccoAnswer = isUsingSmokelessTobacco,
+                  isSmokingAnswer = ongoingMedicalHistoryEntry?.isSmoking,
+                  isUsingSmokelessTobaccoAnswer = ongoingMedicalHistoryEntry?.isUsingSmokelessTobacco,
                   showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
               ) { question, answer ->
                 hotEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
@@ -226,14 +224,11 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun hideDiabetesHistorySection() {
-    diabetesQuestionView.visibility = GONE
-    kidneyDiseaseQuestionView.hideDivider()
+    showDiabetesQuestion = false
   }
 
   override fun showDiabetesHistorySection() {
-    diabetesQuestionView.visibility = VISIBLE
-    kidneyDiseaseQuestionView.showDivider()
-    diabetesQuestionView.hideDivider()
+    showDiabetesQuestion = true
   }
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {

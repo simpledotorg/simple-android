@@ -213,26 +213,8 @@ class NewMedicalHistoryScreen : BaseScreen<
     toolbar.title = patientName
   }
 
-  override fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer) {
-    val view = when (question) {
-      HasHadAHeartAttack -> heartAttackQuestionView
-      HasHadAStroke -> strokeQuestionView
-      HasHadAKidneyDisease -> kidneyDiseaseQuestionView
-      DiagnosedWithDiabetes -> diabetesQuestionView
-      else -> null
-    }
-
-    view?.render(question, answer) { questionForView, newAnswer ->
-      hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
-    }
-
-    if (question == MedicalHistoryQuestion.IsSmoking) {
-      isSmoking = answer
-    }
-
-    if (question == MedicalHistoryQuestion.IsUsingSmokelessTobacco) {
-      isUsingSmokelessTobacco = answer
-    }
+  override fun populateOngoingMedicalHistoryEntry(ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) {
+    this.ongoingMedicalHistoryEntry = ongoingMedicalHistoryEntry
   }
 
   override fun showDiabetesDiagnosisView() {

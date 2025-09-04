@@ -2,10 +2,11 @@ package org.simple.clinic.medicalhistory.newentry
 
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 
 interface NewMedicalHistoryUi {
   fun setPatientName(patientName: String)
-  fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer)
+  fun populateOngoingMedicalHistoryEntry(ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry)
   fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer)
   fun showDiabetesDiagnosisView()
   fun hideDiabetesDiagnosisView()

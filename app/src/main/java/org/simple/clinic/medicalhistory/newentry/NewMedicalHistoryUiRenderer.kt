@@ -2,11 +2,6 @@ package org.simple.clinic.medicalhistory.newentry
 
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
@@ -23,7 +18,7 @@ class NewMedicalHistoryUiRenderer(
     if (model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled) {
       renderDiabetesManagementEnabled(model)
     } else {
-      renderDiabetesManagementDisabled(model)
+      renderDiabetesManagementDisabled()
     }
 
     renderSmokingQuestion(model)
@@ -38,12 +33,10 @@ class NewMedicalHistoryUiRenderer(
 
   private fun renderMedicalHistoryQuestions(model: NewMedicalHistoryModel) {
     with(model.ongoingMedicalHistoryEntry) {
-      ui.renderAnswerForQuestion(HasHadAHeartAttack, hasHadHeartAttack)
-      ui.renderAnswerForQuestion(HasHadAKidneyDisease, hasHadKidneyDisease)
-      ui.renderAnswerForQuestion(HasHadAStroke, hasHadStroke)
       ui.renderDiagnosisAnswer(DiagnosedWithHypertension, diagnosedWithHypertension)
       renderHypertensionTreatmentQuestion(model)
     }
+    ui.populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
   }
 
   private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {
@@ -69,16 +62,14 @@ class NewMedicalHistoryUiRenderer(
     }
   }
 
-  private fun renderDiabetesManagementDisabled(model: NewMedicalHistoryModel) {
+  private fun renderDiabetesManagementDisabled() {
     ui.hideDiabetesDiagnosisView()
     ui.showDiabetesHistorySection()
-    ui.renderAnswerForQuestion(DiagnosedWithDiabetes, model.ongoingMedicalHistoryEntry.hasDiabetes)
   }
 
   private fun renderSmokingQuestion(model: NewMedicalHistoryModel) {
     if (model.showIsSmokingQuestion) {
       ui.showCurrentSmokerQuestion()
-      ui.renderAnswerForQuestion(IsSmoking, model.ongoingMedicalHistoryEntry.isSmoking)
     } else {
       ui.hideCurrentSmokerQuestion()
     }
@@ -87,7 +78,6 @@ class NewMedicalHistoryUiRenderer(
   private fun renderSmokelessTobaccoQuestion(model: NewMedicalHistoryModel) {
     if (model.showSmokelessTobaccoQuestion) {
       ui.showSmokelessTobaccoQuestion()
-      ui.renderAnswerForQuestion(IsUsingSmokelessTobacco, model.ongoingMedicalHistoryEntry.isUsingSmokelessTobacco)
     } else {
       ui.hideSmokelessTobaccoQuestion()
     }

@@ -12,7 +12,7 @@ androidx-lifecycle = "2.8.7"
 androidx-activity = "1.10.1"
 
 chucker = "4.2.0"
-dagger = "2.57"
+dagger = "2.57.1"
 
 kotlin = "2.2.10"
 
@@ -20,7 +20,7 @@ ksp = "2.2.10-2.0.2"
 
 ktlint = "0.36.0"
 
-lint = "31.12.0"
+lint = "31.13.0"
 
 mobius = "2.1.1"
 

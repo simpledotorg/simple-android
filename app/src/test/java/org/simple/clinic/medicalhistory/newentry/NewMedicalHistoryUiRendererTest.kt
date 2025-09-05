@@ -68,13 +68,10 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
-    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
-    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
-    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+    verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
@@ -92,7 +89,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
@@ -114,10 +111,9 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
@@ -134,13 +130,12 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -155,7 +150,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
@@ -182,7 +177,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
@@ -203,7 +198,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideDiabetesHistorySection()
@@ -225,7 +220,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
@@ -252,7 +247,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
@@ -274,7 +269,7 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verifyImplicitRenders()
+    verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
@@ -306,16 +301,12 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
-    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
-    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
-    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+    verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verify(ui).renderAnswerForQuestion(IsSmoking, No)
     verifyNoMoreInteractions(ui)
   }
 
@@ -338,13 +329,10 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
-    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
-    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
-    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+    verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
     verifyNoMoreInteractions(ui)
@@ -371,24 +359,17 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
-    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
-    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
-    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+    verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).showSmokelessTobaccoQuestion()
-    verify(ui).renderAnswerForQuestion(IsSmoking, No)
-    verify(ui).renderAnswerForQuestion(IsUsingSmokelessTobacco, No)
     verifyNoMoreInteractions(ui)
   }
 
-  private fun verifyImplicitRenders() {
-    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Unanswered)
-    verify(ui).renderAnswerForQuestion(HasHadAStroke, Unanswered)
-    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
+  private fun verifyImplicitRenders(model: NewMedicalHistoryModel) {
+    verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
   }

@@ -7,7 +7,7 @@
 - Bump Lint to v31.12.0
 - Bump Kotlin to v2.2.0
 - Bump KSP to v2.2.0-2.0.2
-- Bump dagger to v2.57
+- Bump dagger to v2.57.1
 - Bump okhttp to v5.1.0
 - Bump retrofit to v3.0.0
 - Bump sqlcipher to v4.10.0

@@ -12,7 +12,7 @@ androidx-lifecycle = "2.8.7"
 androidx-activity = "1.10.1"
 
 chucker = "4.2.0"
-dagger = "2.57"
+dagger = "2.57.1"
 
 kotlin = "2.2.10"
 

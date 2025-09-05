@@ -1,7 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
@@ -33,7 +31,6 @@ class NewMedicalHistoryUiRenderer(
 
   private fun renderMedicalHistoryQuestions(model: NewMedicalHistoryModel) {
     with(model.ongoingMedicalHistoryEntry) {
-      ui.renderDiagnosisAnswer(DiagnosedWithHypertension, diagnosedWithHypertension)
       renderHypertensionTreatmentQuestion(model)
     }
     ui.populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
@@ -50,7 +47,6 @@ class NewMedicalHistoryUiRenderer(
   private fun renderDiabetesManagementEnabled(model: NewMedicalHistoryModel) {
     ui.showDiabetesDiagnosisView()
     ui.hideDiabetesHistorySection()
-    ui.renderDiagnosisAnswer(DiagnosedWithDiabetes, model.ongoingMedicalHistoryEntry.hasDiabetes)
     renderDiabetesTreatmentQuestion(model)
   }
 

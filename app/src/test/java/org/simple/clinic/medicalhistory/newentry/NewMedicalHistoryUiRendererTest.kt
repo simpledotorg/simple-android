@@ -66,7 +66,6 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
@@ -92,8 +91,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, No)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -115,7 +112,6 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
     verify(ui).hideNextButtonProgress()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -131,7 +127,6 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders(model)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
@@ -153,8 +148,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -180,8 +173,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -200,9 +191,7 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -223,8 +212,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showDiabetesTreatmentQuestion(Unanswered)
@@ -250,8 +237,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -272,8 +257,6 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders(model)
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, No)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -299,7 +282,6 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
@@ -327,7 +309,6 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()
@@ -357,7 +338,6 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).populateOngoingMedicalHistoryEntry(model.ongoingMedicalHistoryEntry)
     verify(ui).hideNextButtonProgress()

@@ -21,10 +21,12 @@ import org.simple.clinic.medicalhistory.Answer
 
 @Composable
 fun AnswerChipsGroup(
+    modifier: Modifier = Modifier,
     selectedAnswer: Answer?,
     onSelectionChange: (Answer) -> Unit
 ) {
   Row(
+      modifier = modifier,
       horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8)),
       verticalAlignment = Alignment.CenterVertically,
   ) {

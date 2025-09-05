@@ -107,6 +107,9 @@ class NewMedicalHistoryScreen : BaseScreen<
   private var showSmokerQuestion by mutableStateOf(false)
   private var showSmokelessTobaccoQuestion by mutableStateOf(false)
   private var showDiabetesQuestion by mutableStateOf(false)
+  private var showHypertensionTreatmentQuestion by mutableStateOf(false)
+  private var showDiabetesTreatmentQuestion by mutableStateOf(false)
+  private var showDiabetesDiagnosis by mutableStateOf(false)
   private var ongoingMedicalHistoryEntry by mutableStateOf<OngoingMedicalHistoryEntry?>(null)
 
   private val composeView
@@ -175,6 +178,28 @@ class NewMedicalHistoryScreen : BaseScreen<
                       .padding(dimensionResource(R.dimen.spacing_8)),
               verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
           ) {
+            MedicalHistoryDiagnosisWithTreatment(
+                diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
+                diagnosisQuestion = DiagnosedWithHypertension,
+                diagnosisAnswer = ongoingMedicalHistoryEntry?.diagnosedWithHypertension,
+                treatmentQuestion = IsOnHypertensionTreatment(country.isoCountryCode),
+                treatmentAnswer = ongoingMedicalHistoryEntry?.isOnHypertensionTreatment,
+                showTreatmentQuestion = showHypertensionTreatmentQuestion
+            ) { question, answer ->
+              hotEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
+            }
+            if (showDiabetesDiagnosis) {
+              MedicalHistoryDiagnosisWithTreatment(
+                  diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_diabetes_required),
+                  diagnosisQuestion = DiagnosedWithDiabetes,
+                  diagnosisAnswer = ongoingMedicalHistoryEntry?.hasDiabetes,
+                  treatmentQuestion = IsOnDiabetesTreatment,
+                  treatmentAnswer = ongoingMedicalHistoryEntry?.isOnDiabetesTreatment,
+                  showTreatmentQuestion = showDiabetesTreatmentQuestion
+              ) { question, answer ->
+                hotEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
+              }
+            }
             HistoryContainer(
                 heartAttackAnswer = ongoingMedicalHistoryEntry?.hasHadHeartAttack,
                 strokeAnswer = ongoingMedicalHistoryEntry?.hasHadStroke,
@@ -217,10 +242,12 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun showDiabetesDiagnosisView() {
     diabetesDiagnosis.visibility = VISIBLE
+    showDiabetesDiagnosis = true
   }
 
   override fun hideDiabetesDiagnosisView() {
     diabetesDiagnosis.visibility = GONE
+    showDiabetesDiagnosis = false
   }
 
   override fun hideDiabetesHistorySection() {
@@ -266,11 +293,13 @@ class NewMedicalHistoryScreen : BaseScreen<
     }
 
     hypertensionDiagnosis.showTreatmentQuestion()
+    showHypertensionTreatmentQuestion = true
   }
 
   override fun hideHypertensionTreatmentQuestion() {
     hypertensionDiagnosis.hideTreatmentQuestion()
     hypertensionDiagnosis.clearTreatmentChipGroup()
+    showHypertensionTreatmentQuestion = false
   }
 
   override fun showDiabetesTreatmentQuestion(answer: Answer) {
@@ -279,11 +308,13 @@ class NewMedicalHistoryScreen : BaseScreen<
     }
 
     diabetesDiagnosis.showTreatmentQuestion()
+    showDiabetesTreatmentQuestion = true
   }
 
   override fun hideDiabetesTreatmentQuestion() {
     diabetesDiagnosis.hideTreatmentQuestion()
     diabetesDiagnosis.clearTreatmentChipGroup()
+    showDiabetesTreatmentQuestion = false
   }
 
   override fun showCurrentSmokerQuestion() {

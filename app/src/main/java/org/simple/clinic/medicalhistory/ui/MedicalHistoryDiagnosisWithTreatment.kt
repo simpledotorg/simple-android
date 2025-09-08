@@ -9,6 +9,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -32,6 +33,12 @@ fun MedicalHistoryDiagnosisWithTreatment(
     modifier: Modifier = Modifier,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
+    LaunchedEffect(showTreatmentQuestion) {
+        if (!showTreatmentQuestion) {
+            onSelectionChange(treatmentQuestion, Answer.Unanswered)
+        }
+    }
+
     Card(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier

@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Internal
-- Bump AGP to v8.12.2
+- Bump AGP to v8.13.0
 - Bump Lint to v31.13.0
 - Bump Kotlin to v2.2.0
 - Bump KSP to v2.2.0-2.0.2

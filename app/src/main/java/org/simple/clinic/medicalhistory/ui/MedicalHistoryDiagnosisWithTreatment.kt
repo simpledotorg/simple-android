@@ -32,78 +32,84 @@ fun MedicalHistoryDiagnosisWithTreatment(
     modifier: Modifier = Modifier,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
-  Card(modifier = modifier.fillMaxWidth()) {
-    Column(
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.spacing_16)),
-    ) {
-      Text(
-          modifier = Modifier
-              .padding(bottom = dimensionResource(R.dimen.spacing_12)),
-          text = diagnosisLabel,
-          style = SimpleTheme.typography.subtitle1Medium,
-          color = MaterialTheme.colors.onSurface,
-      )
+    Card(modifier = modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(R.dimen.spacing_16))
+                .padding(
+                    top = dimensionResource(R.dimen.spacing_16),
+                    bottom = dimensionResource(R.dimen.spacing_4)
+                )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(R.dimen.spacing_4)),
+                text = diagnosisLabel,
+                style = SimpleTheme.typography.subtitle1Medium,
+                color = MaterialTheme.colors.onSurface,
+            )
 
-      AnswerChipsGroup(
-          modifier = Modifier.align(Alignment.End),
-          selectedAnswer = diagnosisAnswer,
-          onSelectionChange = { newAnswer ->
-            if (newAnswer == diagnosisAnswer) {
-              onSelectionChange(diagnosisQuestion, Answer.Unanswered)
-            } else {
-              onSelectionChange(diagnosisQuestion, newAnswer)
-            }
-          }
-      )
-
-      AnimatedVisibility(
-          visible = showTreatmentQuestion
-      ) {
-        Column {
-          Divider(
-              modifier = Modifier.padding(
-                  top = dimensionResource(R.dimen.spacing_16),
-                  bottom = dimensionResource(R.dimen.spacing_8)),
-              color = SimpleTheme.colors.onSurface11)
-
-          Text(
-              modifier = Modifier
-                  .padding(bottom = dimensionResource(R.dimen.spacing_12)),
-              text = stringResource(treatmentQuestion.questionRes),
-              style = MaterialTheme.typography.body1,
-              color = MaterialTheme.colors.onSurface,
-          )
-
-          AnswerChipsGroup(
-              modifier = Modifier.align(Alignment.End),
-              selectedAnswer = treatmentAnswer,
-              onSelectionChange = { newAnswer ->
-                if (newAnswer == treatmentAnswer) {
-                  onSelectionChange(treatmentQuestion, Answer.Unanswered)
-                } else {
-                  onSelectionChange(treatmentQuestion, newAnswer)
+            AnswerChipsGroup(
+                modifier = Modifier.align(Alignment.End),
+                selectedAnswer = diagnosisAnswer,
+                onSelectionChange = { newAnswer ->
+                    if (newAnswer == diagnosisAnswer) {
+                        onSelectionChange(diagnosisQuestion, Answer.Unanswered)
+                    } else {
+                        onSelectionChange(diagnosisQuestion, newAnswer)
+                    }
                 }
-              }
-          )
+            )
+
+            AnimatedVisibility(
+                visible = showTreatmentQuestion
+            ) {
+                Column {
+                    Divider(
+                        modifier = Modifier.padding(
+                            top = dimensionResource(R.dimen.spacing_4),
+                            bottom = dimensionResource(R.dimen.spacing_8)
+                        ),
+                        color = SimpleTheme.colors.onSurface11
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = dimensionResource(R.dimen.spacing_4)),
+                        text = stringResource(treatmentQuestion.questionRes),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.onSurface,
+                    )
+
+                    AnswerChipsGroup(
+                        modifier = Modifier.align(Alignment.End),
+                        selectedAnswer = treatmentAnswer,
+                        onSelectionChange = { newAnswer ->
+                            if (newAnswer == treatmentAnswer) {
+                                onSelectionChange(treatmentQuestion, Answer.Unanswered)
+                            } else {
+                                onSelectionChange(treatmentQuestion, newAnswer)
+                            }
+                        }
+                    )
+                }
+            }
         }
-      }
     }
-  }
 }
 
 @Preview
 @Composable
 private fun MedicalHistoryDiagnosisWithTreatmentPreview() {
-  SimpleTheme {
-    MedicalHistoryDiagnosisWithTreatment(
-        diagnosisQuestion = MedicalHistoryQuestion.DiagnosedWithHypertension,
-        diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
-        diagnosisAnswer = Answer.Yes,
-        treatmentQuestion = IsOnHypertensionTreatment(Country.INDIA),
-        treatmentAnswer = Answer.Unanswered,
-        showTreatmentQuestion = true,
-        onSelectionChange = { _, _ -> }
-    )
-  }
+    SimpleTheme {
+        MedicalHistoryDiagnosisWithTreatment(
+            diagnosisQuestion = MedicalHistoryQuestion.DiagnosedWithHypertension,
+            diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
+            diagnosisAnswer = Answer.Yes,
+            treatmentQuestion = IsOnHypertensionTreatment(Country.INDIA),
+            treatmentAnswer = Answer.Unanswered,
+            showTreatmentQuestion = true,
+            onSelectionChange = { _, _ -> }
+        )
+    }
 }

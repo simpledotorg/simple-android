@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Internal
-- Bump AGP to v8.12.2
+- Bump AGP to v8.13.0
 - Bump Lint to v31.13.0
 - Bump Kotlin to v2.2.0
 - Bump KSP to v2.2.0-2.0.2
@@ -25,6 +25,8 @@
 - Bump AndroidX Work to v2.10.3
 - Bump Google Service to v4.4.3
 - Bump Sentry Android to v5.9.0
+- Bump AndroidX ViewModel to v2.9.3
+- Update Compose BOM to v2025.08.01
 
 ### Changes
 

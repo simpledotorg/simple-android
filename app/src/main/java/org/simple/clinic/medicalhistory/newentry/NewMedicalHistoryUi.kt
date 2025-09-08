@@ -7,7 +7,6 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 interface NewMedicalHistoryUi {
   fun setPatientName(patientName: String)
   fun populateOngoingMedicalHistoryEntry(ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry)
-  fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer)
   fun showDiabetesDiagnosisView()
   fun hideDiabetesDiagnosisView()
   fun showDiabetesHistorySection()

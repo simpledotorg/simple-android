@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.2"
+agp = "8.13.0"
 
 androidx-cameraView = "1.4.2"
 androidx-camera = "1.4.2"
@@ -7,7 +7,7 @@ androidx-paging = "3.3.6"
 androidx-room = "2.7.2"
 androidx-work = "2.10.3"
 androidx-security-crypto = "1.1.0-alpha07"
-androidx-viewmodel = "2.8.7"
+androidx-viewmodel = "2.9.3"
 androidx-lifecycle = "2.8.7"
 androidx-activity = "1.10.1"
 
@@ -38,7 +38,7 @@ coroutines = "1.10.2"
 
 compose-compiler = "1.5.13"
 
-androidx-compose-bom = "2025.07.00"
+androidx-compose-bom = "2025.08.01"
 
 composeThemeAdapter = "0.36.0"
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/newMedicalHistoryScreen"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
@@ -26,36 +25,10 @@
     android:layout_above="@id/nextButtonFrame"
     android:layout_below="@+id/appbar">
 
-    <LinearLayout
+    <androidx.compose.ui.platform.ComposeView
+      android:id="@+id/composeView"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:clipChildren="false"
-      android:clipToPadding="false"
-      android:orientation="vertical"
-      android:paddingBottom="@dimen/spacing_4">
-
-      <org.simple.clinic.medicalhistory.MedicalHistoryDiagnosisWithTreatment
-        android:id="@+id/hypertensionDiagnosis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_8"
-        android:layout_marginTop="@dimen/spacing_8" />
-
-      <org.simple.clinic.medicalhistory.MedicalHistoryDiagnosisWithTreatment
-        android:id="@+id/diabetesDiagnosis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_8"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-      <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/composeView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    </LinearLayout>
+      android:layout_height="wrap_content" />
 
   </ScrollView>
 

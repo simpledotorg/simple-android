@@ -26,6 +26,7 @@
 - Bump Google Service to v4.4.3
 - Bump Sentry Android to v5.9.0
 - Bump AndroidX ViewModel to v2.9.3
+- Update Compose BOM to v2025.08.01
 
 ### Changes
 

@@ -21,6 +21,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
       is ChangeDiagnosisNotNowClicked -> registerPatient(model)
+      is BackClicked -> dispatch(GoBack)
     }
   }
 

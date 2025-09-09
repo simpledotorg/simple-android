@@ -345,4 +345,15 @@ class NewMedicalHistoryUpdateTest {
             hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
         ))
   }
+
+  @Test
+  fun `when back is clicked, then go back`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
 }

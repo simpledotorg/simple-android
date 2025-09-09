@@ -56,7 +56,7 @@ fun MedicalHistoryDiagnosisWithTreatment(
                 color = MaterialTheme.colors.onSurface,
             )
 
-            AnswerChipsGroup(
+            MedicalHistoryQuestionOptions(
                 modifier = Modifier.align(Alignment.End),
                 selectedAnswer = diagnosisAnswer,
                 onSelectionChange = { newAnswer ->
@@ -88,7 +88,7 @@ fun MedicalHistoryDiagnosisWithTreatment(
                         color = MaterialTheme.colors.onSurface,
                     )
 
-                    AnswerChipsGroup(
+                    MedicalHistoryQuestionOptions(
                         modifier = Modifier.align(Alignment.End),
                         selectedAnswer = treatmentAnswer,
                         onSelectionChange = { newAnswer ->

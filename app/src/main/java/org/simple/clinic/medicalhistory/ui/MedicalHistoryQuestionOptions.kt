@@ -20,7 +20,7 @@ import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.Answer
 
 @Composable
-fun AnswerChipsGroup(
+fun MedicalHistoryQuestionOptions(
     modifier: Modifier = Modifier,
     selectedAnswer: Answer?,
     onSelectionChange: (Answer) -> Unit
@@ -30,7 +30,7 @@ fun AnswerChipsGroup(
       horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8)),
       verticalAlignment = Alignment.CenterVertically,
   ) {
-    MedicalHistoryAnswerChip(
+    MedicalHistoryQuestionOption(
         label = stringResource(R.string.newmedicalhistory_yes),
         selected = selectedAnswer == Answer.Yes,
         onSelectionChange = {
@@ -38,7 +38,7 @@ fun AnswerChipsGroup(
         }
     )
 
-    MedicalHistoryAnswerChip(
+    MedicalHistoryQuestionOption(
         label = stringResource(R.string.newmedicalhistory_no),
         selected = selectedAnswer == Answer.No,
         onSelectionChange = {
@@ -50,7 +50,7 @@ fun AnswerChipsGroup(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MedicalHistoryAnswerChip(
+fun MedicalHistoryQuestionOption(
     label: String,
     selected: Boolean,
     onSelectionChange: () -> Unit

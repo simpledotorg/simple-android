@@ -105,7 +105,7 @@ fun NewMedicalHistoryUi(
             onAnswerChange = onSelectionChange
         )
         if (model.showIsSmokingQuestion) {
-          TobaccoQuestion(
+          TobaccoContainer(
               isSmokingAnswer = model.ongoingMedicalHistoryEntry.isSmoking,
               isUsingSmokelessTobaccoAnswer = model.ongoingMedicalHistoryEntry.isUsingSmokelessTobacco,
               showSmokelessTobaccoQuestion = model.showSmokelessTobaccoQuestion,

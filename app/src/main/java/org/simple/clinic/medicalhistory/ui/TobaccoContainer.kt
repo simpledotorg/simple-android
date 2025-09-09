@@ -18,7 +18,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 
 @Composable
-fun TobaccoQuestion(
+fun TobaccoContainer(
     isSmokingAnswer: Answer?,
     isUsingSmokelessTobaccoAnswer: Answer?,
     showSmokelessTobaccoQuestion: Boolean,
@@ -105,7 +105,7 @@ fun TobaccoUseContainer(
 @Preview
 @Composable
 fun TobaccoQuestionPreview() {
-  TobaccoQuestion(
+  TobaccoContainer(
       isSmokingAnswer = Answer.Yes,
       isUsingSmokelessTobaccoAnswer = Answer.Unanswered,
       showSmokelessTobaccoQuestion = false
@@ -117,7 +117,7 @@ fun TobaccoQuestionPreview() {
 @Preview
 @Composable
 fun TobaccoWithSmokelessQuestionPreview() {
-  TobaccoQuestion(
+  TobaccoContainer(
       isSmokingAnswer = Answer.Yes,
       isUsingSmokelessTobaccoAnswer = Answer.Yes,
       showSmokelessTobaccoQuestion = true

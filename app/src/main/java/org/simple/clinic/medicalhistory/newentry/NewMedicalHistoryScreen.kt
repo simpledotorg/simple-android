@@ -21,7 +21,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
-import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryScreenUi
+import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryUi
 import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -82,7 +82,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
 
         val model by viewModel.models.observeAsState()
         model?.let {
-          NewMedicalHistoryScreenUi(
+          NewMedicalHistoryUi(
               model = it,
               navigationIconClick = { onBackPressed() },
               onNextClick = {

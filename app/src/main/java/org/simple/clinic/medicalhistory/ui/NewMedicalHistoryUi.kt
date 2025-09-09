@@ -32,7 +32,7 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryModel
 
 @Composable
-fun NewMedicalHistoryScreenUi(
+fun NewMedicalHistoryUi(
     model: NewMedicalHistoryModel,
     navigationIconClick: () -> Unit,
     onNextClick: () -> Unit,
@@ -135,8 +135,8 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
 
 @Preview
 @Composable
-private fun NewMedicalHistoryScreenUiPreview() {
-  NewMedicalHistoryScreenUi(
+private fun NewMedicalHistoryUiPreview() {
+  NewMedicalHistoryUi(
       model = previewMedicalHistoryModel,
       navigationIconClick = {},
       onNextClick = {}

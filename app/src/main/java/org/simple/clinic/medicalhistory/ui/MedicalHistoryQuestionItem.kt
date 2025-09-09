@@ -45,7 +45,7 @@ fun MedicalHistoryQuestionItem(
           overflow = TextOverflow.Ellipsis,
       )
 
-      AnswerChipsGroup(
+      MedicalHistoryQuestionOptions(
           selectedAnswer = selectedAnswer,
           onSelectionChange = { newAnswer ->
             if (newAnswer == selectedAnswer) {

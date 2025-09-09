@@ -41,7 +41,6 @@ fun NewMedicalHistoryScreenUi(
   SimpleTheme {
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = SimpleTheme.colors.material.surface,
         topBar = {
           TopAppBar(
               navigationIcon = {

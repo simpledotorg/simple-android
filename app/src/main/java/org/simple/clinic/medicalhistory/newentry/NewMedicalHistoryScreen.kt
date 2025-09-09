@@ -297,6 +297,10 @@ class NewMedicalHistoryScreen : BaseScreen<
     SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }
 
+  override fun goBack() {
+    router.pop()
+  }
+
   override fun showDiagnosisRequiredErrorDialog() {
     SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }

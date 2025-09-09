@@ -1,12 +1,12 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.sync.DataSync
@@ -124,6 +124,18 @@ class NewMedicalHistoryEffectHandlerTest {
 
     // then
     verify(uiActions).showOngoingDiabetesTreatmentErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when back is clicked, then go back to previous screen`() {
+    // when
+    testCase.dispatch(GoBack)
+
+    // then
+    verify(uiActions).goBack()
     verifyNoMoreInteractions(uiActions)
 
     testCase.assertNoOutgoingEvents()

@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -50,7 +53,7 @@ fun NewMedicalHistoryUi(
               },
               title = {
                 Text(
-                    text = model.ongoingPatientEntry!!.personalDetails!!.fullName,
+                    text = model.ongoingPatientEntry?.personalDetails?.fullName ?: "",
                 )
               },
           )
@@ -60,9 +63,17 @@ fun NewMedicalHistoryUi(
               testTag = "NEXT_BUTTON",
               onClick = onNextClick,
           ) {
-            Text(
-                text = stringResource(R.string.newmedicalhistory_next).uppercase()
-            )
+            if (!model.registeringPatient) {
+              Text(
+                  text = stringResource(R.string.newmedicalhistory_next).uppercase()
+              )
+            } else {
+              CircularProgressIndicator(
+                  modifier = Modifier.size(dimensionResource(R.dimen.spacing_24)),
+                  color = MaterialTheme.colors.onPrimary
+              )
+            }
+
           }
         },
     ) { paddingValues ->

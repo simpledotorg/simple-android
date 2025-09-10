@@ -353,7 +353,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(BackClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(GoBack)
         ))
   }
 }

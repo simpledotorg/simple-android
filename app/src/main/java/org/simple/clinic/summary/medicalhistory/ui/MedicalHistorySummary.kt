@@ -20,7 +20,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.ui.HistoryContainer
 import org.simple.clinic.medicalhistory.ui.MedicalHistoryQuestionItem
-import org.simple.clinic.medicalhistory.ui.TobaccoQuestion
+import org.simple.clinic.medicalhistory.ui.TobaccoContainer
 
 @Composable
 fun MedicalHistorySummary(
@@ -62,7 +62,7 @@ fun MedicalHistorySummary(
     )
 
     if (showSmokerQuestion) {
-      TobaccoQuestion(
+      TobaccoContainer(
           isSmokingAnswer = isSmokingAnswer,
           isUsingSmokelessTobaccoAnswer = isUsingSmokelessTobaccoAnswer,
           showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,

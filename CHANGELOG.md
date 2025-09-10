@@ -28,6 +28,7 @@
 - Bump AndroidX ViewModel to v2.9.3
 - Update Compose BOM to v2025.08.01
 - Migrate new medical history screen to Jetpack Compose
+- Bump AndroidX Benchmark to v1.4.0
 
 ### Changes
 

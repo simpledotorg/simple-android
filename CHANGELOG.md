@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 2025.09.09
+
 ### Internal
 - Bump AGP to v8.13.0
 - Bump Lint to v31.13.0

@@ -2,6 +2,9 @@
 
 ## Next Release
 
+### Internal
+- Bump Sentry to v8.21.1
+
 ## 2025.09.09
 
 ### Internal

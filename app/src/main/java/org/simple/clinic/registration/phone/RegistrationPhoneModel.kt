@@ -27,6 +27,9 @@ data class RegistrationPhoneModel(
   val isEnteredNumberValid: Boolean
     get() = phoneValidationResult != null && phoneValidationResult == RegistrationPhoneValidationResult.Valid
 
+  val isRegistrationOngoing: Boolean
+    get() = mode == RegistrationUiMode.RegistrationOngoing
+
   fun phoneNumberChanged(phoneNumber: String): RegistrationPhoneModel {
     return copy(
         ongoingRegistrationEntry = ongoingRegistrationEntry.withPhoneNumber(phoneNumber),

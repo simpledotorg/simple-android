@@ -40,6 +40,9 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       event: EnteredNumberValidated
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     val updatedModel = model.phoneNumberValidated(event.result)
+    if (updatedModel.isRegistrationOngoing) {
+      return noChange()
+    }
 
     return if (updatedModel.isEnteredNumberValid)
       next(updatedModel.clearPhoneRegistrationResult().switchToProgressMode(), SyncFacilities as RegistrationPhoneEffect)
@@ -52,7 +55,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       model: RegistrationPhoneModel
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (event.result) {
-      FacilitySyncResult.Synced -> dispatch(SearchForExistingUser(model.ongoingRegistrationEntry!!.phoneNumber!!) as RegistrationPhoneEffect)
+      FacilitySyncResult.Synced -> dispatch(SearchForExistingUser(model.ongoingRegistrationEntry.phoneNumber!!) as RegistrationPhoneEffect)
       FacilitySyncResult.NetworkError -> next(model.switchToPhoneEntryMode().withRegistrationResult(RegistrationResult.NetworkError))
       FacilitySyncResult.OtherError -> next(model.switchToPhoneEntryMode().withRegistrationResult(RegistrationResult.OtherError))
     }
@@ -60,7 +63,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
 
   private fun registerOrLoginUser(
       model: RegistrationPhoneModel,
-      result: SearchForExistingUserCompleted.Result
+      result: SearchUserResult
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return when (result) {
       is SearchUserResult.Found -> saveFoundUserLocally(model, result.uuid, result.status)
@@ -75,7 +78,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
       foundUserUuid: UUID,
       foundUserStatus: UserStatus
   ): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
-    val number = model.ongoingRegistrationEntry!!.phoneNumber!!
+    val number = model.ongoingRegistrationEntry.phoneNumber!!
 
     return if (foundUserStatus is UserStatus.DisapprovedForSyncing)
       next(model.switchToPhoneEntryMode(), ShowAccessDeniedScreen(number) as RegistrationPhoneEffect)

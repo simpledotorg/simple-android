@@ -1,0 +1,969 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Common -->
+  <string name="gender_female">女</string>
+  <string name="gender_male">男</string>
+  <string name="gender_transgender">变性人</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">M</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">F</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">T</string>
+  <string name="api_unexpected_error">出错了。请重试。</string>
+  <string name="api_network_error">无网络连接</string>
+  <string name="api_server_error">服务器错误！请稍后再试。</string>
+
+  <!-- Country names -->
+  <string name="country_india">橘红</string>
+  <string name="country_bangladesh">孟加拉国</string>
+  <string name="country_ethiopia">埃塞俄比亚</string>
+  <string name="country_sri_lanka">斯里兰卡</string>
+  <string name="country_demo">演示国家</string>
+
+  <!-- Home -->
+  <string name="home_help">帮助</string>
+  <string name="home_settings">设置</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">BP 护照</string>
+  <string name="identifiertype_bangladesh_national_id">居民身份证号</string>
+  <string name="identifiertype_ethiopia_medical_record_number">病历编号</string>
+  <string name="identifiertype_unknown">Id</string>
+  <string name="identifiertype_india_national_health_id">国民健康身份证</string>
+  <string name="identifiertype_sri_lanka_national_id">居民身份证号</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">个人健康档案号</string>
+
+  <!-- Patient search -->
+  <string name="instantsearch_hint">姓名、电话或身份证</string>
+  <!-- Patient search results -->
+  <string name="patientsearchresults_register_patient_rationale">在此列表中找不到病人？</string>
+  <string name="patientsearchresults_register_patient">注册成为新患者</string>
+  <string name="patientsearchresults_item_phone_number">电话</string>
+  <string name="patientsearchresults_item_birthdate">出生日期</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">返回搜索</string>
+  <string name="patiententry_full_name">病人姓名</string>
+  <string name="patiententry_phone_number">电话号码</string>
+  <string name="patiententry_bangladesh_national_id">身份证号码</string>
+  <string name="patiententry_ethiopia_medical_record_number">病历编号</string>
+  <string name="patiententry_sri_lanka_personal_health_number">个人健康档案号</string>
+  <string name="patiententry_date_of_birth_unfocused">生日</string>
+  <string name="patiententry_date_of_birth_focused">日期： 年 月 日</string>
+  <string name="patiententry_dateofbirth_and_age_separator">或</string>
+  <string name="patiententry_age">年龄</string>
+  <string name="patiententry_street_address">房屋地址</string>
+  <string name="patiententry_street_house_road_number">房屋和道路编号</string>
+  <string name="patiententry_village_colony_ward">村庄/聚居区/选区</string>
+  <string name="patiententry_village_ward">村庄/选区</string>
+  <string name="patiententry_kebele">乡</string>
+  <string name="patiententry_zone">工会</string>
+  <string name="patiententry_district">地区</string>
+  <string name="patiententry_woreda">区域</string>
+  <string name="patiententry_upazila">乡</string>
+  <string name="patiententry_state">省市自治区</string>
+  <string name="patiententry_region">地区</string>
+  <string name="patiententry_doornumber_streetname">门牌号、街道名称</string>
+  <string name="patiententry_division_area">分区和地区</string>
+  <string name="patiententry_save_patient">下一步</string>
+  <string name="patiententry_error_empty_fullname">输入患者全名</string>
+  <string name="patiententry_error_empty_gender">选择患者性别</string>
+  <string name="patiententry_error_empty_colony_or_village">必须的</string>
+  <string name="patiententry_error_empty_district">必须的</string>
+  <string name="patiententry_error_state_empty">必须的</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">输入患者年龄</string>
+  <string name="patiententry_error_invalid_dateofbirth">输入患者的出生日期（DD/MM/YYYY）</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">确定患者的出生日期</string>
+  <string name="patiententry_error_phonenumber_blank">电话号码不能为空</string>
+  <string name="patiententry_error_phonenumber_length_less">电话号码不能少于%1$s 位数</string>
+  <string name="patiententry_identifier_bp_passport">BP 护照</string>
+  <string name="patiententry_consent_header">同意：\u0020</string>
+  <string name="patiententry_consent_first_para">点击下面的按钮，即表示您确认您在此输入的任何患者数据都是在适当的知情同意下获得的。这意味着患者或法定监护人知道您正在将他们的个人数据输入应用程序，了解正在收集哪些数据，并知道可能会使用应用程序中提供的电话号码通过短信、WhatsApp 或其他方式与他们联系。</string>
+  <string name="patiententry_consent_second_para">经您或您为之工作的医疗服务提供者授权的任何人都可以访问您在此输入的患者数据和信息。通过使用该应用程序，您确认患者或法定监护人了解谁有权访问通过该应用程序获得的数据，并同意访问这些数据。</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / 短信提醒</string>
+  <string name="patiententry_consent_sms_reminders">短信提醒</string>
+  <string name="patiententry_age_exceeds_max_limit_error">年龄不得超过 120 岁</string>
+  <string name="patiententry_age_exceeds_min_limit_error">年龄不能等于 0 岁</string>
+  <string name="patiententry_town_area">城镇/地区</string>
+  <string name="patiententry_province">省</string>
+
+  <string name="patientedit_save_patient">保存</string>
+  <string name="patientedit_bp_passports_label">BP 护照</string>
+  <string name="patientedit_confirm_discard_title">放弃更改？</string>
+  <string name="patientedit_confirm_discard_ok">放弃</string>
+  <string name="patientedit_confirm_discard_cancel">取消</string>
+  <string name="patientedit_delete_patient">删除</string>
+  <string name="patientedit_add_button">添加</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">患者</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">逾期</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">进展情况</string>
+
+  <string name="home_search_patient_name_phone">输入姓名、电话或身份证</string>
+  <string name="patients_user_awaiting_approval_title">等待批准</string>
+  <string name="patients_user_awaiting_approval_message">一旦获得批准，您就可以访问您所在诊所的病人记录。</string>
+  <string name="patients_user_approved_title">您已获得批准！</string>
+  <string name="patients_awaiting_sms_verification_title">等待短信验证</string>
+  <string name="patients_user_approved_message">您现在可以查看诊所的所有患者数据</string>
+  <string name="patients_awaiting_sms_verification_message">一旦通过验证，您就可以访问您诊所的病人记录。</string>
+  <string name="patients_dismiss_user_approved_status">明白</string>
+  <string name="patients_enter_code">输入代码</string>
+  <string name="patients_you_are_now_logged_in">验证成功！病人记录现在可见。</string>
+  <string name="patients_loggedoutalert_title">一次只能在一台设备上登录</string>
+  <string name="patients_loggedoutalert_message">您已注销之前的设备。</string>
+  <string name="patients_loggedoutalert_dismiss">明白</string>
+  <string name="patients_scan_simple_card">扫描 ID</string>
+  <string name="patients_recentpatients_title">最近</string>
+  <string name="patients_recentpatients_no_recent_patients">近期无病人</string>
+  <string name="patients_recentpatients_see_all">查看全部</string>
+  <string name="patients_recentpatients_nameage">%1$s,%2$s</string>
+  <string name="patients_links_title">链接</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">血压</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">编辑血压</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">访问日期</string>
+  <string name="bloodpressureentry_remove">移除</string>
+  <string name="bloodpressureentry_systolic">收缩</string>
+  <string name="bloodpressureentry_diastolic">舒张</string>
+  <string name="bloodpressureentry_day">天</string>
+  <string name="bloodpressureentry_month">月份</string>
+  <string name="bloodpressureentry_year">年</string>
+  <string name="bloodpressureentry_error_systolic_more">收缩压应高于舒张压</string>
+  <string name="bloodpressureentry_error_systolic_70">收缩压不能低于 70</string>
+  <string name="bloodpressureentry_error_systolic_300">收缩压不能超过 300</string>
+  <string name="bloodpressureentry_error_diastolic_40">舒张压不能低于 40</string>
+  <string name="bloodpressureentry_error_diastolic_180">舒张压不能超过 180</string>
+  <string name="bloodpressureentry_error_systolic_empty">输入收缩压和舒张压</string>
+  <string name="bloodpressureentry_error_diastolic_empty">输入收缩压和舒张压</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">请输入有效日期（日/月/年）。</string>
+  <string name="bloodpressureentry_error_date_is_in_future">日期不能在未来</string>
+  <string name="bloodpressureentry_remove_bp_title">删除 BP</string>
+  <string name="bloodpressureentry_remove_bp_message">您确定要删除此血压记录吗？</string>
+  <string name="bloodpressureentry_remove_bp_confirm">移除</string>
+  <string name="bloodpressureentry_remove_bp_cancel">取消</string>
+  <string name="bloodpressureentry_date_change">改变</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">后退</string>
+  <string name="patientsummary_prescriptions_add">药品</string>
+  <string name="patientsummary_prescriptions_update">编辑药物</string>
+  <string name="patientsummary_bp_add_new">血压</string>
+  <string name="patientsummary_finish_saving_patient">保存</string>
+  <string name="patientsummary_finish_refill_medicine">补充药品</string>
+  <string name="patientsummary_bp_none_added">未添加血压值</string>
+  <string name="patientsummary_edit">编辑</string>
+
+  <string name="patientsummary_updatephone_dialog_title">更新电话号码</string>
+  <string name="patientsummary_updatephone_dialog_message">患者的电话号码之前被标记为不正确</string>
+  <string name="patientsummary_updatephone_phone_hint">电话号码</string>
+  <string name="patientsummary_updatephone_save">保存</string>
+  <string name="patientsummary_updatephone_cancel">跳过</string>
+  <string name="patientsummary_addphone_dialog_title">更新电话号码</string>
+  <string name="patientsummary_addphone_dialog_message">登记时未输入患者的电话号码</string>
+  <string name="patientsummary_addphone_phone_hint">电话号码</string>
+  <string name="patientsummary_addphone_save">保存</string>
+  <string name="patientsummary_addphone_cancel">跳过</string>
+  <string name="patientsummary_toolbar_title">%1$s,%2$s 、%3$s</string>
+
+  <string name="patientsummary_teleconsult">远程咨询</string>
+  <string name="patientsummary_log_teleconsult">日志远程咨询</string>
+
+  <string name="patientsummary_registered_faciliy_title">注册</string>
+  <string name="patientsummary_registered_facility">%1$s 于%2$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">查看全部</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">低</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">高</string>
+
+  <string name="bloodsugar_level_low">低</string>
+  <string name="bloodsugar_level_high">高</string>
+
+  <string name="timestamp_today">今天</string>
+  <string name="timestamp_yesterday">昨天</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s 日前</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">药品</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">添加另一种药物</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">返回电话号码屏幕</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">不是你吗？</string>
+  <string name="applock_reset_pin_alert_title">重置安全密码？</string>
+  <string name="applock_reset_pin_alert_message">您确定要重置安全密码吗？</string>
+  <string name="applock_reset_pin_alert_confirm">复位</string>
+  <string name="applock_reset_pin_alert_cancel">取消</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">忘记密码？</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">密码与原始密码不符</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">密码不正确，%s 剩余尝试次数</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">您已进行了%s 次错误尝试</string>
+  <string name="pinentry_pin_number_hint">您的安全密码</string>
+  <string name="pinentry_bruteforcelock_timer_label">之后再试一次</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">您的电话号码</string>
+  <string name="registrationphone_error_invalid_number">检查电话号码。看起来太短了。</string>
+  <string name="registration_loggedout_dialog_title">您已退出登录</string>
+  <string name="registration_loggedout_dialog_message">请再次登录以继续</string>
+  <string name="registration_loggedout_dialog_confirm">好的</string>
+  <string name="registrationphone_next">下一步</string>
+
+  <string name="registrationname_name_label">您的职务和全名</string>
+  <string name="registrationname_error_empty_name">请输入您的全名</string>
+  <string name="registrationname_next">下一步</string>
+  <string name="registrationname_name_and_role_hint">范例：护士张-美丽</string>
+
+  <string name="registrationpin_pin_label">创建安全密码</string>
+  <string name="registrationpin_pin_hint">记住您的 PIN 码，稍后会用到它</string>
+  <string name="registrationpin_error_incomplete_pin">密码太短。请输入 4 个数字。</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">再次输入安全密码</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">密码与原始密码不符</string>
+  <string name="registrationconfirmpin_reset_pin">重置密码</string>
+
+  <string name="registrationlocation_screen_title">位置访问</string>
+  <string name="registrationlocation_skip_permission">跳过</string>
+  <string name="registrationlocation_permission_rationale_description">您所在的位置将帮助我们找到您的诊所</string>
+  <string name="registrationlocation_permission_rationale_title">更快找到您的诊所</string>
+  <string name="registrationlocation_allow_access">允许位置访问</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">开始</string>
+  <string name="screenonboarding_intro_1">搜索&amp;查找 \n成千上万 \n有</string>
+  <string name="screenonboarding_intro_1_hypertension">\ 高血压</string>
+  <string name="screenonboarding_intro_2">保存以下记录 \n</string>
+  <string name="screenonboarding_intro_2_bp">血压 \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ 药品</string>
+  <string name="screenonboarding_intro_3">患者接受 </string>
+  <string name="screenonboarding_intro_3_reminder">\n提醒信息</string>
+  <string name="screenonboarding_intro_3_visits">\n回访</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">无逾期病人</string>
+  <string name="overdue_empty_desc">如果患者错过了预定的就诊时间，您可以致电患者进行血压复诊。</string>
+  <string name="overdue_list_item_name_age">%s,%s</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="other">逾期 %s 天</item>
+  </plurals>
+  <string name="overdue_list_item_village">村庄</string>
+  <string name="overdue_download">下载</string>
+  <string name="overdue_share">分享</string>
+  <string name="overdue_no_pending_patients">没有待诊病人</string>
+  <string name="overdue_pending_list_button_see_all">查看全部</string>
+  <string name="overdue_pending_list_button_see_less">查看更少</string>
+  <string name="overdue_pending_to_call_header">待调用</string>
+  <string name="overdue_agreed_to_visit_call_header">同意访问</string>
+  <string name="overdue_remind_to_call_header">提醒稍后致电</string>
+  <string name="overdue_removed_from_list_call_header">从列表中删除</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 年未就诊</string>
+
+
+  <!-- Facility change -->
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">检查发送至</string>
+  <string name="enterotp_enter_verification_code">输入验证码</string>
+  <string name="enterotp_incorrect_code">代码不正确，请重试</string>
+  <string name="enterotp_resend_sms">重新发送短信</string>
+  <string name="enterotp_sms_sent">发送新的验证短信</string>
+  <string name="enterotp_try_again_after">之后再试一次</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">您已进行了%s 次错误尝试</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">代码不正确，%s 剩余尝试次数</string>
+  <!-- minutes:seconds -->
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">下次访问时间</string>
+  <string name="scheduleappointment_not_now">现在不要</string>
+  <string name="scheduleappointment_done">完成的</string>
+  <string name="scheduleappointment_next">下一步</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="other">%s 天数</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="other">%s 周数</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="other">%s 个月</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">创建新的安全 PIN 码</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">密码太短。请输入 4 个数字。</string>
+  <string name="forgotpin_confirm_pin">再次输入安全密码</string>
+  <string name="forgotpin_confirm_pin_message">再次输入密码确认</string>
+  <string name="forgotpin_error_pin_mismatch">密码与原始密码不符</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">稍后再来</string>
+  <string name="reports_you_will_be_able_to_see">您可以在此查看您所在诊所的高血压报告。</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">心脏病发作</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">中风</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">肾病</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_hypertension">高血压</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">高血压诊断（必填）</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_diabetes">糖尿病</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">糖尿病诊断（必填）</string>
+  <string name="newmedicalhistory_next">下一步</string>
+  <string name="newmedicalhistory_yes">是</string>
+  <string name="newmedicalhistory_no">否</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">患者上个月是否服用过降压药？</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">患者在上个月是否服用过糖尿病药物？</string>
+  <string name="medicalhistory_question_is_smoking">烟</string>
+  <string name="medicalhistory_question_is_using_smokeless_tobacco">无烟烟草</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">没有</string>
+  <string name="prescribed_drugs_dosage_remove">移除</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s 配料</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">BP 护照或身份证</string>
+  <string name="scansimpleid_enteredcode_error_empty">输入 BP 护照号码或国民健康身份证号码</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">输入有效的 BP 护照号码或国民健康身份证号码</string>
+  <string name="scansimpleid_type_number">或编号</string>
+  <string name="scansimpleid_invalid_qr_code">扫描有效的健康身份证件</string>
+  <string name="scansimpleid_error_state_snackbar_ok">好</string>
+  <string name="scansimpleid_identfier_already_exists">身份证已给另一位病人。\n扫描新的健康 ID。</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP 护照或国民健康身份证</string>
+  <string name="scansimpleid_bp_passport_title">BP 护照</string>
+  <string name="scansimpleid_national_id_title">居民身份证号</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">待同步</string>
+  <string name="syncindicator_status_failed">同步失败</string>
+  <string name="syncindicator_status_syncing">同步</string>
+  <string name="syncindicator_status_synced_just_now">刚刚同步</string>
+  <string name="syncindicator_status_synced_min_ago">同步%s 分钟前</string>
+  <string name="syncindicator_dialog_error_network">确保互联网连接正常，以便同步患者记录。</string>
+  <string name="syncindicator_dialog_button_text">好吧</string>
+  <string name="syncindicator_dialog_error_server">同步服务器暂时关闭。请稍后再试，或与您的主管联系。</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">帮助</string>
+  <string name="help_no_connection">无网络连接</string>
+  <string name="help_something_went_wrong">出问题了</string>
+  <string name="help_try_again">再试一次</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">是</string>
+  <string name="linkidwithpatient_button_back">后退</string>
+  <string name="linkidwithpatient_text">将 ID 添加到</string>
+  <string name="linkidwithpatient_patient_text">%1$s\?</string>
+
+  <!-- Add ID to Patient: Search -->
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">最近</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">访问次数:\u0020</string>
+  <string name="recent_patients_itemview_new_registration">新注册</string>
+
+  <!-- Add ID to Patient: Search Results-->
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">更新应用程序</string>
+  <string name="appupdatedialog_body">您将进入 Google Play Store 更新 \"简单\"。</string>
+  <string name="appupdatedialog_positive_button_text">更新</string>
+  <string name="appupdatedialog_negative_button_text">现在不行</string>
+
+  <!-- All Patients In Facility View-->
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">出问题了</string>
+  <string name="registrationloader_error_unexpected_message">请稍后再试，或与您的主管联系。</string>
+  <string name="registrationloader_error_internet_connection_title">无网络连接</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">再试一次</string>
+
+  <!-- Short code search -->
+
+  <!-- Simple video -->
+  <string name="simple_video_duration">%s 分钟</string>
+
+  <!-- Settings -->
+  <string name="settings_title">设置</string>
+  <string name="settings_name">名称</string>
+  <string name="settings_number">电话号码</string>
+  <string name="settings_language">语言</string>
+  <string name="settings_change">改变</string>
+  <string name="settings_language_hint">选择语言</string>
+  <string name="settings_software">软件</string>
+  <string name="settings_update">更新</string>
+  <string name="settings_software_version">版本%1$s</string>
+  <string name="settings_logout">退出</string>
+  <string name="settings_logout_dialog_title">退出</string>
+  <string name="settings_logout_dialog_desc">您确定要注销吗？</string>
+  <string name="settings_logout_dialog_positive_action">是</string>
+  <string name="settings_logout_dialog_negative_action">否</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">选择语言</string>
+  <string name="changelanguage_done">完成</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">请稍候...</string>
+  <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">简单的标志</string>
+  <string name="selectcountry_title">选择您的国家</string>
+  <string name="selectcountry_networkerror">没有网络连接！</string>
+  <string name="selectcountry_servererror">服务器错误！请稍后再试！</string>
+  <string name="selectcountry_genericerror">出错了！请稍后再试！</string>
+  <string name="selectcountry_retry">再试一次</string>
+  <string name="scheduleappointment_at">于</string>
+  <string name="scheduleappointment_change">改变</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">选择一项措施</string>
+  <string name="bloodsugartype_picker_desc">如果不确定，请选择 \"苏格兰皇家银行\"。</string>
+  <string name="bloodsugartype_rbs">随机血糖 (RBS)</string>
+  <string name="bloodsugartype_fbs">空腹血糖（FBS）</string>
+  <string name="bloodsugartype_ppbs">餐后血糖 (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">访问日期</string>
+  <string name="bloodsugarentry_day">天</string>
+  <string name="bloodsugarentry_month">月份</string>
+  <string name="bloodsugarentry_year">年</string>
+  <string name="bloodsugarentry_error_lower_limit">数值不能低于 30 毫克/分升</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">值不能小于 3\u0025</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">数值不能低于 1.66 mmol/L</string>
+  <string name="bloodsugarentry_error_higher_limit">数值不能超过 1000 毫克/分升</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">值不能超过 25\u0025</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">数值不能超过 55.49 mmol/L</string>
+  <string name="bloodsugarentry_error_empty">值不能为空</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">请输入有效日期（日/月/年）。</string>
+  <string name="bloodsugarentry_error_date_is_in_future">日期不能在未来</string>
+  <string name="bloodsugarentry_random_title">随机血糖</string>
+  <string name="bloodsugarentry_post_prandial_title">餐后血糖</string>
+  <string name="bloodsugarentry_fasting_title">空腹血糖</string>
+  <string name="bloodsugarentry_remove">移除</string>
+  <string name="bloodsugarentry_edit_random_title">编辑随机血糖</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">编辑餐前血糖</string>
+  <string name="bloodsugarentry_edit_fasting_title">编辑空腹血糖</string>
+  <string name="bloodsugarentry_edit_hba1c_title">编辑 HbA1c</string>
+  <string name="bloodsugarentry_date_change">改变</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">去除血糖</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">您确定要删除这个血糖记录吗？</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">移除</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">取消</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">不添加血糖</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">糖尿病</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">血压</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s,%2$s 、%3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">糖尿病</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s,%2$s 、%3$s</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">历史</string>
+  <string name="medicalhistorysummaryview_diagnosis">诊断（必填）</string>
+  <string name="medicalhistorysummaryview_tobacco_use">吸烟</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">不添加药物</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">拒绝随访</string>
+  <string name="accessdeniedscreen_description">拒绝访问 \"简单\"。如果您认为这是一个错误，请联系您的主管。\n\n如果访问权限已恢复，请卸载 Simple，然后从 Play 商店安装。</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">将设施更改为</string>
+  <string name="confirmfacilitychange_negative_button">取消</string>
+  <string name="confirmfacilitychange_positive_button">是</string>
+  <string name="confirmfacilitychange_facility_name">%s\?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">你在哪里？</string>
+  <string name="registrationconfirmfacility_positive_button">是</string>
+  <string name="registrationconfirmfacility_negative_button">取消</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">您是否在</string>
+  <string name="alertfacilitychange_yes_button">是</string>
+  <string name="alertfacilitychange_change_button">改变</string>
+  <string name="alertfacilitychange_facility_name">%s\?</string>
+
+  <!-- Prescribed Drug Summary -->
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
+  <string name="contactpatient_result_of_call">呼叫结果</string>
+  <string name="contactpatient_call">致电</string>
+  <string name="contactpatient_call_normal">适度</string>
+  <string name="contactpatient_call_secure">安全</string>
+  <string name="contactpatient_help_text">安全呼叫可隐藏您的号码，并且是免费的</string>
+  <string name="contactpatient_patientdetails">%1$s,%2$s 、%3$s</string>
+  <string name="contactpatient_call_later_in">稍后在</string>
+  <string name="contactpatient_change">改变</string>
+  <string name="contactpatient_done">完成</string>
+  <string name="contactpatient_result">结果</string>
+  <plurals name="contactpatient_days">
+    <item quantity="other">%s 天数</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="other">%s 周数</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="other">%s 个月</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">选择原因</string>
+  <string name="contactpatient_patient_already_visited">病人已就诊</string>
+  <string name="contactpatient_patient_is_not_responding">病人无反应</string>
+  <string name="contactpatient_invalid_phone_number">电话号码无法使用</string>
+  <string name="contactpatient_public_hospital_transfer">转到其他公共卫生机构</string>
+  <string name="contactpatient_moved_to_private">转为私人医生</string>
+  <string name="contactpatient_refused_to_come_back">拒绝回来</string>
+  <string name="contactpatient_patient_died">去世</string>
+  <string name="contactpatient_other_reason">其他原因</string>
+  <string name="contactpatient_unknown">未知</string>
+  <string name="contactpatient_patient_registered_at">注册地址</string>
+  <string name="contactpatient_patient_transfer_from">转自</string>
+  <string name="contactpatient_phone">电话</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">已随访</string>
+  <string name="contactpatient_no_phone_number">无电话号码</string>
+  <string name="contactpatient_diagnosis_diabetes">糖尿病</string>
+  <string name="contactpatient_diagnosis_hypertension">高血压</string>
+  <string name="contactpatient_diagnosis_none">没有</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">未找到患者资料</string>
+  <string name="deeplink_patient_profile_not_found_desc">请检查您的网络和同步患者</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">好的</string>
+  <string name="deeplink_no_patient">未找到病人</string>
+  <string name="deeplink_no_patient_desc">开始远程会诊并向医护人员询问患者信息</string>
+  <string name="deeplink_no_patient_positive_action">好</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">选择原因</string>
+  <string name="deletereason_duplicate_patient">这是一个重复的病人</string>
+  <string name="deletereason_accidental_registration">病人登记错误</string>
+  <string name="deletereason_died">去世</string>
+  <string name="deletereason_confirm_title">删除病人？</string>
+  <string name="deletereason_confirm_message">这将删除%1$s</string>
+  <string name="deletereason_confirm_positive">删除</string>
+  <string name="deletereason_confirm_negative">取消</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">下一步</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_new_title">可提供的医生</string>
+  <string name="contactdoctor_new_subtitle">尽可能使用 WhatsApp</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">如何使用简单应用程序</string>
+  <string name="screenintrovideo_watch_video">观看视频</string>
+  <string name="screenintrovideo_skip">跳过</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">指定设施</string>
+  <string name="assigned_facility_view_change">改变</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_search_hint">输入设施名称</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">建议的诊所</string>
+  <string name="facilitypicker_header_all_facilities">所有诊所</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">在本框中签名</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">日</string>
+  <string name="drug_duration_empty_error">药物持续时间不能为空</string>
+  <string name="drug_duration_max_error">用药时间不得超过%1$s 天</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">添加处方？</string>
+  <string name="screen_teleconsult_success_yes">是</string>
+  <string name="screen_teleconsult_success_no">否</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">远程咨询 录音</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s,%2$s 、%3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">保存</string>
+
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">远程咨询记录</string>
+  <string name="screen_teleconsult_record_type">远程咨询类型</string>
+  <string name="screen_teleconsult_record_type_audio">音频呼叫</string>
+  <string name="screen_teleconsult_record_type_video">视频通话</string>
+  <string name="screen_teleconsult_record_type_message">消息</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">患者定期服用抗高血压和抗糖尿病药物</string>
+  <string name="screen_teleconsult_record_patient_consented">患者同意接受远程会诊 </string>
+  <string name="screen_teleconsult_record_done">完成</string>
+  <string name="teleconsultnotrecordeddialog_title">未记录远程咨询</string>
+  <string name="teleconsultnotrecordeddialog_body">您确定要取消吗？</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">是</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">否</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">您无权登录远程咨询</string>
+  <string name="deeplink_please_check_with_your_supervisor">请向您的主管确认</string>
+  <string name="deeplink_okay_positive_action">好的</string>
+
+  <string name="screen_teleconsult_prescription_next">下一步</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">药品</string>
+  <string name="view_teleconsult_medicines_add">添加</string>
+  <string name="view_teleconsult_medicines_edit">编辑</string>
+  <string name="view_teleconsult_medicines_required_error">至少添加一种药物</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="other">%1$s 天数</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">病人须知</string>
+  <string name="view_teleconsult_doctor_info_registration_id">医疗注册 ID</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">通过签署本处方，我承认我%1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">添加签名</string>
+  <string name="view_teleconsult_doctor_info_signature_error">添加签名</string>
+
+  <string name="screen_teleconsult_share_prescription_download">下载</string>
+  <string name="screen_teleconsult_share_prescription_share">分享</string>
+  <string name="screen_teleconsult_share_prescription_done">完成</string>
+  <string name="screen_teleconsult_share_prescription_image_using">使用以下方式共享图片</string>
+  <string name="screen_teleconsult_share_prescription_title">处方</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">处方保存在下载中</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">需要诊断</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">同时选择高血压和糖尿病的诊断</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">选择高血压诊断</string>
+  <string name="select_diagnosis_error_ok">好</string>
+  <string name="sheet_teleconsult_status_title">远程咨询完成了吗？</string>
+  <string name="sheet_teleconsult_status_yes">是</string>
+  <string name="sheet_teleconsult_status_no">否</string>
+  <string name="sheet_teleconsult_status_waiting">仍在等待</string>
+  <string name="sheet_teleconsult_status_done">完成</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">无法运行应用程序</string>
+  <string name="setup_rooted">Simple 无法在已 root 的设备上运行。</string>
+  <string name="setup_close">关闭</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">选择</string>
+  <string name="blood_sugar_unit_selection_done">完成</string>
+
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">登记新病人</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">添加到现有病人</string>
+  <string name="sheet_bp_passport_number">BP 护照%1$s</string>
+  <string name="sheet_national_health_id">全民健康档案号%1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">分派给%1$s</string>
+  <string name="patientinstantsearch_nearby_facilities_header">附近设施</string>
+  <string name="patientsearch_error_no_patients_in_facility">您可以在此查看在贵机构登记的所有患者信息</string>
+  <string name="patientsearch_error_no_search_results">无匹配患者</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">没有病人在%1$s</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">输入日期</string>
+  <string name="sheet_text_input_date_picker_day">天</string>
+  <string name="sheet_text_input_date_picker_month">月份</string>
+  <string name="sheet_text_input_date_picker_year">年</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">请输入有效日期（日/月/年）。</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">输入未来日期</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">日期不能在一年之后</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">不能为已有国民健康标识的患者分配国民健康标识</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">好</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">所需输入</string>
+  <string name="select_ongoing_hypertension_treatment_message">确认患者是否在上个月的任何时候服用过降压药。</string>
+  <string name="select_ongoing_diabetes_treatment_message">确认患者是否在上个月的任何时候服用过糖尿病药物。</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">好</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">输入药品名称</string>
+  <string name="customdrugssearch_item_name_separator">,\u0020</string>
+
+  <!-- Warning dialogs -->
+  <string name="warning_add_measurements_title">加上血压和血糖？</string>
+  <string name="warning_add_measurements_message">如果可能，请添加该患者当前的血压和血糖读数。</string>
+  <string name="warning_add_measurements_positive_button">添加读数</string>
+  <string name="warning_add_measurements_negative_button">现在不要</string>
+  <string name="warning_add_blood_pressure_title">添加 BP？</string>
+  <string name="warning_add_blood_pressure_message">如果可能，请添加该患者当前的血压读数。</string>
+  <string name="warning_add_blood_pressure_positive_button">添加血压</string>
+  <string name="warning_add_blood_pressure_negative_button">现在不要</string>
+  <string name="warning_add_blood_sugar_title">加血糖？</string>
+  <string name="warning_add_blood_sugar_message">如果可能，请添加该患者当前的血糖读数。</string>
+  <string name="warning_add_blood_sugar_positive_button">添加血糖</string>
+  <string name="warning_add_blood_sugar_negative_button">现在不要</string>
+
+  <!-- Custom drug entry sheet -->
+  <string name="custom_drug_entry_sheet_remove">移除</string>
+  <string name="custom_drug_entry_sheet_dosage">用量</string>
+  <string name="custom_drug_entry_sheet_frequency">频率</string>
+  <string name="custom_drug_entry_sheet_save_button_text">保存</string>
+  <string name="custom_drug_entry_sheet_add_button_text">添加</string>
+  <string name="custom_drug_entry_sheet_frequency_dialog_done">完成</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">您的诊所在哪里？</string>
+  <string name="select_state_networkerror">没有网络连接！</string>
+  <string name="select_state_servererror">服务器错误！请稍后再试！</string>
+  <string name="select_state_genericerror">出错了！请稍后再试！</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">去世</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">更改诊断？</string>
+  <string name="change_diagnosis_message">如果患者曾被诊断患有高血压或糖尿病，请标记 \"是\"。</string>
+  <string name="change_diagnosis_positive">改变</string>
+  <string name="change_diagnosis_negative">不是现在</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">下载失败</string>
+  <string name="overdue_download_notification_failed_subtitle">过段时间再试一次</string>
+  <string name="overdue_download_notification_in_progress_title">下载逾期线路列表</string>
+  <string name="overdue_download_notification_cancel">取消</string>
+  <string name="overdue_download_notification_succeeded_title">完整下载</string>
+  <string name="overdue_download_notification_succeeded_subtitle">点击打开</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">无互联网</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">检查您的网络，然后再试一次。</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">好</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">电子表格</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">取消</string>
+  <string name="select_overdue_download_format_dialog_title_download">下载为</string>
+  <string name="select_overdue_download_format_dialog_title_share">分享为</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">下载</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">分享</string>
+  <string name="select_overdue_download_format_dialog_share_with">与他人分享</string>
+  <string name="not_enough_storage_error_dialog_title">存储空间不足</string>
+  <string name="not_enough_storage_error_dialog_message">删除一些文件，然后再试一次</string>
+  <string name="download_failed_error_dialog_title">无法下载</string>
+  <string name="download_failed_error_dialog_message">出错了。等待几分钟后再试一次</string>
+  <string name="next_appointment_view_title">后续预约</string>
+  <string name="next_appointment_view_add">添加</string>
+  <string name="next_appointment_view_change">改变</string>
+  <string name="next_appointment_none">没有</string>
+  <string name="next_appointment_appointment_at_facility">于%s</string>
+  <string name="next_appointment_today">今天</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="other">%d 天数</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="other">逾期 %d 天</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">请尽快在 Google Play 商店更新您的 \"简单 \"应用程序。</string>
+  <string name="critical_app_update_notification_subtext">提供重要更新。从 Google Playstore 更新您的 Simple 应用程序。</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">需要关键更新</string>
+  <string name="critical_update_required_dialog_content">立即更新以获得重要的安全更改和最新功能</string>
+  <string name="critical_security_update_required_reason">应用程序安全性受到影响</string>
+  <string name="critical_update_required_dialog_update_button_text">现在更新</string>
+  <string name="critical_update_required_dialog_help_section_title">需要帮助吗？</string>
+  <string name="critical_update_required_dialog_help_section_content">点击下面的按钮，向我们友好的支持团队寻求帮助</string>
+  <string name="critical_update_required_reason">%d 已过时数月</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">关键更新</string>
+  <string name="critical_update_required_card_content">立即更新以获得重要的安全更改和最新功能</string>
+  <string name="update_required_reason">%d 已过时数月</string>
+  <string name="critical_update_required_card_update_button_text">现在更新</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">完成以下待处理药品库存报告%1$s</string>
+  <string name="drug_stock_reminder_card_title">药品库存</string>
+  <string name="drug_stock_reminder_card_content">完成以下待处理药品库存报告%1$s</string>
+  <string name="drug_stock_reminder_button_text">输入药品库存</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">无互联网</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">检查您的网络，然后再试一次。</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">好</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">血压偏高。增加药物？</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">如果患者按时服药，则应遵守协议</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">同意访问</string>
+
+  <string name="call_result_outcome_remind_to_call_later">呼叫提醒设置为%1$s</string>
+
+  <string name="call_result_outcome_removed">已删除：%1$s</string>
+
+  <string name="call_result_outcome_saved_at">已保存%1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">按姓名或村庄搜索</string>
+  <string name="overdue_search_hint">输入姓名或村庄</string>
+  <string name="overdue_search_no_search_results_title">未找到病人</string>
+  <string name="overdue_search_no_search_results_desc">您将在此看到搜索到的所有逾期病人</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d 选定的</string>
+  <string name="selected_overdue_clear">清除</string>
+  <string name="selected_overdue_select_all_appointments">全选</string>
+
+  <string name="patient_line_list_download_notification_failed_title">下载失败</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">过段时间再试一次</string>
+  <string name="patient_line_list_download_notification_in_progress_title">下载患者线路列表</string>
+  <string name="patient_line_list_download_notification_cancel">取消</string>
+  <string name="patient_line_list_download_notification_succeeded_title">完整下载</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">点击打开</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">电子表格</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">取消</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">下载为</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">下载</string>
+  <string name="patient_line_list_download_link">下载 IHCI 患者登记册</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">打开通知</string>
+  <string name="notification_permission_denied_message">Simple 需要权限才能向您显示重要提醒，请在 \"权限\"&gt;\"通知 \"下打开。</string>
+  <string name="notification_permission_denied_positive_button">进入应用程序设置</string>
+  <string name="notification_permission_denied_negetive_button">不是现在</string>
+
+  <!--reports-->
+  <string name="reports_report">%1$s 报告</string><!--Oct 2023 report-->
+  <string name="reports_submit_btn_text">提交</string>
+  <string name="reports_complete">完成！</string>
+  <string name="reports_done">完成</string>
+  <string name="reports_submitted_with_date_and_time">已提交%1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">提交报告</string>
+  <string name="reports_submitted">已提交</string>
+  <string name="reports_submitted_with_date">%1$s 报告已提交</string><!--October 2022 report submitted-->
+  <string name="reports_unsaved_changes_title">未保存的更改</string>
+  <string name="reports_unsaved_changes_text">未保存的更改将丢失。\n您确定要离开吗？</string>
+  <string name="reports_stay_title">停留在此页</string>
+  <string name="reports_leave_page_title">离开此页</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_report">每月筛查报告</string>
+  <string name="monthly_screening_reports">每月筛查报告</string>
+  <string name="monthly_screening_reports_screening_report">%1$s 筛选报告</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">药品库存报告</string>
+  <string name="monthly_drug_stock_reports">药品库存报告</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s 药物库存报告</string>
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">每月供应报告</string>
+  <string name="monthly_supplies_reports">每月供应报告</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s 供应报告</string>
+
+  <!-- Drug Stock Expiry Form -->
+  <string name="month_date_picker_invalid_date">日期无效，日期必须在%1$s - 范围内。%2$s</string>
+
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">使用条款</string>
+  <string name="data_protection_consent_subtitle">在使用 Simple 应用程序之前，您必须阅读并同意以下条款，点击<b>"同意并继续"</b> 。\n\n\nSimple 应用程序包含患者的私人健康信息（\"数据\"）。\n\n\n- 您只能在您工作的医疗机构内履行与患者护理相关的工作职责时访问数据。禁止出于任何其他目的访问或查看数据。\n\n\n- 您必须对数据保密。禁止与他人共享数据。\n\n\n- 您必须对访问 Simple 应用程序时使用的安全代码保密。\n\n\n- 不使用时，您必须及时退出 Simple 应用程序。禁止允许他人使用您的登录凭证访问 Simple 应用程序或数据。\n\n\n- 您必须定期同步数据、捕获必填记录以及进行其他必要的维护。\n\n\n- 您了解，Simple 应用程序会自动创建您访问数据的记录。未经授权的访问或其他违反使用条款的行为可能导致您对 Simple 应用程序的访问被取消或采取其他纪律措施。\n\n\n  </string>
+  <string name="data_protection_consent_accept_button">言归于好</string>
+
+  <!-- Patient transfer to CC -->
+  <string name="patient_facility_reassignment">符合 CC 充值条件</string>
+  <string name="reassign_patient_title">有资格在 CC 重新配药。转院病人？</string>
+  <string name="reassign_patient_description">分配到首选的社区诊所，以便今后就诊。</string>
+  <string name="change_patient_facility">改变</string>
+
+  <!-- Diabetes Diagnosis Warning Dialog -->
+  <string name="diabetes_warning_dialog_title">添加糖尿病诊断？</string>
+  <string name="diabetes_warning_dialog_desc">该患者正在服用糖尿病药物。</string>
+  <string name="diabetes_warning_dialog_positive_button">是，患有糖尿病</string>
+  <string name="diabetes_warning_dialog_negative_button">现在不要</string>
+
+  <!-- HTN Diagnosis Warning Dialog -->
+  <string name="htn_warning_dialog_title">添加高血压诊断？</string>
+  <string name="htn_warning_dialog_desc">该患者正在服用高血压药物。</string>
+  <string name="htn_warning_dialog_positive_button">是，患有高血压</string>
+  <string name="htn_warning_dialog_negative_button">现在不要</string>
+
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">低-高风险%s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">中高风险%s</string>
+  <string name="statin_alert_high_risk_patient_x">高风险%s</string>
+  <string name="statin_alert_very_high_risk_patient">极高危病人</string>
+  <string name="statin_alert_very_high_risk_range">风险极高%s</string>
+  <string name="statin_alert_at_risk_patient">高危病人</string>
+  <string name="statin_alert_refer_to_doctor">向医生咨询<b>他汀类药物</b></string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">糖尿病患者，年龄在 40 岁以上。请向医生咨询<b>他汀类药物</b></string>
+  <string name="statin_alert_add_tobacco_use">增加吸烟</string>
+  <string name="statin_alert_add_bmi">添加 BMI</string>
+  <string name="statin_alert_add_cholesterol">添加胆固醇</string>
+  <string name="statin_alert_add_smoking_info">添加吸烟，以获得更准确的风险评分。</string>
+  <string name="statin_alert_add_bmi_info">添加体重指数，以获得更准确的风险评分。</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">添加吸烟状况和体重指数，以获得更准确的风险评分。</string>
+  <string name="statin_alert_add_cholesterol_info">添加胆固醇，以获得更准确的风险评分。</string>
+  <string name="statin_alert_add_smoking_and_cholesterol_info">添加吸烟状况和胆固醇，以获得更准确的风险评分。</string>
+
+  <!-- Purge notification -->
+  <string name="purge_notification_title">优化数据库</string>
+  <string name="purge_notification_desc">数据库维护中。只需一分钟。</string>
+
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">高度（厘米）</string>
+  <string name="bmi_entry_weight_in_kg">重量（千克）</string>
+  <string name="bmi_x">BMI：%s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title">吸烟？</string>
+  <string name="tobacco_status_dialog_option_smokes">烟</string>
+  <string name="tobacco_status_dialog_option_smokeless">无烟烟草</string>
+  <string name="tobacco_status_dialog_option_no">否</string>
+  <string name="tobacco_status_dialog_title_positive_button">完成</string>
+  <string name="tobacco_status_dialog_title_negative_button">取消</string>
+
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title">胆固醇（毫克/分升）</string>
+  <string name="cholesterol_error_upper_limit">胆固醇不能超过 1000</string>
+  <string name="cholesterol_error_lower_limit">胆固醇不能低于 25</string>
+</resources>

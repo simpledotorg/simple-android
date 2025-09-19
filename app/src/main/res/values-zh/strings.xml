@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -519,8 +519,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>
@@ -906,7 +906,7 @@
   <!-- Data protection consent -->
   <string name="data_protection_consent_title">使用条款</string>
   <string name="data_protection_consent_subtitle">在使用 Simple 应用程序之前，您必须阅读并同意以下条款，点击<b>"同意并继续"</b> 。\n\n\nSimple 应用程序包含患者的私人健康信息（\"数据\"）。\n\n\n- 您只能在您工作的医疗机构内履行与患者护理相关的工作职责时访问数据。禁止出于任何其他目的访问或查看数据。\n\n\n- 您必须对数据保密。禁止与他人共享数据。\n\n\n- 您必须对访问 Simple 应用程序时使用的安全代码保密。\n\n\n- 不使用时，您必须及时退出 Simple 应用程序。禁止允许他人使用您的登录凭证访问 Simple 应用程序或数据。\n\n\n- 您必须定期同步数据、捕获必填记录以及进行其他必要的维护。\n\n\n- 您了解，Simple 应用程序会自动创建您访问数据的记录。未经授权的访问或其他违反使用条款的行为可能导致您对 Simple 应用程序的访问被取消或采取其他纪律措施。\n\n\n  </string>
-  <string name="data_protection_consent_accept_button">言归于好</string>
+  <string name="data_protection_consent_accept_button">同意并继续</string>
 
   <!-- Patient transfer to CC -->
   <string name="patient_facility_reassignment">符合 CC 充值条件</string>

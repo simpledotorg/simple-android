@@ -427,7 +427,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -519,8 +519,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>
@@ -950,8 +950,8 @@
 
   <!-- BMI entry -->
   <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
-  <string name="bmi_entry_height_in_cm">高度（厘米）</string>
-  <string name="bmi_entry_weight_in_kg">重量（千克）</string>
+  <string name="bmi_entry_height_in_cm">身高（厘米）</string>
+  <string name="bmi_entry_weight_in_kg">体重（千克）</string>
   <string name="bmi_x">BMI：%s</string>
 
   <!-- Add Smoking Status Dialog -->

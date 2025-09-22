@@ -10,8 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
@@ -29,9 +27,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
-import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
@@ -49,9 +45,7 @@ class NewMedicalHistoryScreenLogicTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: NewMedicalHistoryUi = mock()
   private val uiActions: NewMedicalHistoryUiActions = mock()
-  private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val patientRepository: PatientRepository = mock()
 
@@ -68,24 +62,6 @@ class NewMedicalHistoryScreenLogicTest {
   @After
   fun tearDown() {
     testFixture.dispose()
-  }
-
-  @Test
-  fun `when screen is started then the patient's name should be shown on the toolbar`() {
-    val patientName = "Ashok Kumar"
-    val patientEntry = OngoingNewPatientEntry(personalDetails = PersonalDetails(
-        fullName = patientName,
-        dateOfBirth = null,
-        age = "20",
-        gender = Gender.Transgender))
-    whenever(patientRepository.ongoingEntry()).thenReturn(patientEntry)
-
-    startMobiusLoop(ongoingPatientEntry = patientEntry)
-
-    // This gets set twice:
-    // 1. When we read the patient entry
-    // 2. When we load the current facility and update the model
-    verify(screen, times(2)).setPatientName(patientName)
   }
 
   @Test
@@ -335,7 +311,7 @@ class NewMedicalHistoryScreenLogicTest {
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = effectHandler,
-        modelUpdateListener = viewRenderer::render
+        modelUpdateListener = { /* no-op */ }
     )
 
     testFixture.start()

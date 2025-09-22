@@ -1,6 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -21,6 +22,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
       is ChangeDiagnosisNotNowClicked -> registerPatient(model)
+      is BackClicked -> dispatch(GoBack)
     }
   }
 
@@ -45,8 +47,16 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
     }
   }
 
-  private fun registerPatient(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> =
-      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
+  private fun registerPatient(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
+    return if (model.registeringPatient) {
+      noChange()
+    } else {
+      next(
+          model.registeringPatient(),
+          RegisterPatient(model.ongoingMedicalHistoryEntry)
+      )
+    }
+  }
 
   private fun currentFacilityLoaded(
       event: CurrentFacilityLoaded,

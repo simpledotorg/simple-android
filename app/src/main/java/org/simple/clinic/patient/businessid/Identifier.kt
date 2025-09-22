@@ -2,6 +2,7 @@ package org.simple.clinic.patient.businessid
 
 import android.content.res.Resources
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.room.ColumnInfo
 import androidx.room.TypeConverter
@@ -42,6 +43,7 @@ data class Identifier(
 
           "$prefix${Unicode.nonBreakingSpace}$suffix"
         }
+
         BangladeshNationalId -> value
         EthiopiaMedicalRecordNumber -> value
         IndiaNationalHealthId -> {
@@ -53,6 +55,7 @@ data class Identifier(
 
           "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
         }
+
         SriLankaNationalId -> value
         SriLankaPersonalHealthNumber -> value
         is Unknown -> value
@@ -67,14 +70,19 @@ data class Identifier(
   }
 
   fun displayType(resources: Resources): String {
+    return resources.getString(displayTypeResId())
+  }
+
+  @StringRes
+  fun displayTypeResId(): Int {
     return when (type) {
-      BpPassport -> resources.getString(R.string.identifiertype_bp_passport)
-      BangladeshNationalId -> resources.getString(R.string.identifiertype_bangladesh_national_id)
-      EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
-      IndiaNationalHealthId -> resources.getString(R.string.identifiertype_india_national_health_id)
-      SriLankaNationalId -> resources.getString(R.string.identifiertype_sri_lanka_national_id)
-      SriLankaPersonalHealthNumber -> resources.getString(R.string.identifiertype_sri_lanka_personal_health_number)
-      is Unknown -> resources.getString(R.string.identifiertype_unknown)
+      BpPassport -> R.string.identifiertype_bp_passport
+      BangladeshNationalId -> R.string.identifiertype_bangladesh_national_id
+      EthiopiaMedicalRecordNumber -> R.string.identifiertype_ethiopia_medical_record_number
+      IndiaNationalHealthId -> R.string.identifiertype_india_national_health_id
+      SriLankaNationalId -> R.string.identifiertype_sri_lanka_national_id
+      SriLankaPersonalHealthNumber -> R.string.identifiertype_sri_lanka_personal_health_number
+      is Unknown -> R.string.identifiertype_unknown
     }
   }
 

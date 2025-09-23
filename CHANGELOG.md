@@ -6,6 +6,10 @@
 - Bump Sentry to v8.21.1
 - Bump AndroidX Lifecycle to v2.9.4
 
+### Changes
+
+- Hide next button when registration is going
+
 ## 2025.09.09
 
 ### Internal

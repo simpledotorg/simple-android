@@ -6,6 +6,7 @@
 - Bump Sentry to v8.21.1
 - Bump AndroidX Lifecycle to v2.9.4
 - Bump AndroidX Test Runner to v1.7.0
+- Bump AndroidX Test Rules to v1.7.0
 
 ## 2025.09.09
 

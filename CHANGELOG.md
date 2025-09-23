@@ -4,6 +4,7 @@
 
 ### Internal
 - Bump Sentry to v8.21.1
+- Bump AndroidX Lifecycle to v2.9.4
 
 ## 2025.09.09
 

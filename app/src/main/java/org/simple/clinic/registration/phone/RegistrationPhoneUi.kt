@@ -7,4 +7,6 @@ interface RegistrationPhoneUi {
   fun hideAnyError()
   fun showProgressIndicator()
   fun hideProgressIndicator()
+  fun showNextButton()
+  fun hideNextButton()
 }

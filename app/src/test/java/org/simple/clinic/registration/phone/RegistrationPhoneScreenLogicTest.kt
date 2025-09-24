@@ -155,6 +155,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).showProgressIndicator()
+    verify(ui).hideNextButton()
     verify(findUserWithPhoneNumber).find(inputNumber)
   }
 
@@ -176,6 +177,8 @@ class RegistrationPhoneScreenLogicTest {
     // then
     verify(ui).showProgressIndicator()
     verify(ui).hideProgressIndicator()
+    verify(ui).hideNextButton()
+    verify(ui).showNextButton()
     verify(ui).showUnexpectedErrorMessage()
 
     clearInvocations(ui)
@@ -186,6 +189,8 @@ class RegistrationPhoneScreenLogicTest {
     // then
     verify(ui).showProgressIndicator()
     verify(ui).hideProgressIndicator()
+    verify(ui).hideNextButton()
+    verify(ui).showNextButton()
     verify(ui).showNetworkErrorMessage()
   }
 
@@ -291,6 +296,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).showProgressIndicator()
+    verify(ui).hideNextButton()
     verify(facilitySync).pullWithResult()
   }
 
@@ -324,6 +330,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).hideProgressIndicator()
+    verify(ui).showNextButton()
     verify(ui).showNetworkErrorMessage()
     verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }
@@ -342,6 +349,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).hideProgressIndicator()
+    verify(ui).showNextButton()
     verify(ui).showUnexpectedErrorMessage()
     verify(findUserWithPhoneNumber, never()).find(phoneNumber)
   }

@@ -9,6 +9,10 @@
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0
 
+### Changes
+
+- Hide next button when registration is going
+
 ## 2025.09.09
 
 ### Internal

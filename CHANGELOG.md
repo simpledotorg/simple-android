@@ -8,6 +8,7 @@
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0
+- Bump Jackson Core to v2.20.0
 
 ## 2025.09.09
 

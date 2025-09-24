@@ -10,6 +10,7 @@
 - Bump AndroidX JUnit to v1.3.0
 - Bump Jackson Core to v2.20.0
 - Bump Play Services Auth to v21.4.0
+- Bump Material Components to v1.12.0
 
 ### Changes
 

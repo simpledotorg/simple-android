@@ -8,6 +8,16 @@
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0
+- Bump Jackson Core to v2.20.0
+- Bump Play Services Auth to v21.4.0
+- Bump Material Components to v1.12.0
+- Bump Kotlin to v2.2.20
+- Bump AndroidX Work to v2.10.4
+- Bump AndroidX ViewModel to v2.9.4
+
+### Changes
+
+- Hide next button when registration is going
 
 ## 2025.09.09
 

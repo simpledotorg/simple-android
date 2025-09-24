@@ -13,6 +13,7 @@
 - Bump Material Components to v1.12.0
 - Bump Kotlin to v2.2.20
 - Bump AndroidX Work to v2.10.4
+- Bump AndroidX ViewModel to v2.9.4
 
 ### Changes
 

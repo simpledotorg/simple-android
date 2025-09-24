@@ -11,6 +11,7 @@
 - Bump Jackson Core to v2.20.0
 - Bump Play Services Auth to v21.4.0
 - Bump Material Components to v1.12.0
+- Bump Kotlin to v2.2.20
 
 ### Changes
 

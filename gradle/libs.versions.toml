@@ -110,7 +110,7 @@ faker = "com.github.blocoio:faker:2.0.4"
 firebase-config = "com.google.firebase:firebase-config:23.0.0"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.5.0"
 
-gson = "com.google.code.gson:gson:2.13.1"
+gson = "com.google.code.gson:gson:2.13.2"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
 

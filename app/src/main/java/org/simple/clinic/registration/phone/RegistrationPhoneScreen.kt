@@ -174,6 +174,14 @@ class RegistrationPhoneScreen :
     progressView.visibility = View.GONE
   }
 
+  override fun showNextButton() {
+    nextButtonFrame.visibility = View.VISIBLE
+  }
+
+  override fun hideNextButton() {
+    nextButtonFrame.visibility = View.GONE
+  }
+
   override fun openLoginPinEntryScreen() {
     router.push(LoginPinScreenKey())
   }

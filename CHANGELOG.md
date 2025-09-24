@@ -10,6 +10,10 @@
 - Bump AndroidX JUnit to v1.3.0
 - Bump Jackson Core to v2.20.0
 
+### Changes
+
+- Hide next button when registration is going
+
 ## 2025.09.09
 
 ### Internal

@@ -15,6 +15,7 @@
 - Bump AndroidX Work to v2.10.4
 - Bump AndroidX ViewModel to v2.9.4
 - Bump Lottie Compose to v6.6.9
+- Bump Gson to v2.13.2
 
 ### Changes
 

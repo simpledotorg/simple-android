@@ -16,6 +16,7 @@
 - Bump AndroidX ViewModel to v2.9.4
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2
+- Bump KSP to v2.2.20-2.0.2
 
 ### Changes
 
@@ -26,8 +27,6 @@
 ### Internal
 - Bump AGP to v8.13.0
 - Bump Lint to v31.13.0
-- Bump Kotlin to v2.2.0
-- Bump KSP to v2.2.0-2.0.2
 - Bump dagger to v2.57.1
 - Bump okhttp to v5.1.0
 - Bump retrofit to v3.0.0

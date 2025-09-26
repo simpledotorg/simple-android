@@ -17,6 +17,7 @@
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2
 - Bump KSP to v2.2.20-2.0.2
+- Bump firebase remote config to v23.0.1
 
 ### Changes
 

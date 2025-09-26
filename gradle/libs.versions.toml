@@ -107,7 +107,7 @@ edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
 faker = "com.github.blocoio:faker:2.0.4"
 
-firebase-config = "com.google.firebase:firebase-config:23.0.0"
+firebase-config = "com.google.firebase:firebase-config:23.0.1"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:22.5.0"
 
 gson = "com.google.code.gson:gson:2.13.2"

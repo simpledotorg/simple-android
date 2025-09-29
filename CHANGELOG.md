@@ -17,6 +17,10 @@
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2
 - Bump KSP to v2.2.20-2.0.2
+- Bump firebase remote config to v23.0.1
+- Bump Google Truth to v1.4.5
+- Bump AndroidX Benchmark to v1.4.1
+- Bump AndroidX Camera to v1.5.0
 
 ### Changes
 

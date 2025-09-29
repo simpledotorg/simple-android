@@ -23,6 +23,7 @@
 - Bump AndroidX Camera to v1.5.0
 - Bump AndroidX Camera View to v1.5.0
 - Bump dagger to v2.57.2
+- Bump UUID generator to v5.1.1
 
 ### Changes
 

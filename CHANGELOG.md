@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Internal
-- Bump Sentry to v8.21.1
+- Bump Sentry to v8.22.0
 - Bump AndroidX Lifecycle to v2.9.4
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
@@ -12,7 +12,7 @@
 - Bump Play Services Auth to v21.4.0
 - Bump Material Components to v1.12.0
 - Bump Kotlin to v2.2.20
-- Bump AndroidX Work to v2.10.4
+- Bump AndroidX Work to v2.10.5
 - Bump AndroidX ViewModel to v2.9.4
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2
@@ -21,6 +21,11 @@
 - Bump Google Truth to v1.4.5
 - Bump AndroidX Benchmark to v1.4.1
 - Bump AndroidX Camera to v1.5.0
+- Bump AndroidX Camera View to v1.5.0
+- Bump dagger to v2.57.2
+- Bump UUID generator to v5.1.1
+- Bump Compose BOM to v2025.09.01
+- Bump Sentry Android to v5.12.0
 
 ### Changes
 

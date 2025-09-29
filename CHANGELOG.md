@@ -21,6 +21,7 @@
 - Bump Google Truth to v1.4.5
 - Bump AndroidX Benchmark to v1.4.1
 - Bump AndroidX Camera to v1.5.0
+- Bump AndroidX Camera View to v1.5.0
 
 ### Changes
 

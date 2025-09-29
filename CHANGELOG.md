@@ -26,6 +26,7 @@
 - Bump UUID generator to v5.1.1
 - Bump Compose BOM to v2025.09.01
 - Bump Sentry Android to v5.12.0
+- Update GH Actions `checkout` to v5
 
 ### Changes
 

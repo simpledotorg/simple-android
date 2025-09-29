@@ -12,7 +12,7 @@
 - Bump Play Services Auth to v21.4.0
 - Bump Material Components to v1.12.0
 - Bump Kotlin to v2.2.20
-- Bump AndroidX Work to v2.10.4
+- Bump AndroidX Work to v2.10.5
 - Bump AndroidX ViewModel to v2.9.4
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2

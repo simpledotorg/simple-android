@@ -27,6 +27,9 @@
 - Bump Compose BOM to v2025.09.01
 - Bump Sentry Android to v5.12.0
 - Update GH Actions `checkout` to v5
+- Update GH Actions `setup-jdk` to to v5
+- Bump Gradle to v9.1.0
+- Bump Mockito Kotlin to v6.0.0
 
 ### Changes
 

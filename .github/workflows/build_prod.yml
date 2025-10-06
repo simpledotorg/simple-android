@@ -43,10 +43,10 @@ jobs:
 
       - name: Checkout
         if: github.event.inputs.tramline-input == null || github.event.inputs.tramline-input == ''
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 17
           distribution: zulu

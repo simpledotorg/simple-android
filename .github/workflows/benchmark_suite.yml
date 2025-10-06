@@ -21,10 +21,10 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Checkout Android source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: 17

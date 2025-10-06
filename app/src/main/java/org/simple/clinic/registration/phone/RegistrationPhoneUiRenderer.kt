@@ -21,8 +21,10 @@ class RegistrationPhoneUiRenderer(
       if (mode == RegistrationUiMode.RegistrationOngoing) {
         registrationResultValueCallback.clear()
         ui.showProgressIndicator()
+        ui.hideNextButton()
       } else {
         ui.hideProgressIndicator()
+        ui.showNextButton()
       }
     }
 

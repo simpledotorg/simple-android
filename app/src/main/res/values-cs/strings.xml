@@ -1,0 +1,999 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Common -->
+  <string name="gender_female">Žena</string>
+  <string name="gender_male">Male</string>
+  <string name="gender_transgender">Transgender</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">M</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">F</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">T</string>
+  <string name="api_unexpected_error">Něco se pokazilo. Zkuste to prosím znovu.</string>
+  <string name="api_network_error">Žádné připojení k internetu</string>
+  <string name="api_server_error">Chyba serveru! Zkuste to prosím později.</string>
+
+  <!-- Country names -->
+  <string name="country_india">Indie</string>
+  <string name="country_bangladesh">Bangladéš</string>
+  <string name="country_ethiopia">Etiopie</string>
+  <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">Demo země</string>
+
+  <!-- Home -->
+  <string name="home_help">Nápověda</string>
+  <string name="home_settings">Nastavení</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">BP Passport</string>
+  <string name="identifiertype_bangladesh_national_id">Národní průkaz totožnosti</string>
+  <string name="identifiertype_ethiopia_medical_record_number">Číslo lékařského záznamu</string>
+  <string name="identifiertype_unknown">ID</string>
+  <string name="identifiertype_india_national_health_id">Národní zdravotní průkaz</string>
+  <string name="identifiertype_sri_lanka_national_id">Národní průkaz totožnosti</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">Osobní zdravotní číslo</string>
+
+  <!-- Patient search -->
+  <string name="instantsearch_hint">Jméno, telefon nebo ID</string>
+  <!-- Patient search results -->
+  <string name="patientsearchresults_register_patient_rationale">Nemůžete v tomto seznamu najít pacienta\?</string>
+  <string name="patientsearchresults_register_patient">Registrace nového pacienta</string>
+  <string name="patientsearchresults_item_phone_number">Telefon</string>
+  <string name="patientsearchresults_item_birthdate">Datum narození</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">Zpět na vyhledávání</string>
+  <string name="patiententry_full_name">Jméno pacienta</string>
+  <string name="patiententry_phone_number">Telefonní číslo</string>
+  <string name="patiententry_bangladesh_national_id">Národní identifikační číslo</string>
+  <string name="patiententry_ethiopia_medical_record_number">Číslo lékařského záznamu</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Osobní zdravotní číslo</string>
+  <string name="patiententry_date_of_birth_unfocused">Datum narození</string>
+  <string name="patiententry_date_of_birth_focused">DATUM NAROZENÍ: DD/MM/RRRR</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Nebo</string>
+  <string name="patiententry_age">Stáří</string>
+  <string name="patiententry_street_address">Adresa domu</string>
+  <string name="patiententry_street_house_road_number">Číslo popisné a orientační</string>
+  <string name="patiententry_village_colony_ward">Vesnice / kolonie / okrsek</string>
+  <string name="patiententry_village_ward">Vesnice / okrsek</string>
+  <string name="patiententry_kebele">Kebele</string>
+  <string name="patiententry_zone">Union</string>
+  <string name="patiententry_district">Okres</string>
+  <string name="patiententry_woreda">Zóna</string>
+  <string name="patiententry_upazila">Upazila</string>
+  <string name="patiententry_state">Stát</string>
+  <string name="patiententry_region">Region</string>
+  <string name="patiententry_doornumber_streetname">Číslo dveří, název ulice</string>
+  <string name="patiententry_division_area">Divize a oblast</string>
+  <string name="patiententry_save_patient">Další</string>
+  <string name="patiententry_error_empty_fullname">Zadejte celé jméno pacienta</string>
+  <string name="patiententry_error_empty_gender">Vyberte pohlaví pacienta</string>
+  <string name="patiententry_error_empty_colony_or_village">Vyžadováno</string>
+  <string name="patiententry_error_empty_district">Vyžadováno</string>
+  <string name="patiententry_error_state_empty">Vyžadováno</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Zadejte věk pacienta</string>
+  <string name="patiententry_error_invalid_dateofbirth">Zadejte datum narození pacienta v DD/MM/RRRR.</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Uveďte datum narození pacienta</string>
+  <string name="patiententry_error_phonenumber_blank">Telefonní číslo nesmí být prázdné</string>
+  <string name="patiententry_error_phonenumber_length_less">Telefonní číslo nesmí mít méně než %1$s číslic.</string>
+  <string name="patiententry_identifier_bp_passport">BP Passport</string>
+  <string name="patiententry_consent_header">Souhlas:\u0020</string>
+  <string name="patiententry_consent_first_para">Klepnutím níže potvrzujete, že veškeré údaje o pacientovi, které zde zadáváte, byly získány na základě příslušného informovaného souhlasu. To znamená, že pacient nebo zákonný zástupce ví, že do aplikace zadáváte jeho osobní údaje, rozumí tomu, jaké údaje jsou shromažďovány, a ví, že může být kontaktován prostřednictvím SMS, WhatsApp nebo jiných metod s použitím telefonního čísla uvedeného v aplikaci.</string>
+  <string name="patiententry_consent_second_para">K údajům a informacím o pacientech, které zde zadáte, bude mít přístup kdokoli, kdo je vámi nebo poskytovatelem zdravotní péče, pro kterého pracujete, pověřen. Používáním aplikace potvrzujete, že pacient nebo zákonný zástupce rozumí tomu, kdo bude mít přístup k údajům získaným prostřednictvím této aplikace, a s tímto přístupem souhlasí.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">Připomínky WhatsApp / SMS</string>
+  <string name="patiententry_consent_sms_reminders">Připomínky SMS</string>
+  <string name="patiententry_age_exceeds_max_limit_error">Věk nesmí být vyšší než 120 let</string>
+  <string name="patiententry_age_exceeds_min_limit_error">Věk nesmí být roven 0 let</string>
+  <string name="patiententry_town_area">Město / oblast</string>
+  <string name="patiententry_province">Provincie</string>
+
+  <string name="patientedit_save_patient">Uložit</string>
+  <string name="patientedit_bp_passports_label">Pasy BP</string>
+  <string name="patientedit_confirm_discard_title">Vyřazení změn\?</string>
+  <string name="patientedit_confirm_discard_ok">Vyřadit</string>
+  <string name="patientedit_confirm_discard_cancel">Zrušit</string>
+  <string name="patientedit_delete_patient">Vymazat</string>
+  <string name="patientedit_add_button">PŘIDAT</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">Pacienti</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">Po termínu</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">Progress</string>
+
+  <string name="home_search_patient_name_phone">Zadejte jméno, telefon nebo ID</string>
+  <string name="patients_user_awaiting_approval_title">Čekání na schválení</string>
+  <string name="patients_user_awaiting_approval_message">Po schválení budete mít přístup k záznamům pacientů z vaší kliniky.</string>
+  <string name="patients_user_approved_title">Byli jste schváleni!</string>
+  <string name="patients_awaiting_sms_verification_title">Čekání na ověření SMS</string>
+  <string name="patients_user_approved_message">Nyní můžete zobrazit všechna data o pacientech na své klinice</string>
+  <string name="patients_awaiting_sms_verification_message">Po ověření budete mít přístup k záznamům pacientů z vaší kliniky.</string>
+  <string name="patients_dismiss_user_approved_status">Mám to</string>
+  <string name="patients_enter_code">Zadejte kód</string>
+  <string name="patients_you_are_now_logged_in">Ověření proběhlo úspěšně! Záznamy pacientů jsou nyní viditelné.</string>
+  <string name="patients_loggedoutalert_title">V jednu chvíli můžete být přihlášeni pouze na jednom zařízení.</string>
+  <string name="patients_loggedoutalert_message">Byli jste odhlášeni z předchozího zařízení.</string>
+  <string name="patients_loggedoutalert_dismiss">Mám to</string>
+  <string name="patients_scan_simple_card">Skenování ID</string>
+  <string name="patients_recentpatients_title">Nedávné</string>
+  <string name="patients_recentpatients_no_recent_patients">Žádní nedávní pacienti</string>
+  <string name="patients_recentpatients_see_all">Zobrazit vše</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">Odkazy</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Krevní tlak</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Upravit krevní tlak</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Datum návštěvy</string>
+  <string name="bloodpressureentry_remove">Odstranit</string>
+  <string name="bloodpressureentry_systolic">Systolický</string>
+  <string name="bloodpressureentry_diastolic">Diastolický</string>
+  <string name="bloodpressureentry_day">Den</string>
+  <string name="bloodpressureentry_month">Měsíc</string>
+  <string name="bloodpressureentry_year">Rok</string>
+  <string name="bloodpressureentry_error_systolic_more">Systolický by měl být vyšší než diastolický.</string>
+  <string name="bloodpressureentry_error_systolic_70">Systolický nesmí být nižší než 70</string>
+  <string name="bloodpressureentry_error_systolic_300">Systolický nesmí být vyšší než 300</string>
+  <string name="bloodpressureentry_error_diastolic_40">Diastolický nesmí být nižší než 40</string>
+  <string name="bloodpressureentry_error_diastolic_180">Diastolický nesmí být vyšší než 180</string>
+  <string name="bloodpressureentry_error_systolic_empty">Zadejte systolický a diastolický tlak</string>
+  <string name="bloodpressureentry_error_diastolic_empty">Zadejte systolický a diastolický tlak</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Zadejte platné datum v DD/MM/RRRR</string>
+  <string name="bloodpressureentry_error_date_is_in_future">Datum nesmí být v budoucnosti</string>
+  <string name="bloodpressureentry_remove_bp_title">Odstranit BP</string>
+  <string name="bloodpressureentry_remove_bp_message">Opravdu chcete odstranit tento záznam krevního tlaku\?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Odstranit</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Zrušit</string>
+  <string name="bloodpressureentry_date_change">Změna</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">Zpět</string>
+  <string name="patientsummary_prescriptions_add">Léky</string>
+  <string name="patientsummary_prescriptions_update">Upravit léky</string>
+  <string name="patientsummary_bp_add_new">Krevní tlak</string>
+  <string name="patientsummary_finish_saving_patient">Uložit</string>
+  <string name="patientsummary_finish_refill_medicine">Doplnění léků</string>
+  <string name="patientsummary_bp_none_added">Nebyl přidán krevní tlak</string>
+  <string name="patientsummary_edit">Upravit</string>
+
+  <string name="patientsummary_updatephone_dialog_title">Aktualizace telefonního čísla</string>
+  <string name="patientsummary_updatephone_dialog_message">Telefonní číslo pacienta bylo dříve označeno jako nesprávné</string>
+  <string name="patientsummary_updatephone_phone_hint">Telefonní číslo</string>
+  <string name="patientsummary_updatephone_save">Uložit</string>
+  <string name="patientsummary_updatephone_cancel">Přeskočit</string>
+  <string name="patientsummary_addphone_dialog_title">Aktualizace telefonního čísla</string>
+  <string name="patientsummary_addphone_dialog_message">Při registraci nebylo zadáno telefonní číslo pacienta</string>
+  <string name="patientsummary_addphone_phone_hint">Telefonní číslo</string>
+  <string name="patientsummary_addphone_save">Uložit</string>
+  <string name="patientsummary_addphone_cancel">Přeskočit</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <string name="patientsummary_teleconsult">Telekonzultace</string>
+  <string name="patientsummary_log_teleconsult">protokol Telekonzultace</string>
+
+  <string name="patientsummary_registered_faciliy_title">Registrován</string>
+  <string name="patientsummary_registered_facility">%1$s v %2$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">Zobrazit vše</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">Nízká</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">Vysoký</string>
+
+  <string name="bloodsugar_level_low">Nízká</string>
+  <string name="bloodsugar_level_high">Vysoký</string>
+
+  <string name="timestamp_today">Dnes</string>
+  <string name="timestamp_yesterday">Včera</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s před několika dny</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">Léky</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Přidat další lék</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">Zpět na obrazovku telefonního čísla</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">Nejste to vy\?</string>
+  <string name="applock_reset_pin_alert_title">Obnovit bezpečnostní kód PIN\?</string>
+  <string name="applock_reset_pin_alert_message">Opravdu chcete resetovat bezpečnostní kód PIN\?</string>
+  <string name="applock_reset_pin_alert_confirm">Reset</string>
+  <string name="applock_reset_pin_alert_cancel">Zrušit</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">Zapomenutý PIN\?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">Kód PIN se neshoduje s původním kódem PIN</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">Nesprávný kód PIN, %s zbývající pokusy</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">Provedli jste %s nesprávné pokusy</string>
+  <string name="pinentry_pin_number_hint">Váš bezpečnostní kód PIN</string>
+  <string name="pinentry_bruteforcelock_timer_label">Zkuste to znovu po</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">Vaše telefonní číslo</string>
+  <string name="registrationphone_error_invalid_number">Zkontrolujte telefonní číslo. Vypadá to, že je příliš krátké.</string>
+  <string name="registration_loggedout_dialog_title">Byli jste odhlášeni</string>
+  <string name="registration_loggedout_dialog_message">Pro pokračování se prosím znovu přihlaste</string>
+  <string name="registration_loggedout_dialog_confirm">Dobře</string>
+  <string name="registrationphone_next">Další</string>
+
+  <string name="registrationname_name_label">Vaše role a celé jméno</string>
+  <string name="registrationname_error_empty_name">Zadejte prosím své celé jméno</string>
+  <string name="registrationname_next">Další</string>
+  <string name="registrationname_name_and_role_hint">Příklad: Sestra Deepa Singh</string>
+
+  <string name="registrationpin_pin_label">Vytvoření bezpečnostního kódu PIN</string>
+  <string name="registrationpin_pin_hint">Zapamatujte si kód PIN, budete ho potřebovat později.</string>
+  <string name="registrationpin_error_incomplete_pin">PIN je příliš krátký. Zadejte prosím 4 čísla.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">Opětovné zadání bezpečnostního kódu PIN</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">Kód PIN se neshoduje s původním kódem PIN</string>
+  <string name="registrationconfirmpin_reset_pin">Obnovení kódu PIN</string>
+
+  <string name="registrationlocation_screen_title">Přístup k poloze</string>
+  <string name="registrationlocation_skip_permission">Přeskočit</string>
+  <string name="registrationlocation_permission_rationale_description">Vaše poloha nám pomůže najít vaši kliniku</string>
+  <string name="registrationlocation_permission_rationale_title">Rychlejší vyhledání kliniky</string>
+  <string name="registrationlocation_allow_access">Povolení přístupu k umístění</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">Začněte</string>
+  <string name="screenonboarding_intro_1">Hledat \&amp; najít \ntisíce pacientů \ns</string>
+  <string name="screenonboarding_intro_1_hypertension">\ hypertenze</string>
+  <string name="screenonboarding_intro_2">Vedení záznamů o \n</string>
+  <string name="screenonboarding_intro_2_bp">krevní tlak \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ léky</string>
+  <string name="screenonboarding_intro_3">Pacienti dostávají </string>
+  <string name="screenonboarding_intro_3_reminder">\nupomínkové zprávy</string>
+  <string name="screenonboarding_intro_3_visits">\nvrátit se na návštěvu</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">Žádní pacienti po termínu</string>
+  <string name="overdue_empty_desc">Pacientům, kteří zmeškají plánovanou návštěvu, budete moci zavolat na kontrolní měření krevního tlaku.</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">%s den po vypršení</item>
+    <item quantity="few">%s dny po vypršení</item>
+    <item quantity="many">%s dnů po vypršení</item>
+    <item quantity="other">%s dnů po vypršení</item>
+  </plurals>
+  <string name="overdue_list_item_village">Vesnice</string>
+  <string name="overdue_download">Stáhnout</string>
+  <string name="overdue_share">Sdílet</string>
+  <string name="overdue_no_pending_patients">Žádní čekající pacienti</string>
+  <string name="overdue_pending_list_button_see_all">Zobrazit vše</string>
+  <string name="overdue_pending_list_button_see_less">Zobrazit méně</string>
+  <string name="overdue_pending_to_call_header">ČEKÁ NA VOLÁNÍ</string>
+  <string name="overdue_agreed_to_visit_call_header">SOUHLASIL S NÁVŠTĚVOU</string>
+  <string name="overdue_remind_to_call_header">PŘIPOMENOUT, ŽE ZAVOLÁTE POZDĚJI</string>
+  <string name="overdue_removed_from_list_call_header">ODSTRANĚNO ZE SEZNAMU</string>
+  <string name="overdue_no_visit_in_one_year_call_header">ŽÁDNÁ NÁVŠTĚVA ZA 1 ROK</string>
+
+
+  <!-- Facility change -->
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">Kontrola SMS odeslaných na adresu</string>
+  <string name="enterotp_enter_verification_code">Zadejte ověřovací kód</string>
+  <string name="enterotp_incorrect_code">Chybný kód, zkuste to prosím znovu</string>
+  <string name="enterotp_resend_sms">Znovu odeslat SMS</string>
+  <string name="enterotp_sms_sent">Nové ověřovací SMS odesláno</string>
+  <string name="enterotp_try_again_after">Zkuste to znovu po</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">Provedli jste %s nesprávné pokusy</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">Nesprávný kód, %s zbývající pokusy</string>
+  <!-- minutes:seconds -->
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">Naplánujte si další návštěvu v</string>
+  <string name="scheduleappointment_not_now">Teď ne</string>
+  <string name="scheduleappointment_done">hotovo</string>
+  <string name="scheduleappointment_next">Další</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s den</item>
+    <item quantity="few">%s dny</item>
+    <item quantity="many">%s dnů</item>
+    <item quantity="other">%s dnů</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s týden</item>
+    <item quantity="few">%s týdny</item>
+    <item quantity="many">%s týdnů</item>
+    <item quantity="other">%s týdnů</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s měsíc</item>
+    <item quantity="few">%s měsíce</item>
+    <item quantity="many">%s měsíců</item>
+    <item quantity="other">%s měsíců</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">Vytvořit nový bezpečnostní kód PIN</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">PIN je příliš krátký. Zadejte prosím 4 čísla.</string>
+  <string name="forgotpin_confirm_pin">Opětovné zadání bezpečnostního kódu PIN</string>
+  <string name="forgotpin_confirm_pin_message">Znovu zadejte PIN a potvrďte jej.</string>
+  <string name="forgotpin_error_pin_mismatch">Kód PIN se neshoduje s původním kódem PIN</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">Vraťte se později</string>
+  <string name="reports_you_will_be_able_to_see">Zde si můžete prohlédnout zprávy o hypertenzi pro vaši kliniku.</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">Srdeční infarkt</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">Mrtvice</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">Onemocnění ledvin</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_hypertension">Hypertenze</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Diagnóza hypertenze (povinné)</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_diabetes">Diabetes</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Diagnóza diabetu (povinné)</string>
+  <string name="newmedicalhistory_next">Další</string>
+  <string name="newmedicalhistory_yes">Ano</string>
+  <string name="newmedicalhistory_no">Ne</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Užíval pacient někdy v posledním měsíci léky na tlak\? (Povinné)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Užíval pacient někdy v posledním měsíci léky na diabetes\? (Povinné)</string>
+  <string name="medicalhistory_question_is_smoking">Kouření</string>
+  <string name="medicalhistory_question_is_using_smokeless_tobacco">Bezdýmný tabák</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">Žádný</string>
+  <string name="prescribed_drugs_dosage_remove">Odstranit</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s dávkování</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">Cestovní pas BP nebo občanský průkaz</string>
+  <string name="scansimpleid_enteredcode_error_empty">Zadejte číslo pasu BP nebo ID zdravotní pojišťovny.</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Zadejte platné číslo pasu BP nebo ID zdravotní pojišťovny</string>
+  <string name="scansimpleid_type_number">nebo zadejte číslo</string>
+  <string name="scansimpleid_invalid_qr_code">Naskenujte platný průkaz zdravotní pojišťovny</string>
+  <string name="scansimpleid_error_state_snackbar_ok">OK</string>
+  <string name="scansimpleid_identfier_already_exists">ID již bylo vydáno jinému pacientovi.\nNaskenujte nový zdravotní průkaz.</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">Cestovní pas BP nebo průkaz zdravotní pojišťovny</string>
+  <string name="scansimpleid_bp_passport_title">BP Passport</string>
+  <string name="scansimpleid_national_id_title">Národní průkaz totožnosti</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">Čeká se na synchronizaci</string>
+  <string name="syncindicator_status_failed">Synchronizace se nezdařila</string>
+  <string name="syncindicator_status_syncing">Probíhá synchronizace</string>
+  <string name="syncindicator_status_synced_just_now">Synchronizováno právě teď</string>
+  <string name="syncindicator_status_synced_min_ago">Synchronizováno před %s min </string>
+  <string name="syncindicator_dialog_error_network">Ujistěte se, že máte funkční připojení k internetu, abyste mohli synchronizovat záznamy o pacientech.</string>
+  <string name="syncindicator_dialog_button_text">Dobře</string>
+  <string name="syncindicator_dialog_error_server">Synchronizační servery jsou momentálně mimo provoz. Zkuste to prosím později nebo se obraťte na svého nadřízeného.</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">Nápověda</string>
+  <string name="help_no_connection">Žádné připojení k internetu</string>
+  <string name="help_something_went_wrong">Něco se pokazilo</string>
+  <string name="help_try_again">Zkuste to znovu</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">Ano</string>
+  <string name="linkidwithpatient_button_back">Zpět</string>
+  <string name="linkidwithpatient_text">Přidat ID do</string>
+  <string name="linkidwithpatient_patient_text">%1$s\?</string>
+
+  <!-- Add ID to Patient: Search -->
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">Nedávné</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">Navštívené:\u0020</string>
+  <string name="recent_patients_itemview_new_registration">Nová registrace</string>
+
+  <!-- Add ID to Patient: Search Results-->
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">Aktualizace aplikace</string>
+  <string name="appupdatedialog_body">Budete přesměrováni do obchodu Google Play, kde můžete aktualizovat aplikaci Simple.</string>
+  <string name="appupdatedialog_positive_button_text">Aktualizovat</string>
+  <string name="appupdatedialog_negative_button_text">Teď ne</string>
+
+  <!-- All Patients In Facility View-->
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">Něco se pokazilo</string>
+  <string name="registrationloader_error_unexpected_message">Po nějaké době to zkuste znovu nebo se obraťte na svého nadřízeného.</string>
+  <string name="registrationloader_error_internet_connection_title">Žádné připojení k internetu</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">Zkusit znovu</string>
+
+  <!-- Short code search -->
+
+  <!-- Simple video -->
+  <string name="simple_video_duration">%s minuty</string>
+
+  <!-- Settings -->
+  <string name="settings_title">Nastavení</string>
+  <string name="settings_name">název</string>
+  <string name="settings_number">Telefonní číslo</string>
+  <string name="settings_language">Jazyk</string>
+  <string name="settings_change">Změna</string>
+  <string name="settings_language_hint">Výběr jazyka</string>
+  <string name="settings_software">Software</string>
+  <string name="settings_update">Aktualizovat</string>
+  <string name="settings_software_version">Verze %1$s</string>
+  <string name="settings_logout">Odhlásit</string>
+  <string name="settings_logout_dialog_title">Odhlásit</string>
+  <string name="settings_logout_dialog_desc">Určitě se chcete odhlásit\?</string>
+  <string name="settings_logout_dialog_positive_action">Ano</string>
+  <string name="settings_logout_dialog_negative_action">Ne</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">Vyberte jazyk</string>
+  <string name="changelanguage_done">Hotovo</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">Počkejte prosím...</string>
+  <string name="placeholder_loading_message">Probíhá údržba databáze. Zabere to jen minutu.</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">Jednoduché logo</string>
+  <string name="selectcountry_title">Vyberte svou zemi</string>
+  <string name="selectcountry_networkerror">Žádné připojení k internetu!</string>
+  <string name="selectcountry_servererror">Chyba serveru! Zkuste to prosím později!</string>
+  <string name="selectcountry_genericerror">Něco se pokazilo! Zkuste to prosím později!</string>
+  <string name="selectcountry_retry">Zkuste to znovu</string>
+  <string name="scheduleappointment_at">na</string>
+  <string name="scheduleappointment_change">Změna</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">Vyberte měření</string>
+  <string name="bloodsugartype_picker_desc">Pokud si nejste jisti, vyberte možnost \"RBS\".</string>
+  <string name="bloodsugartype_rbs">Náhodná hladina cukru v krvi (RBS)</string>
+  <string name="bloodsugartype_fbs">Cukr v krvi nalačno (FBS)</string>
+  <string name="bloodsugartype_ppbs">Postprandiální hladina cukru v krvi (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Datum návštěvy</string>
+  <string name="bloodsugarentry_day">Den</string>
+  <string name="bloodsugarentry_month">Měsíc</string>
+  <string name="bloodsugarentry_year">Rok</string>
+  <string name="bloodsugarentry_error_lower_limit">Hodnota nesmí být nižší než 30 mg/dl</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Hodnota nesmí být nižší než 3\u0025</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">Hodnota nesmí být nižší než 1,66 mmol/l</string>
+  <string name="bloodsugarentry_error_higher_limit">Hodnota nesmí být vyšší než 1000 mg/dl</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Hodnota nesmí být vyšší než 25\u0025</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">Hodnota nesmí být vyšší než 55,49 mmol/l</string>
+  <string name="bloodsugarentry_error_empty">Hodnota nemůže být prázdná</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Zadejte platné datum v DD/MM/RRRR.</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Datum nesmí být v budoucnosti</string>
+  <string name="bloodsugarentry_random_title">Náhodná hladina cukru v krvi</string>
+  <string name="bloodsugarentry_post_prandial_title">Postprandiální hladina cukru v krvi</string>
+  <string name="bloodsugarentry_fasting_title">Hladina cukru v krvi nalačno</string>
+  <string name="bloodsugarentry_remove">Odstranit</string>
+  <string name="bloodsugarentry_edit_random_title">Upravit náhodnou hladinu cukru v krvi</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Úprava postprandiální hladiny cukru v krvi</string>
+  <string name="bloodsugarentry_edit_fasting_title">Úprava hladiny cukru v krvi nalačno</string>
+  <string name="bloodsugarentry_edit_hba1c_title">Upravit HbA1c</string>
+  <string name="bloodsugarentry_date_change">Změna</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Odstranění cukru v krvi</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Opravdu chcete odstranit tento záznam hladiny cukru v krvi\?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Odstranit</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Zrušit</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">Bez přídavku krevních cukrů</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Diabetes</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">Krevní tlak</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">Diabetes</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">Historie</string>
+  <string name="medicalhistorysummaryview_diagnosis">Diagnóza (povinné)</string>
+  <string name="medicalhistorysummaryview_tobacco_use">Užívání tabáku</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">Žádné přidané léky</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">Přístup odepřen</string>
+  <string name="accessdeniedscreen_description">Přístup do služby Simple je odepřen. Pokud se domníváte, že se jedná o chybu, obraťte se na svého nadřízeného.\n\nPokud je přístup obnoven, odinstalujte aplikaci Simple a nainstalujte ji z obchodu Play.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">Změnit zařízení na</string>
+  <string name="confirmfacilitychange_negative_button">Zrušit</string>
+  <string name="confirmfacilitychange_positive_button">Ano</string>
+  <string name="confirmfacilitychange_facility_name">%s\?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Jste na\?</string>
+  <string name="registrationconfirmfacility_positive_button">Ano</string>
+  <string name="registrationconfirmfacility_negative_button">Zrušit</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Jste na</string>
+  <string name="alertfacilitychange_yes_button">Ano</string>
+  <string name="alertfacilitychange_change_button">Změna</string>
+  <string name="alertfacilitychange_facility_name">%s\?</string>
+
+  <!-- Prescribed Drug Summary -->
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">Označit pacienta jako \"Souhlasil s návštěvou\"</string>
+  <string name="contactpatient_remind_call_later">Připomeňte mi volání později...</string>
+  <string name="contactpatient_remove_from_list">Odebrat ze seznamu zpožděných...</string>
+  <string name="contactpatient_result_of_call">Výsledek volání</string>
+  <string name="contactpatient_call">Volání</string>
+  <string name="contactpatient_call_normal">Normální</string>
+  <string name="contactpatient_call_secure">Zabezpečení</string>
+  <string name="contactpatient_help_text">Zabezpečené hovory skrývají vaše číslo a jsou bezplatné</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Zavolejte později</string>
+  <string name="contactpatient_change">Změna</string>
+  <string name="contactpatient_done">Hotovo</string>
+  <string name="contactpatient_result">Výsledek</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s den</item>
+    <item quantity="few">%s dny</item>
+    <item quantity="many">%s dnů</item>
+    <item quantity="other">%s dnů</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s týden</item>
+    <item quantity="few">%s týdny</item>
+    <item quantity="many">%s týdnů</item>
+    <item quantity="other">%s týdnů</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s měsíc</item>
+    <item quantity="few">%s měsíce</item>
+    <item quantity="many">%s měsíců</item>
+    <item quantity="other">%s měsíců</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">Vyberte důvod</string>
+  <string name="contactpatient_patient_already_visited">Pacient již navštívil</string>
+  <string name="contactpatient_patient_is_not_responding">Pacient nereaguje</string>
+  <string name="contactpatient_invalid_phone_number">Telefonní číslo nefunguje</string>
+  <string name="contactpatient_public_hospital_transfer">Převeden do jiného veřejného zdravotnického zařízení</string>
+  <string name="contactpatient_moved_to_private">Přesunut k soukromému lékaři</string>
+  <string name="contactpatient_refused_to_come_back">Odmítl se vrátit</string>
+  <string name="contactpatient_patient_died">Zemřel</string>
+  <string name="contactpatient_other_reason">Jiný důvod</string>
+  <string name="contactpatient_unknown">Neznámý</string>
+  <string name="contactpatient_patient_registered_at">Registrován na</string>
+  <string name="contactpatient_patient_transfer_from">Převod z</string>
+  <string name="contactpatient_phone">Telefon</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">Navštíveno</string>
+  <string name="contactpatient_no_phone_number">Žádné telefonní číslo</string>
+  <string name="contactpatient_diagnosis_diabetes">Diabetes</string>
+  <string name="contactpatient_diagnosis_hypertension">Hypertenze</string>
+  <string name="contactpatient_diagnosis_none">Žádný</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">Profil pacienta nenalezen</string>
+  <string name="deeplink_patient_profile_not_found_desc">Zkontrolujte svůj internet a synchronizujte pacienty</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">Dobře</string>
+  <string name="deeplink_no_patient">Pacient nenalezen</string>
+  <string name="deeplink_no_patient_desc">Zahajte telekonzultace a žádost zdravotnického pracovníka o informace o pacientovi.</string>
+  <string name="deeplink_no_patient_positive_action">OK</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">Vyberte důvod</string>
+  <string name="deletereason_duplicate_patient">Jde o duplicitního pacienta</string>
+  <string name="deletereason_accidental_registration">Omylem registrovaný pacient</string>
+  <string name="deletereason_died">Zemřel</string>
+  <string name="deletereason_confirm_title">Smazat pacienta\?</string>
+  <string name="deletereason_confirm_message">Tím se odstraní %1$s</string>
+  <string name="deletereason_confirm_positive">Vymazat</string>
+  <string name="deletereason_confirm_negative">Zrušit</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">Další</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_new_title">Dostupní lékaři</string>
+  <string name="contactdoctor_new_subtitle">Pokud je to možné, použít WhatsApp</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">Jak používat aplikaci Simple</string>
+  <string name="screenintrovideo_watch_video">Podívejte se na video</string>
+  <string name="screenintrovideo_skip">Přeskočit</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">Přidělené zařízení</string>
+  <string name="assigned_facility_view_change">Změna</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_search_hint">Zadejte název zařízení</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">Navrhované kliniky</string>
+  <string name="facilitypicker_header_all_facilities">Všechny kliniky</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">Podepište se do tohoto pole</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">Dnů</string>
+  <string name="drug_duration_empty_error">Doba užívání léčiva nemůže být prázdná</string>
+  <string name="drug_duration_max_error">Doba užívání léku nesmí být delší než %1$s dnů</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">Přidat předpis\?</string>
+  <string name="screen_teleconsult_success_yes">Ano</string>
+  <string name="screen_teleconsult_success_no">Ne</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Telekonzultace nahrána</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">Uložit</string>
+
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">Záznam Telekonzultace</string>
+  <string name="screen_teleconsult_record_type">Typ Telekonzultace</string>
+  <string name="screen_teleconsult_record_type_audio">Hlasové volání</string>
+  <string name="screen_teleconsult_record_type_video">Videohovor</string>
+  <string name="screen_teleconsult_record_type_message">Zpráva</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">Pacient pravidelně užívá antihypertenziva a antidiabetika</string>
+  <string name="screen_teleconsult_record_patient_consented">Pacient souhlasil s telekonzultací </string>
+  <string name="screen_teleconsult_record_done">Hotovo</string>
+  <string name="teleconsultnotrecordeddialog_title">Telekonzultace není zaznamenána</string>
+  <string name="teleconsultnotrecordeddialog_body">Opravdu to chcete zrušit\?</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">Ano</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">Ne</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">Nejste oprávněni přihlašovat se k telekonzultacím</string>
+  <string name="deeplink_please_check_with_your_supervisor">Informujte se u svého nadřízeného</string>
+  <string name="deeplink_okay_positive_action">Dobře</string>
+
+  <string name="screen_teleconsult_prescription_next">Další</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">Léky</string>
+  <string name="view_teleconsult_medicines_add">Přidat</string>
+  <string name="view_teleconsult_medicines_edit">Upravit</string>
+  <string name="view_teleconsult_medicines_required_error">Přidejte alespoň jeden lék</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s den</item>
+    <item quantity="few">%1$s dny</item>
+    <item quantity="many">%1$s dnů</item>
+    <item quantity="other">%1$s dnů</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">Pokyny pro pacienta</string>
+  <string name="view_teleconsult_doctor_info_registration_id">ID lékařské registrace</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">Podpisem tohoto předpisu potvrzuji, že jsem %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">Přidat podpis</string>
+  <string name="view_teleconsult_doctor_info_signature_error">Přidat podpis</string>
+
+  <string name="screen_teleconsult_share_prescription_download">Stáhnout</string>
+  <string name="screen_teleconsult_share_prescription_share">Sdílet</string>
+  <string name="screen_teleconsult_share_prescription_done">Hotovo</string>
+  <string name="screen_teleconsult_share_prescription_image_using">Sdílet obrázek pomocí</string>
+  <string name="screen_teleconsult_share_prescription_title">Předpis</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">Předpis je uložen v Souborech ke stažení</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">Požadovaná diagnóza</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Zvolte diagnózu pro hypertenzi i diabetes</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Výběr diagnózy hypertenze</string>
+  <string name="select_diagnosis_error_ok">OK</string>
+  <string name="sheet_teleconsult_status_title">Telekonzultace dokončena\?</string>
+  <string name="sheet_teleconsult_status_yes">Ano</string>
+  <string name="sheet_teleconsult_status_no">Ne</string>
+  <string name="sheet_teleconsult_status_waiting">Stále čeká</string>
+  <string name="sheet_teleconsult_status_done">Hotovo</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">Nelze spustit aplikaci</string>
+  <string name="setup_rooted">Aplikaci Simple nelze spustit na zařízení s rootem.</string>
+  <string name="setup_close">Zavřít</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">Vybrat</string>
+  <string name="blood_sugar_unit_selection_done">HOTOVO</string>
+
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">Registrace nového pacienta</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">Přidat ke stávajícímu pacientovi</string>
+  <string name="sheet_bp_passport_number">BP Passport %1$s</string>
+  <string name="sheet_national_health_id">Číslo pojištěnce ZP %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">Přiřazeno k %1$s</string>
+  <string name="patientinstantsearch_nearby_facilities_header">Z okolních zařízení</string>
+  <string name="patientsearch_error_no_patients_in_facility">Zde uvidíte všechny pacienty registrované ve vašem zařízení</string>
+  <string name="patientsearch_error_no_search_results">Neshodují se žádní pacienti</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">Žádní pacienti v %1$s</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">Zadejte datum</string>
+  <string name="sheet_text_input_date_picker_day">Den</string>
+  <string name="sheet_text_input_date_picker_month">Měsíc</string>
+  <string name="sheet_text_input_date_picker_year">Rok</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Zadejte platné datum v DD/MM/RRRR.</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Zadejte datum v budoucnosti</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Datum nesmí být starší než jeden rok</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Národní zdravotní průkaz nelze přidělit pacientovi se stávajícím národním zdravotním průkazem.</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">Zadání vyžadováno</string>
+  <string name="select_ongoing_hypertension_treatment_message">Zjistěte, zda pacient užíval léky na tlak kdykoli v posledním měsíci.</string>
+  <string name="select_ongoing_diabetes_treatment_message">Zjistěte, zda pacient užíval léky na cukrovku kdykoli v posledním měsíci.</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">OK</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">Zadejte název léku</string>
+  <string name="customdrugssearch_item_name_separator">,\u0020</string>
+
+  <!-- Warning dialogs -->
+  <string name="warning_add_measurements_title">Přidat krevní tlak a glykemii\?</string>
+  <string name="warning_add_measurements_message">Pokud je to možné, přidejte aktuální hodnoty krevního tlaku a glykemie tohoto pacienta.</string>
+  <string name="warning_add_measurements_positive_button">Přidání odečtů</string>
+  <string name="warning_add_measurements_negative_button">Teď ne</string>
+  <string name="warning_add_blood_pressure_title">Přidat krevní tlak\?</string>
+  <string name="warning_add_blood_pressure_message">Pokud je to možné, přidejte aktuální hodnotu krevního tlaku tohoto pacienta.</string>
+  <string name="warning_add_blood_pressure_positive_button">Přidat krevní tlak</string>
+  <string name="warning_add_blood_pressure_negative_button">Teď ne</string>
+  <string name="warning_add_blood_sugar_title">Přidat glykemii\?</string>
+  <string name="warning_add_blood_sugar_message">Pokud je to možné, přidejte aktuální hodnotu glykemie tohoto pacienta.</string>
+  <string name="warning_add_blood_sugar_positive_button">Přidání glykemie</string>
+  <string name="warning_add_blood_sugar_negative_button">Teď ne</string>
+
+  <!-- Custom drug entry sheet -->
+  <string name="custom_drug_entry_sheet_remove">Odstranit</string>
+  <string name="custom_drug_entry_sheet_dosage">Dávkování</string>
+  <string name="custom_drug_entry_sheet_frequency">četnost</string>
+  <string name="custom_drug_entry_sheet_save_button_text">Uložit</string>
+  <string name="custom_drug_entry_sheet_add_button_text">Přidat</string>
+  <string name="custom_drug_entry_sheet_frequency_dialog_done">Hotovo</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">Kde je vaše klinika\?</string>
+  <string name="select_state_networkerror">Žádné připojení k internetu!</string>
+  <string name="select_state_servererror">Chyba serveru! Zkuste to prosím později!</string>
+  <string name="select_state_genericerror">Něco se pokazilo! Zkuste to prosím později!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">Zemřel</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Změna diagnózy\?</string>
+  <string name="change_diagnosis_message">Označte ANO, pokud byl pacientovi někdy diagnostikována hypertenze nebo diabetes.</string>
+  <string name="change_diagnosis_positive">ZMĚNA</string>
+  <string name="change_diagnosis_negative">NE TEĎ</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">Stáhnutí selhalo</string>
+  <string name="overdue_download_notification_failed_subtitle">Zkuste to znovu za nějaký čas</string>
+  <string name="overdue_download_notification_in_progress_title">Stažení seznamu opožděných řádků</string>
+  <string name="overdue_download_notification_cancel">Zrušit</string>
+  <string name="overdue_download_notification_succeeded_title">Stahování dokončeno</string>
+  <string name="overdue_download_notification_succeeded_subtitle">Kliknutím otevřete</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">Žádný internet</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">Zkontrolujte internet a zkuste to znovu.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">OK</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Tabulkový procesor</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">Zrušit</string>
+  <string name="select_overdue_download_format_dialog_title_download">Stáhnout jako</string>
+  <string name="select_overdue_download_format_dialog_title_share">Sdílet jako</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Stáhnout</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Sdílet</string>
+  <string name="select_overdue_download_format_dialog_share_with">Sdílet s</string>
+  <string name="not_enough_storage_error_dialog_title">Nedostatečné úložiště</string>
+  <string name="not_enough_storage_error_dialog_message">Smažte několik souborů a zkuste to znovu</string>
+  <string name="download_failed_error_dialog_title">Nelze stáhnout</string>
+  <string name="download_failed_error_dialog_message">Něco se pokazilo. Počkejte několik minut a zkuste to znovu</string>
+  <string name="next_appointment_view_title">Následná schůzka</string>
+  <string name="next_appointment_view_add">Přidat</string>
+  <string name="next_appointment_view_change">Změna</string>
+  <string name="next_appointment_none">Žádný</string>
+  <string name="next_appointment_appointment_at_facility">na %s</string>
+  <string name="next_appointment_today">Dnes</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d den</item>
+    <item quantity="few">%d dny</item>
+    <item quantity="many">%d dnů</item>
+    <item quantity="other">%d dnů</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d den po vypršení</item>
+    <item quantity="few">%d dny po vypršení</item>
+    <item quantity="many">%d dnů po vypršení</item>
+    <item quantity="other">%d dnů po vypršení</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Co nejdříve aktualizujte aplikaci Simple v obchodě Google Play.</string>
+  <string name="critical_app_update_notification_subtext">K dispozici jsou důležité aktualizace. Aktualizujte aplikaci Simple z obchodu Google Playstore.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Je vyžadována kritická aktualizace</string>
+  <string name="critical_update_required_dialog_content">Aktualizujte nyní pro kritické změny zabezpečení a nejnovější funkce</string>
+  <string name="critical_security_update_required_reason">Zabezpečení aplikace je ohroženo</string>
+  <string name="critical_update_required_dialog_update_button_text">AKTUALIZACE</string>
+  <string name="critical_update_required_dialog_help_section_title">Potřebujete pomoc\?</string>
+  <string name="critical_update_required_dialog_help_section_content">Klepnutím na tlačítko níže získáte pomoc od našeho přátelského týmu podpory.</string>
+  <string name="critical_update_required_reason">Aplikace je %d měsíců zastaralá</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">Kritická aktualizace</string>
+  <string name="critical_update_required_card_content">Aktualizujte nyní pro kritické změny zabezpečení a nejnovější funkce</string>
+  <string name="update_required_reason">Aplikace je %d měsíců zastaralá</string>
+  <string name="critical_update_required_card_update_button_text">AKTUALIZACE</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Vyplňte hlášení o zásobách léků čekajících na vyřízení pro %1$s</string>
+  <string name="drug_stock_reminder_card_title">Zásoby léčiv</string>
+  <string name="drug_stock_reminder_card_content">Vyplňte hlášení o zásobách léků čekajících na vyřízení pro %1$s</string>
+  <string name="drug_stock_reminder_button_text">Zadejte zásobu léků</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">Žádný internet</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">Zkontrolujte internet a zkuste to znovu.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">OK</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">Tlak je vysoký. Zvýšit množství léků\?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Pokud pacient užívá léky pravidelně, postupujte podle protokolu</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Souhlas s návštěvou</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Nastavení připomenutí volání na %1$s</string>
+
+  <string name="call_result_outcome_removed">Odstraněno: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">Uloženo %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Hledání podle jména nebo obce</string>
+  <string name="overdue_search_hint">Zadejte jméno nebo obec</string>
+  <string name="overdue_search_no_search_results_title">Nenalezeni žádní pacienti</string>
+  <string name="overdue_search_no_search_results_desc">Zde uvidíte všechny pacienty s prodlením z vašeho vyhledávání</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d vybráno</string>
+  <string name="selected_overdue_clear">VYMAZAT</string>
+  <string name="selected_overdue_select_all_appointments">VYBRAT VŠE</string>
+
+  <string name="patient_line_list_download_notification_failed_title">Stáhnutí selhalo</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">Zkuste to znovu za nějaký čas</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Stažení seznamu pacientů</string>
+  <string name="patient_line_list_download_notification_cancel">Zrušit</string>
+  <string name="patient_line_list_download_notification_succeeded_title">Stahování dokončeno</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">Kliknutím otevřete</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">Tabulkový procesor</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Zrušit</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">Stáhnout jako</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Stáhnout</string>
+  <string name="patient_line_list_download_link">Stáhnout registr pacientů IHCI</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Zapnout oznámení</string>
+  <string name="notification_permission_denied_message">K zobrazování důležitých připomínek potřebuje aplikace Simple povolení. Zapněte ji v části Oprávnění &gt; Oznámení.</string>
+  <string name="notification_permission_denied_positive_button">PŘEJÍT DO NASTAVENÍ APLIKACE</string>
+  <string name="notification_permission_denied_negetive_button">NE TEĎ</string>
+
+  <!--reports-->
+  <string name="reports_report">%1$s zpráva</string><!--Oct 2023 report-->
+  <string name="reports_submit_btn_text">Odeslat</string>
+  <string name="reports_complete">Dokončeno!</string>
+  <string name="reports_done">Hotovo</string>
+  <string name="reports_submitted_with_date_and_time">Odesláno %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">Odeslat zprávu</string>
+  <string name="reports_submitted">Odesláno</string>
+  <string name="reports_submitted_with_date">%1$s zpráva odeslána</string><!--October 2022 report submitted-->
+  <string name="reports_unsaved_changes_title">Neuložené změny</string>
+  <string name="reports_unsaved_changes_text">Neuložené změny budou ztraceny.\nOpravdu chcete odejít\?</string>
+  <string name="reports_stay_title">ZŮSTAT NA TÉTO STRÁNCE</string>
+  <string name="reports_leave_page_title">OPUSTIT TUTO STRÁNKU</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_report">Měsíční zpráva o screeningu</string>
+  <string name="monthly_screening_reports">Měsíční zprávy o screeningu</string>
+  <string name="monthly_screening_reports_screening_report">%1$s zpráva o screeningu</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">Zpráva o zásobách léčiv</string>
+  <string name="monthly_drug_stock_reports">Zprávy o zásobách léčiv</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s zpráva o zásobách léčiv</string>
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">Měsíční hlášení o zásobách</string>
+  <string name="monthly_supplies_reports">Měsíční výkazy zásob</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s zpráva o zásobách</string>
+
+  <!-- Drug Stock Expiry Form -->
+  <string name="month_date_picker_invalid_date">Neplatné datum, datum musí být v rozmezí %1$s - %2$s</string>
+
+  <!-- Data protection consent -->
+  <string name="data_protection_consent_title">Podmínky použití</string>
+  <string name="data_protection_consent_subtitle">Před použitím aplikace Simple si musíte přečíst následující podmínky a souhlasit s nimi kliknutím na <b>“SOUHLASÍM A POKRAČUJI”</b> níže.\n\n\nAplikace Simple obsahuje soukromé zdravotní údaje pacientů (“údaje”).\n\n\n- K Údajům můžete přistupovat pouze v případě, že je to nezbytné k plnění vašich pracovních povinností souvisejících s péčí o pacienty ve zdravotnickém zařízení, ve kterém pracujete. Přístup k údajům nebo jejich prohlížení za jakýmkoli jiným účelem je zakázáno.\n\n\n- Musíte zachovávat důvěrnost údajů. Sdílení Údajů s jinými osobami je zakázáno.\n\n\n- Bezpečnostní kód, který používáte pro přístup do aplikace Simple, musíte uchovávat v tajnosti.\n\n\n- Pokud aplikaci Simple nepoužíváte, musíte se z ní neprodleně odhlásit. Je zakázáno umožnit jiným osobám používat vaše přihlašovací údaje k přístupu do aplikace Simple nebo k datům.\n\n\n- Musíte provádět pravidelnou synchronizaci dat, zachycování povinných záznamů a další potřebnou údržbu.\n\n\n- Berete na vědomí, že aplikace Simple automaticky vytváří záznam o vašem přístupu k datům. Neoprávněný přístup nebo jiné porušení podmínek používání může mít za následek zrušení vašeho přístupu k aplikaci Simple nebo jiná disciplinární opatření.</string>
+  <string name="data_protection_consent_accept_button">SOUHLASÍM A POKRAČUJI</string>
+
+  <!-- Patient transfer to CC -->
+  <string name="patient_facility_reassignment">Způsobilé pro doplnění v komunitním zařízení</string>
+  <string name="reassign_patient_title">Nárok na doplnění v komunitním zařízení. Přesun pacienta\?</string>
+  <string name="reassign_patient_description">Přiřazení k preferovanému komunitnímu zařízení pro budoucí návštěvy.</string>
+  <string name="change_patient_facility">Změna</string>
+
+  <!-- Diabetes Diagnosis Warning Dialog -->
+  <string name="diabetes_warning_dialog_title">Přidat diagnózu cukrovky\?</string>
+  <string name="diabetes_warning_dialog_desc">Tento pacient užívá léky na cukrovku.</string>
+  <string name="diabetes_warning_dialog_positive_button">Ano, má cukrovku</string>
+  <string name="diabetes_warning_dialog_negative_button">Teď ne</string>
+
+  <!-- HTN Diagnosis Warning Dialog -->
+  <string name="htn_warning_dialog_title">Přidat diagnózu hypertenze\?</string>
+  <string name="htn_warning_dialog_desc">Tento pacient užívá léky na hypertenzi.</string>
+  <string name="htn_warning_dialog_positive_button">Ano, má hypertenzi</string>
+  <string name="htn_warning_dialog_negative_button">Teď ne</string>
+
+  <!-- Statin Alerts -->
+  <string name="statin_alert_low_high_risk_patient_x">NÍZKÉ RIZIKO %s</string>
+  <string name="statin_alert_medium_high_risk_patient_x">STŘEDNĚ VYSOKÉ RIZIKO %s</string>
+  <string name="statin_alert_high_risk_patient_x">VYSOKÉ RIZIKO %s</string>
+  <string name="statin_alert_very_high_risk_patient">VELMI RIZIKOVÝ PACIENT</string>
+  <string name="statin_alert_very_high_risk_range">VELMI VYSOKÉ RIZIKO %s</string>
+  <string name="statin_alert_at_risk_patient">RIZIKOVÝ PACIENT</string>
+  <string name="statin_alert_refer_to_doctor">Doporučte lékaři <b>statinový lék</b></string>
+  <string name="statin_alert_refer_to_doctor_diabetic_40">Diabetický pacient, věk nad 40 let. Doporučte lékaři <b>statinový lék</b></string>
+  <string name="statin_alert_add_tobacco_use">Přidat kouření tabáku</string>
+  <string name="statin_alert_add_bmi">Přidat BMI</string>
+  <string name="statin_alert_add_cholesterol">Přidat cholesterol</string>
+  <string name="statin_alert_add_smoking_info">Přidejte kouření pro přesnější skóre rizika.</string>
+  <string name="statin_alert_add_bmi_info">Přidejte BMI pro přesnější skóre rizika.</string>
+  <string name="statin_alert_add_smoking_and_bmi_info">Přidejte stav kouření a BMI pro přesnější skóre rizika.</string>
+  <string name="statin_alert_add_cholesterol_info">Přidejte cholesterol pro přesnější skóre rizika.</string>
+  <string name="statin_alert_add_smoking_and_cholesterol_info">Přidejte stav kouření a cholesterol pro přesnější skóre rizika.</string>
+
+  <!-- Purge notification -->
+  <string name="purge_notification_title">Optimalizace databáze</string>
+  <string name="purge_notification_desc">Probíhá údržba databáze. Zabere to jen minutu.</string>
+
+  <!-- BMI entry -->
+  <string name="bmi_entry_sheet_title_enter_bmi">BMI</string>
+  <string name="bmi_entry_height_in_cm">Výška (cm)</string>
+  <string name="bmi_entry_weight_in_kg">Hmotnost (kg)</string>
+  <string name="bmi_x">BMI: %s</string>
+
+  <!-- Add Smoking Status Dialog -->
+  <string name="tobacco_status_dialog_title">Kouření tabáku\?</string>
+  <string name="tobacco_status_dialog_option_smokes">Kouření</string>
+  <string name="tobacco_status_dialog_option_smokeless">Bezdýmný tabák</string>
+  <string name="tobacco_status_dialog_option_no">Ne</string>
+  <string name="tobacco_status_dialog_title_positive_button">Hotovo</string>
+  <string name="tobacco_status_dialog_title_negative_button">Zrušit</string>
+
+  <!-- Cholesterol entry sheet -->
+  <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
+  <string name="cholesterol_error_upper_limit">Cholesterol nesmí být vyšší než 1000</string>
+  <string name="cholesterol_error_lower_limit">Cholesterol nesmí být nižší než 25</string>
+</resources>

@@ -674,7 +674,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Qorannoon Barbaadamaadha</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Dhiibbaa dhiigaa fii sukkaaraf amaanifuu qorannoo filadhu</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Dhukkuba Dhiibaa Dhiigaatif filannoo taasisi</string>
   <string name="select_diagnosis_error_ok">Tole</string>
   <string name="sheet_teleconsult_status_title">Tele-consult guutameeraa?</string>
   <string name="sheet_teleconsult_status_yes">Eeyyee</string>

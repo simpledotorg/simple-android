@@ -673,7 +673,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ምርመራ ያስፈልጋል</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ለሁለቱም የደም ግፊት እና የስኳር በሽታ ምርመራን ይምረጡ</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ለደም ግፊት ምርመራን ይምረጡ</string>
   <string name="select_diagnosis_error_ok">እሺ</string>
   <string name="sheet_teleconsult_status_title">ቴሌ-ማማከር ተጠናቅቋል?</string>
   <string name="sheet_teleconsult_status_yes">አዎ</string>

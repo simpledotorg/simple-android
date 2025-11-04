@@ -668,7 +668,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Mirimaruni  hasanitano</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Lamuniku xibira yano hypertension and diabetesmirimera dorii</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Mundeete tumo buuxo gara doori</string>
   <string name="select_diagnosis_error_ok">Mahoye</string>
   <string name="sheet_teleconsult_status_title">Bilibiluni asinani hasawi xorishi eke gofino?</string>
   <string name="sheet_teleconsult_status_yes">E’e</string>

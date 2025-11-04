@@ -673,7 +673,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">රෝග නිශ්චය අවශ්‍යයි</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">අධි රුධිර පීඩනය සහ දියවැඩියාව යන රෝග දෙකම සඳහා රෝග විනිශ්චයක් තෝරා ගන්න</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">අධි රුධිර පීඩනය සඳහා රෝග විනිශ්චයක් තෝරන්න</string>
   <string name="select_diagnosis_error_ok">හරි</string>
   <string name="sheet_teleconsult_status_title">ටෙලි-උපදේශනය සම්පූර්ණයි?</string>
   <string name="sheet_teleconsult_status_yes">ඔව්</string>

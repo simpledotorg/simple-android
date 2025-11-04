@@ -670,7 +670,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Baaritaanka ayaa Loo baahanyahay</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Xullo baaritaanka cudurka dhiig karka iyo sokorowga labadaba</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Dooro baaritaanka dhiig karka</string>
   <string name="select_diagnosis_error_ok">Haye</string>
   <string name="sheet_teleconsult_status_title">Latalin telefoonka ah ma dhammaystirtay?</string>
   <string name="sheet_teleconsult_status_yes">Haa</string>

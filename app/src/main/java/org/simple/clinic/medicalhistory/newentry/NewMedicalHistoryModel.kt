@@ -35,9 +35,6 @@ data class NewMedicalHistoryModel(
   val facilityDiabetesManagementEnabled: Boolean
     get() = currentFacility!!.config.diabetesManagementEnabled
 
-  val hasAnsweredHypertensionDiagnosis: Boolean
-    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension != Unanswered
-
   val registeringPatient: Boolean
     get() = nextButtonState == ButtonState.SAVING
 

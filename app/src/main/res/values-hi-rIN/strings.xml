@@ -669,7 +669,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">उच्चरक्तचाप और मधुमेह दोनों के लिए एक निदान चुनें</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">उच्च रक्तचाप के निदान का चयन करें</string>
   <string name="select_diagnosis_error_ok">ठीक है</string>
   <string name="sheet_teleconsult_status_title">टेली-कंसल्ट पूरा हुआ?</string>
   <string name="sheet_teleconsult_status_yes">हाँ</string>

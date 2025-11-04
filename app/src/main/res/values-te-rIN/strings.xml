@@ -668,7 +668,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">రోగ నిర్ధారణ అవసరం</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">రక్తపోటు మరియు మధుమేహం రెండింటి కోసం రోగ నిర్ధారణను ఎంచుకోండి</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">మధుమేహం కోసం రోగ నిదానమును ఎంచుకోండి</string>
   <string name="select_diagnosis_error_ok">సరే</string>
   <string name="sheet_teleconsult_status_title">టెలి-కన్సల్ట్ పూర్తయ్యిందా?</string>
   <string name="sheet_teleconsult_status_yes">అవును</string>

@@ -669,7 +669,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ምርመራ የድሊ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ናይ ጸቕጢ-ደምን ናይ ሕማም ሽኮርን ምርመራ ምረጽ</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ምርመራ ናይ ደም፡ግፊት ክግበረልኩም ይሕረዩ</string>
   <string name="select_diagnosis_error_ok">እሺ</string>
   <string name="sheet_teleconsult_status_title">ቴሌኮንሳልት ተዛዚሙ?</string>
   <string name="sheet_teleconsult_status_yes">እወ</string>

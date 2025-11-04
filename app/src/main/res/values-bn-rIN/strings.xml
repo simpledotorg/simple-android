@@ -668,7 +668,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">রোগ নির্ণয় প্রয়োজন</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">হাইপারটেনশন এবং ডায়াবেটিস উভয়ের জন্য একটি রোগ নির্ণয় নির্বাচন করুন</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">হাইপারটেনশনের জন্য একটি ডায়াগনোসিস নির্বাচন করুন</string>
   <string name="select_diagnosis_error_ok">ঠিক আছে</string>
   <string name="sheet_teleconsult_status_title">টেলি-কনসাল্ট সম্পূর্ণ হয়ে গেছে?</string>
   <string name="sheet_teleconsult_status_yes">হ্যাঁ</string>

@@ -677,7 +677,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Se requiere un diagnóstico</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Seleccione diagnósticos para hipertensión y diabetes</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Seleccione un diagnóstico para hipertensión</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">¿Teleconsulta completa?</string>
   <string name="sheet_teleconsult_status_yes">Sí</string>

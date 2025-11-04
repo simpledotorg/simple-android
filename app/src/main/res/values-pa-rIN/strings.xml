@@ -669,7 +669,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ਡਾਇਗਨੋਸਿਸ ਲੋੜੀਂਦਾ ਹੈ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ਹਾਈਪਰਟੈਨਸ਼ਨ ਅਤੇ ਡਾਇਬਿਟੀਜ਼ ਦੋਵਾਂ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ਹਾਈਪਰਟੈਨਸ਼ਨ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
   <string name="select_diagnosis_error_ok">ਠੀਕ ਹੈ</string>
   <string name="sheet_teleconsult_status_title">ਕੀ ਟੇਲੀ-ਕਨਸਲਟ ਪੂਰੀ ਹੋਈ ਹੈ?</string>
   <string name="sheet_teleconsult_status_yes">ਹਾਂ</string>

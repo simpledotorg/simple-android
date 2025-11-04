@@ -112,14 +112,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     router.pop()
   }
 
-  override fun showHypertensionDiagnosisRequiredErrorDialog() {
-    MaterialAlertDialogBuilder(requireContext())
-        .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
-        .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_hypertension))
-        .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)
-        .show()
-  }
-
   override fun onBackPressed(): Boolean {
     viewModel.dispatch(BackClicked)
     return true

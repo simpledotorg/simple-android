@@ -668,7 +668,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">நோய் கண்டறிதல் அவசியம்</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">உயர் இரத்த அழுத்தம் மற்றும் நீரழிவு நோய் இரண்டிற்குமான நோய் கண்டறிதலைத் தேர்ந்தெடுக்கவும்</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">உயர் இரத்த அழுத்தத்திற்கான நோயறிதலைத் தேர்ந்தெடுக்கவும்</string>
   <string name="select_diagnosis_error_ok">சரி</string>
   <string name="sheet_teleconsult_status_title">தொலைபேசி ஆலோசனை முடிந்ததா?</string>
   <string name="sheet_teleconsult_status_yes">ஆம்</string>

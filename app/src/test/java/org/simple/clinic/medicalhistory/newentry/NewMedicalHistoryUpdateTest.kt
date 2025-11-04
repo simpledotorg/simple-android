@@ -154,25 +154,6 @@ class NewMedicalHistoryUpdateTest {
   }
 
   @Test
-  fun `when save is clicked and patient is diagnosed with diabetes and ongoing diabetes treatment question is not answered and selected country is india, then show error`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, Yes)
-        .answerChanged(DiagnosedWithDiabetes, Yes)
-        .answerChanged(IsOnHypertensionTreatment(Country.INDIA), Yes)
-        .answerChanged(IsOnDiabetesTreatment, Unanswered)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowOngoingDiabetesTreatmentErrorDialog)
-        ))
-  }
-
-  @Test
   fun `when save is clicked and diabetes management is disable and patient is diagnosed with diabetes and ongoing diabetes treatment question is not answered and selected country is india, then register patient`() {
     val model = defaultModel
         .ongoingPatientEntryLoaded(patientEntry)

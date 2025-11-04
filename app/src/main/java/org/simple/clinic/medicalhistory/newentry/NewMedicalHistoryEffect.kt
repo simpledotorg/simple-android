@@ -19,8 +19,6 @@ data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryVi
 
 data object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryViewEffect()
 
-data object ShowDiagnosisRequiredError : NewMedicalHistoryViewEffect()
-
 data object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryViewEffect()
 
 data object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()

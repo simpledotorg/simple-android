@@ -67,64 +67,6 @@ class NewMedicalHistoryUpdateTest {
   }
 
   @Test
-  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if hypertension diagnosis is not selected`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, Unanswered)
-        .answerChanged(DiagnosedWithDiabetes, No)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowDiagnosisRequiredError)
-            )
-        )
-  }
-
-  @Test
-  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if diabetes diagnosis is not selected`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, Yes)
-        .answerChanged(DiagnosedWithDiabetes, Unanswered)
-        .answerChanged(IsOnHypertensionTreatment(Country.INDIA), No)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowDiagnosisRequiredError)
-            )
-        )
-  }
-
-  @Test
-  fun `when diabetes management is enabled and the user clicks save, show the diagnosis required error if both diagnosis are not selected`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, Unanswered)
-        .answerChanged(DiagnosedWithDiabetes, Unanswered)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowDiagnosisRequiredError)
-            )
-        )
-  }
-
-  @Test
   fun `when diabetes management is disabled and the user clicks save, show diagnosis required error if hypertension diagnosis is not selected`() {
     val model = defaultModel
         .ongoingPatientEntryLoaded(patientEntry)

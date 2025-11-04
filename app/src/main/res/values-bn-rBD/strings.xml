@@ -328,10 +328,8 @@
   <string name="medicalhistory_question_kidney">কিডনির অসুখ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">হাইপারটেনশন</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">হাইপারটেনশন ডায়াগনোসিস (প্রয়োজন)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">ডায়াবেটিস</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">ডায়াবেটিস ডায়াগনোসিস (প্রয়োজন)</string>
   <string name="newmedicalhistory_next">পরবর্তী</string>
   <string name="newmedicalhistory_yes">হ্যাঁ</string>
   <string name="newmedicalhistory_no">না</string>

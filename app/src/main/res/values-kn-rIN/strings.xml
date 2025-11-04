@@ -328,10 +328,8 @@
   <string name="medicalhistory_question_kidney">ಮೂತ್ರಪಿಂಡ ರೋಗ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ಅಧಿಕ ರಕ್ತದೊತ್ತಡ</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">ಹೈಪರ್‌ಟೆನ್ಶನ್ ಡಯಾಗ್ನಾಸಿಸ್ (ಅಗತ್ಯವಿದೆ)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">ಡಯಾಬಿಟಿಸ್</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">ಡಯಾಬಿಟಿಸ್ ಡಯಾಗ್ನಾಸಿಸ್ (ಅಗತ್ಯವಿದೆ)</string>
   <string name="newmedicalhistory_next">ಮುಂದಿನ</string>
   <string name="newmedicalhistory_yes">ಹೌದು</string>
   <string name="newmedicalhistory_no">ಇಲ್ಲ</string>

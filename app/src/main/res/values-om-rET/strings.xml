@@ -757,12 +757,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">Boqateera</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">Qorannoo jijjiiri?</string>
-  <string name="change_diagnosis_message">Maaloo dhukkubsataan sukkaara yookan dhiibbaa dhiigaa qaba taanaa EEYYEE irratti mallattoo kaa\'i.</string>
-  <string name="change_diagnosis_positive">JIJJIIRI</string>
-  <string name="change_diagnosis_negative">AMMA MITI</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">Buusuun in kufe</string>
   <string name="overdue_download_notification_failed_subtitle">Yeroo xiqqoo booda shaakalaa</string>

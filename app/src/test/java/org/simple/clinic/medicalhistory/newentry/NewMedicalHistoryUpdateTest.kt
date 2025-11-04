@@ -251,64 +251,6 @@ class NewMedicalHistoryUpdateTest {
   }
 
   @Test
-  fun `when save is clicked and patient is diagnosed with no hypertension and diabetes, then show change diagnosis dialog`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, No)
-        .answerChanged(DiagnosedWithDiabetes, No)
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(
-            assertThatNext(
-                hasModel(model.changeDiagnosisErrorShown()),
-                hasEffects(ShowChangeDiagnosisErrorDialog)
-            )
-        )
-  }
-
-  @Test
-  fun `when save is clicked and patient is diagnosed with no hypertension and diabetes and change diagnosis error is already shown, then don't show change diagnosis dialog`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, No)
-        .answerChanged(DiagnosedWithDiabetes, No)
-        .changeDiagnosisErrorShown()
-
-    updateSpec
-        .given(model)
-        .whenEvent(SaveMedicalHistoryClicked())
-        .then(
-            assertThatNext(
-                hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
-            )
-        )
-  }
-
-  @Test
-  fun `when change diagnosis not now is clicked, then register patient`() {
-    val model = defaultModel
-        .ongoingPatientEntryLoaded(patientEntry)
-        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DiagnosedWithHypertension, No)
-        .answerChanged(DiagnosedWithDiabetes, No)
-
-    updateSpec
-        .given(model)
-        .whenEvent(ChangeDiagnosisNotNowClicked)
-        .then(
-            assertThatNext(
-                hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
-            )
-        )
-  }
-
-  @Test
   fun `when save is clicked and patient is diagnosed with diabetes and ongoing diabetes treatment question is not answered and selected country is india, then show error`() {
     val model = defaultModel
         .ongoingPatientEntryLoaded(patientEntry)

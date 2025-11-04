@@ -755,12 +755,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">இறந்துவிட்டார்</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">நோயறிதலை மாற்றவா?</string>
-  <string name="change_diagnosis_message">நோயாளருக்கு எப்போதாவது உயர் இரத்த அழுத்தம் அல்லது நீரிழிவு நோய் இருப்பது கண்டறியப்பட்டால், ஆம் என்று குறிக்கவும்.</string>
-  <string name="change_diagnosis_positive">மாற்று</string>
-  <string name="change_diagnosis_negative">இப்போது வேண்டாம்</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">பதிவிறக்குவது தோல்வி</string>
   <string name="overdue_download_notification_failed_subtitle">கொஞ்சம் நேரம் கழித்து மீண்டும் முயலவும்</string>

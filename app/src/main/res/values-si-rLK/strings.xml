@@ -756,12 +756,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">මරණය සිදු විය</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">රෝග නිශ්චය වෙනස් කරන්න ද?</string>
-  <string name="change_diagnosis_message">රෝගියාට කිසියම් දිනක අධි රුධිර පීඩනය හෝ දියවැඩියාව ඇති බවට නිශ්චය කර ඇත්නම් ඔව් ලෙස සලකුණු කරන්න.</string>
-  <string name="change_diagnosis_positive">වෙනස් කරන්න</string>
-  <string name="change_diagnosis_negative">දැන් නොවේ</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>
   <string name="overdue_download_notification_failed_subtitle">මද වේලාවකින් නැවත උත්සාහ කරන්න</string>

@@ -751,12 +751,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">ಡಯಾಗ್ನಾಸಿಸ್ ಬದಲಿಸುವುದೇ?</string>
-  <string name="change_diagnosis_message">ರೋಗಿಯಲ್ಲಿ ಎಂದಿಗಾದರೂ ಹೈಪರ್‌ಟೆನ್ಶನ್ ಅಥವಾ ಡಯಾಬಿಟಿಸ್ ಪತ್ತೆಮಾಡಲಾಗಿದ್ದರೆ ಹೌದು ಎಂದು ಗುರುತು ಮಾಡಿ.</string>
-  <string name="change_diagnosis_positive">ಬದಲಾಯಿಸಿ</string>
-  <string name="change_diagnosis_negative">ಈಗ ಬೇಡ</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ಡೌನ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ</string>
   <string name="overdue_download_notification_failed_subtitle">ಸ್ವಲ್ಪ ಸಮಯದಲ್ಲಿ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>

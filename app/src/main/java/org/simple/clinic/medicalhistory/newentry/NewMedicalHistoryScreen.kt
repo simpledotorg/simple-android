@@ -124,17 +124,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
         .show()
   }
 
-  override fun showChangeDiagnosisErrorDialog() {
-    MaterialAlertDialogBuilder(requireContext())
-        .setTitle(getString(R.string.change_diagnosis_title))
-        .setMessage(getString(R.string.change_diagnosis_message))
-        .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
-        .setNegativeButton(getString(R.string.change_diagnosis_negative)) { _, _ ->
-          viewModel.dispatch(ChangeDiagnosisNotNowClicked)
-        }
-        .show()
-  }
-
   override fun onBackPressed(): Boolean {
     viewModel.dispatch(BackClicked)
     return true

@@ -139,7 +139,6 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
     currentFacility = null,
     nextButtonState = null,
-    hasShownChangeDiagnosisError = true,
     showIsSmokingQuestion = true,
     showSmokelessTobaccoQuestion = true
 )

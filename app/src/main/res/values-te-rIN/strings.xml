@@ -751,12 +751,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">మరణించారు</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">రోగ నిర్ణయాన్ని మార్చాలా?</string>
-  <string name="change_diagnosis_message">దయచేసి రోగికి ఎప్పుడైన రక్తపోటు లేదా మధుమేహం ఉన్నట్లయితే అవును అని నిర్ధారించండి.</string>
-  <string name="change_diagnosis_positive">మార్చు</string>
-  <string name="change_diagnosis_negative">ఇప్పుడు వద్దు</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">డౌన్‌లోడ్ విఫలమైంది</string>
   <string name="overdue_download_notification_failed_subtitle">కొద్ది సమయంలో మళ్లీ ప్రయత్నించండి</string>

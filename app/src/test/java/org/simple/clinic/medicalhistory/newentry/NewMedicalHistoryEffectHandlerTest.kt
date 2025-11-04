@@ -106,18 +106,6 @@ class NewMedicalHistoryEffectHandlerTest {
   }
 
   @Test
-  fun `when show change diagnosis error effect is received, then show change diagnosis error dialog`() {
-    // when
-    testCase.dispatch(ShowChangeDiagnosisErrorDialog)
-
-    // then
-    verify(uiActions).showChangeDiagnosisErrorDialog()
-    verifyNoMoreInteractions(uiActions)
-
-    testCase.assertNoOutgoingEvents()
-  }
-
-  @Test
   fun `when show select ongoing diabetes treatment error effect is received, then show ongoing diabetes treatment error dialog`() {
     // when
     testCase.dispatch(ShowOngoingDiabetesTreatmentErrorDialog)

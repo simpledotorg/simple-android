@@ -756,12 +756,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">মারা গেছে</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">ডায়গোনসিস পরিবর্তন করবেন?</string>
-  <string name="change_diagnosis_message">রোগীর কোনও সময় হাইপারটেনশন বা ডায়াবেটিস নির্নীত হয়ে থাকলে অনুগ্রহ করে হ্যাঁ চিহ্নিত করুন।</string>
-  <string name="change_diagnosis_positive">পরিবর্তন করুন</string>
-  <string name="change_diagnosis_negative">এখন না</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ডাউনলোড ব্যর্থ যায়নি</string>
   <string name="overdue_download_notification_failed_subtitle">কিছু সময়ের মধ্যে আবার চেষ্টা করুন</string>

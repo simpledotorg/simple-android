@@ -760,12 +760,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">Fallecido</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">¿Cambiar el diagnóstico?</string>
-  <string name="change_diagnosis_message">Si el paciente ha sido diagnosticado alguna vez con hipertensión o diabetes, marque SÍ.</string>
-  <string name="change_diagnosis_positive">CAMBIAR</string>
-  <string name="change_diagnosis_negative">AHORA NO</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">La descarga falló</string>
   <string name="overdue_download_notification_failed_subtitle">Inténtelo de nuevo en un rato</string>

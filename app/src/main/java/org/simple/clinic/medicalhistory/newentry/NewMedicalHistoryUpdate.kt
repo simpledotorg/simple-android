@@ -21,16 +21,12 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
-      is ChangeDiagnosisNotNowClicked -> registerPatient(model)
       is BackClicked -> dispatch(GoBack)
     }
   }
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when {
-      model.showChangeDiagnosisError -> {
-        next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
-      }
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }

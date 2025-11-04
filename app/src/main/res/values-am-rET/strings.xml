@@ -756,12 +756,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">በህይወት የለም</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">ምርመራ ይለወጥ?</string>
-  <string name="change_diagnosis_message">በሽተኛው የደም ግፊት ወይም የስኳር በሽታ እንዳለበት ከታወቀ እባክዎን አዎ ብለው ምልክት ያድርጉ።</string>
-  <string name="change_diagnosis_positive">ይቀይሩ</string>
-  <string name="change_diagnosis_negative">አሁን አይደለም</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ማውረድ አልተሳካም።</string>
   <string name="overdue_download_notification_failed_subtitle">ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ</string>

@@ -752,12 +752,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">ሞይቱ/ታ</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">መርመራ ትቕይር\'ዶ?</string>
-  <string name="change_diagnosis_message">እቲ ሕሙም ልዑል ጸቕጢ ደም ወይ ሽኮርያ ከም ዘለዎ ብ መርመራ እንተ ደኣ ተረጋጊጹ ብኽብረትካ አወ ዝብል ምልክት ግበር።</string>
-  <string name="change_diagnosis_positive">ምቕያር</string>
-  <string name="change_diagnosis_negative">ሕጂ ኣይኮነን</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይከኣለን</string>
   <string name="overdue_download_notification_failed_subtitle">ካልእ ግዜ ዳግማይ ሞክሩ</string>

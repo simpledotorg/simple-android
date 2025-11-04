@@ -752,12 +752,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">ਮਰ ਗਿਆ</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">ਕੀ ਨਿਦਾਨ ਬਦਲਣਾ ਹੈ?</string>
-  <string name="change_diagnosis_message">ਜੇ ਮਰੀਜ਼ ਨੂੰ ਕਦੇ ਵੀ ਹਾਈਪਰਟੈਨਸ਼ਨ ਜਾਂ ਸ਼ੂਗਰ ਦਾ ਪਤਾ ਲੱਗਿਆ ਹੋਵੇ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਹਾਂ ਨਾਲ ਚਿੰਨ੍ਹਿਤ ਕਰੋ।</string>
-  <string name="change_diagnosis_positive">ਬਦਲੋ</string>
-  <string name="change_diagnosis_negative">ਹਾਲੇ ਨਹੀਂ</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ਡਾਊਨਲੋਡ ਅਸਫਲ ਰਿਹਾ</string>
   <string name="overdue_download_notification_failed_subtitle">ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>

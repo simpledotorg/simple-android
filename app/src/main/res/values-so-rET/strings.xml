@@ -753,12 +753,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">Dhintay</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">Beddel cudur aqoonsasahada?</string>
-  <string name="change_diagnosis_message">Fadaln calaa madee HAA haddii bukaanku weligii lagu aqoonsaday dhiig karka ama cudurka sonkorta.</string>
-  <string name="change_diagnosis_positive">BEDDEL</string>
-  <string name="change_diagnosis_negative">HADDA MAAHA</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">Soo dejinta way Fashilantay</string>
   <string name="overdue_download_notification_failed_subtitle">Isku day mar labbaad qayb wakhtiga ah</string>

@@ -751,12 +751,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">Reyino</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">Anfoniha xibu dana soora?</string>
-  <string name="change_diagnosis_message">Xisamanchu koni albani Mundete lexa xiso woyimi sukare afantinosiro Yes malate ase</string>
-  <string name="change_diagnosis_positive">Sooro</string>
-  <string name="change_diagnosis_negative">Dixati</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">driisa hoonigoni</string>
   <string name="overdue_download_notification_failed_subtitle">woole yanara wiiro woonali</string>

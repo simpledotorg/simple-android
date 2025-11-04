@@ -751,12 +751,6 @@
   <!-- Patient status view -->
   <string name="patient_status_died">मृत झाले</string>
 
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">निदान बदलायचे?</string>
-  <string name="change_diagnosis_message">जर रुग्णाला उच्च रक्तदाबाचे किंवा मधुमेहाचे निदान झाले असेल तर कृपया होय वर खूण करा.</string>
-  <string name="change_diagnosis_positive">बदला</string>
-  <string name="change_diagnosis_negative">आता नाही</string>
-
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">डाउनलोड अयशस्वी</string>
   <string name="overdue_download_notification_failed_subtitle">काही वेळाने पुन्हा प्रयत्न करा</string>

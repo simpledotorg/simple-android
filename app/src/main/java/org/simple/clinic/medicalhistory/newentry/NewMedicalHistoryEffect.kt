@@ -17,8 +17,6 @@ sealed class NewMedicalHistoryViewEffect : NewMedicalHistoryEffect()
 
 data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryViewEffect()
 
-data object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryViewEffect()
-
 data object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()
 
 data object GoBack : NewMedicalHistoryViewEffect()

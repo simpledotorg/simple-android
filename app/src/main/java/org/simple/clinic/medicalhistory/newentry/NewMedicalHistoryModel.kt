@@ -44,9 +44,6 @@ data class NewMedicalHistoryModel(
   val diagnosedWithDiabetes: Boolean
     get() = ongoingMedicalHistoryEntry.hasDiabetes == Yes
 
-  val answeredIsOnHypertensionTreatment: Boolean
-    get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
-
   val answeredIsOnDiabetesTreatment: Boolean
     get() = ongoingMedicalHistoryEntry.isOnDiabetesTreatment != Unanswered
 

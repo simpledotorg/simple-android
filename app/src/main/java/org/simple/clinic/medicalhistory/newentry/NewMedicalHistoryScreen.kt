@@ -100,10 +100,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
   }
 
-  override fun showOngoingHypertensionTreatmentErrorDialog() {
-    SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
-  }
-
   override fun showOngoingDiabetesTreatmentErrorDialog() {
     SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }

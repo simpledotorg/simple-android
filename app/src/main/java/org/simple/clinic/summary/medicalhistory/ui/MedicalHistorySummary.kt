@@ -43,14 +43,13 @@ fun MedicalHistorySummary(
           .padding(dimensionResource(R.dimen.spacing_8)),
       verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
   ) {
-    if (diabetesManagementEnabled) {
-      DiagnosisContainer(
-          modifier = Modifier.fillMaxWidth(),
-          hypertensionAnswer = hypertensionAnswer,
-          diabetesAnswer = diabetesAnswer,
-          onAnswerChange = onAnswerChange,
-      )
-    }
+    DiagnosisContainer(
+        modifier = Modifier.fillMaxWidth(),
+        hypertensionAnswer = hypertensionAnswer,
+        diabetesAnswer = diabetesAnswer,
+        showDiabetesDiagnosisView = diabetesManagementEnabled,
+        onAnswerChange = onAnswerChange,
+    )
 
     HistoryContainer(
         heartAttackAnswer = heartAttackAnswer,
@@ -76,6 +75,7 @@ fun MedicalHistorySummary(
 private fun DiagnosisContainer(
     hypertensionAnswer: Answer?,
     diabetesAnswer: Answer?,
+    showDiabetesDiagnosisView: Boolean,
     modifier: Modifier = Modifier,
     onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -99,17 +99,19 @@ private fun DiagnosisContainer(
       MedicalHistoryQuestionItem(
           question = MedicalHistoryQuestion.DiagnosedWithHypertension,
           selectedAnswer = hypertensionAnswer,
-          showDivider = true,
+          showDivider = showDiabetesDiagnosisView,
       ) {
         onAnswerChange(MedicalHistoryQuestion.DiagnosedWithHypertension, it)
       }
 
-      MedicalHistoryQuestionItem(
-          question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
-          selectedAnswer = diabetesAnswer,
-          showDivider = false,
-      ) {
-        onAnswerChange(MedicalHistoryQuestion.DiagnosedWithDiabetes, it)
+      if (showDiabetesDiagnosisView) {
+        MedicalHistoryQuestionItem(
+            question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
+            selectedAnswer = diabetesAnswer,
+            showDivider = false,
+        ) {
+          onAnswerChange(MedicalHistoryQuestion.DiagnosedWithDiabetes, it)
+        }
       }
     }
   }

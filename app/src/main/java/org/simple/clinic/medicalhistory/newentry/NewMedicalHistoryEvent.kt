@@ -29,10 +29,6 @@ data class CurrentFacilityLoaded(val facility: Facility) : NewMedicalHistoryEven
 
 data class SyncTriggered(val registeredPatientUuid: UUID) : NewMedicalHistoryEvent()
 
-data object ChangeDiagnosisNotNowClicked : NewMedicalHistoryEvent() {
-  override val analyticsName = "New Medical History:Change Diagnosis:Not Now Clicked"
-}
-
 data object BackClicked : NewMedicalHistoryEvent() {
   override val analyticsName: String = "New Medical History:Back Clicked"
 }

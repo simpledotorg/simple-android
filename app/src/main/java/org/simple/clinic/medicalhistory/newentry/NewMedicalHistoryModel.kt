@@ -19,7 +19,6 @@ data class NewMedicalHistoryModel(
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
     val nextButtonState: ButtonState?,
-    val hasShownChangeDiagnosisError: Boolean,
     val showIsSmokingQuestion: Boolean,
     val showSmokelessTobaccoQuestion: Boolean,
 ) : Parcelable {
@@ -36,12 +35,6 @@ data class NewMedicalHistoryModel(
   val facilityDiabetesManagementEnabled: Boolean
     get() = currentFacility!!.config.diabetesManagementEnabled
 
-  val hasAnsweredBothDiagnosisQuestions: Boolean
-    get() = !(ongoingMedicalHistoryEntry.diagnosedWithHypertension == Unanswered || ongoingMedicalHistoryEntry.hasDiabetes == Unanswered)
-
-  val hasAnsweredHypertensionDiagnosis: Boolean
-    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension != Unanswered
-
   val registeringPatient: Boolean
     get() = nextButtonState == ButtonState.SAVING
 
@@ -51,26 +44,11 @@ data class NewMedicalHistoryModel(
   val diagnosedWithDiabetes: Boolean
     get() = ongoingMedicalHistoryEntry.hasDiabetes == Yes
 
-  val answeredIsOnHypertensionTreatment: Boolean
-    get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
-
-  val answeredIsOnDiabetesTreatment: Boolean
-    get() = ongoingMedicalHistoryEntry.isOnDiabetesTreatment != Unanswered
-
   val showOngoingHypertensionTreatment: Boolean
     get() = diagnosedWithHypertension && (country.isoCountryCode == Country.INDIA || country.isoCountryCode == Country.SRI_LANKA)
 
   val showOngoingDiabetesTreatment: Boolean
     get() = facilityDiabetesManagementEnabled && diagnosedWithDiabetes && country.isoCountryCode == Country.INDIA
-
-  private val hasNoHypertension: Boolean
-    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == No
-
-  private val hasNoDiabetes: Boolean
-    get() = ongoingMedicalHistoryEntry.hasDiabetes == No
-
-  val showChangeDiagnosisError: Boolean
-    get() = facilityDiabetesManagementEnabled && !hasShownChangeDiagnosisError && hasNoHypertension && hasNoDiabetes
 
   companion object {
     fun default(
@@ -83,7 +61,6 @@ data class NewMedicalHistoryModel(
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,
         nextButtonState = null,
-        hasShownChangeDiagnosisError = false,
         showIsSmokingQuestion = showIsSmokingQuestion,
         showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
     )
@@ -107,9 +84,5 @@ data class NewMedicalHistoryModel(
 
   fun patientRegistered(): NewMedicalHistoryModel {
     return copy(nextButtonState = ButtonState.SAVED)
-  }
-
-  fun changeDiagnosisErrorShown(): NewMedicalHistoryModel {
-    return copy(hasShownChangeDiagnosisError = true)
   }
 }

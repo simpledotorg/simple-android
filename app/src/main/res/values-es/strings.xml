@@ -332,10 +332,8 @@
   <string name="medicalhistory_question_kidney">Enfermedad renal</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Hipertensión</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">Diagnóstico de hipertensión (requerido)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Diabetes</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">Diagnóstico de diabetes (requerido)</string>
   <string name="newmedicalhistory_next">Siguiente</string>
   <string name="newmedicalhistory_yes">Sí</string>
   <string name="newmedicalhistory_no">No</string>
@@ -677,7 +675,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Se requiere un diagnóstico</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Seleccione diagnósticos para hipertensión y diabetes</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Seleccione un diagnóstico para hipertensión</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">¿Teleconsulta completa?</string>
   <string name="sheet_teleconsult_status_yes">Sí</string>
@@ -759,12 +756,6 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Fallecido</string>
-
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">¿Cambiar el diagnóstico?</string>
-  <string name="change_diagnosis_message">Si el paciente ha sido diagnosticado alguna vez con hipertensión o diabetes, marque SÍ.</string>
-  <string name="change_diagnosis_positive">CAMBIAR</string>
-  <string name="change_diagnosis_negative">AHORA NO</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">La descarga falló</string>

@@ -328,10 +328,8 @@
   <string name="medicalhistory_question_kidney">किडनीचा आजार</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">उच्च रक्तदाब</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">हायपरटेंशन निदान (आवश्यक)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">मधुमेह</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">मधुमेह निदान (आवश्यक)</string>
   <string name="newmedicalhistory_next">पुढील</string>
   <string name="newmedicalhistory_yes">होय</string>
   <string name="newmedicalhistory_no">नाही</string>
@@ -668,7 +666,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक आहे</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">अतिरक्तदाब आणि मधुमेह या दोन्हीसाठी निदान निवडा</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">हायपरटेंशनसाठी निदान निवडा</string>
   <string name="select_diagnosis_error_ok">ठीक आहे</string>
   <string name="sheet_teleconsult_status_title">टेलि-कन्‍सल्‍ट पूर्ण झाले?</string>
   <string name="sheet_teleconsult_status_yes">होय</string>
@@ -750,12 +747,6 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">मृत झाले</string>
-
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">निदान बदलायचे?</string>
-  <string name="change_diagnosis_message">जर रुग्णाला उच्च रक्तदाबाचे किंवा मधुमेहाचे निदान झाले असेल तर कृपया होय वर खूण करा.</string>
-  <string name="change_diagnosis_positive">बदला</string>
-  <string name="change_diagnosis_negative">आता नाही</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">डाउनलोड अयशस्वी</string>

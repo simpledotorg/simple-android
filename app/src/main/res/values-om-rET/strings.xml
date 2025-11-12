@@ -329,10 +329,8 @@
   <string name="medicalhistory_question_kidney">Dhukkuba onne</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Baayyina dhiiga</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">Dhibee Hypertension (Barbaachisa)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Sukkaara</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">Dhibee Sukkaara (Barbaachisa)</string>
   <string name="newmedicalhistory_next">Kan itti aanu</string>
   <string name="newmedicalhistory_yes">Eeyyee</string>
   <string name="newmedicalhistory_no">Lakki</string>
@@ -674,7 +672,6 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Qorannoon Barbaadamaadha</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Dhiibbaa dhiigaa fii sukkaaraf amaanifuu qorannoo filadhu</string>
-  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Dhukkuba Dhiibaa Dhiigaatif filannoo taasisi</string>
   <string name="select_diagnosis_error_ok">Tole</string>
   <string name="sheet_teleconsult_status_title">Tele-consult guutameeraa?</string>
   <string name="sheet_teleconsult_status_yes">Eeyyee</string>
@@ -756,12 +753,6 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Boqateera</string>
-
-  <!-- Change diagnosis error dialog -->
-  <string name="change_diagnosis_title">Qorannoo jijjiiri?</string>
-  <string name="change_diagnosis_message">Maaloo dhukkubsataan sukkaara yookan dhiibbaa dhiigaa qaba taanaa EEYYEE irratti mallattoo kaa\'i.</string>
-  <string name="change_diagnosis_positive">JIJJIIRI</string>
-  <string name="change_diagnosis_negative">AMMA MITI</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">Buusuun in kufe</string>

@@ -490,7 +490,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Seenaa</string>
-  <string name="medicalhistorysummaryview_diagnosis">Qorannoo (Barbaadameera)</string>
   <string name="medicalhistorysummaryview_tobacco_use"> Fayyadama tamboo</string>
 
   <!-- Summary prescriptions view -->

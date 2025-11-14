@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Taariikh</string>
-  <string name="medicalhistorysummaryview_diagnosis">Baaritaan (Loo baahanyahay)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">Ma jiraan daawooyin lagu daray</string>

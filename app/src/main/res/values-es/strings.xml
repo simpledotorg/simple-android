@@ -490,7 +490,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Historia</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diagnóstico (Requerido)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">No se ha agregado medicamentos</string>

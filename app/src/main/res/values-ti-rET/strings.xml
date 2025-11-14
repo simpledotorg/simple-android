@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ታሪኽ</string>
-  <string name="medicalhistorysummaryview_diagnosis">ምርመራ (ተደልዩ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">መድሓኒት ኣይተወሰኸን</string>

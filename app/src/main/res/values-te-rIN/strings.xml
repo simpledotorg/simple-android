@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">చరిత్ర</string>
-  <string name="medicalhistorysummaryview_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">మందులు జోడించలేదు</string>

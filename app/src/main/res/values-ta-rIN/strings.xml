@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">வரலாறு</string>
-  <string name="medicalhistorysummaryview_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">மருந்து விவரங்கள் சேர்க்கப்படவில்லை</string>

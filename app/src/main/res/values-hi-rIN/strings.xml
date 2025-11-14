@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">इतिहास</string>
-  <string name="medicalhistorysummaryview_diagnosis">निदान (आवश्यक)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">कोई दवाएं जोड़ी नहीं गईं</string>

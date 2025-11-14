@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ಇತಿಹಾಸ</string>
-  <string name="medicalhistorysummaryview_diagnosis">ರೋಗನಿರ್ಣಯ (ಅಗತ್ಯವಿದೆ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">ಯಾವುದೇ ಔಷಧಿಗಳನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ</string>

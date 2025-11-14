@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Xagge</string>
-  <string name="medicalhistorysummaryview_diagnosis">xiinixaloo</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">Ledoni xagichi dino</string>

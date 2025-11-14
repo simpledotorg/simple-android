@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ਅਤੀਤ</string>
-  <string name="medicalhistorysummaryview_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">ਕੋਈ ਦਵਾਈ ਨਹੀਂ ਵਧਾਈ ਗਈ</string>

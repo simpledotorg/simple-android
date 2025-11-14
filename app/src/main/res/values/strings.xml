@@ -572,7 +572,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diagnosis (Required)</string>
   <string name="medicalhistorysummaryview_hypertension_diagnosis">Patient has hypertension?</string>
   <string name="medicalhistorysummaryview_diabetes_diagnosis">Patient has diabetes?</string>
   <string name="medicalhistorysummaryview_tobacco_use">Tobacco use</string>

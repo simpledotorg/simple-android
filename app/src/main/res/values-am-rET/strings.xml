@@ -489,7 +489,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ታሪክ </string>
-  <string name="medicalhistorysummaryview_diagnosis">ምርመራ (አስፈላጊ)</string>
   <string name="medicalhistorysummaryview_tobacco_use">ትምባሆ አጠቃቀም</string>
 
   <!-- Summary prescriptions view -->

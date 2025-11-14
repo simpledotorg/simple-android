@@ -486,7 +486,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ইতিহাস</string>
-  <string name="medicalhistorysummaryview_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">কোনও ওষুধ যোগ করা হয়নি</string>

@@ -376,10 +376,10 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when show diagnosis error effect is received, then show diagnosis error`() {
     // when
-    testCase.dispatch(ShowDiagnosisError)
+    testCase.dispatch(ShowDiagnosisError(true))
 
     // then
-    verify(uiActions).showDiagnosisError()
+    verify(uiActions).showDiagnosisError(true)
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

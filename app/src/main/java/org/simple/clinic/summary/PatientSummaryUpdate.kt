@@ -595,7 +595,7 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError(model.isDiabetesManagementEnabled))
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
@@ -637,7 +637,7 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError(model.isDiabetesManagementEnabled))
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))

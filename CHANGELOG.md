@@ -34,6 +34,7 @@
 ### Changes
 
 - Hide next button when registration is going
+- Add Suspected option to hypertension and diabetes questions
 
 ## 2025.09.09
 

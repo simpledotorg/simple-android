@@ -79,8 +79,14 @@ data class MedicalHistory(
     }
   }
 
+  val hypertensionRecorded: Boolean
+    get() = diagnosedWithHypertension != Unanswered
+
+  val diabetesRecorded: Boolean
+    get() = diagnosedWithDiabetes != Unanswered
+
   val diagnosisRecorded: Boolean
-    get() = diagnosedWithHypertension != Unanswered && diagnosedWithDiabetes != Unanswered
+    get() = hypertensionRecorded && diabetesRecorded
 
   fun answered(question: MedicalHistoryQuestion, answer: Answer): MedicalHistory {
     return when (question) {

@@ -577,7 +577,11 @@ class PatientSummaryUpdate(
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && when {
+      model.isDiabetesManagementEnabled -> medicalHistory.diagnosisRecorded.not()
+      else -> medicalHistory.hypertensionRecorded.not()
+    }
+
     val measurementWarningEffect = validateMeasurements(
         isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
         countOfRecordedBloodSugars = countOfRecordedBloodSugars,
@@ -615,7 +619,10 @@ class PatientSummaryUpdate(
     val openIntention = model.openIntention
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && when {
+      model.isDiabetesManagementEnabled -> medicalHistory.diagnosisRecorded.not()
+      else -> medicalHistory.hypertensionRecorded.not()
+    }
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
     val measurementWarningEffect = validateMeasurements(

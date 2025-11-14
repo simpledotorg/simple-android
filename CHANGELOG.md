@@ -35,6 +35,7 @@
 
 - Hide next button when registration is going
 - Remove hypertension and diabetes questions from medical history screen
+- Add Suspected option to hypertension and diabetes questions
 
 ## 2025.09.09
 

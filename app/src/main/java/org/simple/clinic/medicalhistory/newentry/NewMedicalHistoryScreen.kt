@@ -12,15 +12,10 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
-import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
-import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
-import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryUi
 import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -73,7 +68,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 

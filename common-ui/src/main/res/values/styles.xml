@@ -311,18 +311,6 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.ToolbarButton</item>
   </style>
 
-  <style name="Widget.Simple.Chip.Answer" parent="Widget.MaterialComponents.Chip.Choice">
-    <item name="chipBackgroundColor">@color/answer_chip_background</item>
-    <item name="chipStartPadding">@dimen/spacing_0</item>
-    <item name="textStartPadding">@dimen/spacing_24</item>
-    <item name="textEndPadding">@dimen/spacing_24</item>
-    <item name="chipEndPadding">@dimen/spacing_0</item>
-    <item name="chipMinTouchTargetSize">@dimen/spacing_32</item>
-    <item name="android:textColor">@color/answer_chip_text</item>
-    <item name="android:minWidth">@dimen/spacing_56</item>
-    <item name="android:textAlignment">center</item>
-  </style>
-
   <style name="Widget.Simple.TextField.Large.DateInput">
     <item name="android:minWidth">64dp</item>
     <item name="android:minEms">1</item>

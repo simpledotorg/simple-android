@@ -253,12 +253,12 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError(true) as PatientSummaryEffect)
         ))
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is disabled, then clicking on back must show schedule appointment sheet`() {
+  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is disabled, then show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec
@@ -280,7 +280,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK, facilityWithDiabetesManagementDisabled) as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError(false) as PatientSummaryEffect)
         ))
   }
 
@@ -473,12 +473,12 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError(true) as PatientSummaryEffect)
         ))
   }
 
   @Test
-  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must show schedule appointment sheet`() {
+  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec
@@ -500,7 +500,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK, facilityWithDiabetesManagementDisabled) as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError(false) as PatientSummaryEffect)
         ))
   }
 

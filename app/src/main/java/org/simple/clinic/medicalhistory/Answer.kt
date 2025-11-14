@@ -17,6 +17,9 @@ sealed class Answer : Parcelable {
   data object No : Answer()
 
   @Parcelize
+  data object Suspected : Answer()
+
+  @Parcelize
   data object Unanswered : Answer()
 
   @Parcelize
@@ -27,6 +30,7 @@ sealed class Answer : Parcelable {
       knownMappings = mapOf(
           Yes to "yes",
           No to "no",
+          Suspected to "suspected",
           // The actual value of the Unanswered enum should be "unanswered",
           // but the current api representation is "unknown". This is a little
           // confusing because we use Unknown as the convention for values which

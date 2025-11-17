@@ -336,8 +336,10 @@
   <string name="medicalhistory_question_kidney">Onemocnění ledvin</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Hypertenze</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Diagnóza hypertenze (povinné)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Diabetes</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Diagnóza diabetu (povinné)</string>
   <string name="newmedicalhistory_next">Další</string>
   <string name="newmedicalhistory_yes">Ano</string>
   <string name="newmedicalhistory_no">Ne</string>
@@ -437,7 +439,7 @@
   <string name="changelanguage_done">Hotovo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Počkejte prosím…</string>
+  <string name="placeholder_loading_title">Počkejte prosím...</string>
   <string name="placeholder_loading_message">Probíhá údržba databáze. Zabere to jen minutu.</string>
 
   <!-- Select Country Screen -->
@@ -529,8 +531,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Označit pacienta jako \"Souhlasil s návštěvou\"</string>
-  <string name="contactpatient_remind_call_later">Připomeňte mi volání později…</string>
-  <string name="contactpatient_remove_from_list">Odebrat ze seznamu zpožděných…</string>
+  <string name="contactpatient_remind_call_later">Připomeňte mi volání později...</string>
+  <string name="contactpatient_remove_from_list">Odebrat ze seznamu zpožděných...</string>
   <string name="contactpatient_result_of_call">Výsledek volání</string>
   <string name="contactpatient_call">Volání</string>
   <string name="contactpatient_call_normal">Normální</string>
@@ -690,6 +692,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Požadovaná diagnóza</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Zvolte diagnózu pro hypertenzi i diabetes</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Výběr diagnózy hypertenze</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">Telekonzultace dokončena\?</string>
   <string name="sheet_teleconsult_status_yes">Ano</string>
@@ -771,6 +774,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Zemřel</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Změna diagnózy\?</string>
+  <string name="change_diagnosis_message">Označte ANO, pokud byl pacientovi někdy diagnostikována hypertenze nebo diabetes.</string>
+  <string name="change_diagnosis_positive">ZMĚNA</string>
+  <string name="change_diagnosis_negative">NE TEĎ</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">Stáhnutí selhalo</string>

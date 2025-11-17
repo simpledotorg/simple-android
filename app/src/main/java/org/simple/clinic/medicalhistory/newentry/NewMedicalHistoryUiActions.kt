@@ -4,5 +4,11 @@ import java.util.UUID
 
 interface NewMedicalHistoryUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
+  fun showOngoingHypertensionTreatmentErrorDialog()
+  fun showDiagnosisRequiredErrorDialog()
+  fun showHypertensionDiagnosisRequiredErrorDialog()
+  fun showChangeDiagnosisErrorDialog()
+  fun showOngoingDiabetesTreatmentErrorDialog()
+
   fun goBack()
 }

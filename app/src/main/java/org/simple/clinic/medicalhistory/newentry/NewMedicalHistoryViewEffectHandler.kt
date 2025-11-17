@@ -10,6 +10,11 @@ class NewMedicalHistoryViewEffectHandler(
   override fun handle(viewEffect: NewMedicalHistoryViewEffect) {
     when (viewEffect) {
       is OpenPatientSummaryScreen -> uiActions.openPatientSummaryScreen(viewEffect.patientUuid)
+      ShowOngoingHypertensionTreatmentError -> uiActions.showOngoingHypertensionTreatmentErrorDialog()
+      ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
+      ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
+      ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
+      ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()
       GoBack -> uiActions.goBack()
     }.exhaustive()
   }

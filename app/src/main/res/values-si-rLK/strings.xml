@@ -328,8 +328,10 @@
   <string name="medicalhistory_question_kidney">වකුගඩු රෝගය</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">අධි රුධිර පීඩනය</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">අධි රුධිර පීඩන රෝග විනිශ්චය (අවශ්‍යයි)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">දියවැඩියාව</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">දියවැඩියා රෝග විනිශ්චය (අවශ්‍යයි)</string>
   <string name="newmedicalhistory_next">ඊළඟ</string>
   <string name="newmedicalhistory_yes">ඔව්</string>
   <string name="newmedicalhistory_no">නැත</string>
@@ -671,6 +673,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">රෝග නිශ්චය අවශ්‍යයි</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">අධි රුධිර පීඩනය සහ දියවැඩියාව යන රෝග දෙකම සඳහා රෝග විනිශ්චයක් තෝරා ගන්න</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">අධි රුධිර පීඩනය සඳහා රෝග විනිශ්චයක් තෝරන්න</string>
   <string name="select_diagnosis_error_ok">හරි</string>
   <string name="sheet_teleconsult_status_title">ටෙලි-උපදේශනය සම්පූර්ණයි?</string>
   <string name="sheet_teleconsult_status_yes">ඔව්</string>
@@ -752,6 +755,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">මරණය සිදු විය</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">රෝග නිශ්චය වෙනස් කරන්න ද?</string>
+  <string name="change_diagnosis_message">රෝගියාට කිසියම් දිනක අධි රුධිර පීඩනය හෝ දියවැඩියාව ඇති බවට නිශ්චය කර ඇත්නම් ඔව් ලෙස සලකුණු කරන්න.</string>
+  <string name="change_diagnosis_positive">වෙනස් කරන්න</string>
+  <string name="change_diagnosis_negative">දැන් නොවේ</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>

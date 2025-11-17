@@ -27,6 +27,10 @@ import org.simple.clinic.common.ui.components.TopAppBar
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryModel
 
@@ -76,13 +80,33 @@ fun NewMedicalHistoryUi(
       val scrollState = rememberScrollState()
       Column(
           modifier = Modifier
-              .fillMaxWidth()
-              .verticalScroll(scrollState)
-              .padding(paddingValues)
-              .padding(dimensionResource(R.dimen.spacing_8)),
+                  .fillMaxWidth()
+                  .verticalScroll(scrollState)
+                  .padding(paddingValues)
+                  .padding(dimensionResource(R.dimen.spacing_8)),
           verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
       ) {
         val showDiabetesDiagnosis = model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled
+        MedicalHistoryDiagnosisWithTreatment(
+            diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
+            diagnosisQuestion = DiagnosedWithHypertension,
+            diagnosisAnswer = model.ongoingMedicalHistoryEntry.diagnosedWithHypertension,
+            treatmentQuestion = IsOnHypertensionTreatment(model.country.isoCountryCode),
+            treatmentAnswer = model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment,
+            showTreatmentQuestion = model.showOngoingHypertensionTreatment,
+            onSelectionChange = onSelectionChange
+        )
+        if (showDiabetesDiagnosis) {
+          MedicalHistoryDiagnosisWithTreatment(
+              diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_diabetes_required),
+              diagnosisQuestion = DiagnosedWithDiabetes,
+              diagnosisAnswer = model.ongoingMedicalHistoryEntry.hasDiabetes,
+              treatmentQuestion = IsOnDiabetesTreatment,
+              treatmentAnswer = model.ongoingMedicalHistoryEntry.isOnDiabetesTreatment,
+              showTreatmentQuestion = model.showOngoingDiabetesTreatment,
+              onSelectionChange = onSelectionChange
+          )
+        }
         HistoryContainer(
             heartAttackAnswer = model.ongoingMedicalHistoryEntry.hasHadHeartAttack,
             strokeAnswer = model.ongoingMedicalHistoryEntry.hasHadStroke,
@@ -115,6 +139,7 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
     currentFacility = null,
     nextButtonState = null,
+    hasShownChangeDiagnosisError = true,
     showIsSmokingQuestion = true,
     showSmokelessTobaccoQuestion = true
 )
@@ -126,7 +151,7 @@ private fun NewMedicalHistoryUiPreview() {
       model = previewMedicalHistoryModel,
       navigationIconClick = {},
       onNextClick = {}
-  ) { _, _ ->
+  ) { question, answer ->
     //do nothing
   }
 }

@@ -328,8 +328,10 @@
   <string name="medicalhistory_question_kidney">Afalete xiso</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Jawa munideti xiwo</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Saibbo Mundeete tumo buuxo gara (Hasiissanno)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Sukarete  xiso</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Sukkaarete dhibbi buuxo gara (Hasiissanno)</string>
   <string name="newmedicalhistory_next">Aniche</string>
   <string name="newmedicalhistory_yes">E’e</string>
   <string name="newmedicalhistory_no">De’ni</string>
@@ -666,6 +668,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Mirimaruni  hasanitano</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Lamuniku xibira yano hypertension and diabetesmirimera dorii</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Mundeete tumo buuxo gara doori</string>
   <string name="select_diagnosis_error_ok">Mahoye</string>
   <string name="sheet_teleconsult_status_title">Bilibiluni asinani hasawi xorishi eke gofino?</string>
   <string name="sheet_teleconsult_status_yes">E’e</string>
@@ -747,6 +750,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Reyino</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Anfoniha xibu dana soora?</string>
+  <string name="change_diagnosis_message">Xisamanchu koni albani Mundete lexa xiso woyimi sukare afantinosiro Yes malate ase</string>
+  <string name="change_diagnosis_positive">Sooro</string>
+  <string name="change_diagnosis_negative">Dixati</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">driisa hoonigoni</string>

@@ -328,8 +328,10 @@
   <string name="medicalhistory_question_kidney">ಮೂತ್ರಪಿಂಡ ರೋಗ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ಅಧಿಕ ರಕ್ತದೊತ್ತಡ</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">ಹೈಪರ್‌ಟೆನ್ಶನ್ ಡಯಾಗ್ನಾಸಿಸ್ (ಅಗತ್ಯವಿದೆ)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">ಡಯಾಬಿಟಿಸ್</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">ಡಯಾಬಿಟಿಸ್ ಡಯಾಗ್ನಾಸಿಸ್ (ಅಗತ್ಯವಿದೆ)</string>
   <string name="newmedicalhistory_next">ಮುಂದಿನ</string>
   <string name="newmedicalhistory_yes">ಹೌದು</string>
   <string name="newmedicalhistory_no">ಇಲ್ಲ</string>
@@ -666,6 +668,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ರೋಗನಿರ್ಣಯ ಅಗತ್ಯವಿದೆ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ಹೈಪರ್‌ಟೆನ್ಶನ್ ಮತ್ತು ಡಯಾಬಿಟಿಸ್ ಎರಡಕ್ಕೂ ರೋಗನಿರ್ಣಯ ಆಯ್ಕೆಮಾಡಿ</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ಹೈಪರ್‌ಟೆನ್ಶನ್‌ಗಾಗಿ ಡಯಾಗ್ನಾಸಿಸ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
   <string name="select_diagnosis_error_ok">ಸರಿ</string>
   <string name="sheet_teleconsult_status_title">ಟೆಲೆ-ಕನ್ಸಲ್ಟ್ ಪೂರ್ಣಗೊಂಡಿದೆಯೇ?</string>
   <string name="sheet_teleconsult_status_yes">ಹೌದು</string>
@@ -747,6 +750,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ಡಯಾಗ್ನಾಸಿಸ್ ಬದಲಿಸುವುದೇ?</string>
+  <string name="change_diagnosis_message">ರೋಗಿಯಲ್ಲಿ ಎಂದಿಗಾದರೂ ಹೈಪರ್‌ಟೆನ್ಶನ್ ಅಥವಾ ಡಯಾಬಿಟಿಸ್ ಪತ್ತೆಮಾಡಲಾಗಿದ್ದರೆ ಹೌದು ಎಂದು ಗುರುತು ಮಾಡಿ.</string>
+  <string name="change_diagnosis_positive">ಬದಲಾಯಿಸಿ</string>
+  <string name="change_diagnosis_negative">ಈಗ ಬೇಡ</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ಡೌನ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ</string>

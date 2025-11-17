@@ -328,8 +328,10 @@
   <string name="medicalhistory_question_kidney">ਗੁਰਦਿਆਂ ਦੀ ਬਿਮਾਰੀ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">ਹਾਈਪਰਟੈਨਸ਼ਨ ਤਖਸ਼ੀਸ਼ (ਲੋੜੀਂਦਾ)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">ਡਾਯਬਟੀਜ਼ ਤਖਸ਼ੀਸ਼ (ਲੋੜੀਂਦਾ)</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>
@@ -667,6 +669,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ਡਾਇਗਨੋਸਿਸ ਲੋੜੀਂਦਾ ਹੈ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ਹਾਈਪਰਟੈਨਸ਼ਨ ਅਤੇ ਡਾਇਬਿਟੀਜ਼ ਦੋਵਾਂ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ਹਾਈਪਰਟੈਨਸ਼ਨ ਲਈ ਇੱਕ ਨਿਦਾਨ ਦੀ ਚੋਣ ਕਰੋ</string>
   <string name="select_diagnosis_error_ok">ਠੀਕ ਹੈ</string>
   <string name="sheet_teleconsult_status_title">ਕੀ ਟੇਲੀ-ਕਨਸਲਟ ਪੂਰੀ ਹੋਈ ਹੈ?</string>
   <string name="sheet_teleconsult_status_yes">ਹਾਂ</string>
@@ -748,6 +751,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">ਮਰ ਗਿਆ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ਕੀ ਨਿਦਾਨ ਬਦਲਣਾ ਹੈ?</string>
+  <string name="change_diagnosis_message">ਜੇ ਮਰੀਜ਼ ਨੂੰ ਕਦੇ ਵੀ ਹਾਈਪਰਟੈਨਸ਼ਨ ਜਾਂ ਸ਼ੂਗਰ ਦਾ ਪਤਾ ਲੱਗਿਆ ਹੋਵੇ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਹਾਂ ਨਾਲ ਚਿੰਨ੍ਹਿਤ ਕਰੋ।</string>
+  <string name="change_diagnosis_positive">ਬਦਲੋ</string>
+  <string name="change_diagnosis_negative">ਹਾਲੇ ਨਹੀਂ</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ਡਾਊਨਲੋਡ ਅਸਫਲ ਰਿਹਾ</string>

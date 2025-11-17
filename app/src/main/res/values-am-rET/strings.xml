@@ -328,8 +328,10 @@
   <string name="medicalhistory_question_kidney">የኩላሊት በሽታ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ከፍተኛ የደም ግፊት</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">የደም ግፊት ምርመራ (አስፈላጊ)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">የስኳር በሽታ</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">የስኳር በሽታ ምርመራ (አስፈላጊ)</string>
   <string name="newmedicalhistory_next">ቀጣይ</string>
   <string name="newmedicalhistory_yes">አዎ</string>
   <string name="newmedicalhistory_no">አይ</string>
@@ -671,6 +673,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ምርመራ ያስፈልጋል</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ለሁለቱም የደም ግፊት እና የስኳር በሽታ ምርመራን ይምረጡ</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ለደም ግፊት ምርመራን ይምረጡ</string>
   <string name="select_diagnosis_error_ok">እሺ</string>
   <string name="sheet_teleconsult_status_title">ቴሌ-ማማከር ተጠናቅቋል?</string>
   <string name="sheet_teleconsult_status_yes">አዎ</string>
@@ -752,6 +755,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">በህይወት የለም</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ምርመራ ይለወጥ?</string>
+  <string name="change_diagnosis_message">በሽተኛው የደም ግፊት ወይም የስኳር በሽታ እንዳለበት ከታወቀ እባክዎን አዎ ብለው ምልክት ያድርጉ።</string>
+  <string name="change_diagnosis_positive">ይቀይሩ</string>
+  <string name="change_diagnosis_negative">አሁን አይደለም</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ማውረድ አልተሳካም።</string>

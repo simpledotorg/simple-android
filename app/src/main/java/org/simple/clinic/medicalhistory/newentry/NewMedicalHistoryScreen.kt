@@ -12,10 +12,15 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
+import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
+import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryUi
 import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -48,9 +53,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
 
   @Inject
   lateinit var features: Features
-
-  @Inject
-  lateinit var newMedicalHistoryEffectHandler: NewMedicalHistoryEffectHandler.Factory
 
   private val viewEffectHandler by unsafeLazy { NewMedicalHistoryViewEffectHandler(this) }
 
@@ -108,7 +110,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
   }
 
   override fun showDiagnosisRequiredErrorDialog() {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, true)
   }
 
   override fun showHypertensionDiagnosisRequiredErrorDialog() {

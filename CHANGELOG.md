@@ -34,6 +34,7 @@
 ### Changes
 
 - Hide next button when registration is going
+- Remove hypertension and diabetes questions from medical history screen
 
 ## 2025.09.09
 

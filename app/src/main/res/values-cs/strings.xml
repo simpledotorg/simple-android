@@ -439,7 +439,7 @@
   <string name="changelanguage_done">Hotovo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Počkejte prosím...</string>
+  <string name="placeholder_loading_title">Počkejte prosím…</string>
   <string name="placeholder_loading_message">Probíhá údržba databáze. Zabere to jen minutu.</string>
 
   <!-- Select Country Screen -->
@@ -531,8 +531,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Označit pacienta jako \"Souhlasil s návštěvou\"</string>
-  <string name="contactpatient_remind_call_later">Připomeňte mi volání později...</string>
-  <string name="contactpatient_remove_from_list">Odebrat ze seznamu zpožděných...</string>
+  <string name="contactpatient_remind_call_later">Připomeňte mi volání později…</string>
+  <string name="contactpatient_remove_from_list">Odebrat ze seznamu zpožděných…</string>
   <string name="contactpatient_result_of_call">Výsledek volání</string>
   <string name="contactpatient_call">Volání</string>
   <string name="contactpatient_call_normal">Normální</string>

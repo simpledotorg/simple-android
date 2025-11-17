@@ -100,8 +100,39 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
   }
 
+  override fun showOngoingHypertensionTreatmentErrorDialog() {
+    SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun showOngoingDiabetesTreatmentErrorDialog() {
+    SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
   override fun goBack() {
     router.pop()
+  }
+
+  override fun showDiagnosisRequiredErrorDialog() {
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showHypertensionDiagnosisRequiredErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
+        .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_hypertension))
+        .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)
+        .show()
+  }
+
+  override fun showChangeDiagnosisErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.change_diagnosis_title))
+        .setMessage(getString(R.string.change_diagnosis_message))
+        .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
+        .setNegativeButton(getString(R.string.change_diagnosis_negative)) { _, _ ->
+          viewModel.dispatch(ChangeDiagnosisNotNowClicked)
+        }
+        .show()
   }
 
   override fun onBackPressed(): Boolean {

@@ -16,12 +16,34 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
   ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when (event) {
       is NewMedicalHistoryAnswerToggled -> answerToggled(model, event.question, event.answer)
-      is SaveMedicalHistoryClicked -> registerPatient(model)
+      is SaveMedicalHistoryClicked -> saveClicked(model)
       is PatientRegistered -> next(model.patientRegistered(), TriggerSync(event.patientUuid))
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
+      is ChangeDiagnosisNotNowClicked -> registerPatient(model)
       is BackClicked -> dispatch(GoBack)
+    }
+  }
+
+  private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
+    return when {
+      model.showChangeDiagnosisError -> {
+        next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
+      }
+      model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
+        dispatch(ShowDiagnosisRequiredError)
+      }
+      !model.facilityDiabetesManagementEnabled && !model.hasAnsweredHypertensionDiagnosis -> {
+        dispatch(ShowHypertensionDiagnosisRequiredError)
+      }
+      model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
+        dispatch(ShowOngoingHypertensionTreatmentError)
+      }
+      model.showOngoingDiabetesTreatment && !model.answeredIsOnDiabetesTreatment -> {
+        dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
+      }
+      else -> registerPatient(model)
     }
   }
 

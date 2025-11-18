@@ -1,23 +1,27 @@
 package org.simple.clinic.medicalhistory
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class Answer : Parcelable {
+sealed class Answer(
+    @StringRes val labelRes: Int? = null
+) : Parcelable {
 
   @Parcelize
-  data object Yes : Answer()
+  data object Yes : Answer(R.string.newmedicalhistory_yes)
 
   @Parcelize
-  data object No : Answer()
+  data object No : Answer(R.string.newmedicalhistory_no)
 
   @Parcelize
-  data object Suspected : Answer()
+  data object Suspected : Answer(R.string.newmedicalhistory_suspected)
 
   @Parcelize
   data object Unanswered : Answer()

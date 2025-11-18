@@ -2,15 +2,14 @@ package org.simple.clinic.medicalhistory.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -33,90 +32,60 @@ fun MedicalHistoryDiagnosisWithTreatment(
     modifier: Modifier = Modifier,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
-    LaunchedEffect(showTreatmentQuestion) {
-        if (!showTreatmentQuestion) {
-            onSelectionChange(treatmentQuestion, Answer.Unanswered)
-        }
+  LaunchedEffect(showTreatmentQuestion) {
+    if (!showTreatmentQuestion) {
+      onSelectionChange(treatmentQuestion, Answer.Unanswered)
     }
+  }
 
-    Card(modifier = modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = dimensionResource(R.dimen.spacing_16))
-                .padding(
-                    top = dimensionResource(R.dimen.spacing_16),
-                    bottom = dimensionResource(R.dimen.spacing_4)
-                )
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(bottom = dimensionResource(R.dimen.spacing_4)),
-                text = diagnosisLabel,
-                style = SimpleTheme.typography.subtitle1Medium,
-                color = MaterialTheme.colors.onSurface,
-            )
+  Card(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier.padding(dimensionResource(R.dimen.spacing_16))
+    ) {
 
-            MedicalHistoryQuestionOptions(
-                modifier = Modifier.align(Alignment.End),
-                selectedAnswer = diagnosisAnswer,
-                onSelectionChange = { newAnswer ->
-                    if (newAnswer == diagnosisAnswer) {
-                        onSelectionChange(diagnosisQuestion, Answer.Unanswered)
-                    } else {
-                        onSelectionChange(diagnosisQuestion, newAnswer)
-                    }
-                }
-            )
+      MedicalHistoryDiagnosisQuestionItem(
+          header = diagnosisLabel,
+          question = diagnosisQuestion,
+          options = listOf(Answer.Yes, Answer.No, Answer.Suspected),
+          selectedAnswer = diagnosisAnswer,
+          onAnswerChange = onSelectionChange
+      )
 
-            AnimatedVisibility(
-                visible = showTreatmentQuestion
-            ) {
-                Column {
-                    Divider(
-                        modifier = Modifier.padding(
-                            top = dimensionResource(R.dimen.spacing_4),
-                            bottom = dimensionResource(R.dimen.spacing_8)
-                        ),
-                        color = SimpleTheme.colors.onSurface11
-                    )
+      AnimatedVisibility(
+          visible = showTreatmentQuestion
+      ) {
+        Column {
 
-                    Text(
-                        modifier = Modifier
-                            .padding(bottom = dimensionResource(R.dimen.spacing_4)),
-                        text = stringResource(treatmentQuestion.questionRes),
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSurface,
-                    )
+          Spacer(Modifier.requiredHeight(dimensionResource(R.dimen.spacing_16)))
 
-                    MedicalHistoryQuestionOptions(
-                        modifier = Modifier.align(Alignment.End),
-                        selectedAnswer = treatmentAnswer,
-                        onSelectionChange = { newAnswer ->
-                            if (newAnswer == treatmentAnswer) {
-                                onSelectionChange(treatmentQuestion, Answer.Unanswered)
-                            } else {
-                                onSelectionChange(treatmentQuestion, newAnswer)
-                            }
-                        }
-                    )
-                }
-            }
+          Divider(color = SimpleTheme.colors.onSurface11)
+
+          Spacer(Modifier.requiredHeight(dimensionResource(R.dimen.spacing_16)))
+
+          MedicalHistoryDiagnosisQuestionItem(
+              header = stringResource(treatmentQuestion.questionRes),
+              question = treatmentQuestion,
+              selectedAnswer = treatmentAnswer,
+              onAnswerChange = onSelectionChange
+          )
         }
+      }
     }
+  }
 }
 
 @Preview
 @Composable
 private fun MedicalHistoryDiagnosisWithTreatmentPreview() {
-    SimpleTheme {
-        MedicalHistoryDiagnosisWithTreatment(
-            diagnosisQuestion = MedicalHistoryQuestion.DiagnosedWithHypertension,
-            diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
-            diagnosisAnswer = Answer.Yes,
-            treatmentQuestion = IsOnHypertensionTreatment(Country.INDIA),
-            treatmentAnswer = Answer.Unanswered,
-            showTreatmentQuestion = true,
-            onSelectionChange = { _, _ -> }
-        )
-    }
+  SimpleTheme {
+    MedicalHistoryDiagnosisWithTreatment(
+        diagnosisQuestion = MedicalHistoryQuestion.DiagnosedWithHypertension,
+        diagnosisLabel = stringResource(R.string.medicalhistorysummaryview_hypertension_diagnosis),
+        diagnosisAnswer = Answer.Yes,
+        treatmentQuestion = IsOnHypertensionTreatment(Country.INDIA),
+        treatmentAnswer = Answer.Unanswered,
+        showTreatmentQuestion = true,
+        onSelectionChange = { _, _ -> }
+    )
+  }
 }

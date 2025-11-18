@@ -577,10 +577,10 @@ class PatientSummaryScreen :
     ))
   }
 
-  override fun showDiagnosisError() {
+  override fun showDiagnosisError(diabetesManagementEnabled: Boolean) {
     // Diagnosis error message could be obscured, scroll until the entire view is visible
     summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
-      medicalHistorySummaryView.showDiagnosisError()
+      medicalHistorySummaryView.showDiagnosisError(diabetesManagementEnabled)
     }
   }
 

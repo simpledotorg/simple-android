@@ -328,15 +328,13 @@
   <string name="medicalhistory_question_kidney">Cudurada kalyaha</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Dhiig kar</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">Baaritaanka dhiig karka (Wa loo baahan yahay)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Sonkorow</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">Baaritaanka sonkorawga (Wa loo baahan yahay)</string>
   <string name="newmedicalhistory_next">Xiga</string>
   <string name="newmedicalhistory_yes">Haa</string>
   <string name="newmedicalhistory_no">Maya</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">Miyuu bukaanku qaatay dawooyinka BP wakhti kasta gudaha bishii la soo dhaafay? (Loo baahday)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">Miyuu qofku qaatay dawooyinka cudurka sonkorta wakhti kasta bishii la soo dhaafay? (Loo baahan yahay)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Miyuu bukaanku qaatay dawooyinka BP wakhti kasta gudaha bishii la soo dhaafay?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Miyuu qofku qaatay dawooyinka cudurka sonkorta wakhti kasta bishii la soo dhaafay?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Midna</string>
   <string name="prescribed_drugs_dosage_remove">Saar</string>
@@ -486,7 +484,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Taariikh</string>
-  <string name="medicalhistorysummaryview_diagnosis">Baaritaan (Loo baahanyahay)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">Ma jiraan daawooyin lagu daray</string>

@@ -328,15 +328,13 @@
   <string name="medicalhistory_question_kidney">ਗੁਰਦਿਆਂ ਦੀ ਬਿਮਾਰੀ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
-  <string name="medicalhistory_diagnosis_hypertension_required">ਹਾਈਪਰਟੈਨਸ਼ਨ ਤਖਸ਼ੀਸ਼ (ਲੋੜੀਂਦਾ)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">ਡਾਯਬਟੀਜ਼ ਤਖਸ਼ੀਸ਼ (ਲੋੜੀਂਦਾ)</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਬੀਪੀ ਦੀਆਂ ਦਵਾਈਆਂ ਲਈਆਂ ਸਨ? (ਲੋੜੀਂਦਾ)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਸ਼ੂਗਰ ਦੀ ਦਵਾਈ ਲਈ ਸੀ? (ਲੋੜੀਂਦਾ)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਬੀਪੀ ਦੀਆਂ ਦਵਾਈਆਂ ਲਈਆਂ ਸਨ?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਸ਼ੂਗਰ ਦੀ ਦਵਾਈ ਲਈ ਸੀ?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ਕੋਈ ਨਹੀਂ</string>
   <string name="prescribed_drugs_dosage_remove">ਹਟਾਓ</string>
@@ -486,7 +484,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ਅਤੀਤ</string>
-  <string name="medicalhistorysummaryview_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">ਕੋਈ ਦਵਾਈ ਨਹੀਂ ਵਧਾਈ ਗਈ</string>

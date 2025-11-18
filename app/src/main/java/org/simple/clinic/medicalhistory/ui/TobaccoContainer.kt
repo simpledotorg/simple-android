@@ -47,11 +47,11 @@ fun SmokerContainer(
   Card(modifier = modifier) {
     MedicalHistoryQuestionItem(
         modifier = Modifier
-            .padding(horizontal = dimensionResource(R.dimen.spacing_16))
-            .padding(vertical = dimensionResource(R.dimen.spacing_8)),
+            .padding(vertical = dimensionResource(R.dimen.spacing_16))
+            .padding(start = dimensionResource(R.dimen.spacing_16),
+                end = dimensionResource(R.dimen.spacing_24)),
         question = MedicalHistoryQuestion.IsSmoking,
         selectedAnswer = smokerAnswer,
-        showDivider = false,
         onSelectionChange = {
           onAnswerChange(MedicalHistoryQuestion.IsSmoking, it)
         }
@@ -69,11 +69,9 @@ fun TobaccoUseContainer(
   Card(modifier = modifier) {
     Column(
         modifier = Modifier
-            .padding(horizontal = dimensionResource(R.dimen.spacing_16))
-            .padding(
-                top = dimensionResource(R.dimen.spacing_16),
-                bottom = dimensionResource(R.dimen.spacing_4)
-            )
+            .padding(vertical = dimensionResource(R.dimen.spacing_16))
+            .padding(start = dimensionResource(R.dimen.spacing_16),
+                end = dimensionResource(R.dimen.spacing_24)),
     ) {
       Text(
           text = stringResource(R.string.medicalhistorysummaryview_tobacco_use),
@@ -81,20 +79,20 @@ fun TobaccoUseContainer(
           color = MaterialTheme.colors.onSurface,
       )
 
-      Spacer(Modifier.requiredHeight(dimensionResource(R.dimen.spacing_4)))
+      Spacer(Modifier.requiredHeight(dimensionResource(R.dimen.spacing_16)))
 
       MedicalHistoryQuestionItem(
           question = MedicalHistoryQuestion.IsSmoking,
           selectedAnswer = isSmokingAnswer,
-          showDivider = true,
       ) {
         onAnswerChange(MedicalHistoryQuestion.IsSmoking, it)
       }
 
+      Spacer(Modifier.requiredHeight(dimensionResource(R.dimen.spacing_24)))
+
       MedicalHistoryQuestionItem(
           question = MedicalHistoryQuestion.IsUsingSmokelessTobacco,
           selectedAnswer = isUsingSmokelessTobaccoAnswer,
-          showDivider = false,
       ) {
         onAnswerChange(MedicalHistoryQuestion.IsUsingSmokelessTobacco, it)
       }
@@ -105,24 +103,28 @@ fun TobaccoUseContainer(
 @Preview
 @Composable
 fun TobaccoQuestionPreview() {
-  TobaccoContainer(
-      isSmokingAnswer = Answer.Yes,
-      isUsingSmokelessTobaccoAnswer = Answer.Unanswered,
-      showSmokelessTobaccoQuestion = false
-  ) { _, _ ->
-    //no-op
+  SimpleTheme {
+    TobaccoContainer(
+        isSmokingAnswer = Answer.Yes,
+        isUsingSmokelessTobaccoAnswer = Answer.Unanswered,
+        showSmokelessTobaccoQuestion = false
+    ) { _, _ ->
+      //no-op
+    }
   }
 }
 
 @Preview
 @Composable
 fun TobaccoWithSmokelessQuestionPreview() {
-  TobaccoContainer(
-      isSmokingAnswer = Answer.Yes,
-      isUsingSmokelessTobaccoAnswer = Answer.Yes,
-      showSmokelessTobaccoQuestion = true
-  ) { _, _ ->
-    //no-op
+  SimpleTheme {
+    TobaccoContainer(
+        isSmokingAnswer = Answer.Yes,
+        isUsingSmokelessTobaccoAnswer = Answer.Yes,
+        showSmokelessTobaccoQuestion = true
+    ) { _, _ ->
+      //no-op
+    }
   }
 }
 

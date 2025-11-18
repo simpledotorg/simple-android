@@ -80,15 +80,15 @@ fun NewMedicalHistoryUi(
       val scrollState = rememberScrollState()
       Column(
           modifier = Modifier
-                  .fillMaxWidth()
-                  .verticalScroll(scrollState)
-                  .padding(paddingValues)
-                  .padding(dimensionResource(R.dimen.spacing_8)),
+              .fillMaxWidth()
+              .verticalScroll(scrollState)
+              .padding(paddingValues)
+              .padding(dimensionResource(R.dimen.spacing_8)),
           verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
       ) {
         val showDiabetesDiagnosis = model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled
         MedicalHistoryDiagnosisWithTreatment(
-            diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_hypertension_required),
+            diagnosisLabel = stringResource(R.string.medicalhistorysummaryview_hypertension_diagnosis),
             diagnosisQuestion = DiagnosedWithHypertension,
             diagnosisAnswer = model.ongoingMedicalHistoryEntry.diagnosedWithHypertension,
             treatmentQuestion = IsOnHypertensionTreatment(model.country.isoCountryCode),
@@ -98,7 +98,7 @@ fun NewMedicalHistoryUi(
         )
         if (showDiabetesDiagnosis) {
           MedicalHistoryDiagnosisWithTreatment(
-              diagnosisLabel = stringResource(R.string.medicalhistory_diagnosis_diabetes_required),
+              diagnosisLabel = stringResource(R.string.medicalhistorysummaryview_diabetes_diagnosis),
               diagnosisQuestion = DiagnosedWithDiabetes,
               diagnosisAnswer = model.ongoingMedicalHistoryEntry.hasDiabetes,
               treatmentQuestion = IsOnDiabetesTreatment,
@@ -151,7 +151,7 @@ private fun NewMedicalHistoryUiPreview() {
       model = previewMedicalHistoryModel,
       navigationIconClick = {},
       onNextClick = {}
-  ) { question, answer ->
+  ) { _, _ ->
     //do nothing
   }
 }

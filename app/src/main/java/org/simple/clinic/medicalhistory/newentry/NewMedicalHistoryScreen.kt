@@ -54,9 +54,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
   @Inject
   lateinit var features: Features
 
-  @Inject
-  lateinit var newMedicalHistoryEffectHandler: NewMedicalHistoryEffectHandler.Factory
-
   private val viewEffectHandler by unsafeLazy { NewMedicalHistoryViewEffectHandler(this) }
 
   private val viewModel by viewModels<NewMedicalHistoryViewModel>(
@@ -73,7 +70,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
@@ -113,7 +110,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
   }
 
   override fun showDiagnosisRequiredErrorDialog() {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, true)
   }
 
   override fun showHypertensionDiagnosisRequiredErrorDialog() {

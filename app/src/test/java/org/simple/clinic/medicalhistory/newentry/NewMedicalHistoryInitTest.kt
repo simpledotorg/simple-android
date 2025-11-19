@@ -14,7 +14,8 @@ class NewMedicalHistoryInitTest {
   private val defaultModel = NewMedicalHistoryModel.default(
       country = country,
       showIsSmokingQuestion = false,
-      showSmokelessTobaccoQuestion = false
+      showSmokelessTobaccoQuestion = false,
+      isScreeningFeatureEnabled = true,
   )
 
   private val initSpec = InitSpec(NewMedicalHistoryInit())

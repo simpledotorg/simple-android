@@ -306,7 +306,8 @@ class NewMedicalHistoryScreenLogicTest {
         defaultModel = NewMedicalHistoryModel.default(
             country = country,
             showIsSmokingQuestion = true,
-            showSmokelessTobaccoQuestion = true
+            showSmokelessTobaccoQuestion = true,
+            isScreeningFeatureEnabled = true,
         ),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),

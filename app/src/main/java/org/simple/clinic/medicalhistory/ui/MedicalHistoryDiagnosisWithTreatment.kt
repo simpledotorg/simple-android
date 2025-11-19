@@ -29,6 +29,7 @@ fun MedicalHistoryDiagnosisWithTreatment(
     treatmentQuestion: MedicalHistoryQuestion,
     treatmentAnswer: Answer?,
     showTreatmentQuestion: Boolean,
+    isScreeningFeatureEnabled: Boolean,
     modifier: Modifier = Modifier,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -43,10 +44,16 @@ fun MedicalHistoryDiagnosisWithTreatment(
         modifier = Modifier.padding(dimensionResource(R.dimen.spacing_16))
     ) {
 
+      val options = if (isScreeningFeatureEnabled) {
+        listOf(Answer.Yes, Answer.No, Answer.Suspected)
+      } else {
+        listOf(Answer.Yes, Answer.No)
+      }
+
       MedicalHistoryDiagnosisQuestionItem(
           header = diagnosisLabel,
           question = diagnosisQuestion,
-          options = listOf(Answer.Yes, Answer.No, Answer.Suspected),
+          options = options,
           selectedAnswer = diagnosisAnswer,
           onAnswerChange = onSelectionChange
       )
@@ -85,6 +92,7 @@ private fun MedicalHistoryDiagnosisWithTreatmentPreview() {
         treatmentQuestion = IsOnHypertensionTreatment(Country.INDIA),
         treatmentAnswer = Answer.Unanswered,
         showTreatmentQuestion = true,
+        isScreeningFeatureEnabled = true,
         onSelectionChange = { _, _ -> }
     )
   }

@@ -21,6 +21,7 @@ fun DiagnosisContainer(
     hypertensionAnswer: Answer?,
     diabetesAnswer: Answer?,
     showDiabetesDiagnosisView: Boolean,
+    isScreeningFeatureEnabled: Boolean,
     modifier: Modifier = Modifier,
     onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -30,10 +31,16 @@ fun DiagnosisContainer(
             .padding(dimensionResource(R.dimen.spacing_16))
     ) {
 
+      val options = if (isScreeningFeatureEnabled) {
+        listOf(Answer.Yes, Answer.No, Answer.Suspected)
+      } else {
+        listOf(Answer.Yes, Answer.No)
+      }
+
       MedicalHistoryDiagnosisQuestionItem(
           header = stringResource(R.string.medicalhistorysummaryview_hypertension_diagnosis),
           question = MedicalHistoryQuestion.DiagnosedWithHypertension,
-          options = listOf(Answer.Yes, Answer.No, Answer.Suspected),
+          options = options,
           selectedAnswer = hypertensionAnswer,
           onAnswerChange = onAnswerChange
       )
@@ -49,7 +56,7 @@ fun DiagnosisContainer(
         MedicalHistoryDiagnosisQuestionItem(
             header = stringResource(R.string.medicalhistorysummaryview_diabetes_diagnosis),
             question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
-            options = listOf(Answer.Yes, Answer.No, Answer.Suspected),
+            options = options,
             selectedAnswer = diabetesAnswer,
             onAnswerChange = onAnswerChange
         )
@@ -66,6 +73,7 @@ fun DiagnosisContainerPreview(modifier: Modifier = Modifier) {
         hypertensionAnswer = Answer.Yes,
         diabetesAnswer = Answer.No,
         showDiabetesDiagnosisView = true,
+        isScreeningFeatureEnabled = true,
         modifier = modifier,
         onAnswerChange = { _, _ -> }
     )

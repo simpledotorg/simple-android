@@ -63,6 +63,10 @@ data class MedicalHistory(
     @ColumnInfo(name = "cholesterol_value")
     val cholesterol: Float?,
 
+    val hypertensionDiagnosedAt: Instant?,
+
+    val diabetesDiagnosedAt: Instant?,
+
     val syncStatus: SyncStatus,
 
     val createdAt: Instant,

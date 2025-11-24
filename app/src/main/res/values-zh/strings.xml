@@ -329,7 +329,7 @@
   <string name="newmedicalhistory_next">下一步</string>
   <string name="newmedicalhistory_yes">是</string>
   <string name="newmedicalhistory_no">否</string>
-  <string name="newmedicalhistory_suspected">转诊</string>
+  <string name="newmedicalhistory_suspected">转诊诊断</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">患者上个月是否服用过降压药？</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">患者上个月是否服用过糖尿病药物？</string>
   <string name="medicalhistory_question_is_smoking">烟</string>
@@ -426,7 +426,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -519,8 +519,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>

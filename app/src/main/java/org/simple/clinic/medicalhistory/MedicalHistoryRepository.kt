@@ -109,8 +109,8 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
-        hypertensionDiagnosedAt = timestampIfAnsweredYesOrNo(historyEntry.diagnosedWithHypertension, now),
-        diabetesDiagnosedAt = timestampIfAnsweredYesOrNo(historyEntry.hasDiabetes, now),
+        hypertensionDiagnosedAt = diagnosedAt(historyEntry.diagnosedWithHypertension, now),
+        diabetesDiagnosedAt = diagnosedAt(historyEntry.hasDiabetes, now),
         syncStatus = SyncStatus.PENDING,
         createdAt = now,
         updatedAt = now,
@@ -119,9 +119,24 @@ class MedicalHistoryRepository @Inject constructor(
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {
+    val htnDiagnosedAt = diagnosedAt(
+        newAnswer = history.diagnosedWithHypertension,
+        now = updateTime,
+        existingTimestamp = history.hypertensionDiagnosedAt
+    )
+
+    val diabetesDiagnosedAt = diagnosedAt(
+        newAnswer = history.diagnosedWithDiabetes,
+        now = updateTime,
+        existingTimestamp = history.diabetesDiagnosedAt
+    )
+
     val dirtyHistory = history.copy(
+        hypertensionDiagnosedAt = htnDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
         syncStatus = SyncStatus.PENDING,
         updatedAt = updateTime)
+
     dao.save(dirtyHistory)
   }
 
@@ -187,12 +202,8 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  fun timestampIfAnsweredYesOrNo(answer: Answer, instant: Instant) =
-      if (answer.isAnswered) {
-        instant
-      } else {
-        null
-      }
+  fun diagnosedAt(newAnswer: Answer, now: Instant, existingTimestamp: Instant? = null) =
+      existingTimestamp ?: if (newAnswer.isAnswered) now else null
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao

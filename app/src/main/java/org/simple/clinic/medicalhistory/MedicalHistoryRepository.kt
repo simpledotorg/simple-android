@@ -94,6 +94,8 @@ class MedicalHistoryRepository @Inject constructor(
       patientUuid: UUID,
       historyEntry: OngoingMedicalHistoryEntry
   ): Completable {
+    val now = Instant.now(utcClock)
+
     val medicalHistory = MedicalHistory(
         uuid = uuid,
         patientUuid = patientUuid,
@@ -107,11 +109,11 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
-        hypertensionDiagnosedAt = null,
-        diabetesDiagnosedAt = null,
+        hypertensionDiagnosedAt = timestampIfAnsweredYesOrNo(historyEntry.diagnosedWithHypertension, now),
+        diabetesDiagnosedAt = timestampIfAnsweredYesOrNo(historyEntry.hasDiabetes, now),
         syncStatus = SyncStatus.PENDING,
-        createdAt = Instant.now(utcClock),
-        updatedAt = Instant.now(utcClock),
+        createdAt = now,
+        updatedAt = now,
         deletedAt = null)
     return Completable.fromAction { save(listOf(medicalHistory)) }
   }
@@ -184,6 +186,13 @@ class MedicalHistoryRepository @Inject constructor(
           deletedAt = deletedAt)
     }
   }
+
+  fun timestampIfAnsweredYesOrNo(answer: Answer, instant: Instant) =
+      if (answer.isAnswered) {
+        instant
+      } else {
+        null
+      }
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao

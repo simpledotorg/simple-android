@@ -36,6 +36,7 @@
 - Hide next button when registration is going
 - Add Suspected option to hypertension and diabetes questions
 - Handle Screening feature visibility based on feature flag `Screening`
+- Add `hypertensionDiagnosedAt` and `diabetesDiagnosedAt` in `MedicalHistory` table
 
 ## 2025.09.09
 

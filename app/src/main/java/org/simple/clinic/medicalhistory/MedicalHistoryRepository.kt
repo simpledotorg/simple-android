@@ -202,8 +202,13 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  fun diagnosedAt(newAnswer: Answer, now: Instant, existingTimestamp: Instant? = null) =
-      existingTimestamp ?: if (newAnswer.isAnswered) now else null
+  fun diagnosedAt(newAnswer: Answer, now: Instant, existingTimestamp: Instant? = null): Instant? {
+    return if (!newAnswer.isAnsweredWithYesOrNo) {
+      null
+    } else {
+      existingTimestamp ?: now
+    }
+  }
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao

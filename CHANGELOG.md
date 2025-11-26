@@ -3,6 +3,7 @@
 ## Next Release
 
 ### Internal
+
 - Bump Sentry to v8.22.0
 - Bump AndroidX Lifecycle to v2.9.4
 - Bump AndroidX Test Runner to v1.7.0
@@ -37,10 +38,12 @@
 - Add Suspected option to hypertension and diabetes questions
 - Handle Screening feature visibility based on feature flag `Screening`
 - Add `hypertensionDiagnosedAt` and `diabetesDiagnosedAt` in `MedicalHistory` table
+- Hide schedule appointment sheet for suspected patients
 
 ## 2025.09.09
 
 ### Internal
+
 - Bump AGP to v8.13.0
 - Bump Lint to v31.13.0
 - Bump dagger to v2.57.1

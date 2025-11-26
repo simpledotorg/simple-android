@@ -13,6 +13,7 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.Answer
@@ -2817,6 +2818,60 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(CalculateLabBasedCVDRisk(patient))
+        ))
+  }
+
+  @Test
+  fun `when there are patient is suspected, clicking on back should not show the schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 1,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Suspected,
+                hasDiabetes = Suspected
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPreviousScreen)
+        ))
+  }
+
+  @Test
+  fun `when there are patient is suspected, clicking on done should not show the schedule appointment sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Suspected,
+                hasDiabetes = Suspected
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
         ))
   }
 

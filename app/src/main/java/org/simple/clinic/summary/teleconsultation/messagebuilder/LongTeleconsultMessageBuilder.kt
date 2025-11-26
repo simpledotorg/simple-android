@@ -62,15 +62,15 @@ class LongTeleconsultMessageBuilder @Inject constructor(
     val diagnosedWithHypertension = patientTeleconsultationInfo.medicalHistory.diagnosedWithHypertension
     val diagnosedWithDiabetes = patientTeleconsultationInfo.medicalHistory.diagnosedWithDiabetes
 
-    if (diagnosedWithHypertension.isAnswered || diagnosedWithDiabetes.isAnswered) {
+    if (diagnosedWithHypertension.isAnsweredWithYesOrNo || diagnosedWithDiabetes.isAnsweredWithYesOrNo) {
       message.appendLine(resources.getString(R.string.patientsummary_contact_doctor_diagnosis))
     }
 
-    if (diagnosedWithHypertension.isAnswered) {
+    if (diagnosedWithHypertension.isAnsweredWithYesOrNo) {
       message.appendLine("$hyperTensionTitle ${textForDiagnosisAnswer(diagnosedWithHypertension)}")
     }
 
-    if (diagnosedWithDiabetes.isAnswered) {
+    if (diagnosedWithDiabetes.isAnsweredWithYesOrNo) {
       message.appendLine("$diabetesTitle ${textForDiagnosisAnswer(diagnosedWithDiabetes)}")
     }
 

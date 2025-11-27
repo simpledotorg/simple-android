@@ -600,7 +600,7 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisError)
+      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisRequiredError)
       shouldShowHypertensionDiagnosisErrorForDiabetesDisabled -> dispatch(ShowHypertensionDiagnosisError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
@@ -651,7 +651,7 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisError)
+      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisRequiredError)
       shouldShowHypertensionDiagnosisErrorForDiabetesDisabled -> dispatch(ShowHypertensionDiagnosisError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)

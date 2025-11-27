@@ -233,7 +233,35 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when no diagnosis is recorded and diabetes management is enabled, then clicking on back must show diagnosis error`() {
+  fun `when no diagnosis is recorded and diabetes management and screening is enabled, then clicking on back must show diagnosis error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("1d686e68-b64b-40ae-ba33-614c81853389"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiagnosisOrReferralRequiredError as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when no diagnosis is recorded and diabetes management is enabled and screening is disabled, then clicking on back must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -261,7 +289,35 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when no diagnosis is recorded and diabetes management is disabled, then show diagnosis error`() {
+  fun `when no diagnosis is recorded and diabetes management is disabled and screening is enabled, then show diagnosis error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("9da22d50-9a5e-4c78-b451-39cc8535fec9"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHypertensionDiagnosisOrReferralRequiredError)
+        ))
+  }
+
+  @Test
+  fun `when no diagnosis is recorded and diabetes management and screening is disabled, then show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec
@@ -461,7 +517,35 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when diagnosis is not recorded and diabetes management is enabled, clicking on save must show diagnosis error`() {
+  fun `when diagnosis is not recorded and diabetes management and screening is enabled, clicking on save must show diagnosis or referral error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("13c1b8b9-7109-4b2f-ad01-3532f9be6766"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiagnosisOrReferralRequiredError as PatientSummaryEffect)
+        ))
+  }
+
+  @Test
+  fun `when diagnosis is not recorded and diabetes management is enabled and screening is disabled, clicking on save must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -489,7 +573,35 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when diagnosis is not recorded and diabetes management is disabled, clicking on save must show diagnosis error`() {
+  fun `when diagnosis is not recorded and diabetes management is disabled and screening is enabled, clicking on save must show diagnosis error`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("e6514821-3fb4-4b78-b20a-e8ab6f856c0b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            ),
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHypertensionDiagnosisOrReferralRequiredError)
+        ))
+  }
+
+  @Test
+  fun `when diagnosis is not recorded and diabetes management and screening is disabled, clicking on save must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec

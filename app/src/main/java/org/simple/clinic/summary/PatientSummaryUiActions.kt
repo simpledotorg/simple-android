@@ -25,6 +25,7 @@ interface PatientSummaryUiActions {
   fun showDiagnosisRequiredError()
   fun showDiagnosisOrReferralRequiredError()
   fun showHypertensionDiagnosisRequiredError()
+  fun showHypertensionDiagnosisOrReferralRequiredError()
   fun openPatientContactSheet(patientUuid: UUID)
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)
   fun openContactDoctorSheet(patientUuid: UUID)

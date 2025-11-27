@@ -596,6 +596,12 @@ class PatientSummaryScreen :
     }
   }
 
+  override fun showHypertensionDiagnosisOrReferralIsRequiredError() {
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showHypertensionDiagnosisOrReferralRequiredError()
+    }
+  }
+
   override fun openPatientContactSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
   }

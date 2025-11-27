@@ -115,6 +115,8 @@ data object ShowDiagnosisOrReferralRequiredError: PatientSummaryViewEffect()
 
 data object ShowHypertensionDiagnosisRequiredError : PatientSummaryViewEffect()
 
+data object ShowHypertensionDiagnosisOrReferralRequiredError : PatientSummaryViewEffect()
+
 data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()
 
 data class NavigateToTeleconsultRecordScreen(

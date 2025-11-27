@@ -407,6 +407,17 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
+  fun `when show hypertension diagnosis or referral error effect is received, then show hypertension diagnosis or referral error`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+
+    // then
+    verify(uiActions).showHypertensionDiagnosisOrReferralRequiredError()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
   fun `when the fetch missing phone reminder effect is received, fetch whether reminder has been shown for the patient`() {
     // given
     whenever(missingPhoneReminderRepository.hasShownReminderForPatient(patientUuid)) doReturn true

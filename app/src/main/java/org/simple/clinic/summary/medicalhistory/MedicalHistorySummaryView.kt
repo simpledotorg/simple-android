@@ -25,6 +25,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.SelectDiagnosisOrReferralRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectDiagnosisRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisOrReferralRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisRequiredErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -197,6 +198,10 @@ class MedicalHistorySummaryView(
 
   fun showHypertensionDiagnosisRequiredError() {
     SelectHypertensionDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  fun showHypertensionDiagnosisOrReferralRequiredError() {
+    SelectHypertensionDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

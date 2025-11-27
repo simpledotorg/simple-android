@@ -123,6 +123,10 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     SelectHypertensionDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
+  override fun showHypertensionDiagnosisRequiredOrReferralErrorDialog() {
+    //Todo : Implement this dialog
+  }
+
   override fun showChangeDiagnosisErrorDialog() {
     MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.change_diagnosis_title))

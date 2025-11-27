@@ -14,6 +14,7 @@ class NewMedicalHistoryViewEffectHandler(
       ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
       ShowDiagnosisOrReferralRequiredError -> uiActions.showDiagnosisOrReferralRequiredErrorDialog()
       ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
+      ShowHypertensionDiagnosisOrReferralRequiredError -> uiActions.showHypertensionDiagnosisRequiredOrReferralErrorDialog()
       ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
       ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()
       GoBack -> uiActions.goBack()

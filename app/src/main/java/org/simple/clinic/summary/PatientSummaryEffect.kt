@@ -113,6 +113,8 @@ data class ShowDiagnosisError(
     val diabetesManagementEnabled: Boolean
 ) : PatientSummaryViewEffect()
 
+data object ShowHypertensionDiagnosisError : PatientSummaryViewEffect()
+
 data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()
 
 data class NavigateToTeleconsultRecordScreen(

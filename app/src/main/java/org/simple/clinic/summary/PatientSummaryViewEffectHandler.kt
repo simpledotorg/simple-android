@@ -21,6 +21,7 @@ class PatientSummaryViewEffectHandler(
       )
 
       is ShowDiagnosisError -> uiActions.showDiagnosisError(viewEffect.diabetesManagementEnabled)
+      is ShowHypertensionDiagnosisError -> uiActions.showHypertensionDiagnosisError()
       is OpenContactPatientScreen -> uiActions.openPatientContactSheet(viewEffect.patientUuid)
       is NavigateToTeleconsultRecordScreen -> uiActions.navigateToTeleconsultRecordScreen(viewEffect.patientUuid, viewEffect.teleconsultRecordId)
       is OpenContactDoctorSheet -> uiActions.openContactDoctorSheet(viewEffect.patientUuid)

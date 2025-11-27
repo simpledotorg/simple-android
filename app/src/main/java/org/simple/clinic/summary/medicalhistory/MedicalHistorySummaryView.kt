@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
@@ -187,6 +188,10 @@ class MedicalHistorySummaryView(
 
   fun showDiagnosisError(diabetesManagementEnabled: Boolean) {
     SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, diabetesManagementEnabled)
+  }
+
+  fun showHypertensionDiagnosisError() {
+    SelectHypertensionDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

@@ -13,10 +13,10 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.cvdrisk.CVDRiskRange
 import org.simple.clinic.cvdrisk.CVDRiskRepository
 import org.simple.clinic.cvdrisk.calculator.LabBasedCVDRiskCalculator
+import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -380,6 +380,17 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     verify(uiActions).showDiagnosisError(true)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show hypertension diagnosis error effect is received, then show hypertension diagnosis error`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisError)
+
+    // then
+    verify(uiActions).showHypertensionDiagnosisError()
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

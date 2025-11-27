@@ -22,7 +22,7 @@ interface PatientSummaryUiActions {
   fun showUpdatePhoneDialog(patientUuid: UUID)
   fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
-  fun showDiagnosisError(diabetesManagementEnabled: Boolean)
+  fun showDiagnosisError()
   fun showHypertensionDiagnosisError()
   fun openPatientContactSheet(patientUuid: UUID)
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)

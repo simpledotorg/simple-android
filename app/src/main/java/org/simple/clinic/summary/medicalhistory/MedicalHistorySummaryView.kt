@@ -186,8 +186,8 @@ class MedicalHistorySummaryView(
     modelUpdateCallback = callback
   }
 
-  fun showDiagnosisError(diabetesManagementEnabled: Boolean) {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, diabetesManagementEnabled)
+  fun showDiagnosisError() {
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, true)
   }
 
   fun showHypertensionDiagnosisError() {

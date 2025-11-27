@@ -232,7 +232,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is enabled, then clicking on back must show diagnosis error`() {
+  fun `when no diagnosis is recorded and diabetes management is enabled, then clicking on back must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -254,12 +254,12 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError(true) as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
         ))
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present and no diagnosis is recorded and diabetes management is disabled, then show diagnosis error`() {
+  fun `when no diagnosis is recorded and diabetes management is disabled, then show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec
@@ -281,7 +281,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError(false) as PatientSummaryEffect)
+            hasEffects(ShowHypertensionDiagnosisError)
         ))
   }
 
@@ -452,7 +452,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is enabled, clicking on save must show diagnosis error`() {
+  fun `when diagnosis is not recorded and diabetes management is enabled, clicking on save must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -474,12 +474,12 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError(true) as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
         ))
   }
 
   @Test
-  fun `when at least one measurement is present and diagnosis is not recorded and diabetes management is disabled, clicking on save must show diagnosis error`() {
+  fun `when diagnosis is not recorded and diabetes management is disabled, clicking on save must show diagnosis error`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
 
     updateSpec
@@ -501,7 +501,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError(false) as PatientSummaryEffect)
+            hasEffects(ShowHypertensionDiagnosisError)
         ))
   }
 

@@ -47,7 +47,7 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
         dateFormatter: DateTimeFormatter,
         isPatientReassignmentFeatureEnabled: Boolean,
     ): RecentPatientItem {
-      val model = RecentPatientUiModel.fromDomain(
+      val model = RecentPatientUiModel.from(
           recentPatient = recentPatient,
           today = today,
           userClock = userClock,

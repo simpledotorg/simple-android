@@ -33,7 +33,7 @@ data class RecentPatientItem(
         userClock: UserClock,
         dateFormatter: DateTimeFormatter
     ): RecentPatientItem {
-      val model = RecentPatientUiModel.fromDomain(
+      val model = RecentPatientUiModel.from(
           recentPatient = recentPatient,
           today = today,
           userClock = userClock,

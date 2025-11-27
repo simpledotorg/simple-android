@@ -32,7 +32,7 @@ data class RecentPatientUiModel(
     val isSuspectedForDiabetes: Boolean = false
 ) {
   companion object {
-    fun fromDomain(
+    fun from(
         recentPatient: RecentPatient,
         today: LocalDate,
         userClock: UserClock,

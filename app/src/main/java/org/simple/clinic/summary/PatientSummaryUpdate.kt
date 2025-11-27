@@ -579,10 +579,10 @@ class PatientSummaryUpdate(
         !hasAppointmentChangedSinceScreenCreated &&
         medicalHistory.suspected.not()
 
-    val shouldShowDiagnosisErrorForDiabetesEnabled =
+    val showDiagnosisRequiredError =
         model.isDiabetesManagementEnabled && medicalHistory.diagnosisRecorded.not()
 
-    val shouldShowHypertensionDiagnosisErrorForDiabetesDisabled =
+    val showHypertensionDiagnosisRequiredError =
         model.isDiabetesManagementEnabled.not() && medicalHistory.hypertensionRecorded.not()
 
     val measurementWarningEffect = validateMeasurements(
@@ -600,8 +600,8 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisRequiredError)
-      shouldShowHypertensionDiagnosisErrorForDiabetesDisabled -> dispatch(ShowHypertensionDiagnosisError)
+      showDiagnosisRequiredError -> dispatch(ShowDiagnosisRequiredError)
+      showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisRequiredError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
@@ -626,10 +626,10 @@ class PatientSummaryUpdate(
         && !hasAppointmentChangedSinceScreenCreated
         && medicalHistory.suspected.not()
 
-    val shouldShowDiagnosisErrorForDiabetesEnabled =
+    val showDiagnosisRequiredError =
         model.isDiabetesManagementEnabled && medicalHistory.diagnosisRecorded.not()
 
-    val shouldShowHypertensionDiagnosisErrorForDiabetesDisabled =
+    val showHypertensionDiagnosisRequiredError =
         model.isDiabetesManagementEnabled.not() && medicalHistory.hypertensionRecorded.not()
 
     val openIntention = model.openIntention
@@ -651,8 +651,8 @@ class PatientSummaryUpdate(
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisErrorForDiabetesEnabled -> dispatch(ShowDiagnosisRequiredError)
-      shouldShowHypertensionDiagnosisErrorForDiabetesDisabled -> dispatch(ShowHypertensionDiagnosisError)
+      showDiagnosisRequiredError -> dispatch(ShowDiagnosisRequiredError)
+      showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisRequiredError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))

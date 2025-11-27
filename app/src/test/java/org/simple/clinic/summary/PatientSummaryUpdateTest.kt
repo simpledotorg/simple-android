@@ -254,7 +254,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisRequiredError as PatientSummaryEffect)
         ))
   }
 
@@ -281,7 +281,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHypertensionDiagnosisError)
+            hasEffects(ShowHypertensionDiagnosisRequiredError)
         ))
   }
 
@@ -474,7 +474,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowDiagnosisError as PatientSummaryEffect)
+            hasEffects(ShowDiagnosisRequiredError as PatientSummaryEffect)
         ))
   }
 
@@ -501,7 +501,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHypertensionDiagnosisError)
+            hasEffects(ShowHypertensionDiagnosisRequiredError)
         ))
   }
 

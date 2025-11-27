@@ -7,14 +7,14 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.simple.clinic.R
 
-class SelectHypertensionDiagnosisErrorDialog : AppCompatDialogFragment() {
+class SelectHypertensionDiagnosisRequiredErrorDialog : AppCompatDialogFragment() {
 
   companion object {
 
-    private const val FRAGMENT_TAG = "select_hypertension_diagnosis_error_alert"
+    private const val FRAGMENT_TAG = "select_hypertension_diagnosis_required__error_alert"
 
     fun show(fragmentManager: FragmentManager) {
-      val fragment = SelectHypertensionDiagnosisErrorDialog()
+      val fragment = SelectHypertensionDiagnosisRequiredErrorDialog()
 
       fragment.show(fragmentManager, FRAGMENT_TAG)
     }

@@ -379,7 +379,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(ShowDiagnosisRequiredError)
 
     // then
-    verify(uiActions).showDiagnosisError()
+    verify(uiActions).showDiagnosisRequiredError()
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
@@ -387,10 +387,10 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when show hypertension diagnosis error effect is received, then show hypertension diagnosis error`() {
     // when
-    testCase.dispatch(ShowHypertensionDiagnosisError)
+    testCase.dispatch(ShowHypertensionDiagnosisRequiredError)
 
     // then
-    verify(uiActions).showHypertensionDiagnosisError()
+    verify(uiActions).showHypertensionDiagnosisRequiredError()
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

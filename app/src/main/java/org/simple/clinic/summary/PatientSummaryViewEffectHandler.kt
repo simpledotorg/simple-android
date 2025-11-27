@@ -20,8 +20,8 @@ class PatientSummaryViewEffectHandler(
           currentFacility = viewEffect.currentFacility
       )
 
-      is ShowDiagnosisRequiredError -> uiActions.showDiagnosisError()
-      is ShowHypertensionDiagnosisError -> uiActions.showHypertensionDiagnosisError()
+      is ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredError()
+      is ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredError()
       is OpenContactPatientScreen -> uiActions.openPatientContactSheet(viewEffect.patientUuid)
       is NavigateToTeleconsultRecordScreen -> uiActions.navigateToTeleconsultRecordScreen(viewEffect.patientUuid, viewEffect.teleconsultRecordId)
       is OpenContactDoctorSheet -> uiActions.openContactDoctorSheet(viewEffect.patientUuid)

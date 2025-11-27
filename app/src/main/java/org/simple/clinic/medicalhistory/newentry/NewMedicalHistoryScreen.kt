@@ -18,8 +18,8 @@ import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
-import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
-import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectDiagnosisRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryUi
@@ -111,11 +111,11 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
   }
 
   override fun showDiagnosisRequiredErrorDialog() {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+    SelectDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
   override fun showHypertensionDiagnosisRequiredErrorDialog() {
-    SelectHypertensionDiagnosisErrorDialog.show(activity.supportFragmentManager)
+    SelectHypertensionDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
   override fun showChangeDiagnosisErrorDialog() {

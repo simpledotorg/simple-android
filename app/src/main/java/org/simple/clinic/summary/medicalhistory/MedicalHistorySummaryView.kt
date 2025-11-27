@@ -187,7 +187,7 @@ class MedicalHistorySummaryView(
   }
 
   fun showDiagnosisError() {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, true)
+    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
   }
 
   fun showHypertensionDiagnosisError() {

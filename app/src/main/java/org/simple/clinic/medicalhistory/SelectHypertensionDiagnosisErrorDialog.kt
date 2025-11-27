@@ -14,7 +14,7 @@ class SelectHypertensionDiagnosisErrorDialog : AppCompatDialogFragment() {
     private const val FRAGMENT_TAG = "select_hypertension_diagnosis_error_alert"
 
     fun show(fragmentManager: FragmentManager) {
-      val fragment = SelectDiagnosisErrorDialog()
+      val fragment = SelectHypertensionDiagnosisErrorDialog()
 
       fragment.show(fragmentManager, FRAGMENT_TAG)
     }

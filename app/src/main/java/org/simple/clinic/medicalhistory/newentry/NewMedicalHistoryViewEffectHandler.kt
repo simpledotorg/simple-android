@@ -12,6 +12,7 @@ class NewMedicalHistoryViewEffectHandler(
       is OpenPatientSummaryScreen -> uiActions.openPatientSummaryScreen(viewEffect.patientUuid)
       ShowOngoingHypertensionTreatmentError -> uiActions.showOngoingHypertensionTreatmentErrorDialog()
       ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
+      ShowDiagnosisOrReferralRequiredError -> uiActions.showDiagnosisOrReferralRequiredErrorDialog()
       ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
       ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
       ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()

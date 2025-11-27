@@ -20,6 +20,8 @@ import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -38,10 +40,12 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.util.NoOpRemoteConfigService
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -82,6 +86,13 @@ class PatientSummaryEffectHandlerTest {
   private val nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() }
   private val labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator { TestData.labBasedCVDRiskCalculationSheet() }
 
+  val features = Features(
+      remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+      overrides = mapOf(
+          Feature.Screening to true,
+      )
+  )
+
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
       userClock = userClock,
@@ -107,6 +118,7 @@ class PatientSummaryEffectHandlerTest {
       nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
       labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
       viewEffectsConsumer = viewEffectHandler::handle,
+      feature = features
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -154,6 +166,7 @@ class PatientSummaryEffectHandlerTest {
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
+        feature = features
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -218,6 +231,7 @@ class PatientSummaryEffectHandlerTest {
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
+        feature = features
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
@@ -309,7 +323,8 @@ class PatientSummaryEffectHandlerTest {
             medicalHistory = medicalHistory,
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = prescribedDrugs,
-            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
+            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions,
+            isScreeningEnabled = true
         )
     )
     verifyNoInteractions(uiActions)
@@ -355,7 +370,8 @@ class PatientSummaryEffectHandlerTest {
             medicalHistory = medicalHistory,
             canShowPatientReassignmentWarning = true,
             prescribedDrugs = prescribedDrugs,
-            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
+            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions,
+            isScreeningEnabled = true,
         )
     )
     verifyNoInteractions(uiActions)
@@ -684,6 +700,7 @@ class PatientSummaryEffectHandlerTest {
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
         viewEffectsConsumer = viewEffectHandler::handle,
+        feature = features
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
 

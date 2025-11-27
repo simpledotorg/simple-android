@@ -223,7 +223,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false,
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -250,7 +251,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -277,7 +279,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -305,7 +308,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -333,7 +337,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -361,7 +366,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -388,7 +394,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -416,7 +423,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -443,7 +451,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -470,7 +479,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -497,7 +507,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -525,7 +536,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -916,7 +928,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -943,7 +956,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -970,7 +984,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -997,7 +1012,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1028,7 +1044,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -1055,7 +1072,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -1082,7 +1100,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -1109,7 +1128,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1345,7 +1365,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1372,7 +1393,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1404,7 +1426,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1436,7 +1459,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1473,7 +1497,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1670,7 +1695,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = true,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1701,7 +1727,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = true,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1973,7 +2000,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = listOf("amlodipine"),
                 diabetesPrescriptions = emptyList()
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2008,7 +2036,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = emptyList(),
                 diabetesPrescriptions = listOf("metformin")
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2047,7 +2076,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = listOf("amlodipine"),
                 diabetesPrescriptions = listOf("metformin")
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2082,7 +2112,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = listOf("amlodipine"),
                 diabetesPrescriptions = emptyList()
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2117,7 +2148,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = emptyList(),
                 diabetesPrescriptions = listOf("metformin")
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2156,7 +2188,8 @@ class PatientSummaryUpdateTest {
             diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
                 htnPrescriptions = listOf("amlodipine"),
                 diabetesPrescriptions = listOf("metformin")
-            )
+            ),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasModel(model.shownDiagnosisWarningDialog()),
@@ -2840,7 +2873,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -2867,7 +2901,8 @@ class PatientSummaryUpdateTest {
             ),
             canShowPatientReassignmentWarning = false,
             prescribedDrugs = emptyList(),
-            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty(),
+            isScreeningEnabled = false
         ))
         .then(assertThatNext(
             hasNoModel(),

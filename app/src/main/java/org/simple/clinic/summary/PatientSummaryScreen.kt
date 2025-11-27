@@ -596,7 +596,7 @@ class PatientSummaryScreen :
     }
   }
 
-  override fun showHypertensionDiagnosisOrReferralIsRequiredError() {
+  override fun showHypertensionDiagnosisOrReferralRequiredError() {
     summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
       medicalHistorySummaryView.showHypertensionDiagnosisOrReferralRequiredError()
     }

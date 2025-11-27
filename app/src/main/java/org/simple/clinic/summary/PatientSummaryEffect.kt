@@ -111,6 +111,8 @@ data class ShowScheduleAppointmentSheet(
 
 data object ShowDiagnosisRequiredError: PatientSummaryViewEffect()
 
+data object ShowDiagnosisOrReferralRequiredError: PatientSummaryViewEffect()
+
 data object ShowHypertensionDiagnosisRequiredError : PatientSummaryViewEffect()
 
 data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()

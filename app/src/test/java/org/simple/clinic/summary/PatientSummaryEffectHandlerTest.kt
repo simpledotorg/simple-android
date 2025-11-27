@@ -385,6 +385,17 @@ class PatientSummaryEffectHandlerTest {
   }
 
   @Test
+  fun `when show diagnosis or referral error effect is received, then show diagnosis or referral error`() {
+    // when
+    testCase.dispatch(ShowDiagnosisOrReferralRequiredError)
+
+    // then
+    verify(uiActions).showDiagnosisOrReferralRequiredError()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
   fun `when show hypertension diagnosis error effect is received, then show hypertension diagnosis error`() {
     // when
     testCase.dispatch(ShowHypertensionDiagnosisRequiredError)

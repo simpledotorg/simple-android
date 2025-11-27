@@ -23,6 +23,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.SelectDiagnosisOrReferralRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectDiagnosisRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisRequiredErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
@@ -188,6 +189,10 @@ class MedicalHistorySummaryView(
 
   fun showDiagnosisRequiredError() {
     SelectDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  fun showDiagnosisOrReferralRequiredError() {
+    SelectDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
   fun showHypertensionDiagnosisRequiredError() {

@@ -584,6 +584,12 @@ class PatientSummaryScreen :
     }
   }
 
+  override fun showDiagnosisOrReferralRequiredError() {
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showDiagnosisOrReferralRequiredError()
+    }
+  }
+
   override fun showHypertensionDiagnosisRequiredError() {
     summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
       medicalHistorySummaryView.showHypertensionDiagnosisRequiredError()

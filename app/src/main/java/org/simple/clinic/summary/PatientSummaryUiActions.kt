@@ -23,6 +23,7 @@ interface PatientSummaryUiActions {
   fun showAddPhoneDialog(patientUuid: UUID)
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier)
   fun showDiagnosisRequiredError()
+  fun showDiagnosisOrReferralRequiredError()
   fun showHypertensionDiagnosisRequiredError()
   fun openPatientContactSheet(patientUuid: UUID)
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)

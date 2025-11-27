@@ -5,6 +5,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.SeeAllItemViewBinding
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
@@ -63,7 +64,9 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
           clock = userClock,
           isNewRegistration = isNewRegistration,
           isEligibleForReassignment = isPatientReassignmentFeatureEnabled &&
-              recentPatient.eligibleForReassignment == Answer.Yes
+              recentPatient.eligibleForReassignment == Answer.Yes,
+          isSuspectedForHypertension = recentPatient.diagnosedWithHypertension == Suspected,
+          isSuspectedForDiabetes = recentPatient.diagnosedWithDiabetes == Suspected
       )
     }
   }
@@ -79,6 +82,8 @@ data class RecentPatientItem(
     val clock: UserClock,
     val isNewRegistration: Boolean,
     val isEligibleForReassignment: Boolean,
+    val isSuspectedForHypertension: Boolean,
+    val isSuspectedForDiabetes: Boolean,
 ) : RecentPatientItemType() {
 
   override fun layoutResId(): Int = R.layout.recent_patient_item_view
@@ -91,7 +96,24 @@ data class RecentPatientItem(
       subject.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    binding.newRegistrationTextView.visibleOrGone(isNewRegistration)
+    val statusText: String? = when {
+      isSuspectedForHypertension && isSuspectedForDiabetes ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_hypertension_and_diabetes)
+
+      isSuspectedForHypertension ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_hypertension)
+
+      isSuspectedForDiabetes ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_diabetes)
+
+      isNewRegistration ->
+        context.getString(R.string.recent_patients_itemview_new_registration)
+
+      else -> null
+    }
+
+    binding.patientStatusTextView.visibleOrGone(statusText != null)
+    binding.patientStatusTextView.text = statusText
     binding.facilityReassignmentView.root.visibleOrGone(isEligibleForReassignment)
     binding.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
     binding.genderImageView.setImageResource(gender.displayIconRes)

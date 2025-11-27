@@ -114,6 +114,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = true,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -125,6 +127,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = false,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -136,6 +140,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = false,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         )
     ))
     verify(ui).showOrHideRecentPatients(isVisible = true)
@@ -210,6 +216,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = true,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -221,6 +229,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = false,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -232,6 +242,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = false,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         ),
         SeeAllItem
     ))
@@ -275,6 +287,8 @@ class LatestRecentPatientsLogicTest {
             clock = userClock,
             isNewRegistration = false,
             isEligibleForReassignment = false,
+            isSuspectedForHypertension = false,
+            isSuspectedForDiabetes = false,
         )
     ))
     verify(ui).showOrHideRecentPatients(true)

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
@@ -28,7 +29,9 @@ data class RecentPatientItem(
     val updatedAt: Instant,
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
-    val isNewRegistration: Boolean
+    val isNewRegistration: Boolean,
+    val isSuspectedForHypertension: Boolean,
+    val isSuspectedForDiabetes: Boolean,
 ) : PagingItemAdapter.Item<UiEvent> {
 
   companion object {
@@ -59,7 +62,9 @@ data class RecentPatientItem(
           updatedAt = recentPatient.updatedAt,
           dateFormatter = dateFormatter,
           clock = userClock,
-          isNewRegistration = isNewRegistration
+          isNewRegistration = isNewRegistration,
+          isSuspectedForHypertension = recentPatient.diagnosedWithHypertension == Suspected,
+          isSuspectedForDiabetes = recentPatient.diagnosedWithDiabetes == Suspected
       )
     }
   }
@@ -74,7 +79,25 @@ data class RecentPatientItem(
       subject.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    binding.newRegistrationTextView.visibleOrGone(isNewRegistration)
+    val statusText: String? = when {
+      isSuspectedForHypertension && isSuspectedForDiabetes ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_hypertension_and_diabetes)
+
+      isSuspectedForHypertension ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_hypertension)
+
+      isSuspectedForDiabetes ->
+        context.getString(R.string.recent_patients_itemview_suspected_for_diabetes)
+
+      isNewRegistration ->
+        context.getString(R.string.recent_patients_itemview_new_registration)
+
+      else -> null
+    }
+
+    binding.patientStatusTextView.visibleOrGone(statusText != null)
+    binding.patientStatusTextView.text = statusText
+
     binding.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
     binding.genderImageView.setImageResource(gender.displayIconRes)
     binding.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))

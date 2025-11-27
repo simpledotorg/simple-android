@@ -31,18 +31,33 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       model.showChangeDiagnosisError -> {
         next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
       }
+
+      model.isScreeningFeatureEnabled && model.facilityDiabetesManagementEnabled &&
+          !model.hasAnsweredBothDiagnosisQuestions -> {
+        dispatch(ShowDiagnosisOrReferralRequiredError)
+      }
+
+      model.isScreeningFeatureEnabled && !model.facilityDiabetesManagementEnabled &&
+          !model.hasAnsweredHypertensionDiagnosis -> {
+        dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+      }
+
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }
+
       !model.facilityDiabetesManagementEnabled && !model.hasAnsweredHypertensionDiagnosis -> {
         dispatch(ShowHypertensionDiagnosisRequiredError)
       }
+
       model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }
+
       model.showOngoingDiabetesTreatment && !model.answeredIsOnDiabetesTreatment -> {
         dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
       }
+
       else -> registerPatient(model)
     }
   }

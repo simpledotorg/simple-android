@@ -39,6 +39,7 @@
 - Handle Screening feature visibility based on feature flag `Screening`
 - Add `hypertensionDiagnosedAt` and `diabetesDiagnosedAt` in `MedicalHistory` table
 - Hide schedule appointment sheet for suspected patients
+- Add `Suspected` flag to recent patient list item
 
 ## 2025.09.09
 

@@ -3,22 +3,19 @@ package org.simple.clinic.recentpatientsview
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
-import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.SeeAllItemViewBinding
 import org.simple.clinic.patient.Answer
-import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
-import org.simple.clinic.patient.displayIconRes
+import org.simple.clinic.recentpatient.RecentPatientUiModel
+import org.simple.clinic.recentpatient.RecentPatientViewBinder
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
-import org.simple.clinic.widgets.visibleOrGone
-import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+
 
 sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
 
@@ -50,52 +47,32 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
         dateFormatter: DateTimeFormatter,
         isPatientReassignmentFeatureEnabled: Boolean,
     ): RecentPatientItem {
-      val patientRegisteredOnDate = recentPatient.patientRecordedAt.toLocalDateAtZone(userClock.zone)
-      val isNewRegistration = today == patientRegisteredOnDate
-
-      return RecentPatientItem(
-          uuid = recentPatient.uuid,
-          name = recentPatient.fullName,
-          age = recentPatient.ageDetails.estimateAge(userClock),
-          gender = recentPatient.gender,
-          updatedAt = recentPatient.updatedAt,
+      val model = RecentPatientUiModel.from(
+          recentPatient = recentPatient,
+          today = today,
+          userClock = userClock,
           dateFormatter = dateFormatter,
-          clock = userClock,
-          isNewRegistration = isNewRegistration,
           isEligibleForReassignment = isPatientReassignmentFeatureEnabled &&
               recentPatient.eligibleForReassignment == Answer.Yes
       )
+
+      return RecentPatientItem(model)
     }
   }
 }
 
 data class RecentPatientItem(
-    val uuid: UUID,
-    val name: String,
-    val age: Int,
-    val gender: Gender,
-    val updatedAt: Instant,
-    val dateFormatter: DateTimeFormatter,
-    val clock: UserClock,
-    val isNewRegistration: Boolean,
-    val isEligibleForReassignment: Boolean,
+    private val model: RecentPatientUiModel
 ) : RecentPatientItemType() {
+
+  val uuid: UUID get() = model.uuid
 
   override fun layoutResId(): Int = R.layout.recent_patient_item_view
 
   override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-    val context = holder.itemView.context
-    val binding = holder.binding as RecentPatientItemViewBinding
-
-    holder.itemView.setOnClickListener {
+    RecentPatientViewBinder.bind(holder, model) {
       subject.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
-
-    binding.newRegistrationTextView.visibleOrGone(isNewRegistration)
-    binding.facilityReassignmentView.root.visibleOrGone(isEligibleForReassignment)
-    binding.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
-    binding.genderImageView.setImageResource(gender.displayIconRes)
-    binding.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))
   }
 }
 

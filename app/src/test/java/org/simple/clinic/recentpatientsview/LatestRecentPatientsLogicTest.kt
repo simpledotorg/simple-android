@@ -1,11 +1,5 @@
 package org.simple.clinic.recentpatientsview
 
-import org.mockito.kotlin.clearInvocations
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -13,6 +7,13 @@ import io.reactivex.subjects.Subject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
@@ -20,12 +21,12 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
+import org.simple.clinic.recentpatient.RecentPatientUiModel
+import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.clinic.TestData
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
@@ -105,37 +106,49 @@ class LatestRecentPatientsLogicTest {
 
     verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
-            uuid = patientUuid1,
-            name = "Ajay Kumar",
-            age = 42,
-            gender = Transgender,
-            updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = true,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid1,
+                name = "Ajay Kumar",
+                age = 42,
+                gender = Transgender,
+                updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = true,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         ),
         RecentPatientItem(
-            uuid = patientUuid2,
-            name = "Vijay Kumar",
-            age = 24,
-            gender = Male,
-            updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = false,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid2,
+                name = "Vijay Kumar",
+                age = 24,
+                gender = Male,
+                updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = false,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         ),
         RecentPatientItem(
-            uuid = patientUuid3,
-            name = "Vinaya Kumari",
-            age = 27,
-            gender = Female,
-            updatedAt = Instant.parse("2019-12-29T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = false,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid3,
+                name = "Vinaya Kumari",
+                age = 27,
+                gender = Female,
+                updatedAt = Instant.parse("2019-12-29T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = false,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         )
     ))
     verify(ui).showOrHideRecentPatients(isVisible = true)
@@ -201,37 +214,49 @@ class LatestRecentPatientsLogicTest {
 
     verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
-            uuid = patientUuid1,
-            name = "Ajay Kumar",
-            age = 42,
-            gender = Transgender,
-            updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = true,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid1,
+                name = "Ajay Kumar",
+                age = 42,
+                gender = Transgender,
+                updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = true,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         ),
         RecentPatientItem(
-            uuid = patientUuid2,
-            name = "Vijay Kumar",
-            age = 24,
-            gender = Male,
-            updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = false,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid2,
+                name = "Vijay Kumar",
+                age = 24,
+                gender = Male,
+                updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = false,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         ),
         RecentPatientItem(
-            uuid = patientUuid3,
-            name = "Vinaya Kumari",
-            age = 27,
-            gender = Female,
-            updatedAt = Instant.parse("2019-12-28T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = false,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid3,
+                name = "Vinaya Kumari",
+                age = 27,
+                gender = Female,
+                updatedAt = Instant.parse("2019-12-28T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = false,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         ),
         SeeAllItem
     ))
@@ -266,15 +291,19 @@ class LatestRecentPatientsLogicTest {
     )))
     verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(
-            uuid = patientUuid,
-            name = "Anish Acharya",
-            age = 2,
-            gender = Male,
-            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-            dateFormatter = dateFormatter,
-            clock = userClock,
-            isNewRegistration = false,
-            isEligibleForReassignment = false,
+            model = RecentPatientUiModel(
+                uuid = patientUuid,
+                name = "Anish Acharya",
+                age = 2,
+                gender = Male,
+                updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+                dateFormatter = dateFormatter,
+                clock = userClock,
+                isNewRegistration = false,
+                isEligibleForReassignment = false,
+                isSuspectedForHypertension = false,
+                isSuspectedForDiabetes = false,
+            )
         )
     ))
     verify(ui).showOrHideRecentPatients(true)

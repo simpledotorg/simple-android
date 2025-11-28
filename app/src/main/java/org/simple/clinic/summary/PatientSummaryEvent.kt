@@ -68,7 +68,8 @@ data class DataForBackClickLoaded(
     val medicalHistory: MedicalHistory,
     val canShowPatientReassignmentWarning: Boolean,
     val prescribedDrugs: List<PrescribedDrug>,
-    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions
+    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+    val isScreeningEnabled: Boolean,
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
@@ -80,6 +81,7 @@ data class DataForDoneClickLoaded(
     val canShowPatientReassignmentWarning: Boolean,
     val prescribedDrugs: List<PrescribedDrug>,
     val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+    val isScreeningEnabled: Boolean,
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()

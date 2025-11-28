@@ -40,6 +40,7 @@
 - Add `hypertensionDiagnosedAt` and `diabetesDiagnosedAt` in `MedicalHistory` table
 - Hide schedule appointment sheet for suspected patients
 - Add `Suspected` flag to recent patient list item
+- Update diagnosis required error dialog to include referral feature
 
 ## 2025.09.09
 

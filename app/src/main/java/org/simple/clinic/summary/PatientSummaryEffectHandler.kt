@@ -22,6 +22,8 @@ import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -74,6 +76,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     private val nonLabBasedCVDRiskCalculator: NonLabBasedCVDRiskCalculator,
     private val labBasedCVDRiskCalculator: LabBasedCVDRiskCalculator,
+    private val feature: Features,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -554,7 +557,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 medicalHistory = medicalHistory,
                 canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning,
                 prescribedDrugs = prescribedDrugs,
-                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get()
+                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get(),
+                isScreeningEnabled = feature.isEnabled(Feature.Screening)
             )
           }
     }
@@ -592,7 +596,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 medicalHistory = medicalHistory,
                 canShowPatientReassignmentWarning = loadDataForDoneClick.canShowPatientReassignmentWarning,
                 prescribedDrugs = prescribedDrugs,
-                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get()
+                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get(),
+                isScreeningEnabled = feature.isEnabled(Feature.Screening)
             )
           }
     }

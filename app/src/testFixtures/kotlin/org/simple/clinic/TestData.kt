@@ -1167,7 +1167,10 @@ object TestData {
           dateOfBirth = null
       ),
       eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
-  ) = RecentPatient(
+      diagnosedWithHypertension: Answer = Answer.Unanswered,
+      diagnosedWithDiabetes: Answer = Answer.Unanswered,
+
+      ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
@@ -1175,6 +1178,8 @@ object TestData {
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt,
       eligibleForReassignment = eligibleForReassignment,
+      diagnosedWithHypertension = diagnosedWithHypertension,
+      diagnosedWithDiabetes = diagnosedWithDiabetes,
   )
 
   fun ongoingLoginEntry(

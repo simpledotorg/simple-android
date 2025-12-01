@@ -333,8 +333,8 @@
   <string name="newmedicalhistory_next">ዝቕፅል</string>
   <string name="newmedicalhistory_yes">እወ</string>
   <string name="newmedicalhistory_no">ኣይፋሉን</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?(ዝድለ)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት ወሲዱ ኔሩ ድዩ? (ኣገዳሲ) </string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት ወሲዱ ኔሩ ድዩ?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>
   <string name="prescribed_drugs_dosage_remove">ምልጋስ </string>
@@ -484,7 +484,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ታሪኽ</string>
-  <string name="medicalhistorysummaryview_diagnosis">ምርመራ (ተደልዩ)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">መድሓኒት ኣይተወሰኸን</string>
@@ -667,6 +666,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">ምርመራ የድሊ</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">ናይ ጸቕጢ-ደምን ናይ ሕማም ሽኮርን ምርመራ ምረጽ</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">ምርመራ ናይ ደም፡ግፊት ክግበረልኩም ይሕረዩ</string>
   <string name="select_diagnosis_error_ok">እሺ</string>
   <string name="sheet_teleconsult_status_title">ቴሌኮንሳልት ተዛዚሙ?</string>
   <string name="sheet_teleconsult_status_yes">እወ</string>
@@ -748,6 +748,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">ሞይቱ/ታ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">መርመራ ትቕይር\'ዶ?</string>
+  <string name="change_diagnosis_message">እቲ ሕሙም ልዑል ጸቕጢ ደም ወይ ሽኮርያ ከም ዘለዎ ብ መርመራ እንተ ደኣ ተረጋጊጹ ብኽብረትካ አወ ዝብል ምልክት ግበር።</string>
+  <string name="change_diagnosis_positive">ምቕያር</string>
+  <string name="change_diagnosis_negative">ሕጂ ኣይኮነን</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይከኣለን</string>

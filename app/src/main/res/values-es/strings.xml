@@ -337,8 +337,8 @@
   <string name="newmedicalhistory_next">Siguiente</string>
   <string name="newmedicalhistory_yes">Sí</string>
   <string name="newmedicalhistory_no">No</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">¿El paciente tomó medicinas para la PA en cualquier momento durante el mes pasado? (requerido)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">¿El paciente tomó medicinas para la diabetes en cualquier momento durante el mes pasado? (requerido)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">¿El paciente tomó medicinas para la PA en cualquier momento durante el mes pasado?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">¿El paciente tomó medicinas para la diabetes en cualquier momento durante el mes pasado?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Ninguno</string>
   <string name="prescribed_drugs_dosage_remove">Eliminar</string>
@@ -488,7 +488,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Historia</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diagnóstico (Requerido)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">No se ha agregado medicamentos</string>
@@ -675,6 +674,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Se requiere un diagnóstico</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Seleccione diagnósticos para hipertensión y diabetes</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Seleccione un diagnóstico para hipertensión</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">¿Teleconsulta completa?</string>
   <string name="sheet_teleconsult_status_yes">Sí</string>
@@ -756,6 +756,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Fallecido</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">¿Cambiar el diagnóstico?</string>
+  <string name="change_diagnosis_message">Si el paciente ha sido diagnosticado alguna vez con hipertensión o diabetes, marque SÍ.</string>
+  <string name="change_diagnosis_positive">CAMBIAR</string>
+  <string name="change_diagnosis_negative">AHORA NO</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">La descarga falló</string>

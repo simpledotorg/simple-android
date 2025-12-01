@@ -70,6 +70,90 @@ class NewMedicalHistoryEffectHandlerTest {
   }
 
   @Test
+  fun `when show select ongoing hypertension treatment error effect is received, then show ongoing hypertension treatment error dialog`() {
+    // when
+    testCase.dispatch(ShowOngoingHypertensionTreatmentError)
+
+    // then
+    verify(uiActions).showOngoingHypertensionTreatmentErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show diagnosis required effect is received, then show diagnosis required error dialog`() {
+    // when
+    testCase.dispatch(ShowDiagnosisRequiredError)
+
+    // then
+    verify(uiActions).showDiagnosisRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show diagnosis or referral required effect is received, then show diagnosis or referral required error dialog`() {
+    // when
+    testCase.dispatch(ShowDiagnosisOrReferralRequiredError)
+
+    // then
+    verify(uiActions).showDiagnosisOrReferralRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show hypertension diagnosis required effect is received, then show hypertension diagnosis required error dialog`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisRequiredError)
+
+    // then
+    verify(uiActions).showHypertensionDiagnosisRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show hypertension diagnosis or referral required effect is received, then show hypertension diagnosis or referral required error dialog`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+
+    // then
+    verify(uiActions).showHypertensionDiagnosisRequiredOrReferralErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show change diagnosis error effect is received, then show change diagnosis error dialog`() {
+    // when
+    testCase.dispatch(ShowChangeDiagnosisErrorDialog)
+
+    // then
+    verify(uiActions).showChangeDiagnosisErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show select ongoing diabetes treatment error effect is received, then show ongoing diabetes treatment error dialog`() {
+    // when
+    testCase.dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
+
+    // then
+    verify(uiActions).showOngoingDiabetesTreatmentErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
   fun `when back is clicked, then go back to previous screen`() {
     // when
     testCase.dispatch(GoBack)

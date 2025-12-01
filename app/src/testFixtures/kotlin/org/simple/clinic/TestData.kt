@@ -762,6 +762,8 @@ object TestData {
       isSmoking: Answer = randomMedicalHistoryAnswer(),
       isUsingSmokelessTobacco: Answer = randomMedicalHistoryAnswer(),
       cholesterol: Float? = 400f,
+      hypertensionDiagnosedAt: Instant? = null,
+      diabetesDiagnosedAt: Instant? = null,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -780,6 +782,8 @@ object TestData {
         isSmoking = isSmoking,
         isUsingSmokelessTobacco = isUsingSmokelessTobacco,
         cholesterol = cholesterol,
+        hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -801,6 +805,8 @@ object TestData {
       isSmoking: Answer = randomMedicalHistoryAnswer(),
       isUsingSmokelessTobacco: Answer = randomMedicalHistoryAnswer(),
       cholesterol: Float? = 400f,
+      hypertensionDiagnosedAt: Instant? = null,
+      diabetesDiagnosedAt: Instant? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -819,6 +825,8 @@ object TestData {
         isSmoking = isSmoking,
         isUsingSmokelessTobacco = isUsingSmokelessTobacco,
         cholesterol = cholesterol,
+        hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)
@@ -1159,7 +1167,10 @@ object TestData {
           dateOfBirth = null
       ),
       eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
-  ) = RecentPatient(
+      diagnosedWithHypertension: Answer = Answer.Unanswered,
+      diagnosedWithDiabetes: Answer = Answer.Unanswered,
+
+      ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
@@ -1167,6 +1178,8 @@ object TestData {
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt,
       eligibleForReassignment = eligibleForReassignment,
+      diagnosedWithHypertension = diagnosedWithHypertension,
+      diagnosedWithDiabetes = diagnosedWithDiabetes,
   )
 
   fun ongoingLoginEntry(

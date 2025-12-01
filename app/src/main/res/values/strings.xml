@@ -391,9 +391,10 @@
   <string name="newmedicalhistory_next">Next</string>
   <string name="newmedicalhistory_yes">Yes</string>
   <string name="newmedicalhistory_no">No</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">Did patient take BP medicines any time in the last month? (Required)</string>
+  <string name="newmedicalhistory_suspected">Refer for diagnosis</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Did patient take BP medicines any time in the last month?</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment_sri_lanka" translatable="false">Is patient starting Simple treatment protocol for Hypertension? (Required)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">Did patient take diabetes medicines any time in the last month? (Required)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Did patient take diabetes medicines any time in the last month?</string>
   <string name="medicalhistory_question_is_smoking">Smokes</string>
   <string name="medicalhistory_question_is_using_smokeless_tobacco">Smokeless tobacco</string>
 
@@ -445,6 +446,9 @@
   <!-- Recent Patients Item View -->
   <string name="recent_patients_itemview_last_seen">Visited:\u0020</string>
   <string name="recent_patients_itemview_new_registration">New registration</string>
+  <string name="recent_patients_itemview_suspected_for_hypertension_and_diabetes">Suspected for hypertension, diabetes</string>
+  <string name="recent_patients_itemview_suspected_for_hypertension">Suspected for hypertension</string>
+  <string name="recent_patients_itemview_suspected_for_diabetes">Suspected for diabetes</string>
 
   <!-- Add ID to Patient: Search Results-->
 
@@ -570,7 +574,8 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">History</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diagnosis (Required)</string>
+  <string name="medicalhistorysummaryview_hypertension_diagnosis">Patient has hypertension?</string>
+  <string name="medicalhistorysummaryview_diabetes_diagnosis">Patient has diabetes?</string>
   <string name="medicalhistorysummaryview_tobacco_use">Tobacco use</string>
 
   <!-- Summary prescriptions view -->
@@ -771,6 +776,9 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Diagnosis Required</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Select a diagnosis for both hypertension and diabetes</string>
+  <string name="select_diagnosis_or_referral_required_error_message">Select a diagnosis or refer for diagnosis for both hypertension and diabetes.</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Select a diagnosis for hypertension</string>
+  <string name="select_diagnosis_error_enter_diagnosis_or_referral_hypertension_message">Select a diagnosis or refer for diagnosis for hypertension</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">Tele-consult complete?</string>
   <string name="sheet_teleconsult_status_yes">Yes</string>
@@ -863,6 +871,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">Died</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Change diagnosis?</string>
+  <string name="change_diagnosis_message">Please mark YES if patient has ever been diagnosed with hypertension or diabetes.</string>
+  <string name="change_diagnosis_positive">CHANGE</string>
+  <string name="change_diagnosis_negative">NOT NOW</string>
 
   <string name="latin_numeric_characters" translatable="false">0123456789</string>
 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ fun MedicalHistoryQuestionItem(
     question: MedicalHistoryQuestion,
     selectedAnswer: Answer?,
     modifier: Modifier = Modifier,
-    showDivider: Boolean = true,
     onSelectionChange: (Answer) -> Unit,
 ) {
   Column(
@@ -47,7 +45,7 @@ fun MedicalHistoryQuestionItem(
 
       MedicalHistoryQuestionOptions(
           selectedAnswer = selectedAnswer,
-          onSelectionChange = { newAnswer ->
+          onAnswerChange = { newAnswer ->
             if (newAnswer == selectedAnswer) {
               onSelectionChange(Answer.Unanswered)
             } else {
@@ -55,10 +53,6 @@ fun MedicalHistoryQuestionItem(
             }
           }
       )
-    }
-
-    if (showDivider) {
-      Divider(color = SimpleTheme.colors.onSurface11)
     }
   }
 }
@@ -71,7 +65,6 @@ private fun MedicalHistoryQuestionItemPreview() {
     MedicalHistoryQuestionItem(
         question = MedicalHistoryQuestion.DiagnosedWithHypertension,
         selectedAnswer = null,
-        showDivider = true,
         onSelectionChange = {
           // no-op
         }
@@ -86,7 +79,6 @@ private fun MedicalHistoryQuestionItemYesPreview() {
     MedicalHistoryQuestionItem(
         question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
         selectedAnswer = Answer.Yes,
-        showDivider = true,
         onSelectionChange = {
           // no-op
         }

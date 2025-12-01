@@ -35,6 +35,8 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = Unanswered,
         isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
+        hypertensionDiagnosedAt = null,
+        diabetesDiagnosedAt = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -77,6 +79,8 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = Unanswered,
         isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
+        hypertensionDiagnosedAt = null,
+        diabetesDiagnosedAt = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -90,6 +94,8 @@ class MedicalHistoryRepository @Inject constructor(
       patientUuid: UUID,
       historyEntry: OngoingMedicalHistoryEntry
   ): Completable {
+    val now = Instant.now(utcClock)
+
     val medicalHistory = MedicalHistory(
         uuid = uuid,
         patientUuid = patientUuid,
@@ -103,17 +109,34 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
+        hypertensionDiagnosedAt = diagnosedAt(historyEntry.diagnosedWithHypertension, now),
+        diabetesDiagnosedAt = diagnosedAt(historyEntry.hasDiabetes, now),
         syncStatus = SyncStatus.PENDING,
-        createdAt = Instant.now(utcClock),
-        updatedAt = Instant.now(utcClock),
+        createdAt = now,
+        updatedAt = now,
         deletedAt = null)
     return Completable.fromAction { save(listOf(medicalHistory)) }
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {
+    val htnDiagnosedAt = diagnosedAt(
+        newAnswer = history.diagnosedWithHypertension,
+        now = updateTime,
+        existingTimestamp = history.hypertensionDiagnosedAt
+    )
+
+    val diabetesDiagnosedAt = diagnosedAt(
+        newAnswer = history.diagnosedWithDiabetes,
+        now = updateTime,
+        existingTimestamp = history.diabetesDiagnosedAt
+    )
+
     val dirtyHistory = history.copy(
+        hypertensionDiagnosedAt = htnDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
         syncStatus = SyncStatus.PENDING,
         updatedAt = updateTime)
+
     dao.save(dirtyHistory)
   }
 
@@ -171,9 +194,19 @@ class MedicalHistoryRepository @Inject constructor(
           isUsingSmokelessTobacco = isUsingSmokelessTobacco,
           cholesterol = cholesterol,
           syncStatus = syncStatus,
+          hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+          diabetesDiagnosedAt = diabetesDiagnosedAt,
           createdAt = createdAt,
           updatedAt = updatedAt,
           deletedAt = deletedAt)
+    }
+  }
+
+  fun diagnosedAt(newAnswer: Answer, now: Instant, existingTimestamp: Instant? = null): Instant? {
+    return if (!newAnswer.isAnsweredWithYesOrNo) {
+      null
+    } else {
+      existingTimestamp ?: now
     }
   }
 

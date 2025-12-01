@@ -18,7 +18,10 @@ import org.simple.clinic.R
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
-import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectDiagnosisOrReferralRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectDiagnosisRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisOrReferralRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisRequiredErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.ui.NewMedicalHistoryUi
@@ -54,9 +57,6 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
   @Inject
   lateinit var features: Features
 
-  @Inject
-  lateinit var newMedicalHistoryEffectHandler: NewMedicalHistoryEffectHandler.Factory
-
   private val viewEffectHandler by unsafeLazy { NewMedicalHistoryViewEffectHandler(this) }
 
   private val viewModel by viewModels<NewMedicalHistoryViewModel>(
@@ -73,7 +73,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
@@ -100,8 +100,43 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     router.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
   }
 
+  override fun showOngoingHypertensionTreatmentErrorDialog() {
+    SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun showOngoingDiabetesTreatmentErrorDialog() {
+    SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
   override fun goBack() {
     router.pop()
+  }
+
+  override fun showDiagnosisRequiredErrorDialog() {
+    SelectDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showDiagnosisOrReferralRequiredErrorDialog() {
+    SelectDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showHypertensionDiagnosisRequiredErrorDialog() {
+    SelectHypertensionDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showHypertensionDiagnosisRequiredOrReferralErrorDialog() {
+    SelectHypertensionDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showChangeDiagnosisErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.change_diagnosis_title))
+        .setMessage(getString(R.string.change_diagnosis_message))
+        .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
+        .setNegativeButton(getString(R.string.change_diagnosis_negative)) { _, _ ->
+          viewModel.dispatch(ChangeDiagnosisNotNowClicked)
+        }
+        .show()
   }
 
   override fun onBackPressed(): Boolean {

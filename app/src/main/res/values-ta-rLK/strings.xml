@@ -333,8 +333,8 @@
   <string name="newmedicalhistory_next">அடுத்தது</string>
   <string name="newmedicalhistory_yes">ஆம்</string>
   <string name="newmedicalhistory_no">இல்லை</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளர் எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா?</string>
   <string name="medicalhistory_question_is_smoking"> சுருட்டு புகை</string>
   <string name="medicalhistory_question_is_using_smokeless_tobacco"> புகையற்ற புகையிலை</string>
 
@@ -487,7 +487,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">வரலாறு</string>
-  <string name="medicalhistorysummaryview_diagnosis">நோய் கண்டறிதல் (தேவை)</string>
   <string name="medicalhistorysummaryview_tobacco_use"> புகையிலை பாவனை</string>
 
   <!-- Summary prescriptions view -->
@@ -670,6 +669,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">நோய் கண்டறிதல் தேவை</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">உயர் இரத்த அழுத்தம் மற்றும் நீரிழிவு ஆகிய இரண்டிற்குமான நோயறிதல் விவரங்களைத் தேர்ந்தெடுக்கவும்</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">உயர் இரத்த அழுத்தத்திற்கான நோயறிதலைத் தேர்ந்தெடுக்கவும்</string>
   <string name="select_diagnosis_error_ok">சரி</string>
   <string name="sheet_teleconsult_status_title">தொலைத்தொடர்பு ஆலோசனை முடிந்ததா?</string>
   <string name="sheet_teleconsult_status_yes">ஆம்</string>
@@ -751,6 +751,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">இறந்துவிட்டார்</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">நோயறிதலை மாற்றவா?</string>
+  <string name="change_diagnosis_message">நோயாளருக்கு எப்போதாவது உயர் இரத்த அழுத்தம் அல்லது நீரிழிவு நோய் இருப்பது கண்டறியப்பட்டால், ஆம் என்று குறிக்கவும்.</string>
+  <string name="change_diagnosis_positive">மாற்று</string>
+  <string name="change_diagnosis_negative">இப்போது வேண்டாம்</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">பதிவிறக்குவது தோல்வி</string>

@@ -333,8 +333,8 @@
   <string name="newmedicalhistory_next">తదుపరి</string>
   <string name="newmedicalhistory_yes">అవును</string>
   <string name="newmedicalhistory_no">కాదు</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా? (అవసరం)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">గత నెలలో రోగి ఎప్పుడైనా మధుమేహం మందులు తీసుకున్నారా? (అవసరం)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">గత నెలలో రోగి ఎప్పుడైనా మధుమేహం మందులు తీసుకున్నారా?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ఏదీ కాదు</string>
   <string name="prescribed_drugs_dosage_remove">తీసివేయి</string>
@@ -484,7 +484,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">చరిత్ర</string>
-  <string name="medicalhistorysummaryview_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">మందులు జోడించలేదు</string>
@@ -666,6 +665,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">రోగ నిర్ధారణ అవసరం</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">రక్తపోటు మరియు మధుమేహం రెండింటి కోసం రోగ నిర్ధారణను ఎంచుకోండి</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">మధుమేహం కోసం రోగ నిదానమును ఎంచుకోండి</string>
   <string name="select_diagnosis_error_ok">సరే</string>
   <string name="sheet_teleconsult_status_title">టెలి-కన్సల్ట్ పూర్తయ్యిందా?</string>
   <string name="sheet_teleconsult_status_yes">అవును</string>
@@ -747,6 +747,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">మరణించారు</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">రోగ నిర్ణయాన్ని మార్చాలా?</string>
+  <string name="change_diagnosis_message">దయచేసి రోగికి ఎప్పుడైన రక్తపోటు లేదా మధుమేహం ఉన్నట్లయితే అవును అని నిర్ధారించండి.</string>
+  <string name="change_diagnosis_positive">మార్చు</string>
+  <string name="change_diagnosis_negative">ఇప్పుడు వద్దు</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">డౌన్‌లోడ్ విఫలమైంది</string>

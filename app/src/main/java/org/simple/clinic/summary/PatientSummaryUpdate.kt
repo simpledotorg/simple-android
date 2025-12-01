@@ -59,7 +59,8 @@ class PatientSummaryUpdate(
           medicalHistory = event.medicalHistory,
           isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning,
           prescribedDrugs = event.prescribedDrugs,
-          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions
+          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions,
+          isScreeningEnabled = event.isScreeningEnabled
       )
 
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
@@ -71,7 +72,8 @@ class PatientSummaryUpdate(
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
           isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning,
           prescribedDrugs = event.prescribedDrugs,
-          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions
+          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions,
+          isScreeningEnabled = event.isScreeningEnabled
       )
 
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
@@ -574,10 +576,18 @@ class PatientSummaryUpdate(
       isPatientEligibleForReassignment: Boolean,
       prescribedDrugs: List<PrescribedDrug>,
       diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+      isScreeningEnabled: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated &&
+        !hasAppointmentChangedSinceScreenCreated &&
+        medicalHistory.suspected.not()
+
+    val showDiagnosisRequiredError =
+        model.isDiabetesManagementEnabled && medicalHistory.diagnosisRecorded.not()
+
+    val showHypertensionDiagnosisRequiredError =
+        model.isDiabetesManagementEnabled.not() && medicalHistory.hypertensionRecorded.not()
+
     val measurementWarningEffect = validateMeasurements(
         isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
         countOfRecordedBloodSugars = countOfRecordedBloodSugars,
@@ -585,13 +595,18 @@ class PatientSummaryUpdate(
         medicalHistory = medicalHistory,
         hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog
     )
+
     val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Yes &&
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
+
     val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Yes &&
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      isScreeningEnabled && showDiagnosisRequiredError -> dispatch(ShowDiagnosisOrReferralRequiredError)
+      !isScreeningEnabled && showDiagnosisRequiredError -> dispatch(ShowDiagnosisRequiredError)
+      isScreeningEnabled && showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+      !isScreeningEnabled && showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisRequiredError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
@@ -611,26 +626,41 @@ class PatientSummaryUpdate(
       isPatientEligibleForReassignment: Boolean,
       prescribedDrugs: List<PrescribedDrug>,
       diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+      isScreeningEnabled: Boolean
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated
+        && !hasAppointmentChangedSinceScreenCreated
+        && medicalHistory.suspected.not()
+
+    val showDiagnosisRequiredError =
+        model.isDiabetesManagementEnabled && medicalHistory.diagnosisRecorded.not()
+
+    val showHypertensionDiagnosisRequiredError =
+        model.isDiabetesManagementEnabled.not() && medicalHistory.hypertensionRecorded.not()
+
     val openIntention = model.openIntention
-    val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
-    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
+    val shouldGoToHomeScreen = openIntention is LinkIdWithPatient ||
+        openIntention is ViewNewPatient ||
+        openIntention is ViewExistingPatientWithTeleconsultLog
+
     val measurementWarningEffect = validateMeasurements(
         isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
         countOfRecordedBloodSugars = countOfRecordedBloodSugars,
         countOfRecordedBloodPressures = countOfRecordedBloodPressures,
         medicalHistory = medicalHistory,
         hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog)
+
     val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Yes &&
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
     val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Yes &&
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
-      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      isScreeningEnabled && showDiagnosisRequiredError -> dispatch(ShowDiagnosisOrReferralRequiredError)
+      !isScreeningEnabled && showDiagnosisRequiredError -> dispatch(ShowDiagnosisRequiredError)
+      isScreeningEnabled && showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+      !isScreeningEnabled && showHypertensionDiagnosisRequiredError -> dispatch(ShowHypertensionDiagnosisRequiredError)
       !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))

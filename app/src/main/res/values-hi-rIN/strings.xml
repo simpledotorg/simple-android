@@ -333,8 +333,8 @@
   <string name="newmedicalhistory_next">आगे</string>
   <string name="newmedicalhistory_yes">हाँ</string>
   <string name="newmedicalhistory_no">नहीं</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं? (आवश्यक है)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">क्या रोगी ने पिछले महीने में कभी भी मधुमेह की दवाएं ली हैं? (आवश्यक है)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">क्या रोगी ने पिछले महीने में कभी भी मधुमेह की दवाएं ली हैं?</string>
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">कोई नहीं</string>
   <string name="prescribed_drugs_dosage_remove">हटाएं</string>
@@ -484,7 +484,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">इतिहास</string>
-  <string name="medicalhistorysummaryview_diagnosis">निदान (आवश्यक)</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">कोई दवाएं जोड़ी नहीं गईं</string>
@@ -667,6 +666,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">निदान आवश्यक</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">उच्चरक्तचाप और मधुमेह दोनों के लिए एक निदान चुनें</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">उच्च रक्तचाप के निदान का चयन करें</string>
   <string name="select_diagnosis_error_ok">ठीक है</string>
   <string name="sheet_teleconsult_status_title">टेली-कंसल्ट पूरा हुआ?</string>
   <string name="sheet_teleconsult_status_yes">हाँ</string>
@@ -748,6 +748,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">जीवित नहीं</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">निदान का तरीका बदलें?</string>
+  <string name="change_diagnosis_message">अगर रोगी को कभी उच्च रक्तचाप या मधुमेह का निदान किया गया है, तो कृपया हाँ चिह्नित करें।</string>
+  <string name="change_diagnosis_positive">बदलें</string>
+  <string name="change_diagnosis_negative">अभी नहीं</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">डाउनलोड विफल हुआ</string>

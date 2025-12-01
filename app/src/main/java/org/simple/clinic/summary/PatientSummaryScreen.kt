@@ -577,10 +577,28 @@ class PatientSummaryScreen :
     ))
   }
 
-  override fun showDiagnosisError() {
+  override fun showDiagnosisRequiredError() {
     // Diagnosis error message could be obscured, scroll until the entire view is visible
     summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
-      medicalHistorySummaryView.showDiagnosisError()
+      medicalHistorySummaryView.showDiagnosisRequiredError()
+    }
+  }
+
+  override fun showDiagnosisOrReferralRequiredError() {
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showDiagnosisOrReferralRequiredError()
+    }
+  }
+
+  override fun showHypertensionDiagnosisRequiredError() {
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showHypertensionDiagnosisRequiredError()
+    }
+  }
+
+  override fun showHypertensionDiagnosisOrReferralRequiredError() {
+    summaryViewsContainer.scrollToChild(medicalHistorySummaryView) {
+      medicalHistorySummaryView.showHypertensionDiagnosisOrReferralRequiredError()
     }
   }
 

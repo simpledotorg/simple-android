@@ -52,6 +52,8 @@ class MedicalHistorySync @Inject constructor(
                 isSmoking = isSmoking,
                 isUsingSmokelessTobacco = isUsingSmokelessTobacco,
                 cholesterol = cholesterol,
+                hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+                diabetesDiagnosedAt = diabetesDiagnosedAt,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt)

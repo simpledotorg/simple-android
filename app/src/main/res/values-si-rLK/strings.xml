@@ -333,8 +333,8 @@
   <string name="newmedicalhistory_next">ඊළඟ</string>
   <string name="newmedicalhistory_yes">ඔව්</string>
   <string name="newmedicalhistory_no">නැත</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
-  <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද?</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද?</string>
   <string name="medicalhistory_question_is_smoking">දුම් පානය කරයි</string>
   <string name="medicalhistory_question_is_using_smokeless_tobacco"> දුම රහිත දුම්කොළ ආශ්‍රිත නිෂ්පාදන</string>
 
@@ -487,7 +487,6 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">ඉතිහාසය</string>
-  <string name="medicalhistorysummaryview_diagnosis">රෝග නිශ්චය (අවශ්‍යයි)</string>
   <string name="medicalhistorysummaryview_tobacco_use">දුම්කොළ ආශ්‍රිත නිෂ්පාදන භාවිතය</string>
 
   <!-- Summary prescriptions view -->
@@ -671,6 +670,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">රෝග නිශ්චය අවශ්‍යයි</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">අධි රුධිර පීඩනය සහ දියවැඩියාව යන රෝග දෙකම සඳහා රෝග විනිශ්චයක් තෝරා ගන්න</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">අධි රුධිර පීඩනය සඳහා රෝග විනිශ්චයක් තෝරන්න</string>
   <string name="select_diagnosis_error_ok">හරි</string>
   <string name="sheet_teleconsult_status_title">ටෙලි-උපදේශනය සම්පූර්ණයි?</string>
   <string name="sheet_teleconsult_status_yes">ඔව්</string>
@@ -752,6 +752,12 @@
 
   <!-- Patient status view -->
   <string name="patient_status_died">මරණය සිදු විය</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">රෝග නිශ්චය වෙනස් කරන්න ද?</string>
+  <string name="change_diagnosis_message">රෝගියාට කිසියම් දිනක අධි රුධිර පීඩනය හෝ දියවැඩියාව ඇති බවට නිශ්චය කර ඇත්නම් ඔව් ලෙස සලකුණු කරන්න.</string>
+  <string name="change_diagnosis_positive">වෙනස් කරන්න</string>
+  <string name="change_diagnosis_negative">දැන් නොවේ</string>
 
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>

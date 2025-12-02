@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
@@ -109,8 +110,18 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
-        hypertensionDiagnosedAt = diagnosedAt(historyEntry.diagnosedWithHypertension, now),
-        diabetesDiagnosedAt = diagnosedAt(historyEntry.hasDiabetes, now),
+        hypertensionDiagnosedAt = diagnosedAt(
+            existingAnswer = null,
+            newAnswer = historyEntry.diagnosedWithHypertension,
+            now = now,
+            existingTimestamp = null
+        ),
+        diabetesDiagnosedAt = diagnosedAt(
+            existingAnswer = null,
+            newAnswer = historyEntry.hasDiabetes,
+            now = now,
+            existingTimestamp = null
+        ),
         syncStatus = SyncStatus.PENDING,
         createdAt = now,
         updatedAt = now,
@@ -119,16 +130,20 @@ class MedicalHistoryRepository @Inject constructor(
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {
+    val existing = dao.getOne(history.uuid)
+
     val htnDiagnosedAt = diagnosedAt(
+        existingAnswer = existing?.diagnosedWithHypertension,
         newAnswer = history.diagnosedWithHypertension,
         now = updateTime,
-        existingTimestamp = history.hypertensionDiagnosedAt
+        existingTimestamp = existing?.hypertensionDiagnosedAt
     )
 
     val diabetesDiagnosedAt = diagnosedAt(
+        existingAnswer = existing?.diagnosedWithDiabetes,
         newAnswer = history.diagnosedWithDiabetes,
         now = updateTime,
-        existingTimestamp = history.diabetesDiagnosedAt
+        existingTimestamp = existing?.diabetesDiagnosedAt
     )
 
     val dirtyHistory = history.copy(
@@ -202,14 +217,6 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  fun diagnosedAt(newAnswer: Answer, now: Instant, existingTimestamp: Instant? = null): Instant? {
-    return if (!newAnswer.isAnsweredWithYesOrNo) {
-      null
-    } else {
-      existingTimestamp ?: now
-    }
-  }
-
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .countWithStatus(SyncStatus.PENDING)
@@ -224,4 +231,21 @@ class MedicalHistoryRepository @Inject constructor(
             offset = offset
         )
   }
+}
+
+fun diagnosedAt(
+    existingAnswer: Answer?,
+    newAnswer: Answer,
+    existingTimestamp: Instant?,
+    now: Instant
+): Instant? {
+  if (newAnswer == Suspected) return null
+
+  if (existingTimestamp != null) return existingTimestamp
+
+  if (existingAnswer == null || !existingAnswer.isAnsweredWithYesOrNo) {
+    return if (newAnswer.isAnsweredWithYesOrNo) now else null
+  }
+
+  return null
 }

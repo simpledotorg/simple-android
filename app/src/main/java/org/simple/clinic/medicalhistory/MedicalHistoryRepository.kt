@@ -110,13 +110,13 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
-        hypertensionDiagnosedAt = diagnosedAtOnlyIfAnswerChanged(
+        hypertensionDiagnosedAt = diagnosedAt(
             existingAnswer = null,
             newAnswer = historyEntry.diagnosedWithHypertension,
             now = now,
             existingTimestamp = null
         ),
-        diabetesDiagnosedAt = diagnosedAtOnlyIfAnswerChanged(
+        diabetesDiagnosedAt = diagnosedAt(
             existingAnswer = null,
             newAnswer = historyEntry.hasDiabetes,
             now = now,
@@ -132,14 +132,14 @@ class MedicalHistoryRepository @Inject constructor(
   fun save(history: MedicalHistory, updateTime: Instant) {
     val existing = dao.getOne(history.uuid)
 
-    val htnDiagnosedAt = diagnosedAtOnlyIfAnswerChanged(
+    val htnDiagnosedAt = diagnosedAt(
         existingAnswer = existing?.diagnosedWithHypertension,
         newAnswer = history.diagnosedWithHypertension,
         now = updateTime,
         existingTimestamp = existing?.hypertensionDiagnosedAt
     )
 
-    val diabetesDiagnosedAt = diagnosedAtOnlyIfAnswerChanged(
+    val diabetesDiagnosedAt = diagnosedAt(
         existingAnswer = existing?.diagnosedWithDiabetes,
         newAnswer = history.diagnosedWithDiabetes,
         now = updateTime,
@@ -217,23 +217,6 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  private fun diagnosedAtOnlyIfAnswerChanged(
-      existingAnswer: Answer?,
-      newAnswer: Answer,
-      existingTimestamp: Instant?,
-      now: Instant
-  ): Instant? {
-    if (newAnswer == Suspected) return null
-
-    if (existingTimestamp != null) return existingTimestamp
-
-    if (existingAnswer == null || !existingAnswer.isAnsweredWithYesOrNo) {
-      return if (newAnswer.isAnsweredWithYesOrNo) now else null
-    }
-
-    return null
-  }
-
   override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .countWithStatus(SyncStatus.PENDING)
@@ -248,4 +231,21 @@ class MedicalHistoryRepository @Inject constructor(
             offset = offset
         )
   }
+}
+
+fun diagnosedAt(
+    existingAnswer: Answer?,
+    newAnswer: Answer,
+    existingTimestamp: Instant?,
+    now: Instant
+): Instant? {
+  if (newAnswer == Suspected) return null
+
+  if (existingTimestamp != null) return existingTimestamp
+
+  if (existingAnswer == null || !existingAnswer.isAnsweredWithYesOrNo) {
+    return if (newAnswer.isAnsweredWithYesOrNo) now else null
+  }
+
+  return null
 }

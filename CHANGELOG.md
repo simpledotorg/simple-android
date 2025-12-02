@@ -31,6 +31,7 @@
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.1.0
 - Bump Mockito Kotlin to v6.0.0
+- Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 
 ### Changes
 

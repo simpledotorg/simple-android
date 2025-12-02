@@ -52,6 +52,12 @@ data class MedicalHistoryPayload(
     @Json(name = "cholesterol")
     val cholesterol: Float?,
 
+    @Json(name = "htn_diagnosed_at")
+    val hypertensionDiagnosedAt: Instant?,
+
+    @Json(name = "dm_diagnosed_at")
+    val diabetesDiagnosedAt: Instant?,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 

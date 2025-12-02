@@ -94,6 +94,7 @@ fun NewMedicalHistoryUi(
             treatmentQuestion = IsOnHypertensionTreatment(model.country.isoCountryCode),
             treatmentAnswer = model.ongoingMedicalHistoryEntry.isOnHypertensionTreatment,
             showTreatmentQuestion = model.showOngoingHypertensionTreatment,
+            isScreeningFeatureEnabled = model.isScreeningFeatureEnabled,
             onSelectionChange = onSelectionChange
         )
         if (showDiabetesDiagnosis) {
@@ -104,6 +105,7 @@ fun NewMedicalHistoryUi(
               treatmentQuestion = IsOnDiabetesTreatment,
               treatmentAnswer = model.ongoingMedicalHistoryEntry.isOnDiabetesTreatment,
               showTreatmentQuestion = model.showOngoingDiabetesTreatment,
+              isScreeningFeatureEnabled = model.isScreeningFeatureEnabled,
               onSelectionChange = onSelectionChange
           )
         }
@@ -141,7 +143,8 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     nextButtonState = null,
     hasShownChangeDiagnosisError = true,
     showIsSmokingQuestion = true,
-    showSmokelessTobaccoQuestion = true
+    showSmokelessTobaccoQuestion = true,
+    isScreeningFeatureEnabled = true
 )
 
 @Preview

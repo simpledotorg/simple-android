@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
@@ -35,6 +36,8 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = Unanswered,
         isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
+        hypertensionDiagnosedAt = null,
+        diabetesDiagnosedAt = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -77,6 +80,8 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = Unanswered,
         isUsingSmokelessTobacco = Unanswered,
         cholesterol = null,
+        hypertensionDiagnosedAt = null,
+        diabetesDiagnosedAt = null,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
@@ -90,6 +95,8 @@ class MedicalHistoryRepository @Inject constructor(
       patientUuid: UUID,
       historyEntry: OngoingMedicalHistoryEntry
   ): Completable {
+    val now = Instant.now(utcClock)
+
     val medicalHistory = MedicalHistory(
         uuid = uuid,
         patientUuid = patientUuid,
@@ -103,17 +110,48 @@ class MedicalHistoryRepository @Inject constructor(
         isSmoking = historyEntry.isSmoking,
         isUsingSmokelessTobacco = historyEntry.isUsingSmokelessTobacco,
         cholesterol = null,
+        hypertensionDiagnosedAt = diagnosedAt(
+            existingAnswer = null,
+            newAnswer = historyEntry.diagnosedWithHypertension,
+            now = now,
+            existingTimestamp = null
+        ),
+        diabetesDiagnosedAt = diagnosedAt(
+            existingAnswer = null,
+            newAnswer = historyEntry.hasDiabetes,
+            now = now,
+            existingTimestamp = null
+        ),
         syncStatus = SyncStatus.PENDING,
-        createdAt = Instant.now(utcClock),
-        updatedAt = Instant.now(utcClock),
+        createdAt = now,
+        updatedAt = now,
         deletedAt = null)
     return Completable.fromAction { save(listOf(medicalHistory)) }
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {
+    val existing = dao.getOne(history.uuid)
+
+    val htnDiagnosedAt = diagnosedAt(
+        existingAnswer = existing?.diagnosedWithHypertension,
+        newAnswer = history.diagnosedWithHypertension,
+        now = updateTime,
+        existingTimestamp = existing?.hypertensionDiagnosedAt
+    )
+
+    val diabetesDiagnosedAt = diagnosedAt(
+        existingAnswer = existing?.diagnosedWithDiabetes,
+        newAnswer = history.diagnosedWithDiabetes,
+        now = updateTime,
+        existingTimestamp = existing?.diabetesDiagnosedAt
+    )
+
     val dirtyHistory = history.copy(
+        hypertensionDiagnosedAt = htnDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
         syncStatus = SyncStatus.PENDING,
         updatedAt = updateTime)
+
     dao.save(dirtyHistory)
   }
 
@@ -171,6 +209,8 @@ class MedicalHistoryRepository @Inject constructor(
           isUsingSmokelessTobacco = isUsingSmokelessTobacco,
           cholesterol = cholesterol,
           syncStatus = syncStatus,
+          hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+          diabetesDiagnosedAt = diabetesDiagnosedAt,
           createdAt = createdAt,
           updatedAt = updatedAt,
           deletedAt = deletedAt)
@@ -191,4 +231,21 @@ class MedicalHistoryRepository @Inject constructor(
             offset = offset
         )
   }
+}
+
+fun diagnosedAt(
+    existingAnswer: Answer?,
+    newAnswer: Answer,
+    existingTimestamp: Instant?,
+    now: Instant
+): Instant? {
+  if (newAnswer == Suspected) return null
+
+  if (existingTimestamp != null) return existingTimestamp
+
+  if (existingAnswer == null || !existingAnswer.isAnsweredWithYesOrNo) {
+    return if (newAnswer.isAnsweredWithYesOrNo) now else null
+  }
+
+  return null
 }

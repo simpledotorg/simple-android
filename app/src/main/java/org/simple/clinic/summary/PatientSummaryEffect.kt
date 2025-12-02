@@ -109,9 +109,13 @@ data class ShowScheduleAppointmentSheet(
     val currentFacility: Facility
 ) : PatientSummaryViewEffect()
 
-data class ShowDiagnosisError(
-    val diabetesManagementEnabled: Boolean
-) : PatientSummaryViewEffect()
+data object ShowDiagnosisRequiredError: PatientSummaryViewEffect()
+
+data object ShowDiagnosisOrReferralRequiredError: PatientSummaryViewEffect()
+
+data object ShowHypertensionDiagnosisRequiredError : PatientSummaryViewEffect()
+
+data object ShowHypertensionDiagnosisOrReferralRequiredError : PatientSummaryViewEffect()
 
 data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()
 

@@ -3,6 +3,7 @@
 ## Next Release
 
 ### Internal
+
 - Bump Sentry to v8.22.0
 - Bump AndroidX Lifecycle to v2.9.4
 - Bump AndroidX Test Runner to v1.7.0
@@ -30,15 +31,23 @@
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.1.0
 - Bump Mockito Kotlin to v6.0.0
+- Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
+- Bump asm to v9.9
 
 ### Changes
 
 - Hide next button when registration is going
 - Add Suspected option to hypertension and diabetes questions
+- Handle Screening feature visibility based on feature flag `Screening`
+- Add `hypertensionDiagnosedAt` and `diabetesDiagnosedAt` in `MedicalHistory` table
+- Hide schedule appointment sheet for suspected patients
+- Add `Suspected` flag to recent patient list item
+- Update diagnosis required error dialog to include referral feature
 
 ## 2025.09.09
 
 ### Internal
+
 - Bump AGP to v8.13.0
 - Bump Lint to v31.13.0
 - Bump dagger to v2.57.1

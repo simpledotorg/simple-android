@@ -23,7 +23,10 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectDiagnosisOrReferralRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectDiagnosisRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisOrReferralRequiredErrorDialog
+import org.simple.clinic.medicalhistory.SelectHypertensionDiagnosisRequiredErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
@@ -122,7 +125,8 @@ class MedicalHistorySummaryView(
                 isUsingSmokelessTobaccoAnswer = medicalHistory?.isUsingSmokelessTobacco,
                 diabetesManagementEnabled = diabetesManagementEnabled,
                 showSmokerQuestion = showSmokerQuestion,
-                showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
+                showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
+                isScreeningFeatureEnabled = features.isEnabled(Feature.Screening)
             ) { question, answer ->
               answerToggled(question, answer)
             }
@@ -184,8 +188,20 @@ class MedicalHistorySummaryView(
     modelUpdateCallback = callback
   }
 
-  fun showDiagnosisError(diabetesManagementEnabled: Boolean) {
-    SelectDiagnosisErrorDialog.show(activity.supportFragmentManager, diabetesManagementEnabled)
+  fun showDiagnosisRequiredError() {
+    SelectDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  fun showDiagnosisOrReferralRequiredError() {
+    SelectDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  fun showHypertensionDiagnosisRequiredError() {
+    SelectHypertensionDiagnosisRequiredErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  fun showHypertensionDiagnosisOrReferralRequiredError() {
+    SelectHypertensionDiagnosisOrReferralRequiredErrorDialog.show(activity.supportFragmentManager)
   }
 
   private fun answerToggled(question: MedicalHistoryQuestion, answer: Answer) {

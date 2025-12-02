@@ -64,6 +64,6 @@ sealed class Answer(
     fun toJson(answer: Answer): String? = TypeAdapter.fromEnum(answer)
   }
 
-  val isAnswered: Boolean
+  val isAnsweredWithYesOrNo: Boolean
     get() = this is Yes || this is No
 }

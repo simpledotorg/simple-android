@@ -27,22 +27,41 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
   }
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
+    val screening = model.isScreeningFeatureEnabled
+    val diabetesEnabled = model.facilityDiabetesManagementEnabled
+
     return when {
+
       model.showChangeDiagnosisError -> {
         next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
       }
-      model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
+
+      screening && diabetesEnabled &&
+          !model.hasAnsweredBothDiagnosisQuestions -> {
+        dispatch(ShowDiagnosisOrReferralRequiredError)
+      }
+
+      screening && !diabetesEnabled &&
+          !model.hasAnsweredHypertensionDiagnosis -> {
+        dispatch(ShowHypertensionDiagnosisOrReferralRequiredError)
+      }
+
+      !screening && diabetesEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }
-      !model.facilityDiabetesManagementEnabled && !model.hasAnsweredHypertensionDiagnosis -> {
+
+      !screening && !diabetesEnabled && !model.hasAnsweredHypertensionDiagnosis -> {
         dispatch(ShowHypertensionDiagnosisRequiredError)
       }
+
       model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }
+
       model.showOngoingDiabetesTreatment && !model.answeredIsOnDiabetesTreatment -> {
         dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
       }
+
       else -> registerPatient(model)
     }
   }

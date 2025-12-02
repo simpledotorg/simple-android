@@ -31,18 +31,17 @@
       android:layout_marginBottom="@dimen/spacing_4"
       android:textAppearance="?attr/textAppearanceSubtitle1"
       android:textColor="?attr/colorPrimary"
-      app:layout_constraintBottom_toTopOf="@id/newRegistrationTextView"
+      app:layout_constraintBottom_toTopOf="@id/patientStatusTextView"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/genderImageView"
       app:layout_constraintTop_toTopOf="@+id/genderImageView"
       tools:text="Anish Acharya, 43" />
 
     <TextView
-      android:id="@+id/newRegistrationTextView"
+      android:id="@+id/patientStatusTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_12"
-      android:text="@string/recent_patients_itemview_new_registration"
       android:textAppearance="?attr/textAppearanceBody2"
       android:textColor="?attr/colorPrimary"
       android:theme="@style/ThemeOverlay.Simple.Green1Primary"
@@ -62,7 +61,7 @@
       app:layout_constraintBottom_toTopOf="@id/lastSeenLabelTextView"
       app:layout_constraintEnd_toEndOf="@id/patientNameTextView"
       app:layout_constraintStart_toStartOf="@id/patientNameTextView"
-      app:layout_constraintTop_toBottomOf="@id/newRegistrationTextView" />
+      app:layout_constraintTop_toBottomOf="@id/patientStatusTextView" />
 
     <TextView
       android:id="@+id/lastSeenLabelTextView"

@@ -29,7 +29,15 @@ class NewMedicalHistoryUpdateTest {
   private val defaultModel = NewMedicalHistoryModel.default(
       country = country,
       showIsSmokingQuestion = false,
-      showSmokelessTobaccoQuestion = false
+      showSmokelessTobaccoQuestion = false,
+      isScreeningFeatureEnabled = false,
+  )
+
+  private val defaultScreeningModel = NewMedicalHistoryModel.default(
+      country = country,
+      showIsSmokingQuestion = false,
+      showSmokelessTobaccoQuestion = false,
+      isScreeningFeatureEnabled = true,
   )
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
@@ -62,6 +70,82 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when screening and diabetes management is enabled and the user clicks save, show the diagnosis or referral required error if hypertension diagnosis is not selected`() {
+    val model = defaultScreeningModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DiagnosedWithHypertension, Unanswered)
+        .answerChanged(DiagnosedWithDiabetes, No)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowDiagnosisOrReferralRequiredError)
+            )
+        )
+  }
+
+  @Test
+  fun `when screening and diabetes management is enabled and the user clicks save, show the diagnosis or referral required error if diagnosis diagnosis is not selected`() {
+    val model = defaultScreeningModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DiagnosedWithHypertension, No)
+        .answerChanged(DiagnosedWithDiabetes, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowDiagnosisOrReferralRequiredError)
+            )
+        )
+  }
+
+  @Test
+  fun `when screening and diabetes management is enabled and the user clicks save, show the diagnosis or referral required error if both diagnosis is not selected`() {
+    val model = defaultScreeningModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DiagnosedWithHypertension, Unanswered)
+        .answerChanged(DiagnosedWithDiabetes, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowDiagnosisOrReferralRequiredError)
+            )
+        )
+  }
+
+  @Test
+  fun `when screening is enabled and diabetes management is disabled and the user clicks save, show diagnosis or referral required error if hypertension diagnosis is not selected`() {
+    val model = defaultScreeningModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .answerChanged(DiagnosedWithHypertension, Unanswered)
+        .answerChanged(DiagnosedWithDiabetes, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowHypertensionDiagnosisOrReferralRequiredError)
             )
         )
   }
@@ -142,6 +226,7 @@ class NewMedicalHistoryUpdateTest {
             )
         )
   }
+
 
   @Test
   fun `when diabetes management is disabled and the user clicks save, do not show the diagnosis required error if hypertension diagnosis is answered`() {
@@ -231,7 +316,8 @@ class NewMedicalHistoryUpdateTest {
     val model = NewMedicalHistoryModel.default(
         country = bangladesh,
         showIsSmokingQuestion = false,
-        showSmokelessTobaccoQuestion = false
+        showSmokelessTobaccoQuestion = false,
+        isScreeningFeatureEnabled = true
     )
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)

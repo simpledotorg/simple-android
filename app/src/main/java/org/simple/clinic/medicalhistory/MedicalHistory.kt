@@ -13,6 +13,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.medicalhistory.Answer.Suspected
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
@@ -63,6 +64,10 @@ data class MedicalHistory(
     @ColumnInfo(name = "cholesterol_value")
     val cholesterol: Float?,
 
+    val hypertensionDiagnosedAt: Instant?,
+
+    val diabetesDiagnosedAt: Instant?,
+
     val syncStatus: SyncStatus,
 
     val createdAt: Instant,
@@ -87,6 +92,9 @@ data class MedicalHistory(
 
   val diagnosisRecorded: Boolean
     get() = hypertensionRecorded && diabetesRecorded
+
+  val suspected: Boolean
+    get() = diagnosedWithHypertension == Suspected && diagnosedWithDiabetes == Suspected
 
   fun answered(question: MedicalHistoryQuestion, answer: Answer): MedicalHistory {
     return when (question) {

@@ -17,6 +17,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -32,6 +34,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionT
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.util.NoOpRemoteConfigService
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -82,6 +86,13 @@ class MedicalHistorySummaryLogicTest {
   private val events = PublishSubject.create<UiEvent>()
 
   private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
+
+  private val features = Features(
+      remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+      overrides = mapOf(
+          Feature.Screening to true,
+      )
+  )
 
   @After
   fun tearDown() {
@@ -376,7 +387,8 @@ class MedicalHistorySummaryLogicTest {
         medicalHistoryRepository = medicalHistoryRepository,
         clock = clock,
         currentFacility = { facility },
-        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
+        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
+        features = features
     )
 
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)

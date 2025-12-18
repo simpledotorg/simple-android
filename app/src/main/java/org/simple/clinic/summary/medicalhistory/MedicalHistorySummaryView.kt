@@ -129,7 +129,8 @@ class MedicalHistorySummaryView(
                 diabetesManagementEnabled = diabetesManagementEnabled,
                 showSmokerQuestion = showSmokerQuestion,
                 showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
-                isScreeningFeatureEnabled = features.isEnabled(Feature.Screening)
+                showHypertensionSuspectedOption = showHypertensionSuspectedOption,
+                showDiabetesSuspectedOption = showDiabetesSuspectedOption
             ) { question, answer ->
               answerToggled(question, answer)
             }

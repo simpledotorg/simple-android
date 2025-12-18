@@ -8,7 +8,6 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
@@ -70,18 +69,15 @@ class MedicalHistorySummaryEffectHandler @Inject constructor(
             val medicalHistory = effect.medicalHistory
 
             val isScreeningFeatureEnabled = features.isEnabled(Feature.Screening)
-            val isDataSynced = medicalHistory.syncStatus == SyncStatus.DONE
 
             val showHypertensionSuspectedOption = shouldShowSuspectedOption(
                 isScreeningFeatureEnabled,
                 medicalHistory.diagnosedWithHypertension.isAnsweredWithYesOrNo,
-                isDataSynced
             )
 
             val showDiabetesSuspectedOption = shouldShowSuspectedOption(
                 isScreeningFeatureEnabled,
                 medicalHistory.diagnosedWithDiabetes.isAnsweredWithYesOrNo,
-                isDataSynced
             )
 
             SuspectedOptionVisibilityDetermined(
@@ -95,8 +91,7 @@ class MedicalHistorySummaryEffectHandler @Inject constructor(
   private fun shouldShowSuspectedOption(
       isScreeningEnabled: Boolean,
       hasAnswered: Boolean,
-      isSynced: Boolean
   ): Boolean {
-    return isScreeningEnabled && !(hasAnswered && isSynced)
+    return isScreeningEnabled && !hasAnswered
   }
 }

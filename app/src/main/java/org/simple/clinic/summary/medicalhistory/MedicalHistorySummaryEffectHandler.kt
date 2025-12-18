@@ -84,7 +84,7 @@ class MedicalHistorySummaryEffectHandler @Inject constructor(
                 isDataSynced
             )
 
-            SuspectedDiagnosisVisibilityDetermined(
+            SuspectedOptionVisibilityDetermined(
                 showHypertensionSuspectedOption = showHypertensionSuspectedOption,
                 showDiabetesSuspectedOption = showDiabetesSuspectedOption
             )

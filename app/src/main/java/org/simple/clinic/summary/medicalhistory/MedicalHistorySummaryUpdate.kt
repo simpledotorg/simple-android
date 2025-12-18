@@ -14,6 +14,12 @@ class MedicalHistorySummaryUpdate : Update<MedicalHistorySummaryModel, MedicalHi
       is MedicalHistoryLoaded -> next(model.medicalHistoryLoaded(event.medicalHistory))
       is SummaryMedicalHistoryAnswerToggled -> medicalHistoryAnswerToggled(model, event)
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is SuspectedOptionVisibilityDetermined -> next(
+          model.diagnosisSuspectedOptionVisibilityLoaded(
+              event.showHypertensionSuspectedOption,
+              event.showDiabetesSuspectedOption
+          )
+      )
     }
   }
 

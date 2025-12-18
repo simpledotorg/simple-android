@@ -79,7 +79,7 @@ class MedicalHistorySummaryEffectHandlerTest {
     testCase.dispatch(DetermineSuspectedOptionVisibility(medicalHistory = medicalHistory))
 
     // then
-    testCase.assertOutgoingEvents(SuspectedDiagnosisVisibilityDetermined(
+    testCase.assertOutgoingEvents(SuspectedOptionVisibilityDetermined(
         showHypertensionSuspectedOption = false,
         showDiabetesSuspectedOption = true
     ))

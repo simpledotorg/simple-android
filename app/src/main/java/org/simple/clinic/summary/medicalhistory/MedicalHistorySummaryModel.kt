@@ -18,6 +18,7 @@ data class MedicalHistorySummaryModel(
     val showSmokelessTobaccoQuestion: Boolean,
     val showHypertensionSuspectedOption: Boolean,
     val showDiabetesSuspectedOption: Boolean,
+    val hasDeterminedSuspectedOptionVisibility: Boolean
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -31,6 +32,7 @@ data class MedicalHistorySummaryModel(
         showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
         showHypertensionSuspectedOption = false,
         showDiabetesSuspectedOption = false,
+        hasDeterminedSuspectedOptionVisibility = false,
     )
   }
 
@@ -60,6 +62,10 @@ data class MedicalHistorySummaryModel(
       showHypertensionSuspectedOption: Boolean,
       showDiabetesSuspectedOption: Boolean
   ): MedicalHistorySummaryModel {
-    return copy(showHypertensionSuspectedOption = showHypertensionSuspectedOption, showDiabetesSuspectedOption = showDiabetesSuspectedOption)
+    return copy(
+        showHypertensionSuspectedOption = showHypertensionSuspectedOption,
+        showDiabetesSuspectedOption = showDiabetesSuspectedOption,
+        hasDeterminedSuspectedOptionVisibility = true
+    )
   }
 }

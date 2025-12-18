@@ -45,6 +45,45 @@ class MedicalHistorySummaryUpdateTest {
   }
 
   @Test
+  fun `when medical history is loaded, then update the model and determine the suspected option visibility`() {
+    val patientUuid = UUID.fromString("b2593f11-158f-45da-9f61-25c9024f8be7")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("574b45e4-afe5-4303-9c98-57c297f0a072"),
+        patientUuid = patientUuid,
+    )
+    val defaultModel = MedicalHistorySummaryModel
+        .create(patientUuid, showIsSmokingQuestion = true, showSmokelessTobaccoQuestion = true)
+
+    UpdateSpec(MedicalHistorySummaryUpdate())
+        .given(defaultModel)
+        .whenEvent(MedicalHistoryLoaded(medicalHistory))
+        .then(assertThatNext(
+            hasModel(defaultModel.medicalHistoryLoaded(medicalHistory)),
+            hasEffects(DetermineSuspectedOptionVisibility(medicalHistory))
+        ))
+  }
+
+  @Test
+  fun `when medical history is loaded and suspected option visibility is already determined, then update the model`() {
+    val patientUuid = UUID.fromString("b2593f11-158f-45da-9f61-25c9024f8be7")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("574b45e4-afe5-4303-9c98-57c297f0a072"),
+        patientUuid = patientUuid,
+    )
+    val defaultModel = MedicalHistorySummaryModel
+        .create(patientUuid, showIsSmokingQuestion = true, showSmokelessTobaccoQuestion = true)
+        .diagnosisSuspectedOptionVisibilityLoaded(showHypertensionSuspectedOption = true, showDiabetesSuspectedOption = true)
+
+    UpdateSpec(MedicalHistorySummaryUpdate())
+        .given(defaultModel)
+        .whenEvent(MedicalHistoryLoaded(medicalHistory))
+        .then(assertThatNext(
+            hasModel(defaultModel.medicalHistoryLoaded(medicalHistory)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
   fun `when suspected option visibility is determined , then update the model`() {
     val patientUuid = UUID.fromString("b2593f11-158f-45da-9f61-25c9024f8be7")
     val medicalHistory = TestData.medicalHistory(
@@ -63,7 +102,10 @@ class MedicalHistorySummaryUpdateTest {
         ))
         .then(
             assertThatNext(
-                hasModel(medicalHistoryLoadedModel.diagnosisSuspectedOptionVisibilityLoaded(true, true)),
+                hasModel(medicalHistoryLoadedModel.diagnosisSuspectedOptionVisibilityLoaded(
+                    showHypertensionSuspectedOption = true,
+                    showDiabetesSuspectedOption = true
+                )),
                 hasNoEffects()
             )
         )

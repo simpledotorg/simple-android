@@ -26,7 +26,7 @@
 - Bump dagger to v2.57.2
 - Bump UUID generator to v5.1.1
 - Bump Compose BOM to v2025.09.01
-- Bump Sentry Android to v5.12.0
+- Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v5
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.1.0
@@ -43,6 +43,10 @@
 - Hide schedule appointment sheet for suspected patients
 - Add `Suspected` flag to recent patient list item
 - Update diagnosis required error dialog to include referral feature
+
+### Fixes
+
+- Fix `updated_at` not updating when a business identifier is updated
 
 ## 2025.09.09
 

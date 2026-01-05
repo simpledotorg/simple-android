@@ -50,6 +50,9 @@ class MedicalHistorySummaryView(
   private var showSmokerQuestion by mutableStateOf(false)
   private var showSmokelessTobaccoQuestion by mutableStateOf(false)
 
+  private var showHypertensionSuspectedOption by mutableStateOf(false)
+  private var showDiabetesSuspectedOption by mutableStateOf(false)
+
   @Inject
   lateinit var activity: AppCompatActivity
 
@@ -126,7 +129,8 @@ class MedicalHistorySummaryView(
                 diabetesManagementEnabled = diabetesManagementEnabled,
                 showSmokerQuestion = showSmokerQuestion,
                 showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
-                isScreeningFeatureEnabled = features.isEnabled(Feature.Screening)
+                showHypertensionSuspectedOption = showHypertensionSuspectedOption,
+                showDiabetesSuspectedOption = showDiabetesSuspectedOption
             ) { question, answer ->
               answerToggled(question, answer)
             }
@@ -182,6 +186,14 @@ class MedicalHistorySummaryView(
 
   override fun hideSmokelessTobaccoQuestion() {
     showSmokelessTobaccoQuestion = false
+  }
+
+  override fun setHypertensionSuspectedOptionVisibility(visible: Boolean) {
+    showHypertensionSuspectedOption = visible
+  }
+
+  override fun setDiabetesSuspectedOptionVisibility(visible: Boolean) {
+    showDiabetesSuspectedOption = visible
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

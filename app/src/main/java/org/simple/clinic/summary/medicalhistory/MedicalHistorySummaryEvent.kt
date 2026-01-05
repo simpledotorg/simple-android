@@ -18,3 +18,8 @@ data class SummaryMedicalHistoryAnswerToggled(
 data class MedicalHistoryLoaded(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEvent()
 
 data class CurrentFacilityLoaded(val facility: Facility) : MedicalHistorySummaryEvent()
+
+data class SuspectedOptionVisibilityDetermined(
+    val showHypertensionSuspectedOption: Boolean,
+    val showDiabetesSuspectedOption: Boolean
+) : MedicalHistorySummaryEvent()

@@ -16,6 +16,13 @@ class MedicalHistorySummaryUiRenderer(
 
   private val smokelessTobaccoQuestionVisibilityChangedCallback = ValueChangedCallback<Boolean>()
 
+  private val hypertensionSuspectedVisibilityChangedCallback =
+      ValueChangedCallback<Boolean>()
+
+  private val diabetesSuspectedVisibilityChangedCallback =
+      ValueChangedCallback<Boolean>()
+
+
   override fun render(model: MedicalHistorySummaryModel) {
     if (model.hasLoadedMedicalHistory) {
       medicalHistoryChangedCallback.pass(model.medicalHistory!!, ui::populateMedicalHistory)
@@ -40,6 +47,16 @@ class MedicalHistorySummaryUiRenderer(
         ui.hideSmokelessTobaccoQuestion()
       }
     }
+
+    hypertensionSuspectedVisibilityChangedCallback.pass(
+        model.showHypertensionSuspectedOption,
+        ui::setHypertensionSuspectedOptionVisibility
+    )
+
+    diabetesSuspectedVisibilityChangedCallback.pass(
+        model.showDiabetesSuspectedOption,
+        ui::setDiabetesSuspectedOptionVisibility
+    )
   }
 
   private fun toggleDiabetesManagementUi(diabetesManagementEnabled: Boolean) {

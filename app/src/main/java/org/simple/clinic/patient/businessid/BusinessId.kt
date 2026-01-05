@@ -84,8 +84,11 @@ data class BusinessId(
     )
   }
 
-  fun updateIdentifierValue(newValue: String): BusinessId =
-      copy(identifier = identifier.copy(value = newValue))
+  fun updateIdentifierValue(newValue: String, updatedAt: Instant): BusinessId =
+      copy(
+          identifier = identifier.copy(value = newValue),
+          updatedAt = updatedAt
+      )
 
   sealed class MetaDataVersion : Parcelable {
 

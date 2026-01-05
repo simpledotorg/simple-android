@@ -33,6 +33,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -267,7 +268,12 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun updateAlternativeId(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
     return savePatientEffects
         .filter(::isAlternativeIdModified)
-        .map { it.saveAlternativeId?.updateIdentifierValue(it.ongoingEntry.alternativeId) }
+        .map {
+          it.saveAlternativeId?.updateIdentifierValue(
+              newValue = it.ongoingEntry.alternativeId,
+              updatedAt = Instant.now(utcClock)
+          )
+        }
         .flatMapCompletable { patientRepository.saveBusinessId(it) }
         .toObservable()
   }

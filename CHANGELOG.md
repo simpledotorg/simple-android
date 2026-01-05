@@ -44,6 +44,10 @@
 - Add `Suspected` flag to recent patient list item
 - Update diagnosis required error dialog to include referral feature
 
+### Fixes
+
+- Fix `updated_at` not updating when a business identifier is updated
+
 ## 2025.09.09
 
 ### Internal

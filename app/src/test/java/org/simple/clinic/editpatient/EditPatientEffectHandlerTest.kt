@@ -186,7 +186,12 @@ class EditPatientEffectHandlerTest {
     // given
     val bangladeshNationalIdText = "1569273"
     val ongoingEntryWithBangladeshId = entry.updateAlternativeId(bangladeshNationalIdText)
-    val updatedBangladeshNationalId = bangladeshNationalId.updateIdentifierValue(bangladeshNationalIdText)
+    val now = Instant.now(utcClock)
+    val updatedBangladeshNationalId =
+        bangladeshNationalId.updateIdentifierValue(
+            newValue = bangladeshNationalIdText,
+            updatedAt = now
+        )
 
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()

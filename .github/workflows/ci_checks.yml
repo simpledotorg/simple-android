@@ -109,10 +109,10 @@ jobs:
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           arch: ${{ env.AVD_ARCH }}
-          force-avd-creation: true
+          force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
-          disk-size: 8G
+          disk-size: 6G
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK

@@ -1,15 +1,27 @@
 package org.simple.clinic.patient.onlinelookup.api
 
-import com.squareup.moshi.FromJson
-import com.squareup.moshi.ToJson
+
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
 import java.time.Duration
 
-class DurationFromSecondsMoshiAdapter {
+class DurationFromSecondsMoshiAdapter : JsonAdapter<SecondsDuration>() {
 
-  @ToJson
-  fun toJson(@SecondsDuration duration: Duration?): Int? = duration?.seconds?.toInt()
+  override fun fromJson(reader: JsonReader): SecondsDuration? {
+    if (reader.peek() == JsonReader.Token.NULL) {
+      reader.nextNull<Unit>()
+      return null
+    }
+    return SecondsDuration(Duration.ofSeconds(reader.nextLong()))
+  }
 
-  @FromJson
-  @SecondsDuration
-  fun fromJson(seconds: Int?): Duration? = seconds?.let { Duration.ofSeconds(it.toLong()) }
+  override fun toJson(writer: JsonWriter, value: SecondsDuration?) {
+    if (value == null) {
+      writer.nullValue()
+    } else {
+      writer.value(value.value.seconds)
+    }
+  }
 }
+

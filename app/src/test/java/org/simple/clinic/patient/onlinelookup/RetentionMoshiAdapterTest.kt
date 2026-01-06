@@ -6,13 +6,14 @@ import org.junit.Test
 import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
 import org.simple.clinic.patient.onlinelookup.api.RecordRetention
 import org.simple.clinic.patient.onlinelookup.api.RetentionType
+import org.simple.clinic.patient.onlinelookup.api.SecondsDuration
 import java.time.Duration
 
 class RetentionMoshiAdapterTest {
 
   private val moshi = Moshi
       .Builder()
-      .add(DurationFromSecondsMoshiAdapter())
+      .add(SecondsDuration::class.java, DurationFromSecondsMoshiAdapter())
       .build()
 
   private val adapter = moshi.adapter(RecordRetention::class.java)
@@ -33,7 +34,7 @@ class RetentionMoshiAdapterTest {
     // then
     val expected = RecordRetention(
         type = RetentionType.Temporary,
-        retainFor = Duration.ofSeconds(10000)
+        retainFor = SecondsDuration(Duration.ofSeconds(10000))
     )
     assertThat(retention).isEqualTo(expected)
   }
@@ -57,4 +58,17 @@ class RetentionMoshiAdapterTest {
     )
     assertThat(retention).isEqualTo(expected)
   }
+
+  @Test
+  fun `seconds duration round trip`() {
+    val adapter = moshi.adapter(SecondsDuration::class.java)
+
+    val value = SecondsDuration(Duration.ofSeconds(123))
+
+    val json = adapter.toJson(value)
+    val parsed = adapter.fromJson(json)
+
+    assertThat(parsed).isEqualTo(value)
+  }
+
 }

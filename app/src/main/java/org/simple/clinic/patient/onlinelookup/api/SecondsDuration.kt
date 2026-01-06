@@ -1,7 +1,7 @@
 package org.simple.clinic.patient.onlinelookup.api
 
-import com.squareup.moshi.JsonQualifier
+import java.time.Duration
 
-@Retention(AnnotationRetention.RUNTIME)
-@JsonQualifier
-annotation class SecondsDuration
+@JvmInline
+value class SecondsDuration(val value: Duration)
+

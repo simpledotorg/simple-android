@@ -33,6 +33,8 @@
 - Bump Mockito Kotlin to v6.0.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 - Bump asm to v9.9
+- Bump AGP to v8.13.2
+- Bump Lint to v31.13.2
 
 ### Changes
 

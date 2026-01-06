@@ -28,7 +28,8 @@ fun MedicalHistorySummary(
     diabetesManagementEnabled: Boolean,
     showSmokerQuestion: Boolean,
     showSmokelessTobaccoQuestion: Boolean,
-    isScreeningFeatureEnabled: Boolean,
+    showHypertensionSuspectedOption: Boolean,
+    showDiabetesSuspectedOption: Boolean,
     modifier: Modifier = Modifier,
     onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -43,7 +44,8 @@ fun MedicalHistorySummary(
         hypertensionAnswer = hypertensionAnswer,
         diabetesAnswer = diabetesAnswer,
         showDiabetesDiagnosisView = diabetesManagementEnabled,
-        isScreeningFeatureEnabled = isScreeningFeatureEnabled,
+        showHypertensionSuspectedOption = showHypertensionSuspectedOption,
+        showDiabetesSuspectedOption = showDiabetesSuspectedOption,
         onAnswerChange = onAnswerChange,
     )
 
@@ -82,7 +84,8 @@ private fun MedicalHistorySummaryPreview() {
         diabetesManagementEnabled = true,
         showSmokerQuestion = false,
         showSmokelessTobaccoQuestion = false,
-        isScreeningFeatureEnabled = true,
+        showHypertensionSuspectedOption = true,
+        showDiabetesSuspectedOption = true,
         onAnswerChange = { _, _ ->
           // no-op
         }
@@ -105,7 +108,8 @@ private fun MedicalHistorySummaryNoDiabetesManagementPreview() {
         diabetesManagementEnabled = false,
         showSmokerQuestion = false,
         showSmokelessTobaccoQuestion = false,
-        isScreeningFeatureEnabled = true,
+        showHypertensionSuspectedOption = true,
+        showDiabetesSuspectedOption = true,
         onAnswerChange = { _, _ ->
           // no-op
         }
@@ -128,7 +132,8 @@ private fun MedicalHistorySummarySmokerPreview() {
         diabetesManagementEnabled = true,
         showSmokerQuestion = true,
         showSmokelessTobaccoQuestion = false,
-        isScreeningFeatureEnabled = true,
+        showHypertensionSuspectedOption = true,
+        showDiabetesSuspectedOption = true,
         onAnswerChange = { _, _ ->
           // no-op
         }
@@ -151,7 +156,8 @@ private fun MedicalHistorySummaryTobaccoUsePreview() {
         diabetesManagementEnabled = true,
         showSmokerQuestion = true,
         showSmokelessTobaccoQuestion = true,
-        isScreeningFeatureEnabled = true,
+        showHypertensionSuspectedOption = true,
+        showDiabetesSuspectedOption = true,
         onAnswerChange = { _, _ ->
           // no-op
         }

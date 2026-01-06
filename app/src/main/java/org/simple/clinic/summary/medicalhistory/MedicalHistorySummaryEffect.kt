@@ -9,4 +9,6 @@ data class LoadMedicalHistory(val patientUUID: UUID) : MedicalHistorySummaryEffe
 
 data object LoadCurrentFacility : MedicalHistorySummaryEffect()
 
+data class DetermineSuspectedOptionVisibility(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEffect()
+
 data class SaveUpdatedMedicalHistory(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEffect()

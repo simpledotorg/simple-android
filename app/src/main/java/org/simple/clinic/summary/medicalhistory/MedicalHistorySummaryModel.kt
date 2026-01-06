@@ -16,6 +16,9 @@ data class MedicalHistorySummaryModel(
     val currentFacility: Facility? = null,
     val showIsSmokingQuestion: Boolean,
     val showSmokelessTobaccoQuestion: Boolean,
+    val showHypertensionSuspectedOption: Boolean,
+    val showDiabetesSuspectedOption: Boolean,
+    val hasDeterminedSuspectedOptionVisibility: Boolean
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -26,7 +29,10 @@ data class MedicalHistorySummaryModel(
     ): MedicalHistorySummaryModel = MedicalHistorySummaryModel(
         patientUuid = patientUuid,
         showIsSmokingQuestion = showIsSmokingQuestion,
-        showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion
+        showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
+        showHypertensionSuspectedOption = false,
+        showDiabetesSuspectedOption = false,
+        hasDeterminedSuspectedOptionVisibility = false,
     )
   }
 
@@ -50,5 +56,16 @@ data class MedicalHistorySummaryModel(
 
   fun answerToggled(question: MedicalHistoryQuestion, answer: Answer): MedicalHistorySummaryModel {
     return copy(medicalHistory = medicalHistory!!.answered(question, answer))
+  }
+
+  fun diagnosisSuspectedOptionVisibilityLoaded(
+      showHypertensionSuspectedOption: Boolean,
+      showDiabetesSuspectedOption: Boolean
+  ): MedicalHistorySummaryModel {
+    return copy(
+        showHypertensionSuspectedOption = showHypertensionSuspectedOption,
+        showDiabetesSuspectedOption = showDiabetesSuspectedOption,
+        hasDeterminedSuspectedOptionVisibility = true
+    )
   }
 }

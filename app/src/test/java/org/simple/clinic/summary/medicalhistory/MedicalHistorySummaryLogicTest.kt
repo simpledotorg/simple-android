@@ -11,12 +11,13 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -30,8 +31,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.remoteconfig.DefaultValueConfigReader
+import org.simple.clinic.util.NoOpRemoteConfigService
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -83,6 +85,13 @@ class MedicalHistorySummaryLogicTest {
 
   private lateinit var testFixture: MobiusTestFixture<MedicalHistorySummaryModel, MedicalHistorySummaryEvent, MedicalHistorySummaryEffect>
 
+  private val features = Features(
+      remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
+      overrides = mapOf(
+          Feature.Screening to true,
+      )
+  )
+
   @After
   fun tearDown() {
     testFixture.dispose()
@@ -101,7 +110,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).populateMedicalHistory(medicalHistory)
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -146,7 +156,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -162,7 +173,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -182,7 +194,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -202,7 +215,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -222,7 +236,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -242,7 +257,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -262,7 +278,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -282,7 +299,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).showDiagnosisView()
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -298,7 +316,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -314,7 +333,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -330,7 +350,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).hideCurrentSmokerQuestion()
     verify(ui).hideSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Test
@@ -346,7 +367,8 @@ class MedicalHistorySummaryLogicTest {
     verify(ui).hideDiagnosisView()
     verify(ui).showCurrentSmokerQuestion()
     verify(ui).showSmokelessTobaccoQuestion()
-    verifyNoMoreInteractions(ui)
+    verify(ui).setHypertensionSuspectedOptionVisibility(true)
+    verify(ui).setDiabetesSuspectedOptionVisibility(true)
   }
 
   @Suppress("unused")
@@ -376,7 +398,8 @@ class MedicalHistorySummaryLogicTest {
         medicalHistoryRepository = medicalHistoryRepository,
         clock = clock,
         currentFacility = { facility },
-        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
+        uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
+        features = features
     )
 
     val uiRenderer = MedicalHistorySummaryUiRenderer(ui)

@@ -11,9 +11,28 @@ class MedicalHistorySummaryUpdate : Update<MedicalHistorySummaryModel, MedicalHi
       event: MedicalHistorySummaryEvent
   ): Next<MedicalHistorySummaryModel, MedicalHistorySummaryEffect> {
     return when (event) {
-      is MedicalHistoryLoaded -> next(model.medicalHistoryLoaded(event.medicalHistory))
+      is MedicalHistoryLoaded -> medicalHistoryLoaded(model, event)
       is SummaryMedicalHistoryAnswerToggled -> medicalHistoryAnswerToggled(model, event)
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is SuspectedOptionVisibilityDetermined -> next(
+          model.diagnosisSuspectedOptionVisibilityLoaded(
+              event.showHypertensionSuspectedOption,
+              event.showDiabetesSuspectedOption
+          )
+      )
+    }
+  }
+
+  private fun medicalHistoryLoaded(
+      model: MedicalHistorySummaryModel,
+      event: MedicalHistoryLoaded
+  ): Next<MedicalHistorySummaryModel, MedicalHistorySummaryEffect> {
+    val updatedModel = model.medicalHistoryLoaded(event.medicalHistory)
+
+    return if (updatedModel.hasDeterminedSuspectedOptionVisibility) {
+      next(updatedModel)
+    } else {
+      next(updatedModel, DetermineSuspectedOptionVisibility(event.medicalHistory))
     }
   }
 

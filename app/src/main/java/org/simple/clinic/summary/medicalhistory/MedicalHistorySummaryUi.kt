@@ -11,4 +11,6 @@ interface MedicalHistorySummaryUi {
 
   fun showSmokelessTobaccoQuestion()
   fun hideSmokelessTobaccoQuestion()
+  fun setHypertensionSuspectedOptionVisibility(visible: Boolean)
+  fun setDiabetesSuspectedOptionVisibility(visible: Boolean)
 }

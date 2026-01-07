@@ -17,7 +17,7 @@
 - Bump AndroidX ViewModel to v2.9.4
 - Bump Lottie Compose to v6.6.9
 - Bump Gson to v2.13.2
-- Bump KSP to v2.2.20-2.0.2
+- Bump KSP to v2.3.4
 - Bump firebase remote config to v23.0.1
 - Bump Google Truth to v1.4.5
 - Bump AndroidX Benchmark to v1.4.1
@@ -30,11 +30,13 @@
 - Update GH Actions `checkout` to v5
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.1.0
-- Bump Mockito Kotlin to v6.0.0
+- Bump Mockito Kotlin to v6.1.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 - Bump asm to v9.9
 - Bump AGP to v8.13.2
 - Bump Lint to v31.13.2
+- Disable Ksp1 and enable Ksp2 by default
+- Update GH Workflow Actions `Setup Gradle` to v5
 
 ### Changes
 

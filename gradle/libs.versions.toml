@@ -16,7 +16,7 @@ dagger = "2.57.2"
 
 kotlin = "2.2.20"
 
-ksp = "2.2.20-2.0.2"
+ksp = "2.3.4"
 
 ktlint = "0.36.0"
 
@@ -142,7 +142,7 @@ lottie = "com.airbnb.android:lottie-compose:6.6.9"
 
 material = "com.google.android.material:material:1.13.0"
 
-mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:6.0.0"
+mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:6.1.0"
 
 mobius-android = { module = "com.spotify.mobius:mobius-android", version.ref = "mobius" }
 mobius-core = { module = "com.spotify.mobius:mobius-core", version.ref = "mobius" }

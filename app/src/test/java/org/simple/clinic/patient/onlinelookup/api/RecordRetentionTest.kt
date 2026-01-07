@@ -13,7 +13,7 @@ class RecordRetentionTest {
     val retentionDuration = Duration.ofDays(1)
     val retention = RecordRetention(
         type = RetentionType.Temporary,
-        retainFor = retentionDuration
+        retainFor = SecondsDuration(retentionDuration)
     )
     val currentTime = Instant.parse("2018-01-01T09:33:05Z")
 
@@ -46,7 +46,7 @@ class RecordRetentionTest {
     // given
     val retention = RecordRetention(
         type = RetentionType.Unknown,
-        retainFor = Duration.ofHours(1)
+        retainFor = SecondsDuration(Duration.ofHours(1))
     )
     val currentTime = Instant.parse("2018-01-01T00:00:00Z")
     val fallbackRetentionDuration = Duration.ofMinutes(1)

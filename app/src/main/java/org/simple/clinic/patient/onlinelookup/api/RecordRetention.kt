@@ -14,13 +14,12 @@ data class RecordRetention(
     val type: RetentionType,
 
     @Json(name = "duration_seconds")
-    @SecondsDuration
-    val retainFor: Duration?
+    val retainFor: SecondsDuration?
 ) {
 
   fun computeRetainUntilTimestamp(instant: Instant, fallbackRetentionDuration: Duration): Instant? {
     return when (type) {
-      Temporary -> instant + retainFor!!
+      Temporary -> instant + retainFor?.value
       Permanent -> null
       Unknown -> instant + fallbackRetentionDuration
     }

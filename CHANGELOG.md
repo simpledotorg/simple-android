@@ -36,6 +36,7 @@
 - Bump AGP to v8.13.2
 - Bump Lint to v31.13.2
 - Disable Ksp1 and enable Ksp2 by default
+- Update GH Workflow Actions `Setup Gradle` to v5
 
 ### Changes
 

@@ -35,6 +35,7 @@
 - Bump asm to v9.9
 - Bump AGP to v8.13.2
 - Bump Lint to v31.13.2
+- Disable Ksp1 and enable Ksp2 by default
 
 ### Changes
 

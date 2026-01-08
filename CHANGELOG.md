@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump Sentry to v8.22.0
+- Bump Sentry to v8.29.0
 - Bump AndroidX Lifecycle to v2.9.4
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
@@ -37,6 +37,7 @@
 - Bump Lint to v31.13.2
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
+- Bump Google Service to v4.4.4
 
 ### Changes
 

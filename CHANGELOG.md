@@ -38,6 +38,7 @@
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
 - Bump Google Service to v4.4.4
+- Bump AndroidX Room to v2.8.4
 
 ### Changes
 

@@ -39,6 +39,7 @@
 - Update GH Workflow Actions `Setup Gradle` to v5
 - Bump Google Service to v4.4.4
 - Bump AndroidX Room to v2.8.4
+- Bump AndroidX Security Crypto to v1.1.0
 
 ### Changes
 

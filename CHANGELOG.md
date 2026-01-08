@@ -40,6 +40,7 @@
 - Bump Google Service to v4.4.4
 - Bump AndroidX Room to v2.8.4
 - Bump AndroidX Security Crypto to v1.1.0
+- Bump okhttp to v5.3.2
 
 ### Changes
 

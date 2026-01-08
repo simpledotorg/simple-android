@@ -37,6 +37,7 @@
 - Bump Lint to v31.13.2
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
+- Bump Google Service to v4.4.4
 
 ### Changes
 

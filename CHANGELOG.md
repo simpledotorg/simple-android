@@ -5,7 +5,7 @@
 ### Internal
 
 - Bump Sentry to v8.29.0
-- Bump AndroidX Lifecycle to v2.9.4
+- Bump AndroidX Lifecycle to v2.10.0
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0

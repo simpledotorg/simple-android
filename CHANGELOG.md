@@ -41,6 +41,7 @@
 - Bump AndroidX Room to v2.8.4
 - Bump AndroidX Security Crypto to v1.1.0
 - Bump okhttp to v5.3.2
+- Bump sqlcipher to v4.12.0
 
 ### Changes
 

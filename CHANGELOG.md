@@ -21,8 +21,8 @@
 - Bump firebase remote config to v23.0.1
 - Bump Google Truth to v1.4.5
 - Bump AndroidX Benchmark to v1.4.1
-- Bump AndroidX Camera to v1.5.0
-- Bump AndroidX Camera View to v1.5.0
+- Bump AndroidX Camera to v1.5.2
+- Bump AndroidX Camera View to v1.5.2
 - Bump dagger to v2.57.2
 - Bump UUID generator to v5.1.1
 - Bump Compose BOM to v2025.09.01

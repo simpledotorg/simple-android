@@ -18,7 +18,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Verify PR description
         run: .github/scripts/story_link_check.sh '${{ github.event.pull_request.body }}'
 
@@ -27,13 +27,13 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: current
 
@@ -43,7 +43,7 @@ jobs:
   lint:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Setup JDK
         uses: actions/setup-java@v5
@@ -58,7 +58,7 @@ jobs:
   unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Setup JDK
         uses: actions/setup-java@v5
@@ -87,7 +87,7 @@ jobs:
 
 
       - name: Checkout Android source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Start Simple Docker server
         run: |
@@ -182,13 +182,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: current
 
@@ -199,7 +199,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0

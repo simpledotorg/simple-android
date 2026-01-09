@@ -27,7 +27,7 @@
 - Bump UUID generator to v5.2.0
 - Bump Compose BOM to v2025.12.01
 - Bump Sentry Android to v5.12.2
-- Update GH Actions `checkout` to v5
+- Update GH Actions `checkout` to v6
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.2.1
 - Bump Mockito Kotlin to v6.1.0

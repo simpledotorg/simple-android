@@ -1,20 +1,20 @@
 [versions]
 agp = "8.13.2"
 
-androidx-cameraView = "1.5.0"
-androidx-camera = "1.5.0"
+androidx-cameraView = "1.5.2"
+androidx-camera = "1.5.2"
 androidx-paging = "3.3.6"
-androidx-room = "2.7.2"
-androidx-work = "2.10.5"
-androidx-security-crypto = "1.1.0-alpha07"
-androidx-viewmodel = "2.9.4"
-androidx-lifecycle = "2.9.4"
+androidx-room = "2.8.4"
+androidx-work = "2.11.0"
+androidx-security-crypto = "1.1.0"
+androidx-viewmodel = "2.10.0"
+androidx-lifecycle = "2.10.0"
 androidx-activity = "1.10.1"
 
 chucker = "4.2.0"
 dagger = "2.57.2"
 
-kotlin = "2.2.20"
+kotlin = "2.3.0"
 
 ksp = "2.3.4"
 
@@ -26,7 +26,7 @@ mobius = "2.1.1"
 
 moshi = "1.15.2"
 
-okhttp = "5.1.0"
+okhttp = "5.3.2"
 
 retrofit = "3.0.0"
 
@@ -38,11 +38,11 @@ coroutines = "1.10.2"
 
 compose-compiler = "1.5.13"
 
-androidx-compose-bom = "2025.09.01"
+androidx-compose-bom = "2025.12.01"
 
 composeThemeAdapter = "0.36.0"
 
-sqlCipher = "4.10.0"
+sqlCipher = "4.12.0"
 
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -94,7 +94,7 @@ androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmod
 
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 
-asm = "org.ow2.asm:asm:9.9"
+asm = "org.ow2.asm:asm:9.9.1"
 
 chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
 chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
@@ -116,7 +116,7 @@ itemanimators = "com.mikepenz:itemanimators:1.1.0"
 
 itext7 = "com.itextpdf:itext7-core:7.2.5"
 
-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.20.0"
+jackson-core = "com.fasterxml.jackson.core:jackson-core:2.20.1"
 
 jbcrypt = "org.mindrot:jbcrypt:0.4"
 
@@ -138,7 +138,7 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 #noinspection GradleDependency
 logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
-lottie = "com.airbnb.android:lottie-compose:6.6.9"
+lottie = "com.airbnb.android:lottie-compose:6.7.1"
 
 material = "com.google.android.material:material:1.13.0"
 
@@ -160,7 +160,7 @@ okhttp-interceptor-logging = { module = "com.squareup.okhttp3:logging-intercepto
 openCsv = "com.opencsv:opencsv:5.12.0"
 
 play-app-update = "com.google.android.play:app-update-ktx:2.1.0"
-play-services-auth = "com.google.android.gms:play-services-auth:21.4.0"
+play-services-auth = "com.google.android.gms:play-services-auth:21.5.0"
 play-services-location = "com.google.android.gms:play-services-location:21.3.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.1"
 
@@ -193,7 +193,7 @@ rx-java-extensions = "com.github.akarnokd:rxjava3-extensions:3.1.1"
 
 truth = "com.google.truth:truth:1.4.5"
 
-uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.1.1"
+uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.2.0"
 
 #noinspection GradleDependency
 viewpump = "io.github.inflationx:viewpump:2.0.3"

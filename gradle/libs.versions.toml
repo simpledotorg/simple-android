@@ -193,7 +193,7 @@ rx-java-extensions = "com.github.akarnokd:rxjava3-extensions:3.1.1"
 
 truth = "com.google.truth:truth:1.4.5"
 
-uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.1.1"
+uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.2.0"
 
 #noinspection GradleDependency
 viewpump = "io.github.inflationx:viewpump:2.0.3"

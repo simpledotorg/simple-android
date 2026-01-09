@@ -43,6 +43,7 @@
 - Bump okhttp to v5.3.2
 - Bump sqlcipher to v4.12.0
 - Bump GH Actions `cache` to v5
+- Bump GH Actions `upload-artifacts` to v6
 
 ### Changes
 

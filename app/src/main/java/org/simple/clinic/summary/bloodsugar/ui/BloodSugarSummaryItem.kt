@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -100,9 +99,8 @@ fun BloodSugarSummaryItem(
 
 @Composable
 private fun BloodSugarReadingText(item: BloodSugarSummaryItem) {
-  val context = LocalContext.current
-  val displayUnit = context.getString(item.reading.displayUnit(item.measurementUnit))
-  val displayType = context.getString(item.reading.displayType)
+  val displayUnit = stringResource(item.reading.displayUnit(item.measurementUnit))
+  val displayType = stringResource(item.reading.displayType)
   val readingPrefix = item.reading.displayValue(item.measurementUnit)
   val readingSuffix = "$displayUnit $displayType"
 

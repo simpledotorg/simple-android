@@ -5,39 +5,43 @@
 ### Internal
 
 - Bump Sentry to v8.29.0
-- Bump AndroidX Lifecycle to v2.9.4
+- Bump AndroidX Lifecycle to v2.10.0
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0
-- Bump Jackson Core to v2.20.0
-- Bump Play Services Auth to v21.4.0
+- Bump Jackson Core to v2.20.1
+- Bump Play Services Auth to v21.5.0
 - Bump Material Components to v1.12.0
-- Bump Kotlin to v2.2.20
-- Bump AndroidX Work to v2.10.5
-- Bump AndroidX ViewModel to v2.9.4
-- Bump Lottie Compose to v6.6.9
+- Bump Kotlin to v2.3.0
+- Bump AndroidX Work to v2.11.0
+- Bump AndroidX ViewModel to v2.10.0
+- Bump Lottie Compose to v6.7.1
 - Bump Gson to v2.13.2
 - Bump KSP to v2.3.4
 - Bump firebase remote config to v23.0.1
 - Bump Google Truth to v1.4.5
 - Bump AndroidX Benchmark to v1.4.1
-- Bump AndroidX Camera to v1.5.0
-- Bump AndroidX Camera View to v1.5.0
+- Bump AndroidX Camera to v1.5.2
+- Bump AndroidX Camera View to v1.5.2
 - Bump dagger to v2.57.2
 - Bump UUID generator to v5.1.1
-- Bump Compose BOM to v2025.09.01
+- Bump Compose BOM to v2025.12.01
 - Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v5
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.1.0
 - Bump Mockito Kotlin to v6.1.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
-- Bump asm to v9.9
+- Bump asm to v9.9.1
 - Bump AGP to v8.13.2
 - Bump Lint to v31.13.2
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
 - Bump Google Service to v4.4.4
+- Bump AndroidX Room to v2.8.4
+- Bump AndroidX Security Crypto to v1.1.0
+- Bump okhttp to v5.3.2
+- Bump sqlcipher to v4.12.0
 
 ### Changes
 

@@ -1,8 +1,6 @@
 package org.simple.clinic.scanid
 
-import com.squareup.moshi.JsonQualifier
-import kotlin.annotation.AnnotationRetention.RUNTIME
+import java.time.LocalDate
 
-@Retention(RUNTIME)
-@JsonQualifier
-annotation class IndiaNHIDDateOfBirth {}
+@JvmInline
+value class IndiaNHIDDateOfBirth(val value: LocalDate)

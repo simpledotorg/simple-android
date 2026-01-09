@@ -21,7 +21,8 @@ fun DiagnosisContainer(
     hypertensionAnswer: Answer?,
     diabetesAnswer: Answer?,
     showDiabetesDiagnosisView: Boolean,
-    isScreeningFeatureEnabled: Boolean,
+    showHypertensionSuspectedOption: Boolean,
+    showDiabetesSuspectedOption: Boolean,
     modifier: Modifier = Modifier,
     onAnswerChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
@@ -31,7 +32,13 @@ fun DiagnosisContainer(
             .padding(dimensionResource(R.dimen.spacing_16))
     ) {
 
-      val options = if (isScreeningFeatureEnabled) {
+      val hypertensionDiagnosisOptions = if (showHypertensionSuspectedOption) {
+        listOf(Answer.Yes, Answer.No, Answer.Suspected)
+      } else {
+        listOf(Answer.Yes, Answer.No)
+      }
+
+      val diabetesDiagnosisOptions = if (showDiabetesSuspectedOption) {
         listOf(Answer.Yes, Answer.No, Answer.Suspected)
       } else {
         listOf(Answer.Yes, Answer.No)
@@ -40,7 +47,7 @@ fun DiagnosisContainer(
       MedicalHistoryDiagnosisQuestionItem(
           header = stringResource(R.string.medicalhistorysummaryview_hypertension_diagnosis),
           question = MedicalHistoryQuestion.DiagnosedWithHypertension,
-          options = options,
+          options = hypertensionDiagnosisOptions,
           selectedAnswer = hypertensionAnswer,
           onAnswerChange = onAnswerChange
       )
@@ -56,7 +63,7 @@ fun DiagnosisContainer(
         MedicalHistoryDiagnosisQuestionItem(
             header = stringResource(R.string.medicalhistorysummaryview_diabetes_diagnosis),
             question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
-            options = options,
+            options = diabetesDiagnosisOptions,
             selectedAnswer = diabetesAnswer,
             onAnswerChange = onAnswerChange
         )
@@ -73,7 +80,8 @@ fun DiagnosisContainerPreview(modifier: Modifier = Modifier) {
         hypertensionAnswer = Answer.Yes,
         diabetesAnswer = Answer.No,
         showDiabetesDiagnosisView = true,
-        isScreeningFeatureEnabled = true,
+        showHypertensionSuspectedOption = true,
+        showDiabetesSuspectedOption = true,
         modifier = modifier,
         onAnswerChange = { _, _ -> }
     )

@@ -96,6 +96,7 @@ import org.simple.clinic.questionnaire.component.properties.InputFieldValidation
 import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaire.component.properties.StringType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
@@ -1357,7 +1358,7 @@ object TestData {
       indiaNHIDGender = indiaNHIDGender,
       state = state,
       district = district,
-      dateOfBirth = dateOfBirth,
+      dateOfBirth = IndiaNHIDDateOfBirth(dateOfBirth),
       address = address
   )
 

@@ -1,10 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import org.simple.rmg.RoomMetadataGenerator
 import java.util.EnumSet
 
@@ -201,13 +199,17 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.toString()
-    freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        "-Xannotation-default-target=param-property"
-    )
+  kotlin {
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+
+      freeCompilerArgs.addAll(
+          "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+          "-Xannotation-default-target=param-property"
+      )
+    }
   }
+
 
   sourceSets {
     getByName("androidTest") {

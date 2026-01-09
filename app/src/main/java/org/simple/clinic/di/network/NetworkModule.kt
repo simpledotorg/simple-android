@@ -13,8 +13,6 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.questionnaire.QuestionnaireType
-import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.Outcome
@@ -27,10 +25,14 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
 import org.simple.clinic.patient.onlinelookup.api.RetentionType
+import org.simple.clinic.patient.onlinelookup.api.SecondsDuration
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.InputFieldViewType
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -80,9 +82,9 @@ class NetworkModule {
         .add(TeleconsultAnswer.MoshiTypeAdapter())
         .add(TeleconsultationType.MoshiTypeAdapter())
         .add(TeleconsultStatus.MoshiTypeAdapter())
-        .add(IndiaNHIDDateOfBirthMoshiAdapter())
+        .add(IndiaNHIDDateOfBirth::class.java, IndiaNHIDDateOfBirthMoshiAdapter())
         .add(IndiaNHIDGender.MoshiTypeAdapter())
-        .add(DurationFromSecondsMoshiAdapter())
+        .add(SecondsDuration::class.java, DurationFromSecondsMoshiAdapter())
         .add(RetentionType::class.java, EnumJsonAdapter.create(RetentionType::class.java).withUnknownFallback(RetentionType.Unknown))
         .add(DrugCategory.MoshiTypeConverter())
         .add(DrugAnswer.MoshiTypeAdapter())

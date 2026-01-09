@@ -154,7 +154,7 @@ jobs:
 
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: failed-test-artifacts
           path: app/build/outputs/test-artifacts
@@ -168,7 +168,7 @@ jobs:
 
       - name: Upload Docker logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: docker-logs
           path: docker_logs.zip

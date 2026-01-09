@@ -74,7 +74,7 @@ jobs:
           bundleSandboxRelease
 
       - name: Upload release bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: release.aab
           path: app/build/outputs/bundle/sandboxRelease/app-sandbox-release.aab

@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload release bundle
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: release.aab
           path: app/build/outputs/bundle/productionRelease/app-production-release.aab

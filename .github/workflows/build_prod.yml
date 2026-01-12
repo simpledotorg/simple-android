@@ -43,7 +43,7 @@ jobs:
 
       - name: Checkout
         if: github.event.inputs.tramline-input == null || github.event.inputs.tramline-input == ''
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup JDK
         uses: actions/setup-java@v5
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload release bundle
         if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: release.aab
           path: app/build/outputs/bundle/productionRelease/app-production-release.aab

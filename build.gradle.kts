@@ -14,9 +14,9 @@ plugins {
 
 buildscript {
   extra.apply {
-    set("compileSdkVersion", 35)
+    set("compileSdkVersion", 36)
     set("minSdkVersion", 26)
-    set("targetSdkVersion", 35)
+    set("targetSdkVersion", 36)
   }
 
   repositories {

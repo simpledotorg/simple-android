@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +14,8 @@ import androidx.work.WorkManager
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
@@ -31,15 +30,14 @@ import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.activity.permissions.ActivityPermissionResult
-import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
@@ -48,6 +46,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
+import org.simple.clinic.util.handleBackPress
 import org.simple.clinic.util.popWithParcelableResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
@@ -192,6 +191,14 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
     )
     super.onCreate(savedInstanceState)
+
+    handleBackPress {
+      if (!router.onBackPressed()) {
+        isEnabled = false
+        onBackPressedDispatcher.onBackPressed()
+      }
+    }
+
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -199,11 +206,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @SuppressLint("CheckResult")
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
-    @Suppress("ConstantConditionIf")
-    if (BuildConfig.DISABLE_SCREENSHOT) {
-      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-    }
-
     if (savedInstanceState == null) {
       disposables.addAll(
           syncSetup.run(),
@@ -268,12 +270,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     screenResults.send(ActivityPermissionResult(requestCode))
-  }
-
-  override fun onBackPressed() {
-    if (!router.onBackPressed()) {
-      super.onBackPressed()
-    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

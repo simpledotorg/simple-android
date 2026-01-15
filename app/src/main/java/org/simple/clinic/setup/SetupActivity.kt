@@ -5,14 +5,12 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.activity.permissions.ActivityPermissionResult
@@ -32,6 +30,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.disablePendingTransitions
 import org.simple.clinic.util.finishWithoutAnimations
+import org.simple.clinic.util.handleBackPress
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -86,9 +85,12 @@ class SetupActivity : AppCompatActivity(), UiActions {
         navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
     )
     super.onCreate(savedInstanceState)
-    @Suppress("ConstantConditionIf")
-    if (BuildConfig.DISABLE_SCREENSHOT) {
-      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+
+    handleBackPress {
+      if (!router.onBackPressed()) {
+        isEnabled = false
+        onBackPressedDispatcher.onBackPressed()
+      }
     }
 
     binding = ActivitySetupBinding.inflate(layoutInflater)
@@ -112,12 +114,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
     router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
-  }
-
-  override fun onBackPressed() {
-    if (!router.onBackPressed()) {
-      super.onBackPressed()
-    }
   }
 
   override fun attachBaseContext(baseContext: Context) {

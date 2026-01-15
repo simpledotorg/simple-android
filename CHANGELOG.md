@@ -44,6 +44,9 @@
 - Bump sqlcipher to v4.12.0
 - Bump GH Actions `cache` to v5
 - Bump GH Actions `upload-artifacts` to v6
+- Add support for Android 16
+  - Bump compile and target SDK to 36
+- Bump AndroidX Activity to v1.12.2
 
 ### Changes
 
@@ -88,6 +91,7 @@
 - Migrate new medical history screen to Jetpack Compose
 - Bump AndroidX Benchmark to v1.4.0
 - Bump Open CSV to v5.12.0
+- Bump AndroidX Core KTX to v1.17.0
 
 ### Changes
 

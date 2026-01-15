@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.databinding.BottomSheetBinding
 import org.simple.clinic.util.disablePendingTransitions
+import org.simple.clinic.util.handleBackPress
 
 /**
  * We're using Activities as fake bottom sheets instead of BottomSheetDialog because we want
@@ -31,13 +30,12 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     disablePendingTransitions()
     super.onCreate(savedInstanceState)
-    @Suppress("ConstantConditionIf")
-    if (BuildConfig.DISABLE_SCREENSHOT) {
-      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-    }
-
     bottomSheetBinding = BottomSheetBinding.inflate(layoutInflater)
     super.setContentView(bottomSheetBinding.root)
+
+    handleBackPress {
+      finish()
+    }
 
     contentContainer.setOnClickListener {
       // Swallow clicks to avoid dismissing the sheet accidentally.
@@ -77,13 +75,6 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   }
 
   open fun onBackgroundClick() {
-    onBackPressed()
-  }
-
-  @Deprecated("Deprecated in Java")
-  override fun onBackPressed() {
-    super.onBackPressed()
-    // Routing to finish() just so that the exit animation can be played.
-    finish()
+    onBackPressedDispatcher.onBackPressed()
   }
 }

@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.view.KeyEvent
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import org.simple.clinic.feature.Feature
@@ -111,4 +113,20 @@ fun Context.resolveFloat(attrRes: Int, fallback: (() -> Float)? = null): Float {
   } finally {
     a.recycle()
   }
+}
+
+/**
+ * A reusable extension function to handle a custom back press action.
+ * The `onBackPressedAction` lambda tells the function what to do
+ * when the back button is pressed.
+ */
+fun AppCompatActivity.handleBackPress(
+    onBackPressedAction: OnBackPressedCallback.() -> Unit
+) {
+  val onBackPressedCallback = object : OnBackPressedCallback(true) {
+    override fun handleOnBackPressed() {
+      this.onBackPressedAction()
+    }
+  }
+  onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 }

@@ -11,17 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.activity.permissions.ActivityPermissionResult
-import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.selectcountry.SelectCountryScreen
+import org.simple.clinic.util.handleBackPress
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -86,6 +87,14 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
         navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
     )
     super.onCreate(savedInstanceState)
+
+    handleBackPress {
+      if (!router.onBackPressed()) {
+        isEnabled = false
+        onBackPressedDispatcher.onBackPressed()
+      }
+    }
+
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
   }
@@ -139,12 +148,6 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     screenResults.send(ActivityPermissionResult(requestCode))
-  }
-
-  override fun onBackPressed() {
-    if (!router.onBackPressed()) {
-      super.onBackPressed()
-    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

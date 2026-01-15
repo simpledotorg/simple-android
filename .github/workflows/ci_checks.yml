@@ -139,7 +139,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          disk-size: 8G
+          disk-size: 6G
           script: |
             adb root
             mkdir -p app/build/outputs/test-artifacts

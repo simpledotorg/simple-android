@@ -46,6 +46,7 @@
 - Bump GH Actions `upload-artifacts` to v6
 - Add support for Android 16
   - Bump compile and target SDK to 36
+- Bump AndroidX Activity to v1.12.2
 
 ### Changes
 

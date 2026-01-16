@@ -33,8 +33,8 @@
 - Bump Mockito Kotlin to v6.2.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 - Bump asm to v9.9.1
-- Bump AGP to v8.13.2
-- Bump Lint to v31.13.2
+- Bump AGP to v9.0.0
+- Bump Lint to v32.0.0
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
 - Bump Google Service to v4.4.4

@@ -38,7 +38,7 @@ coroutines = "1.10.2"
 
 compose-compiler = "1.5.13"
 
-androidx-compose-bom = "2025.12.01"
+androidx-compose-bom = "2026.01.00"
 
 composeThemeAdapter = "0.36.0"
 

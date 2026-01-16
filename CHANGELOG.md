@@ -25,7 +25,7 @@
 - Bump AndroidX Camera View to v1.5.2
 - Bump dagger to v2.57.2
 - Bump UUID generator to v5.2.0
-- Bump Compose BOM to v2025.12.01
+- Bump Compose BOM to v2026.01.00
 - Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v6
 - Update GH Actions `setup-jdk` to to v5

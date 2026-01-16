@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump Sentry to v8.29.0
+- Bump Sentry to v8.30.0
 - Bump AndroidX Lifecycle to v2.10.0
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
@@ -25,16 +25,16 @@
 - Bump AndroidX Camera View to v1.5.2
 - Bump dagger to v2.57.2
 - Bump UUID generator to v5.2.0
-- Bump Compose BOM to v2025.12.01
+- Bump Compose BOM to v2026.01.00
 - Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v6
 - Update GH Actions `setup-jdk` to to v5
 - Bump Gradle to v9.2.1
-- Bump Mockito Kotlin to v6.1.0
+- Bump Mockito Kotlin to v6.2.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 - Bump asm to v9.9.1
-- Bump AGP to v8.13.2
-- Bump Lint to v31.13.2
+- Bump AGP to v9.0.0
+- Bump Lint to v32.0.0
 - Disable Ksp1 and enable Ksp2 by default
 - Update GH Workflow Actions `Setup Gradle` to v5
 - Bump Google Service to v4.4.4
@@ -47,6 +47,7 @@
 - Add support for Android 16
   - Bump compile and target SDK to 36
 - Bump AndroidX Activity to v1.12.2
+- Bump Chucker to v4.3.0
 
 ### Changes
 

@@ -20,7 +20,7 @@ ksp = "2.3.4"
 
 ktlint = "0.36.0"
 
-lint = "31.13.2"
+lint = "32.0.0"
 
 mobius = "2.1.1"
 
@@ -224,7 +224,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 androidx-benchmark = { id = "androidx.benchmark", version = "1.4.1" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -8,7 +8,6 @@ import java.util.EnumSet
 
 plugins {
   alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.parcelize)
   alias(libs.plugins.sentry)
   alias(libs.plugins.ksp)

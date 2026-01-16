@@ -47,6 +47,7 @@
 - Add support for Android 16
   - Bump compile and target SDK to 36
 - Bump AndroidX Activity to v1.12.2
+- Bump Chucker to v4.3.0
 
 ### Changes
 

@@ -6,6 +6,7 @@
 
 - Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
 - Add effect to fetch complete medical records
+- Bump Gradle to v9.3.0
 
 ## 2026.02.02
 

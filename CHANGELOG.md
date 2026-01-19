@@ -23,7 +23,7 @@
 - Bump AndroidX Benchmark to v1.4.1
 - Bump AndroidX Camera to v1.5.2
 - Bump AndroidX Camera View to v1.5.2
-- Bump dagger to v2.57.2
+- Bump dagger to v2.58
 - Bump UUID generator to v5.2.0
 - Bump Compose BOM to v2026.01.00
 - Bump Sentry Android to v5.12.2

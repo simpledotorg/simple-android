@@ -29,7 +29,7 @@
 - Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v6
 - Update GH Actions `setup-jdk` to to v5
-- Bump Gradle to v9.2.1
+- Bump Gradle to v9.3.0
 - Bump Mockito Kotlin to v6.2.0
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history
 - Bump asm to v9.9.1

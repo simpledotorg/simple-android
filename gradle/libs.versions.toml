@@ -116,7 +116,7 @@ itemanimators = "com.mikepenz:itemanimators:1.1.0"
 
 itext7 = "com.itextpdf:itext7-core:7.2.5"
 
-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.20.1"
+jackson-core = "com.fasterxml.jackson.core:jackson-core:2.21.0"
 
 jbcrypt = "org.mindrot:jbcrypt:0.4"
 
@@ -142,7 +142,7 @@ lottie = "com.airbnb.android:lottie-compose:6.7.1"
 
 material = "com.google.android.material:material:1.13.0"
 
-mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:6.2.0"
+mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:6.2.1"
 
 mobius-android = { module = "com.spotify.mobius:mobius-android", version.ref = "mobius" }
 mobius-core = { module = "com.spotify.mobius:mobius-core", version.ref = "mobius" }

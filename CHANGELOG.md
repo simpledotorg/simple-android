@@ -9,7 +9,7 @@
 - Bump AndroidX Test Runner to v1.7.0
 - Bump AndroidX Test Rules to v1.7.0
 - Bump AndroidX JUnit to v1.3.0
-- Bump Jackson Core to v2.20.1
+- Bump Jackson Core to v2.21.0
 - Bump Play Services Auth to v21.5.0
 - Bump Material Components to v1.12.0
 - Bump Kotlin to v2.3.0

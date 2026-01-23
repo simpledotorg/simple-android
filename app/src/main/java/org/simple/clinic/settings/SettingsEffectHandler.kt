@@ -39,9 +39,9 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
-      .addTransformer(LogoutUser::class.java, fetchCompleteMedicalRecords())
+      .addTransformer(LogoutUser::class.java, logoutUser())
       .addTransformer(LoadDatabaseEncryptionStatus::class.java, loadDatabaseEncryptionStatus())
-//      .addTransformer(FetchCompleteMedicalRecords::class.java, fetchCompleteMedicalRecords())
+      .addTransformer(FetchCompleteMedicalRecords::class.java, fetchCompleteMedicalRecords())
       .build()
 
   private fun loadDatabaseEncryptionStatus(): ObservableTransformer<LoadDatabaseEncryptionStatus, SettingsEvent> {
@@ -101,7 +101,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun fetchCompleteMedicalRecords(): ObservableTransformer<LogoutUser, SettingsEvent> {
+  private fun fetchCompleteMedicalRecords(): ObservableTransformer<FetchCompleteMedicalRecords, SettingsEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

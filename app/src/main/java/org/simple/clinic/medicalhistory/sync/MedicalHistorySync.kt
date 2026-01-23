@@ -35,30 +35,7 @@ class MedicalHistorySync @Inject constructor(
   }
 
   private fun toRequest(histories: List<MedicalHistory>): MedicalHistoryPushRequest {
-    val payloads = histories
-        .map {
-          it.run {
-            MedicalHistoryPayload(
-                uuid = uuid,
-                patientUuid = patientUuid,
-                diagnosedWithHypertension = diagnosedWithHypertension,
-                isOnTreatmentForHypertension = isOnHypertensionTreatment,
-                isOnDiabetesTreatment = isOnDiabetesTreatment,
-                hasHadHeartAttack = hasHadHeartAttack,
-                hasHadStroke = hasHadStroke,
-                hasHadKidneyDisease = hasHadKidneyDisease,
-                hasDiabetes = diagnosedWithDiabetes,
-                hasHypertension = diagnosedWithHypertension,
-                isSmoking = isSmoking,
-                isUsingSmokelessTobacco = isUsingSmokelessTobacco,
-                cholesterol = cholesterol,
-                hypertensionDiagnosedAt = hypertensionDiagnosedAt,
-                diabetesDiagnosedAt = diabetesDiagnosedAt,
-                createdAt = createdAt,
-                updatedAt = updatedAt,
-                deletedAt = deletedAt)
-          }
-        }
+    val payloads = histories.map { it.toPayload() }
     return MedicalHistoryPushRequest(payloads)
   }
 }

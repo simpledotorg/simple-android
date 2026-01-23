@@ -26,6 +26,8 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       is DatabaseEncryptionStatusLoaded -> next(
           model.databaseEncryptionStatusLoaded(isDatabaseEncrypted = event.isDatabaseEncrypted)
       )
+
+      is MedicalRecordsFetched -> noChange()
     }
   }
 

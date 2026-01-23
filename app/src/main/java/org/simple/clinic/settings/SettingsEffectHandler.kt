@@ -8,6 +8,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -16,6 +17,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class SettingsEffectHandler @AssistedInject constructor(
     private val userSession: UserSession,
     private val settingsRepository: SettingsRepository,
+    private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val appVersionFetcher: AppVersionFetcher,
     private val appUpdateAvailability: CheckAppUpdateAvailability,
@@ -37,8 +39,9 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
-      .addTransformer(LogoutUser::class.java, logoutUser())
+      .addTransformer(LogoutUser::class.java, fetchCompleteMedicalRecords())
       .addTransformer(LoadDatabaseEncryptionStatus::class.java, loadDatabaseEncryptionStatus())
+//      .addTransformer(FetchCompleteMedicalRecords::class.java, fetchCompleteMedicalRecords())
       .build()
 
   private fun loadDatabaseEncryptionStatus(): ObservableTransformer<LoadDatabaseEncryptionStatus, SettingsEvent> {
@@ -95,6 +98,15 @@ class SettingsEffectHandler @AssistedInject constructor(
           .map {
             AppUpdateAvailabilityChecked(it is AppUpdateState.ShowAppUpdate)
           }
+    }
+  }
+
+  private fun fetchCompleteMedicalRecords(): ObservableTransformer<LogoutUser, SettingsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.fetchCompleteMedicalRecord() }
+          .map(::MedicalRecordsFetched)
     }
   }
 }

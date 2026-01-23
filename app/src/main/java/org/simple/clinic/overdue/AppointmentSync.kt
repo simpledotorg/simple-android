@@ -33,26 +33,7 @@ class AppointmentSync @Inject constructor(
   }
 
   private fun toRequest(appointments: List<Appointment>): AppointmentPushRequest {
-    val payloads = appointments
-        .map {
-          it.run {
-            AppointmentPayload(
-                uuid = uuid,
-                patientUuid = patientUuid,
-                facilityUuid = facilityUuid,
-                creationFacilityUuid = creationFacilityUuid,
-                date = scheduledDate,
-                status = status,
-                cancelReason = cancelReason,
-                remindOn = remindOn,
-                agreedToVisit = agreedToVisit,
-                appointmentType = appointmentType,
-                createdAt = createdAt,
-                updatedAt = updatedAt,
-                deletedAt = deletedAt)
-          }
-        }
-        .toList()
+    val payloads = appointments.map { it.toPayload() }
     return AppointmentPushRequest(payloads)
   }
 }

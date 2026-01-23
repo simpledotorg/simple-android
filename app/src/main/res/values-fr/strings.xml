@@ -437,7 +437,7 @@
   <string name="changelanguage_done">Terminé</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Veuillez patienter...</string>
+  <string name="placeholder_loading_title">Veuillez patienter…</string>
   <string name="placeholder_loading_message">Maintenance de la base de données en cours. Cela ne prendra qu\'une minute.</string>
 
   <!-- Select Country Screen -->
@@ -530,8 +530,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marquer le patient comme étant \"D\'accord pour une visite\"</string>
-  <string name="contactpatient_remind_call_later">Rappeler plus tard...</string>
-  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards...</string>
+  <string name="contactpatient_remind_call_later">Rappeler plus tard…</string>
+  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards…</string>
   <string name="contactpatient_result_of_call">Résultat de l\'appel</string>
   <string name="contactpatient_call">Appeler</string>
   <string name="contactpatient_call_normal">Normal</string>

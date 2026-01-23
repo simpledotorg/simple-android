@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import java.time.Instant
 import java.util.UUID
 
@@ -46,6 +47,18 @@ data class PatientPhoneNumber(
 
     val deletedAt: Instant?
 ) : Parcelable {
+
+  fun toPayload(): PatientPhoneNumberPayload {
+    return PatientPhoneNumberPayload(
+        uuid = uuid,
+        number = number,
+        type = phoneType,
+        active = active,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
 
   fun withNumber(number: String): PatientPhoneNumber =
       copy(number = number)

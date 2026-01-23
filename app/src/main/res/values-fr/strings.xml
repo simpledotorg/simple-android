@@ -437,7 +437,7 @@
   <string name="changelanguage_done">Terminé</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Veuillez patienter…</string>
+  <string name="placeholder_loading_title">Veuillez patienter...</string>
   <string name="placeholder_loading_message">Maintenance de la base de données en cours. Cela ne prendra qu\'une minute.</string>
 
   <!-- Select Country Screen -->
@@ -530,8 +530,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marquer le patient comme étant \"D\'accord pour une visite\"</string>
-  <string name="contactpatient_remind_call_later">Rappeler plus tard…</string>
-  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards…</string>
+  <string name="contactpatient_remind_call_later">Rappeler plus tard...</string>
+  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards...</string>
   <string name="contactpatient_result_of_call">Résultat de l\'appel</string>
   <string name="contactpatient_call">Appeler</string>
   <string name="contactpatient_call_normal">Normal</string>
@@ -935,7 +935,7 @@
 
   <!-- Patient transfer to CC -->
   <string name="patient_facility_reassignment">Éligible au renouvèlement de la CC</string>
-  <string name="reassign_patient_title">Éligible pour des renouvellements au CC. Transférer le patient \?</string>
+  <string name="reassign_patient_title">Éligible pour des renouvellements à la CC. Transférer le patient \?</string>
   <string name="reassign_patient_description">Orienter vers la clinique communautaire de préférence pour les prochaines visites.</string>
   <string name="change_patient_facility">Modifier</string>
 

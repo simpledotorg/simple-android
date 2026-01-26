@@ -3,7 +3,6 @@ plugins {
   alias(libs.plugins.android.library) apply false
   alias(libs.plugins.android.lint) apply false
   alias(libs.plugins.androidx.benchmark) apply false
-  alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlin.parcelize) apply false
   alias(libs.plugins.kotlin.compose.compiler) apply false
@@ -14,9 +13,9 @@ plugins {
 
 buildscript {
   extra.apply {
-    set("compileSdkVersion", 35)
+    set("compileSdkVersion", 36)
     set("minSdkVersion", 26)
-    set("targetSdkVersion", 35)
+    set("targetSdkVersion", 36)
   }
 
   repositories {

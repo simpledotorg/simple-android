@@ -40,6 +40,9 @@ data class SettingsModel(
   val appVersionQueried: Boolean
     get() = appVersion != null
 
+  val isMedicalRecordsPushInProgress: Boolean
+    get() = isPushingMedicalRecords == true
+
   fun userDetailsFetched(name: String, phoneNumber: String): SettingsModel {
     return copy(name = name, phoneNumber = phoneNumber)
   }
@@ -71,6 +74,11 @@ data class SettingsModel(
   fun databaseEncryptionStatusLoaded(isDatabaseEncrypted: Boolean): SettingsModel {
     return copy(isDatabaseEncrypted = isDatabaseEncrypted)
   }
+
+  fun medicalRecordsPushStarted(): SettingsModel {
+    return copy(isPushingMedicalRecords = true)
+  }
+
   fun medicalRecordsPushCompleted(): SettingsModel {
     return copy(isPushingMedicalRecords = false)
   }

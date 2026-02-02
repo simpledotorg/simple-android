@@ -28,6 +28,7 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       )
 
       is MedicalRecordsFetched -> noChange()
+      is PushAllMedicalRecordsClicked -> next(model.medicalRecordsPushStarted(), FetchCompleteMedicalRecords)
       is PushMedicalRecordsOnlineCompleted -> next(model.medicalRecordsPushCompleted())
     }
   }

@@ -35,6 +35,10 @@ data object BackClicked : SettingsEvent() {
 
 data class DatabaseEncryptionStatusLoaded(val isDatabaseEncrypted: Boolean) : SettingsEvent()
 
+data object PushAllMedicalRecordsClicked : SettingsEvent() {
+  override val analyticsName: String = "Settings:Push all medical records Clicked"
+}
+
 data class MedicalRecordsFetched(
     val completeMedicalRecords: List<CompleteMedicalRecord>
 ) : SettingsEvent()

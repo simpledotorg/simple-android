@@ -1,6 +1,7 @@
 package org.simple.clinic.patient.sync
 
 import org.simple.clinic.di.network.Timeout
+import org.simple.clinic.patient.medicalRecords.CompleteMedicalRecordsPushRequest
 import org.simple.clinic.patient.onlinelookup.api.OnlineLookupResponsePayload
 import org.simple.clinic.patient.onlinelookup.api.PatientOnlineLookupRequest
 import org.simple.clinic.sync.DataPushResponse
@@ -31,4 +32,9 @@ interface PatientSyncApi {
   fun lookup(
       @Body body: PatientOnlineLookupRequest
   ): Call<OnlineLookupResponsePayload>
+
+  @POST("v4/legacy_data_dumps")
+  fun pushAllPatientsData(
+      @Body body: CompleteMedicalRecordsPushRequest
+  ): Call<DataPushResponse>
 }

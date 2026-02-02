@@ -12,7 +12,9 @@ data class SettingsModel(
     val isUpdateAvailable: Boolean?,
     val isUserLoggingOut: Boolean?,
     val isDatabaseEncrypted: Boolean?,
-    val isChangeLanguageFeatureEnabled: Boolean,
+    val isPushingMedicalRecords: Boolean?,
+    val isChangeLanguageFeatureEnabled: Boolean
+
 ) : Parcelable {
 
   companion object {
@@ -24,6 +26,7 @@ data class SettingsModel(
         isUpdateAvailable = null,
         isUserLoggingOut = null,
         isDatabaseEncrypted = null,
+        isPushingMedicalRecords = null,
         isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
     )
   }
@@ -67,5 +70,8 @@ data class SettingsModel(
 
   fun databaseEncryptionStatusLoaded(isDatabaseEncrypted: Boolean): SettingsModel {
     return copy(isDatabaseEncrypted = isDatabaseEncrypted)
+  }
+  fun medicalRecordsPushCompleted(): SettingsModel {
+    return copy(isPushingMedicalRecords = false)
   }
 }

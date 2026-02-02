@@ -7,8 +7,12 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
+import java.util.UUID
 
 class SettingsUpdateTest {
 
@@ -152,13 +156,35 @@ class SettingsUpdateTest {
   }
 
   @Test
-  fun `when database encryption status is loaded, then update ui`() {
+  fun `when sync medical records button is clicked, then update model and fetch complete medical records`() {
     spec
         .given(defaultModel)
-        .whenEvent(DatabaseEncryptionStatusLoaded(isDatabaseEncrypted = true))
+        .whenEvent(PushAllMedicalRecordsClicked)
         .then(assertThatNext(
-            hasModel(defaultModel.databaseEncryptionStatusLoaded(isDatabaseEncrypted = true)),
-            hasNoEffects()
+            hasModel(defaultModel.medicalRecordsPushStarted()),
+            hasEffects(FetchCompleteMedicalRecords)
+        ))
+  }
+
+  @Test
+  fun `when complete medical records are fetch, then push them online`() {
+    // given
+    val identifier = Identifier("4f1cea37-70ff-498e-bd09-ad0ca75628ff", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("0b78c024-f527-4306-9e20-6ae6d7251e9b"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("47fdb968-9512-4e50-b95f-cc83c6de4b0a"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(MedicalRecordsFetched(medicalRecords))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(PushCompleteMedicalRecordsOnline(medicalRecords))
         ))
   }
 }

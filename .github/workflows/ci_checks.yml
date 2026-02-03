@@ -19,7 +19,10 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v6
-      - name: Verify PR description
+      - name: Verify PR has Jira reference
+        env:
+          GITHUB_PR_TITLE: ${{ github.event.pull_request.title }}
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
         run: .github/scripts/story_link_check.sh '${{ github.event.pull_request.body }}'
 
   verify_changelog_was_updated:

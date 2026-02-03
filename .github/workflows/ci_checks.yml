@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify_pr_has_story_link:
+  verify_pr_has_jira_reference:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:

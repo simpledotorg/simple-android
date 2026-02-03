@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 2026.02.02
+
 ### Internal
 
 - Bump Sentry to v8.30.0

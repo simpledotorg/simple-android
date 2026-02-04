@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+-Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+
 ## 2026.02.02
 
 ### Internal

@@ -4,7 +4,8 @@
 
 ### Internal
 
--Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+- Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+- Add effect to fetch complete medical records
 
 ## 2026.02.02
 

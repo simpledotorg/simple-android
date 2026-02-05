@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreat
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsSmoking
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsUsingSmokelessTobacco
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
@@ -112,6 +113,28 @@ data class MedicalHistory(
 
   fun cholesterolChanged(cholesterol: Float): MedicalHistory {
     return copy(cholesterol = cholesterol)
+  }
+
+  fun toPayload(): MedicalHistoryPayload {
+    return MedicalHistoryPayload(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = diagnosedWithHypertension,
+        isOnTreatmentForHypertension = isOnHypertensionTreatment,
+        isOnDiabetesTreatment = isOnDiabetesTreatment,
+        hasHadHeartAttack = hasHadHeartAttack,
+        hasHadStroke = hasHadStroke,
+        hasHadKidneyDisease = hasHadKidneyDisease,
+        hasDiabetes = diagnosedWithDiabetes,
+        hasHypertension = diagnosedWithHypertension,
+        isSmoking = isSmoking,
+        isUsingSmokelessTobacco = isUsingSmokelessTobacco,
+        cholesterol = cholesterol,
+        hypertensionDiagnosedAt = hypertensionDiagnosedAt,
+        diabetesDiagnosedAt = diabetesDiagnosedAt,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   @Dao

@@ -51,6 +51,23 @@ data class Appointment(
     val creationFacilityUuid: UUID?
 ) : Parcelable {
 
+  fun toPayload(): AppointmentPayload {
+    return AppointmentPayload(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        creationFacilityUuid = creationFacilityUuid,
+        date = scheduledDate,
+        status = status,
+        cancelReason = cancelReason,
+        remindOn = remindOn,
+        agreedToVisit = agreedToVisit,
+        appointmentType = appointmentType,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
+  }
+
   fun wasCancelledBecauseOfInvalidPhoneNumber(): Boolean = status == Status.Cancelled && cancelReason == AppointmentCancelReason.InvalidPhoneNumber
 
   sealed class Status : Parcelable {

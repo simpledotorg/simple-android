@@ -38,9 +38,8 @@ class PatientSync @Inject constructor(
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(
         patients.map { (patient, address, phoneNumbers, businessIds) ->
-          val numberPayloads = phoneNumbers
-              .map(::phoneNumberPayload)
-              .let { payloads -> if (payloads.isEmpty()) null else payloads }
+          val numberPayloads = phoneNumbers.map { it.toPayload() }
+              .let { payloads -> payloads.ifEmpty { null } }
 
           val businessIdPayloads = businessIds
               .map { it.toPayload() }
@@ -70,18 +69,5 @@ class PatientSync @Inject constructor(
           }
         }
     )
-  }
-
-  private fun phoneNumberPayload(phoneNumber: PatientPhoneNumber): PatientPhoneNumberPayload {
-    return phoneNumber.run {
-      PatientPhoneNumberPayload(
-          uuid = uuid,
-          number = number,
-          type = phoneType,
-          active = active,
-          createdAt = createdAt,
-          updatedAt = updatedAt,
-          deletedAt = deletedAt)
-    }
   }
 }

@@ -1,20 +1,23 @@
 package org.simple.clinic.settings
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -33,9 +36,12 @@ class SettingsEffectHandlerTest {
   private val checkAppUpdateAvailability = mock<CheckAppUpdateAvailability>()
   private val databaseEncryptor = mock<DatabaseEncryptor>()
 
+  private val patientRepository = mock<PatientRepository>()
+
   private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
       settingsRepository = settingsRepository,
+      patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       appVersionFetcher = appVersionFetcher,
       appUpdateAvailability = checkAppUpdateAvailability,
@@ -211,5 +217,28 @@ class SettingsEffectHandlerTest {
     verifyNoInteractions(userSession)
 
     testCase.assertOutgoingEvents(DatabaseEncryptionStatusLoaded(isDatabaseEncrypted = true))
+  }
+
+  @Test
+  fun `when fetch complete medical records effect is received, then fetch all medical records`() {
+    //given
+    val identifier = Identifier("4f1cea37-70ff-498e-bd09-ad0ca75628ff", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("0b78c024-f527-4306-9e20-6ae6d7251e9b"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("47fdb968-9512-4e50-b95f-cc83c6de4b0a"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    whenever(patientRepository.fetchCompleteMedicalRecord()) doReturn medicalRecords
+
+    // when
+    testCase.dispatch(FetchCompleteMedicalRecords)
+
+    // then
+    testCase.assertOutgoingEvents(MedicalRecordsFetched(medicalRecords))
+    verifyNoMoreInteractions(uiActions)
   }
 }

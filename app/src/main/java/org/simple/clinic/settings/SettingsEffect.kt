@@ -1,5 +1,7 @@
 package org.simple.clinic.settings
 
+import org.simple.clinic.scanid.ScanSimpleIdEffect
+
 sealed class SettingsEffect
 
 data object LoadUserDetailsEffect : SettingsEffect()
@@ -23,3 +25,6 @@ data object ShowConfirmLogoutDialog : SettingsViewEffect()
 data object RestartApp : SettingsViewEffect()
 
 data object GoBack : SettingsViewEffect()
+
+data object FetchCompleteMedicalRecords : SettingsEffect()
+

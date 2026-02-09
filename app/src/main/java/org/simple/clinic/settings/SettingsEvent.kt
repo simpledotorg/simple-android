@@ -1,5 +1,7 @@
 package org.simple.clinic.settings
 
+import org.simple.clinic.patient.CompleteMedicalRecord
+import org.simple.clinic.scanid.ScanSimpleIdEvent
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
@@ -32,3 +34,7 @@ data object BackClicked : SettingsEvent() {
 }
 
 data class DatabaseEncryptionStatusLoaded(val isDatabaseEncrypted: Boolean) : SettingsEvent()
+
+data class MedicalRecordsFetched(
+    val completeMedicalRecords: List<CompleteMedicalRecord>
+) : SettingsEvent()

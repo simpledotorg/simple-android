@@ -1,13 +1,30 @@
 #!/bin/bash
+set -e
 
-link="$1"
+PR_BODY="$1"
 
-story_regex="https:\/\/app.shortcut.com\/simpledotorg\/story\/[0-9]+(\/.*)?"
+JIRA_KEY_REGEX='[A-Z][A-Z0-9]+-[0-9]+'
 
-if [[ "$link" =~ $story_regex ]]; then
-  echo "PR description contains a valid story link."
+echo "🔍 Verifying Jira reference..."
+
+# 1. Check PR body
+if [[ "$PR_BODY" =~ $JIRA_KEY_REGEX ]]; then
+  echo "✅ Jira key found in PR description"
   exit 0
-else
-  echo "PR description doesn't contain any valid story links."
-  exit 1
 fi
+
+# 2. Check PR title
+if [[ "$GITHUB_PR_TITLE" =~ $JIRA_KEY_REGEX ]]; then
+  echo "✅ Jira key found in PR title"
+  exit 0
+fi
+
+# 3. Check branch name
+if [[ "$GITHUB_HEAD_REF" =~ $JIRA_KEY_REGEX ]]; then
+  echo "✅ Jira key found in branch name"
+  exit 0
+fi
+
+echo "❌ No Jira issue key found."
+echo "Expected something like ENG-1234 in branch name, PR title, PR description."
+exit 1

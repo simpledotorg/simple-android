@@ -4,6 +4,15 @@
 
 ### Internal
 
+- Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+- Add effect to fetch complete medical records
+- Bump sqlcipher to v4.13.0
+- Bump dagger to v2.59.1
+
+## 2026.02.02
+
+### Internal
+
 - Bump Sentry to v8.30.0
 - Bump AndroidX Lifecycle to v2.10.0
 - Bump AndroidX Test Runner to v1.7.0

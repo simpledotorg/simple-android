@@ -13,7 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
-import org.simple.clinic.patient.Answer.*
+import org.simple.clinic.patient.Answer.Unanswered
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.SyncStatus.DONE
@@ -738,6 +738,31 @@ class PatientRepository @Inject constructor(
         database.appointmentDao().save(medicalRecord.appointments)
         database.prescriptionDao().save(medicalRecord.prescribedDrugs)
       }
+    }
+  }
+
+  fun fetchCompleteMedicalRecord(): List<CompleteMedicalRecord> {
+    val patientProfiles = database.patientDao().allPatientProfiles()
+    return patientProfiles.map { patientProfile ->
+      val patientUuid = patientProfile.patientUuid
+      val medicalHistory = database.medicalHistoryDao().historyForPatientImmediate(patientUuid)
+      val appointments = database.appointmentDao().getAllAppointmentsForPatient(patientUuid)
+      val bloodPressures = database.bloodPressureDao().allBloodPressuresRecordedSinceImmediate(
+          patientUuid,
+          Instant.EPOCH
+      )
+      val bloodSugars = database.bloodSugarDao().allBloodSugarsImmediate(patientUuid)
+
+      val prescribedDrugs = database.prescriptionDao().forPatientImmediate(patientUuid)
+
+      CompleteMedicalRecord(
+          patient = patientProfile,
+          medicalHistory = medicalHistory,
+          appointments = appointments,
+          bloodPressures = bloodPressures,
+          bloodSugars = bloodSugars,
+          prescribedDrugs = prescribedDrugs
+      )
     }
   }
 

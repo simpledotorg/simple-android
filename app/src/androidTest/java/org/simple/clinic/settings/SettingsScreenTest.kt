@@ -18,6 +18,7 @@ class SettingsScreenTest {
 
   private val defaultSettingsModel = SettingsModel.default(
       isChangeLanguageFeatureEnabled = true,
+      showDiagnosisButton = true
   )
 
   @Test
@@ -30,7 +31,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -58,7 +60,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -78,7 +81,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -97,7 +101,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -115,7 +120,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -133,7 +139,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -150,7 +157,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -168,7 +176,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -186,7 +195,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -198,6 +208,7 @@ class SettingsScreenTest {
   fun whenChangeLanguageFeatureIsNotEnabledThenDoNotShowChangeLanguageSetting() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = false,
+        showDiagnosisButton = true
     )
     composeRule.setContent {
       SettingsScreen(
@@ -205,7 +216,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -217,6 +229,7 @@ class SettingsScreenTest {
   fun whenChangeLanguageFeatureIsEnabledThenShowChangeLanguageSetting() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
+        showDiagnosisButton = true,
     )
     composeRule.setContent {
       SettingsScreen(
@@ -224,7 +237,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 
@@ -236,6 +250,7 @@ class SettingsScreenTest {
   fun logoutButtonShouldBeVisible() {
     val model = SettingsModel.default(
         isChangeLanguageFeatureEnabled = true,
+        showDiagnosisButton = true
     )
     composeRule.setContent {
       SettingsScreen(
@@ -243,7 +258,8 @@ class SettingsScreenTest {
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
           updateButtonClick = { /*no-op*/ },
-          logoutButtonClick = { /*no-op*/ }
+          logoutButtonClick = { /*no-op*/ },
+          syncMedicalRecordClick = { /*no-op*/ }
       )
     }
 

@@ -14,7 +14,6 @@ import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.TestUtcClock
 import retrofit2.Call
 import retrofit2.Response
-import java.time.Duration
 import java.time.Instant
 
 class PushMedicalRecordsOnlineTest {
@@ -28,7 +27,6 @@ class PushMedicalRecordsOnlineTest {
   private val pushMedicalRecordsOnline = PushMedicalRecordsOnline(
       patientSyncApi = patientSyncApi,
       clock = clock,
-      fallbackRecordRetentionDuration = Duration.ZERO
   )
 
 

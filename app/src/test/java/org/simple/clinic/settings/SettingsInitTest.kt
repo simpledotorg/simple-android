@@ -9,7 +9,8 @@ import org.junit.Test
 class SettingsInitTest {
 
   private val defaultModel = SettingsModel.default(
-      isChangeLanguageFeatureEnabled = true
+      isChangeLanguageFeatureEnabled = true,
+      showDiagnosisButton = true,
   )
 
   private val spec = InitSpec(SettingsInit())

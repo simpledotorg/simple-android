@@ -18,6 +18,7 @@ class SettingsUpdateTest {
 
   private val defaultModel = SettingsModel.default(
       isChangeLanguageFeatureEnabled = true,
+      showDiagnosisButton = true
   )
 
   private val spec = UpdateSpec(SettingsUpdate())

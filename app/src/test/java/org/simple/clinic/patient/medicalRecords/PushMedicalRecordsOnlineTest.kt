@@ -8,6 +8,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.sync.DataPushResponse
@@ -32,7 +33,7 @@ class PushMedicalRecordsOnlineTest {
 
   private fun mockCall(): Call<DataPushResponse> = mock()
 
-  private fun fakeMedicalRecord(): CompleteMedicalRecord = mock()
+  private fun fakeMedicalRecord(): CompleteMedicalRecord = TestData.completeMedicalRecord()
 
 
   @Test

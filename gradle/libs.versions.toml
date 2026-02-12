@@ -9,7 +9,7 @@ androidx-work = "2.11.0"
 androidx-security-crypto = "1.1.0"
 androidx-viewmodel = "2.10.0"
 androidx-lifecycle = "2.10.0"
-androidx-activity = "1.12.2"
+androidx-activity = "1.12.4"
 
 chucker = "4.3.0"
 dagger = "2.59.1"

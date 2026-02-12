@@ -13,12 +13,13 @@ data class SettingsModel(
     val isUserLoggingOut: Boolean?,
     val isDatabaseEncrypted: Boolean?,
     val isPushingMedicalRecords: Boolean?,
-    val isChangeLanguageFeatureEnabled: Boolean
+    val isChangeLanguageFeatureEnabled: Boolean,
+    val showDiagnosisButton: Boolean,
 
-) : Parcelable {
+    ) : Parcelable {
 
   companion object {
-    fun default(isChangeLanguageFeatureEnabled: Boolean) = SettingsModel(
+    fun default(isChangeLanguageFeatureEnabled: Boolean, showDiagnosisButton: Boolean) = SettingsModel(
         name = null,
         phoneNumber = null,
         currentLanguage = null,
@@ -28,6 +29,7 @@ data class SettingsModel(
         isDatabaseEncrypted = null,
         isPushingMedicalRecords = null,
         isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
+        showDiagnosisButton = showDiagnosisButton
     )
   }
 

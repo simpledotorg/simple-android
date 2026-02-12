@@ -43,11 +43,16 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
     features.isEnabled(Feature.ChangeLanguage)
   }
 
+  private val showDiagnosisButton by unsafeLazy {
+    features.isEnabled(Feature.ShowDiagnosisButton)
+  }
+
   private val viewEffectHandler by unsafeLazy { SettingsViewEffectHandler(this) }
   private val viewModel by mobiusViewModels(
       defaultModel = {
         SettingsModel.default(
             isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
+            showDiagnosisButton = showDiagnosisButton
         )
       },
       init = { SettingsInit() },

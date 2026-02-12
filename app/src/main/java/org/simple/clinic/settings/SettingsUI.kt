@@ -261,13 +261,15 @@ private fun SettingsList(
       )
     }
 
-    item {
-      SyncMedicalRecordsButton(
-          modifier = Modifier
-              .padding(top = 48.dp)
-              .testTag("SETTINGS_LOGOUT_BUTTON"),
-          syncMedicalRecords = syncMedicalRecordClick
-      )
+    if (model.showDiagnosisButton) {
+      item {
+        SyncMedicalRecordsButton(
+            modifier = Modifier
+                .padding(top = 48.dp)
+                .testTag("SETTINGS_LOGOUT_BUTTON"),
+            syncMedicalRecords = syncMedicalRecordClick
+        )
+      }
     }
   }
 }
@@ -378,6 +380,7 @@ private val previewSettingsModel = SettingsModel(
     isDatabaseEncrypted = true,
     isPushingMedicalRecords = false,
     isChangeLanguageFeatureEnabled = true,
+    showDiagnosisButton = true,
 )
 
 @Preview

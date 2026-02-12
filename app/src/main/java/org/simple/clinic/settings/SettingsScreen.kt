@@ -73,7 +73,8 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
               navigationIconClick = { onBackPressed() },
               changeLanguageButtonClick = { viewModel.dispatchEvent(ChangeLanguage) },
               updateButtonClick = { launchPlayStoreForUpdate() },
-              logoutButtonClick = { viewModel.dispatchEvent(LogoutButtonClicked) }
+              logoutButtonClick = { viewModel.dispatchEvent(LogoutButtonClicked) },
+              syncMedicalRecordClick = { viewModel.dispatchEvent(PushAllMedicalRecordsClicked) },
           )
         }
       }

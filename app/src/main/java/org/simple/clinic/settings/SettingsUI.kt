@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -42,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
+import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.components.OutlinedButton
 import org.simple.clinic.common.ui.components.TopAppBar
 import org.simple.clinic.common.ui.theme.SimpleRedTheme
@@ -54,6 +54,7 @@ fun SettingsScreen(
     changeLanguageButtonClick: () -> Unit,
     updateButtonClick: () -> Unit,
     logoutButtonClick: () -> Unit,
+    syncMedicalRecordClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
   SimpleTheme {
@@ -80,11 +81,12 @@ fun SettingsScreen(
           paddingValues = paddingValues,
           changeLanguageButtonClick = changeLanguageButtonClick,
           updateButtonClick = updateButtonClick,
-          logoutButtonClick = logoutButtonClick
+          logoutButtonClick = logoutButtonClick,
+          syncMedicalRecordClick = syncMedicalRecordClick
       )
     }
 
-    if (model.isUserLoggingOut == true) {
+    if (model.isUserLoggingOut == true || model.isMedicalRecordsPushInProgress) {
       // Scrim
       Box(
           modifier = Modifier
@@ -106,7 +108,8 @@ private fun SettingsList(
     paddingValues: PaddingValues,
     changeLanguageButtonClick: () -> Unit,
     updateButtonClick: () -> Unit,
-    logoutButtonClick: () -> Unit
+    logoutButtonClick: () -> Unit,
+    syncMedicalRecordClick: () -> Unit,
 ) {
   LazyColumn(
       modifier = Modifier
@@ -257,6 +260,15 @@ private fun SettingsList(
           logout = logoutButtonClick
       )
     }
+
+    item {
+      SyncMedicalRecordsButton(
+          modifier = Modifier
+              .padding(top = 48.dp)
+              .testTag("SETTINGS_LOGOUT_BUTTON"),
+          syncMedicalRecords = syncMedicalRecordClick
+      )
+    }
   }
 }
 
@@ -337,6 +349,25 @@ private fun LogoutButton(
   }
 }
 
+@Composable
+private fun SyncMedicalRecordsButton(
+    modifier: Modifier = Modifier,
+    syncMedicalRecords: () -> Unit
+) {
+  Box(modifier) {
+    SimpleTheme {
+      FilledButton(
+          onClick = syncMedicalRecords,
+          modifier = Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 16.dp),
+      ) {
+        Text(text = stringResource(id = R.string.settings_sync_medical_records).uppercase())
+      }
+    }
+  }
+}
+
 private val previewSettingsModel = SettingsModel(
     name = "Riya Murthy",
     phoneNumber = "1111111111",
@@ -345,6 +376,7 @@ private val previewSettingsModel = SettingsModel(
     isUpdateAvailable = true,
     isUserLoggingOut = null,
     isDatabaseEncrypted = true,
+    isPushingMedicalRecords = false,
     isChangeLanguageFeatureEnabled = true,
 )
 
@@ -383,6 +415,9 @@ private fun SettingsScreenContentPreview() {
         // no-op
       },
       logoutButtonClick = {
+        // no-op
+      },
+      syncMedicalRecordClick = {
         // no-op
       }
   )

@@ -9,6 +9,10 @@
 - Bump sqlcipher to v4.13.0
 - Bump dagger to v2.59.1
 
+### Changes
+
+- Add `Sync Medical Records` button on setting page behind feature flag
+
 ## 2026.02.02
 
 ### Internal

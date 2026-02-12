@@ -483,6 +483,7 @@
   <string name="settings_update">Update</string>
   <string name="settings_software_version">Version %1$s</string>
   <string name="settings_logout">Logout</string>
+  <string name="settings_sync_medical_records">Sync medical records</string>
   <string name="settings_logout_dialog_title">Logout</string>
   <string name="settings_logout_dialog_desc">Are you sure you want to logout?</string>
   <string name="settings_logout_dialog_positive_action">Yes</string>

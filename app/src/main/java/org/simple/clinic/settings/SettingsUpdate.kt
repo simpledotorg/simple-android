@@ -27,7 +27,9 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
           model.databaseEncryptionStatusLoaded(isDatabaseEncrypted = event.isDatabaseEncrypted)
       )
 
-      is MedicalRecordsFetched -> noChange()
+      is PushAllMedicalRecordsClicked -> next(model.medicalRecordsPushStarted(), FetchCompleteMedicalRecords)
+      is MedicalRecordsFetched -> dispatch(PushCompleteMedicalRecordsOnline(event.completeMedicalRecords))
+      is PushMedicalRecordsOnlineCompleted -> next(model.medicalRecordsPushCompleted())
     }
   }
 

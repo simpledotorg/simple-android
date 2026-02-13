@@ -4,7 +4,14 @@
 
 ### Internal
 
--Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+- Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
+- Add effect to fetch complete medical records
+- Bump sqlcipher to v4.13.0
+- Bump dagger to v2.59.1
+
+### Changes
+
+- Add `Sync Medical Records` button on setting page behind feature flag
 
 ## 2026.02.02
 

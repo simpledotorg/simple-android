@@ -8,6 +8,7 @@
 - Add effect to fetch complete medical records
 - Bump sqlcipher to v4.13.0
 - Bump dagger to v2.59.1
+- Bump Mockito Kotlin to v6.2.3
 
 ### Changes
 

@@ -10,6 +10,7 @@
 - Bump dagger to v2.59.1
 - Bump Mockito Kotlin to v6.2.3
 - Bump Sentry to v8.32.0
+- Bump Sentry Android to v6.0.0
 
 ### Changes
 

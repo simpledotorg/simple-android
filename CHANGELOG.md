@@ -12,6 +12,8 @@
 - Bump Sentry to v8.32.0
 - Bump Sentry Android to v6.0.0
 - Bump KSP to v2.3.5
+- Bump AndroidX Camera to v1.5.3
+- Bump AndroidX Camera View to v1.5.3
 
 ### Changes
 

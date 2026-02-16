@@ -8,6 +8,15 @@
 - Add effect to fetch complete medical records
 - Bump sqlcipher to v4.13.0
 - Bump dagger to v2.59.1
+- Bump Mockito Kotlin to v6.2.3
+- Bump Sentry to v8.32.0
+- Bump Sentry Android to v6.0.0
+- Bump KSP to v2.3.5
+- Bump AndroidX Camera to v1.5.3
+- Bump AndroidX Camera View to v1.5.3
+- Bump AndroidX Work to v2.11.1
+- Bump AndroidX Activity to v1.12.4
+- Bump Compose BOM to v2026.02.00
 
 ### Changes
 

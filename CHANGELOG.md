@@ -14,6 +14,7 @@
 - Bump KSP to v2.3.5
 - Bump AndroidX Camera to v1.5.3
 - Bump AndroidX Camera View to v1.5.3
+- Bump AndroidX Work to v2.11.1
 
 ### Changes
 

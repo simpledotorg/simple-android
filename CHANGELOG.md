@@ -16,6 +16,7 @@
 - Bump AndroidX Camera View to v1.5.3
 - Bump AndroidX Work to v2.11.1
 - Bump AndroidX Activity to v1.12.4
+- Bump Compose BOM to v2026.02.00
 
 ### Changes
 

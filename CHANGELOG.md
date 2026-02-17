@@ -19,6 +19,7 @@
 - Bump Compose BOM to v2026.02.00
 - Bump Kotlin to v2.3.10
 - Bump AGP to v9.0.1
+- Bump Lint to v32.0.1
 
 ### Changes
 

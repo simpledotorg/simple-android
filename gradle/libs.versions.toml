@@ -3,7 +3,7 @@ agp = "9.0.1"
 
 androidx-cameraView = "1.5.3"
 androidx-camera = "1.5.3"
-androidx-paging = "3.3.6"
+androidx-paging = "3.4.1"
 androidx-room = "2.8.4"
 androidx-work = "2.11.1"
 androidx-security-crypto = "1.1.0"

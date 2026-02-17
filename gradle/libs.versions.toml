@@ -1,5 +1,5 @@
 [versions]
-agp = "9.0.0"
+agp = "9.0.1"
 
 androidx-cameraView = "1.5.3"
 androidx-camera = "1.5.3"
@@ -14,13 +14,13 @@ androidx-activity = "1.12.4"
 chucker = "4.3.0"
 dagger = "2.59.1"
 
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 
 ksp = "2.3.5"
 
 ktlint = "0.36.0"
 
-lint = "32.0.0"
+lint = "32.0.1"
 
 mobius = "2.1.1"
 

@@ -17,6 +17,7 @@
 - Bump AndroidX Work to v2.11.1
 - Bump AndroidX Activity to v1.12.4
 - Bump Compose BOM to v2026.02.00
+- Bump Kotlin to v2.3.10
 
 ### Changes
 

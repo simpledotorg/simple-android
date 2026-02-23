@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.medicalRecords.PushMedicalRecordsOnline
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -22,6 +23,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val appVersionFetcher: AppVersionFetcher,
     private val appUpdateAvailability: CheckAppUpdateAvailability,
     private val databaseEncryptor: DatabaseEncryptor,
+    private val pushMedicalRecordsOnline: PushMedicalRecordsOnline,
     @Assisted private val viewEffectsConsumer: Consumer<SettingsViewEffect>
 ) {
 
@@ -42,6 +44,7 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LogoutUser::class.java, logoutUser())
       .addTransformer(LoadDatabaseEncryptionStatus::class.java, loadDatabaseEncryptionStatus())
       .addTransformer(FetchCompleteMedicalRecords::class.java, fetchCompleteMedicalRecords())
+      .addTransformer(PushCompleteMedicalRecordsOnline::class.java, pushCompleteMedicalRecordsOnline())
       .build()
 
   private fun loadDatabaseEncryptionStatus(): ObservableTransformer<LoadDatabaseEncryptionStatus, SettingsEvent> {
@@ -107,6 +110,17 @@ class SettingsEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { patientRepository.fetchCompleteMedicalRecord() }
           .map(::MedicalRecordsFetched)
+    }
+  }
+
+  private fun pushCompleteMedicalRecordsOnline(): ObservableTransformer<PushCompleteMedicalRecordsOnline, SettingsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val results = pushMedicalRecordsOnline.pushAllMedicalRecordsOnServer(it.medicalRecords)
+            PushMedicalRecordsOnlineCompleted(results)
+          }
     }
   }
 }

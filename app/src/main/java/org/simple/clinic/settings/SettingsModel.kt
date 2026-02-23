@@ -12,11 +12,14 @@ data class SettingsModel(
     val isUpdateAvailable: Boolean?,
     val isUserLoggingOut: Boolean?,
     val isDatabaseEncrypted: Boolean?,
+    val isPushingMedicalRecords: Boolean?,
     val isChangeLanguageFeatureEnabled: Boolean,
-) : Parcelable {
+    val showDiagnosisButton: Boolean,
+
+    ) : Parcelable {
 
   companion object {
-    fun default(isChangeLanguageFeatureEnabled: Boolean) = SettingsModel(
+    fun default(isChangeLanguageFeatureEnabled: Boolean, showDiagnosisButton: Boolean) = SettingsModel(
         name = null,
         phoneNumber = null,
         currentLanguage = null,
@@ -24,7 +27,9 @@ data class SettingsModel(
         isUpdateAvailable = null,
         isUserLoggingOut = null,
         isDatabaseEncrypted = null,
+        isPushingMedicalRecords = null,
         isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
+        showDiagnosisButton = showDiagnosisButton
     )
   }
 
@@ -36,6 +41,9 @@ data class SettingsModel(
 
   val appVersionQueried: Boolean
     get() = appVersion != null
+
+  val isMedicalRecordsPushInProgress: Boolean
+    get() = isPushingMedicalRecords == true
 
   fun userDetailsFetched(name: String, phoneNumber: String): SettingsModel {
     return copy(name = name, phoneNumber = phoneNumber)
@@ -67,5 +75,13 @@ data class SettingsModel(
 
   fun databaseEncryptionStatusLoaded(isDatabaseEncrypted: Boolean): SettingsModel {
     return copy(isDatabaseEncrypted = isDatabaseEncrypted)
+  }
+
+  fun medicalRecordsPushStarted(): SettingsModel {
+    return copy(isPushingMedicalRecords = true)
+  }
+
+  fun medicalRecordsPushCompleted(): SettingsModel {
+    return copy(isPushingMedicalRecords = false)
   }
 }

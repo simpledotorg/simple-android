@@ -743,26 +743,30 @@ class PatientRepository @Inject constructor(
 
   fun fetchCompleteMedicalRecord(): List<CompleteMedicalRecord> {
     val patientProfiles = database.patientDao().allPatientProfiles()
-    return patientProfiles.map { patientProfile ->
-      val patientUuid = patientProfile.patientUuid
-      val medicalHistory = database.medicalHistoryDao().historyForPatientImmediate(patientUuid)
-      val appointments = database.appointmentDao().getAllAppointmentsForPatient(patientUuid)
-      val bloodPressures = database.bloodPressureDao().allBloodPressuresRecordedSinceImmediate(
-          patientUuid,
-          Instant.EPOCH
-      )
-      val bloodSugars = database.bloodSugarDao().allBloodSugarsImmediate(patientUuid)
+    return patientProfiles.mapNotNull { patientProfile ->
+      try {
+        val patientUuid = patientProfile.patientUuid
+        val medicalHistory = database.medicalHistoryDao().historyForPatientImmediate(patientUuid)
+        val appointments = database.appointmentDao().getAllAppointmentsForPatient(patientUuid)
+        val bloodPressures = database.bloodPressureDao().allBloodPressuresRecordedSinceImmediate(
+            patientUuid,
+            Instant.EPOCH
+        )
+        val bloodSugars = database.bloodSugarDao().allBloodSugarsImmediate(patientUuid)
 
-      val prescribedDrugs = database.prescriptionDao().forPatientImmediate(patientUuid)
+        val prescribedDrugs = database.prescriptionDao().forPatientImmediate(patientUuid)
 
-      CompleteMedicalRecord(
-          patient = patientProfile,
-          medicalHistory = medicalHistory,
-          appointments = appointments,
-          bloodPressures = bloodPressures,
-          bloodSugars = bloodSugars,
-          prescribedDrugs = prescribedDrugs
-      )
+        CompleteMedicalRecord(
+            patient = patientProfile,
+            medicalHistory = medicalHistory,
+            appointments = appointments,
+            bloodPressures = bloodPressures,
+            bloodSugars = bloodSugars,
+            prescribedDrugs = prescribedDrugs
+        )
+      } catch (_: Exception) {
+        null
+      }
     }
   }
 

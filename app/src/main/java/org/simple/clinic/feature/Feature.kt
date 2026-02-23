@@ -26,5 +26,6 @@ enum class Feature(
   PatientStatinNudge(false, "patient_statin_nudge_v0"),
   NonLabBasedStatinNudge(false, "non_lab_based_statin_nudge"),
   LabBasedStatinNudge(false, "lab_based_statin_nudge"),
-  Screening(false, "screening_feature_v0")
+  Screening(false, "screening_feature_v0"),
+  ShowDiagnosisButton(false, "show_diagnosis_button"),
 }

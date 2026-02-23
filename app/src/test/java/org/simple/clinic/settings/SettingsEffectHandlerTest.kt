@@ -18,6 +18,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.medicalRecords.PushMedicalRecordsOnline
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -38,6 +39,8 @@ class SettingsEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
 
+  private val pushMedicalRecordsOnline = mock<PushMedicalRecordsOnline>()
+
   private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
       settingsRepository = settingsRepository,
@@ -46,7 +49,8 @@ class SettingsEffectHandlerTest {
       appVersionFetcher = appVersionFetcher,
       appUpdateAvailability = checkAppUpdateAvailability,
       databaseEncryptor = databaseEncryptor,
-      viewEffectsConsumer = SettingsViewEffectHandler(uiActions)::handle
+      viewEffectsConsumer = SettingsViewEffectHandler(uiActions)::handle,
+      pushMedicalRecordsOnline = pushMedicalRecordsOnline
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -239,6 +243,30 @@ class SettingsEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(MedicalRecordsFetched(medicalRecords))
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when push complete medical records online effect is received, then push all medical records online`() {
+    // given
+    val identifier = Identifier("4f1cea37-70ff-498e-bd09-ad0ca75628ff", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("0b78c024-f527-4306-9e20-6ae6d7251e9b"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("47fdb968-9512-4e50-b95f-cc83c6de4b0a"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    val results = PushMedicalRecordsOnline.Result.Success
+    whenever(pushMedicalRecordsOnline.pushAllMedicalRecordsOnServer(medicalRecords)) doReturn results
+
+    // when
+    testCase.dispatch(PushCompleteMedicalRecordsOnline(medicalRecords))
+
+    // then
+    testCase.assertOutgoingEvents(PushMedicalRecordsOnlineCompleted(results))
     verifyNoMoreInteractions(uiActions)
   }
 }

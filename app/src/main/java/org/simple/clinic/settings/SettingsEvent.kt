@@ -1,7 +1,7 @@
 package org.simple.clinic.settings
 
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.scanid.ScanSimpleIdEvent
+import org.simple.clinic.patient.medicalRecords.PushMedicalRecordsOnline
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
@@ -35,6 +35,14 @@ data object BackClicked : SettingsEvent() {
 
 data class DatabaseEncryptionStatusLoaded(val isDatabaseEncrypted: Boolean) : SettingsEvent()
 
+data object PushAllMedicalRecordsClicked : SettingsEvent() {
+  override val analyticsName: String = "Settings:Push all medical records Clicked"
+}
+
 data class MedicalRecordsFetched(
     val completeMedicalRecords: List<CompleteMedicalRecord>
+) : SettingsEvent()
+
+data class PushMedicalRecordsOnlineCompleted(
+    val result: PushMedicalRecordsOnline.Result,
 ) : SettingsEvent()

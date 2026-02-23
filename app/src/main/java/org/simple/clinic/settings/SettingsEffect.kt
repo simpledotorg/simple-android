@@ -1,6 +1,6 @@
 package org.simple.clinic.settings
 
-import org.simple.clinic.scanid.ScanSimpleIdEffect
+import org.simple.clinic.patient.CompleteMedicalRecord
 
 sealed class SettingsEffect
 
@@ -27,4 +27,8 @@ data object RestartApp : SettingsViewEffect()
 data object GoBack : SettingsViewEffect()
 
 data object FetchCompleteMedicalRecords : SettingsEffect()
+
+data class PushCompleteMedicalRecordsOnline(
+    val medicalRecords: List<CompleteMedicalRecord>
+) : SettingsEffect()
 

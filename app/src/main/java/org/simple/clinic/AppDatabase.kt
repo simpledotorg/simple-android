@@ -49,9 +49,11 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.questionnaire.Questionnaire
 import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.returnScore.ReturnScore
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.returnScore.ScoreType
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
@@ -105,12 +107,13 @@ import org.simple.clinic.patient.Answer as PatientAnswer
       Questionnaire::class,
       QuestionnaireResponse::class,
       PatientAttribute::class,
-      CVDRisk::class
+      CVDRisk::class,
+      ReturnScore::class,
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 122,
+    version = 123,
     exportSchema = true
 )
 @TypeConverters(
@@ -148,6 +151,7 @@ import org.simple.clinic.patient.Answer as PatientAnswer
     MapRoomTypeConverter::class,
     PatientAnswer.RoomTypeConverter::class,
     CVDRiskRange.RoomTypeConverter::class,
+    ScoreType.RoomTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -209,6 +213,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun cvdRiskDao(): CVDRisk.RoomDao
 
+  abstract fun returnScoreDao(): ReturnScore.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -228,6 +234,7 @@ abstract class AppDatabase : RoomDatabase() {
       questionnaireResponseDao().clear()
       patientAttributeDao().clear()
       cvdRiskDao().clear()
+      returnScoreDao().clear()
     }
   }
 
@@ -258,7 +265,8 @@ abstract class AppDatabase : RoomDatabase() {
           purgeUnnecessaryMedicalHistories() +
           purgeUnnecessaryPrescriptions() +
           purgeUnnecessaryCallResults() +
-          purgeUnnecessaryQuestionnaireResponses()
+          purgeUnnecessaryQuestionnaireResponses() +
+          purgeUnnecessaryReturnScores()
     }
   }
 
@@ -314,6 +322,10 @@ abstract class AppDatabase : RoomDatabase() {
   private fun purgeUnnecessaryQuestionnaireResponses(): Int {
     return questionnaireDao().purgeDeleted() +
         questionnaireResponseDao().purgeDeleted()
+  }
+
+  private fun purgeUnnecessaryReturnScores(): Int {
+    return returnScoreDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

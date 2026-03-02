@@ -24,6 +24,7 @@
 ### Changes
 
 - Add `Sync Medical Records` button on setting page behind feature flag
+- Increase the network read timeout to 45 seconds
 
 ## 2026.02.02
 

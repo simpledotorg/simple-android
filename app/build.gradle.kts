@@ -330,6 +330,7 @@ dependencies {
   implementation(libs.kotlin.coroutines)
   implementation(libs.kotlin.coroutines.test)
   implementation(libs.kotlin.stdlib)
+  implementation(libs.kotlin.serialization)
 
   implementation(libs.logback.classic)
 

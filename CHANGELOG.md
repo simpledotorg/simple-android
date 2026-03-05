@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Add `ReturnScore` table
+
 ## 2026.03.02
 
 ### Internal

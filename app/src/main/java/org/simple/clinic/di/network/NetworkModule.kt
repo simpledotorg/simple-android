@@ -32,6 +32,7 @@ import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.InputFieldViewType
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.returnscore.ScoreType
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
 import org.simple.clinic.scanid.IndiaNHIDGender
@@ -98,6 +99,7 @@ class NetworkModule {
         .add(InputFieldViewType.MoshiTypeAdapter())
         .add(PatientAnswer.MoshiTypeAdapter())
         .add(CVDRiskRange.MoshiTypeAdapter())
+        .add(ScoreType.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

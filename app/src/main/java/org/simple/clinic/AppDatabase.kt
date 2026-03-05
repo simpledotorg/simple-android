@@ -49,11 +49,11 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.questionnaire.Questionnaire
 import org.simple.clinic.questionnaire.QuestionnaireType
-import org.simple.clinic.returnScore.ReturnScore
+import org.simple.clinic.returnscore.ReturnScore
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
-import org.simple.clinic.returnScore.ScoreType
+import org.simple.clinic.returnscore.ScoreType
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer

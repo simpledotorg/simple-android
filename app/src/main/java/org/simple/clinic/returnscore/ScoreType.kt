@@ -1,4 +1,4 @@
-package org.simple.clinic.returnScore
+package org.simple.clinic.returnscore
 
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting

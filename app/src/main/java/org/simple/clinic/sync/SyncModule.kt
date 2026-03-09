@@ -48,6 +48,7 @@ import org.simple.clinic.questionnaireresponse.di.QuestionnaireResponseModule
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.returnscore.di.ReturnScoreModule
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
@@ -74,7 +75,8 @@ import javax.inject.Named
   QuestionnaireModule::class,
   QuestionnaireResponseModule::class,
   PatientAttributeModule::class,
-  CVDRiskModule::class
+  CVDRiskModule::class,
+  ReturnScoreModule::class,
 ])
 class SyncModule {
 

@@ -15,6 +15,7 @@ chucker = "4.3.0"
 dagger = "2.59.1"
 
 kotlin = "2.3.10"
+kotlinx-serialization = "1.10.0"
 
 ksp = "2.3.5"
 
@@ -127,6 +128,7 @@ kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", v
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.14"
 

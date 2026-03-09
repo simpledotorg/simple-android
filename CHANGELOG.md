@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Add `ReturnScore` table
+
+## 2026.03.02
+
+### Internal
+
 - Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
 - Add effect to fetch complete medical records
 - Bump sqlcipher to v4.13.0
@@ -24,6 +30,7 @@
 ### Changes
 
 - Add `Sync Medical Records` button on setting page behind feature flag
+- Increase the network read timeout to 45 seconds
 
 ## 2026.02.02
 

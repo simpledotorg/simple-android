@@ -32,6 +32,7 @@ import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.InputFieldViewType
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.returnscore.ScoreType
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
 import org.simple.clinic.scanid.IndiaNHIDGender
@@ -98,6 +99,7 @@ class NetworkModule {
         .add(InputFieldViewType.MoshiTypeAdapter())
         .add(PatientAnswer.MoshiTypeAdapter())
         .add(CVDRiskRange.MoshiTypeAdapter())
+        .add(ScoreType.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()
@@ -123,7 +125,7 @@ class NetworkModule {
           // When syncing large amounts of data, the default read timeout(10s) has been seen to
           // timeout frequently for larger models. Through trial and error, 15s was found to be a
           // good number for syncing large batch sizes.
-          readTimeout(configReader.long("networkmodule_read_timeout", default = 30L), TimeUnit.SECONDS)
+          readTimeout(configReader.long("networkmodule_read_timeout", default = 45L), TimeUnit.SECONDS)
         }
         .build()
   }

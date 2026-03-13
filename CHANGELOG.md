@@ -5,6 +5,7 @@
 ### Internal
 
 - Add `ReturnScore` table
+- Add `ReturnScore` sync resource
 
 ## 2026.03.02
 

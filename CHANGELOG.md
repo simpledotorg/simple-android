@@ -11,6 +11,7 @@
 - Bump AndroidX Paging to v3.4.2
 - Bump Play Services Auth to v21.5.1
 - Bump Kotlin to v2.3.20
+- Bump KSP to v2.3.6
 
 ## 2026.03.02
 

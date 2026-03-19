@@ -9,6 +9,7 @@
 - Bump Sentry Android to v6.1.0
 - Bump AndroidX Benchmark to v1.5.0-alpha04
 - Bump AndroidX Paging to v3.4.2
+- Bump Play Services Auth to v21.5.1
 
 ## 2026.03.02
 

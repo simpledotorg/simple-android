@@ -13,6 +13,7 @@
 - Bump Kotlin to v2.3.20
 - Bump KSP to v2.3.6
 - Bump Sentry to v8.36.0
+- Bump dagger to v2.59.2
 
 ## 2026.03.02
 

@@ -7,6 +7,7 @@
 - Add `ReturnScore` table
 - Add `ReturnScore` sync resource
 - Bump Sentry Android to v6.1.0
+- Bump AndroidX Benchmark to v1.5.0-alpha04
 
 ## 2026.03.02
 

@@ -12,6 +12,7 @@
 - Bump Play Services Auth to v21.5.1
 - Bump Kotlin to v2.3.20
 - Bump KSP to v2.3.6
+- Bump Sentry to v8.36.0
 
 ## 2026.03.02
 

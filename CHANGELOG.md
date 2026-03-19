@@ -15,6 +15,7 @@
 - Bump Sentry to v8.36.0
 - Bump dagger to v2.59.2
 - Bump Jackson Core to v2.21.1
+- Bump Compose BOM to v2026.03.00
 
 ## 2026.03.02
 

@@ -6,6 +6,7 @@
 
 - Add `ReturnScore` table
 - Add `ReturnScore` sync resource
+- Bump Sentry Android to v6.1.0
 
 ## 2026.03.02
 

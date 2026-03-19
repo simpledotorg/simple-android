@@ -14,6 +14,7 @@
 - Bump KSP to v2.3.6
 - Bump Sentry to v8.36.0
 - Bump dagger to v2.59.2
+- Bump Jackson Core to v2.21.1
 
 ## 2026.03.02
 

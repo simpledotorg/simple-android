@@ -11,7 +11,8 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class ScoreType : Parcelable {
   object TypeAdapter : SafeEnumTypeAdapter<ScoreType>(
       knownMappings = mapOf(
-          LikelyToReturnScoreType to "likely_to_return",
+          LikelyToReturnIfCalledScoreType to "likely_to_return_if_called",
+          LikelyToReturnIfNotCalledIn15DaysScoreType to "likely_to_return_if_not_called_in_15_days",
       ),
       unknownStringToEnumConverter = ::Unknown,
       unknownEnumToStringConverter = { (it as Unknown).actualValue }
@@ -42,7 +43,11 @@ sealed class ScoreType : Parcelable {
 }
 
 @Parcelize
-data object LikelyToReturnScoreType : ScoreType()
+data object LikelyToReturnIfCalledScoreType : ScoreType()
+
+@Parcelize
+data object LikelyToReturnIfNotCalledIn15DaysScoreType : ScoreType()
+
 
 @Parcelize
 data class Unknown(val actualValue: String) : ScoreType()

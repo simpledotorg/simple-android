@@ -28,4 +28,5 @@ enum class Feature(
   LabBasedStatinNudge(false, "lab_based_statin_nudge"),
   Screening(false, "screening_feature_v0"),
   ShowDiagnosisButton(false, "show_diagnosis_button"),
+  SortOverdueBasedOnReturnScore(false, "sort_overdue_based_on_return_score"),
 }

@@ -40,6 +40,7 @@ import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrat
 import org.simple.clinic.patientattribute.PatientAttributeRepositoryAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
+import org.simple.clinic.returnscore.ReturnScoreRepositoryAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.SaveDatabaseRule
@@ -73,6 +74,7 @@ import org.simple.clinic.sync.ProtocolSyncIntegrationTest
 import org.simple.clinic.sync.QuestionnaireResponseSyncIntegrationTest
 import org.simple.clinic.sync.QuestionnaireSyncIntegrationTest
 import org.simple.clinic.sync.ReportsSyncIntegrationTest
+import org.simple.clinic.sync.ReturnScoreSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepositoryAndroidTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSyncIntegrationTest
@@ -170,4 +172,6 @@ interface TestAppComponent {
   fun inject(target: PatientAttributeSyncIntegrationTest)
   fun inject(target: CVDRiskRepositoryAndroidTest)
   fun inject(target: CVDRiskSyncIntegrationTest)
+  fun inject(target: ReturnScoreRepositoryAndroidTest)
+  fun inject(target: ReturnScoreSyncIntegrationTest)
 }

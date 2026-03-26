@@ -1,18 +1,18 @@
 package org.simple.clinic.home.overdue
 
+import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.junit.Test
-import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.TestData
+import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import java.util.UUID
 
 class OverdueUiRendererTest {
 
   private val ui = mock<OverdueUi>()
   private val uiRenderer = OverdueUiRenderer(
-    ui = ui
+      ui = ui
   )
   private val defaultModel = OverdueModel.create()
 
@@ -31,7 +31,8 @@ class OverdueUiRendererTest {
                 agreedToVisitAppointments = agreedToVisitAppointments,
                 remindToCallLaterAppointments = emptyList(),
                 removedFromOverdueAppointments = removedFromOverdueAppointments,
-                moreThanAnYearOverdueAppointments = emptyList()
+                moreThanAnYearOverdueAppointments = emptyList(),
+                pendingDebugInfo = emptyMap()
             )
         )
         .selectedOverdueAppointmentsChanged(selectedAppointments)
@@ -54,7 +55,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = agreedToVisitAppointments,
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = removedFromOverdueAppointments,
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ),
         selectedAppointments,
         overdueListSectionStates = overdueListSectionStates
@@ -76,7 +78,8 @@ class OverdueUiRendererTest {
                 agreedToVisitAppointments = emptyList(),
                 remindToCallLaterAppointments = emptyList(),
                 removedFromOverdueAppointments = emptyList(),
-                moreThanAnYearOverdueAppointments = emptyList()
+                moreThanAnYearOverdueAppointments = emptyList(),
+                pendingDebugInfo = emptyMap()
             )
         )
     val overdueListSectionStates = OverdueListSectionStates(
@@ -99,7 +102,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = emptyList(),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = emptyList(),
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ),
         emptySet(),
         overdueListSectionStates = overdueListSectionStates
@@ -143,7 +147,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = emptyList(),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = emptyList(),
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ))
         .selectedOverdueAppointmentsChanged(selectedAppointments)
 
@@ -157,7 +162,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = emptyList(),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = emptyList(),
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ),
         selectedOverdueAppointments = selectedAppointments,
         overdueListSectionStates = selectedAppointmentsModel.overdueListSectionStates
@@ -183,7 +189,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = emptyList(),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = emptyList(),
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ))
         .selectedOverdueAppointmentsChanged(emptySet())
 
@@ -197,7 +204,8 @@ class OverdueUiRendererTest {
             agreedToVisitAppointments = emptyList(),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = emptyList(),
-            moreThanAnYearOverdueAppointments = emptyList()
+            moreThanAnYearOverdueAppointments = emptyList(),
+            pendingDebugInfo = emptyMap()
         ),
         selectedOverdueAppointments = emptySet(),
         overdueListSectionStates = selectedAppointmentsModel.overdueListSectionStates

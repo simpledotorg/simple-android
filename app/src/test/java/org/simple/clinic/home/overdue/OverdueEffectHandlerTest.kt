@@ -9,6 +9,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -19,9 +20,8 @@ import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -48,6 +48,8 @@ class OverdueEffectHandlerTest {
   private val viewEffectHandler = OverdueViewEffectHandler(uiActions)
   private val appointmentRepository = mock<AppointmentRepository>()
   private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
+  private val overdueAppointmentSorter = mock<OverdueAppointmentSorter>()
+
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = appointmentRepository,
@@ -57,6 +59,7 @@ class OverdueEffectHandlerTest {
       overdueDownloadScheduler = overdueDownloadScheduler,
       userClock = TestUserClock(Instant.parse("2018-01-01T00:00:00Z")),
       overdueAppointmentSelector = overdueAppointmentSelector,
+      overdueAppointmentSorter = overdueAppointmentSorter,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -160,7 +163,8 @@ class OverdueEffectHandlerTest {
         overdueDownloadScheduler = overdueDownloadScheduler,
         userClock = TestUserClock(Instant.parse("2018-03-01T00:00:00Z")),
         overdueAppointmentSelector = overdueAppointmentSelector,
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        overdueAppointmentSorter = overdueAppointmentSorter,
     ).build()
     val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -252,6 +256,7 @@ class OverdueEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(
         overdueAppointmentSections = OverdueAppointmentSections(
             pendingAppointments = listOf(pendingAppointment),
+            pendingDebugInfo = emptyMap(),
             agreedToVisitAppointments = listOf(agreedToVisitAppointment),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = listOf(removedAppointment),

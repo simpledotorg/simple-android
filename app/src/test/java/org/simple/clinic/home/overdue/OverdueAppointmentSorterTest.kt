@@ -58,7 +58,7 @@ class OverdueAppointmentSorterTest {
     val result = sorter.sort(list)
 
     val input = list.map { it.appointment.patientUuid }
-    val output = result.map { it.appointment.patientUuid }
+    val output = result.map { it.appointment.appointment.patientUuid }
 
     assertThat(output).containsExactlyElementsIn(input)
   }
@@ -84,7 +84,7 @@ class OverdueAppointmentSorterTest {
     )
 
     val result = sorter.sort(list)
-    val uuids = result.map { it.appointment.patientUuid }
+    val uuids = result.map { it.appointment.appointment.patientUuid }
 
     assertThat(uuids.indexOf(p2)).isLessThan(uuids.indexOf(p1))
   }
@@ -109,8 +109,8 @@ class OverdueAppointmentSorterTest {
     val result1 = sorter1.sort(list)
     val result2 = sorter2.sort(list)
 
-    assertThat(result1.map { it.appointment.patientUuid })
-        .containsExactlyElementsIn(result2.map { it.appointment.patientUuid })
+    assertThat(result1.map { it.appointment.appointment.patientUuid })
+        .containsExactlyElementsIn(result2.map { it.appointment.appointment.patientUuid })
         .inOrder()
   }
 
@@ -139,7 +139,7 @@ class OverdueAppointmentSorterTest {
 
     val result = sorter.sort(list)
 
-    val uuids = result.map { it.appointment.patientUuid }
+    val uuids = result.map { it.appointment.appointment.patientUuid }
 
     assertThat(uuids.indexOf(p2)).isLessThan(uuids.indexOf(p1))
     assertThat(uuids.indexOf(p3)).isLessThan(uuids.indexOf(p1))
@@ -173,7 +173,7 @@ class OverdueAppointmentSorterTest {
 
     val result = sorter.sort(list)
 
-    val first = result.first().appointment.patientUuid
+    val first = result.first().appointment.appointment.patientUuid
 
     assertThat(first).isEqualTo(uuid)
   }
@@ -197,7 +197,7 @@ class OverdueAppointmentSorterTest {
 
     val result = sorter.sort(list)
 
-    val sorted = result.map { it.appointment.patientUuid }
+    val sorted = result.map { it.appointment.appointment.patientUuid }
 
     assertThat(sorted.first()).isEqualTo(p1)
   }
@@ -221,7 +221,7 @@ class OverdueAppointmentSorterTest {
     val top20 = uuids.take(2)
     val next30 = uuids.subList(2, 5)
 
-    val picked = result.take(2).map { it.appointment.patientUuid }
+    val picked = result.take(2).map { it.appointment.appointment.patientUuid }
 
     picked.forEach {
       assertThat(it in (top20 + next30)).isTrue()

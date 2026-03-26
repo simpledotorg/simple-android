@@ -29,4 +29,5 @@ enum class Feature(
   Screening(false, "screening_feature_v0"),
   ShowDiagnosisButton(false, "show_diagnosis_button"),
   SortOverdueBasedOnReturnScore(false, "sort_overdue_based_on_return_score"),
+  ShowReturnScoreDebugValues(false, "show_return_score_debug_values"),
 }

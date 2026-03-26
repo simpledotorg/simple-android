@@ -60,6 +60,9 @@ fun OverdueAppointmentSections(
               isOverdueSelectAndDownloadEnabled = model.isOverdueSelectAndDownloadEnabled,
               isAppointmentSelected = model.isAppointmentSelected,
               isEligibleForReassignment = model.isEligibleForReassignment,
+              showDebugValues = model.showDebugValues,
+              returnScore = model.returnScore,
+              bucket = model.bucket,
               onCallClicked = onCallClicked,
               onRowClicked = onRowClicked,
               onCheckboxClicked = onCheckboxClicked

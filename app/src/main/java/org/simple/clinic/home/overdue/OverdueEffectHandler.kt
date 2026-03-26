@@ -87,9 +87,13 @@ class OverdueEffectHandler @AssistedInject constructor(
             val pendingAppointments = overdueSections[null].orEmpty()
 
             val sortedPendingAppointments = overdueAppointmentSorter.sort(pendingAppointments)
+            val debugMap = sortedPendingAppointments.associate {
+              it.appointment.appointment.patientUuid to (it.score to it.bucket)
+            }
 
             val overdueAppointmentSections = OverdueAppointmentSections(
-                pendingAppointments = sortedPendingAppointments,
+                pendingAppointments = sortedPendingAppointments.map { it.appointment },
+                pendingDebugInfo = debugMap,
                 agreedToVisitAppointments = overdueSections[Outcome.AgreedToVisit].orEmpty(),
                 remindToCallLaterAppointments = overdueSections[Outcome.RemindToCallLater].orEmpty(),
                 removedFromOverdueAppointments = overdueSections[Outcome.RemovedFromOverdueList].orEmpty(),

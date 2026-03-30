@@ -17,6 +17,10 @@
 - Bump Jackson Core to v2.21.1
 - Bump Compose BOM to v2026.03.00
 
+### Changes
+
+- Sort Overdue list based on return score when feature `sort_overdue_based_on_return_score` is enabled
+
 ## 2026.03.02
 
 ### Internal

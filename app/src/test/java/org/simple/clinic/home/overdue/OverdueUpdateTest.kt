@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
@@ -18,7 +19,6 @@ import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FRO
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
-import org.simple.clinic.TestData
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -161,6 +161,7 @@ class OverdueUpdateTest {
 
     val overdueAppointmentSections = OverdueAppointmentSections(
         pendingAppointments = pendingAppointments,
+        pendingDebugInfo = emptyMap(),
         agreedToVisitAppointments = agreedToVisitAppointments,
         remindToCallLaterAppointments = remindToCallLaterAppointments,
         removedFromOverdueAppointments = removedFromOverdueAppointments,

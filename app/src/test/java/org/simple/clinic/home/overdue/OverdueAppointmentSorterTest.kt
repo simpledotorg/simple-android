@@ -43,7 +43,12 @@ class OverdueAppointmentSorterTest {
 
     val result = sorter.sort(list)
 
-    assertThat(result).containsExactlyElementsIn(list).inOrder()
+    assertThat(result.map { it.appointment })
+        .containsExactlyElementsIn(list)
+        .inOrder()
+
+    assertThat(result.all { it.score == 0f }).isTrue()
+    assertThat(result.all { it.bucket == OverdueBucket.REMAINING }).isTrue()
   }
 
   @Test

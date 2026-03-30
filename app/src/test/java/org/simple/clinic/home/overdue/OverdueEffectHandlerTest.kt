@@ -246,6 +246,16 @@ class OverdueEffectHandlerTest {
         facilityId = facility.uuid
     )) doReturn Observable.just(overdueAppointments)
 
+    whenever(overdueAppointmentSorter.sort(listOf(pendingAppointment)))
+        .thenReturn(
+            listOf(
+                SortedOverdueAppointment(
+                    appointment = pendingAppointment,
+                    score = 0f,
+                    bucket = OverdueBucket.REMAINING
+                )
+            )
+        )
     // when
     effectHandlerTestCase.dispatch(LoadOverdueAppointments(
         overdueSince = LocalDate.parse("2018-04-03"),
@@ -256,7 +266,9 @@ class OverdueEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(
         overdueAppointmentSections = OverdueAppointmentSections(
             pendingAppointments = listOf(pendingAppointment),
-            pendingDebugInfo = emptyMap(),
+            pendingDebugInfo = mapOf(
+                pendingAppointment.appointment.patientUuid to (0f to OverdueBucket.REMAINING)
+            ),
             agreedToVisitAppointments = listOf(agreedToVisitAppointment),
             remindToCallLaterAppointments = emptyList(),
             removedFromOverdueAppointments = listOf(removedAppointment),

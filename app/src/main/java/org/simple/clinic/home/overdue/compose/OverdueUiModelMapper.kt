@@ -8,6 +8,7 @@ import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMIND_TO_CALL
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FROM_OVERDUE
 import org.simple.clinic.home.overdue.OverdueAppointmentSections
+import org.simple.clinic.home.overdue.OverdueBucket
 import org.simple.clinic.home.overdue.OverdueListSectionStates
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
@@ -31,6 +32,7 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        showDebugValues: Boolean,
         locale: Locale,
     ): List<OverdueUiModel> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(
@@ -45,6 +47,7 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          showDebugValues,
           locale,
       )
 
@@ -236,6 +239,7 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        showDebugValues: Boolean,
         locale: Locale,
     ): List<OverdueUiModel> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
@@ -256,6 +260,7 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          showDebugValues
       )
 
       val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && overdueListSectionStates.isPendingHeaderExpanded
@@ -278,6 +283,7 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        showDebugValues: Boolean,
     ): List<OverdueUiModel> {
       val pendingAppointmentsList = when (overdueListSectionStates.pendingListState) {
         SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(pendingListDefaultStateSize)
@@ -291,6 +297,8 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled,
           selectedOverdueAppointments,
           isPatientReassignmentFeatureEnabled,
+          showDebugValues,
+          overdueAppointmentSections.pendingDebugInfo
       )
 
       return if (pendingAppointmentsList.isEmpty() && overdueListSectionStates.isPendingHeaderExpanded) {
@@ -307,6 +315,8 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>,
         isPatientReassignmentFeatureEnabled: Boolean,
+        showDebugValues: Boolean = false,
+        debugMap: Map<UUID, Pair<Float, OverdueBucket>> = emptyMap()
     ): List<OverdueUiModel> {
       return if (isListExpanded) {
         overdueAppointment.map {
@@ -317,6 +327,8 @@ class OverdueUiModelMapper {
               isOverdueSelectAndDownloadEnabled,
               isAppointmentSelected,
               isPatientReassignmentFeatureEnabled,
+              showDebugValues,
+              debugMap
           )
         }
       } else {
@@ -330,7 +342,12 @@ class OverdueUiModelMapper {
         isOverdueSelectAndDownloadEnabled: Boolean,
         isAppointmentSelected: Boolean,
         isPatientReassignmentFeatureEnabled: Boolean,
+        showDebugValues: Boolean,
+        debugMap: Map<UUID, Pair<Float, OverdueBucket>>
     ): OverdueUiModel {
+      val patientUuid = overdueAppointment.appointment.patientUuid
+      val debugInfo = debugMap[patientUuid]
+
       return OverdueUiModel.Patient(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
@@ -343,6 +360,9 @@ class OverdueUiModelMapper {
           isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
           isAppointmentSelected = isAppointmentSelected,
           isEligibleForReassignment = (overdueAppointment.eligibleForReassignment == Answer.Yes) && isPatientReassignmentFeatureEnabled,
+          showDebugValues = showDebugValues,
+          returnScore = debugInfo?.first,
+          bucket = debugInfo?.second,
       )
     }
 

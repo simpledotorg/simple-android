@@ -4,6 +4,27 @@
 
 ### Internal
 
+- Add `ReturnScore` table
+- Add `ReturnScore` sync resource
+- Bump Sentry Android to v6.2.0
+- Bump AndroidX Benchmark to v1.5.0-alpha04
+- Bump AndroidX Paging to v3.4.2
+- Bump Play Services Auth to v21.5.1
+- Bump Kotlin to v2.3.20
+- Bump KSP to v2.3.6
+- Bump Sentry to v8.36.0
+- Bump dagger to v2.59.2
+- Bump Jackson Core to v2.21.1
+- Bump Compose BOM to v2026.03.00
+
+### Changes
+
+- Sort Overdue list based on return score when feature `sort_overdue_based_on_return_score` is enabled
+
+## 2026.03.02
+
+### Internal
+
 - Update `ci-checks.yml` & `story-link-check.sh` to verify valid jira reference
 - Add effect to fetch complete medical records
 - Bump sqlcipher to v4.13.0
@@ -24,6 +45,7 @@
 ### Changes
 
 - Add `Sync Medical Records` button on setting page behind feature flag
+- Increase the network read timeout to 45 seconds
 
 ## 2026.02.02
 

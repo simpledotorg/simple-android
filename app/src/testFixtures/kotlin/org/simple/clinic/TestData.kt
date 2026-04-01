@@ -96,6 +96,9 @@ import org.simple.clinic.questionnaire.component.properties.InputFieldValidation
 import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaire.component.properties.StringType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.returnscore.LikelyToReturnIfCalledScoreType
+import org.simple.clinic.returnscore.ReturnScore
+import org.simple.clinic.returnscore.ScoreType
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
@@ -2004,4 +2007,24 @@ object TestData {
         )
     )
   }
+
+  fun returnScore(
+      uuid: UUID = UUID.fromString("f9a42c9f-01fe-40c5-b625-64b3e9868d5e"),
+      patientUuid: UUID = UUID.fromString("f9a42c9f-01fe-40c5-b625-64b3e9868d5e"),
+      scoreType: ScoreType = LikelyToReturnIfCalledScoreType,
+      scoreValue: Float = 0f,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+  ) = ReturnScore(
+      uuid = uuid,
+      patientUuid = patientUuid,
+      scoreType = scoreType,
+      scoreValue = scoreValue,
+      timestamps = Timestamps(
+          createdAt = createdAt,
+          updatedAt = updatedAt,
+          deletedAt = deletedAt
+      )
+  )
 }

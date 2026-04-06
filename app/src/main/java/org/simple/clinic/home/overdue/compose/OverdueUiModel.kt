@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue.compose
 
 import androidx.annotation.StringRes
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle
+import org.simple.clinic.home.overdue.OverdueBucket
 import org.simple.clinic.home.overdue.PendingListState
 import org.simple.clinic.patient.Gender
 import java.util.Locale
@@ -20,6 +21,9 @@ sealed class OverdueUiModel {
       val isOverdueSelectAndDownloadEnabled: Boolean,
       val isAppointmentSelected: Boolean,
       val isEligibleForReassignment: Boolean,
+      val showDebugValues: Boolean,
+      val returnScore: Float? = null,
+      val bucket: OverdueBucket? = null
   ) : OverdueUiModel()
 
   data class Header(

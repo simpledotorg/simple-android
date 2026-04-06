@@ -10,12 +10,14 @@ import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.returnscore.ReturnScore
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import java.time.Period
 import java.util.Optional
 import javax.inject.Named
+import kotlin.random.Random
 
 @Module
 class AppointmentModule {
@@ -133,4 +135,9 @@ class AppointmentModule {
 
   @Provides
   fun providePendingAppointmentsConfig(configReader: ConfigReader) = PendingAppointmentsConfig.read(configReader)
+
+  @Provides
+  fun provideRandom(): Random {
+    return Random.Default
+  }
 }

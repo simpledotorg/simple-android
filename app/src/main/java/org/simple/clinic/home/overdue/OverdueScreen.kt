@@ -31,6 +31,7 @@ import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.PatientReassignment
+import org.simple.clinic.feature.Feature.ShowReturnScoreDebugValues
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.overdue.compose.OverdueScreenView
@@ -249,6 +250,7 @@ class OverdueScreen : BaseScreen<
         isOverdueSelectAndDownloadEnabled = country.isoCountryCode == Country.INDIA,
         selectedOverdueAppointments = selectedOverdueAppointments,
         isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
+        showDebugValues = features.isEnabled(ShowReturnScoreDebugValues),
         locale = locale,
     )
 

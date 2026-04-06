@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.theme.SimpleTheme
+import org.simple.clinic.home.overdue.OverdueBucket
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import java.util.UUID
@@ -44,6 +45,9 @@ fun OverduePatientListItem(
     isOverdueSelectAndDownloadEnabled: Boolean,
     isAppointmentSelected: Boolean,
     isEligibleForReassignment: Boolean,
+    showDebugValues: Boolean,
+    returnScore: Float?,
+    bucket: OverdueBucket?,
     onCallClicked: (UUID) -> Unit,
     onRowClicked: (UUID) -> Unit,
     onCheckboxClicked: (UUID) -> Unit
@@ -97,6 +101,10 @@ fun OverduePatientListItem(
               style = SimpleTheme.typography.material.body2,
               color = SimpleTheme.colors.material.error,
           )
+
+          if (showDebugValues) {
+            DebugScoreView(returnScore = returnScore, bucket = bucket)
+          }
         }
 
         OverduePatientListItemRightButton(
@@ -210,6 +218,28 @@ fun OverduePatientListItemRightButton(
   }
 }
 
+@Composable
+private fun DebugScoreView(
+    returnScore: Float?,
+    bucket: OverdueBucket?
+) {
+  if (returnScore != null && bucket != null) {
+
+    val bucketText = when (bucket) {
+      OverdueBucket.TOP_20 -> "Top 20%"
+      OverdueBucket.NEXT_30 -> "Next 30%"
+      OverdueBucket.REMAINING -> "Remaining"
+    }
+
+    Text(
+        modifier = Modifier.padding(top = 4.dp),
+        text = "Score: ${"%.1f".format(returnScore)} | $bucketText",
+        style = SimpleTheme.typography.material.caption,
+        color = Color.Gray
+    )
+  }
+}
+
 @Preview
 @Composable
 private fun OverduePatientListItemPreview() {
@@ -226,6 +256,9 @@ private fun OverduePatientListItemPreview() {
         isOverdueSelectAndDownloadEnabled = false,
         isAppointmentSelected = false,
         isEligibleForReassignment = true,
+        showDebugValues = true,
+        returnScore = 9.2f,
+        bucket = OverdueBucket.TOP_20,
         onCallClicked = {},
         onRowClicked = {},
         onCheckboxClicked = {}

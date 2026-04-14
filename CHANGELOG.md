@@ -22,6 +22,7 @@
 - Bump AndroidX Camera to v1.6.0
 - Bump AndroidX Camera View to v1.6.0
 - Bump AndroidX Work to v2.11.2
+- Bump AndroidX Activity to v1.13.0
 
 ### Changes
 

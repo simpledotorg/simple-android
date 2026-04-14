@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.databinding.BottomSheetBinding
 import org.simple.clinic.util.disablePendingTransitions
 import org.simple.clinic.util.handleBackPress
@@ -30,6 +32,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     disablePendingTransitions()
     super.onCreate(savedInstanceState)
+    if (BuildConfig.DISABLE_SCREENSHOT) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
     bottomSheetBinding = BottomSheetBinding.inflate(layoutInflater)
     super.setContentView(bottomSheetBinding.root)
 

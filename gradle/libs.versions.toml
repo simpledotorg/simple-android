@@ -1,7 +1,7 @@
 [versions]
 agp = "9.1.1"
 
-androidx-cameraView = "1.5.3"
+androidx-cameraView = "1.6.0"
 androidx-camera = "1.5.3"
 androidx-paging = "3.4.2"
 androidx-room = "2.8.4"

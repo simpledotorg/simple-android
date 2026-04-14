@@ -19,6 +19,7 @@
 - Bump AGP to v9.1.1
 - Bump Lint to v32.1.1
 - Bump Gradle to v9.3.1
+- Bump AndroidX Camera to v1.6.0
 
 ### Changes
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.work.WorkManager
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.deeplink.DeepLinkResult
@@ -206,6 +208,11 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @SuppressLint("CheckResult")
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
+
+    if (BuildConfig.DISABLE_SCREENSHOT) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
+
     if (savedInstanceState == null) {
       disposables.addAll(
           syncSetup.run(),

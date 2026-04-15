@@ -21,6 +21,10 @@
 
 - Sort Overdue list based on return score when feature `sort_overdue_based_on_return_score` is enabled
 
+### Fixes
+
+- Screenshot blocking is now controlled via Gradle property `disableScreenshot`
+
 ## 2026.03.02
 
 ### Internal

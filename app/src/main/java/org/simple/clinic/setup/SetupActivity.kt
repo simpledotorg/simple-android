@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.activity.permissions.ActivityPermissionResult
@@ -85,6 +87,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
         navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
     )
     super.onCreate(savedInstanceState)
+
+    if (BuildConfig.DISABLE_SCREENSHOT) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
 
     handleBackPress {
       if (!router.onBackPressed()) {

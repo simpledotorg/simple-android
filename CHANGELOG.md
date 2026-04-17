@@ -23,6 +23,7 @@
 - Bump AndroidX Camera View to v1.6.0
 - Bump AndroidX Work to v2.11.2
 - Bump AndroidX Activity to v1.13.0
+- Bump Kotlinx-Serialization to v1.11.0
 
 ### Changes
 

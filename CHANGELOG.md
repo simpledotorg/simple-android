@@ -25,6 +25,7 @@
 - Bump AndroidX Activity to v1.13.0
 - Bump Kotlinx-Serialization to v1.11.0
 - Bump sqlCipher to v4.14.1
+- Bump AndroidX Annotation to v1.10.0
 
 ### Changes
 

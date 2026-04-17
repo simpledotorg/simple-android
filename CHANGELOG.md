@@ -27,6 +27,7 @@
 - Bump sqlCipher to v4.14.1
 - Bump AndroidX Annotation to v1.10.0
 - Bump AndroidX Core KTX to v1.18.0
+- Bump Mockito Kotlin to v6.3.0
 
 ### Changes
 

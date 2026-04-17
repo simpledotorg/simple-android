@@ -26,6 +26,7 @@
 - Bump Kotlinx-Serialization to v1.11.0
 - Bump sqlCipher to v4.14.1
 - Bump AndroidX Annotation to v1.10.0
+- Bump AndroidX Core KTX to v1.18.0
 
 ### Changes
 

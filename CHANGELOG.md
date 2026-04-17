@@ -6,16 +6,29 @@
 
 - Add `ReturnScore` table
 - Add `ReturnScore` sync resource
-- Bump Sentry Android to v6.2.0
-- Bump AndroidX Benchmark to v1.5.0-alpha04
+- Bump Sentry Android to v6.4.0
+- Bump AndroidX Benchmark to v1.5.0-alpha05
 - Bump AndroidX Paging to v3.4.2
 - Bump Play Services Auth to v21.5.1
 - Bump Kotlin to v2.3.20
 - Bump KSP to v2.3.6
-- Bump Sentry to v8.36.0
+- Bump Sentry to v8.39.1
 - Bump dagger to v2.59.2
-- Bump Jackson Core to v2.21.1
-- Bump Compose BOM to v2026.03.00
+- Bump Jackson Core to v2.21.2
+- Bump Compose BOM to v2026.03.01
+- Bump AGP to v9.1.1
+- Bump Lint to v32.1.1
+- Bump Gradle to v9.4.1
+- Bump AndroidX Camera to v1.6.0
+- Bump AndroidX Camera View to v1.6.0
+- Bump AndroidX Work to v2.11.2
+- Bump AndroidX Activity to v1.13.0
+- Bump Kotlinx-Serialization to v1.11.0
+- Bump sqlCipher to v4.14.1
+- Bump AndroidX Annotation to v1.10.0
+- Bump AndroidX Core KTX to v1.18.0
+- Bump Mockito Kotlin to v6.3.0
+- Bump RootBeer to 0.1.2
 
 ### Changes
 

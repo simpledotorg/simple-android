@@ -14,7 +14,7 @@
 - Bump KSP to v2.3.6
 - Bump Sentry to v8.36.0
 - Bump dagger to v2.59.2
-- Bump Jackson Core to v2.21.1
+- Bump Jackson Core to v2.21.2
 - Bump Compose BOM to v2026.03.01
 - Bump AGP to v9.1.1
 - Bump Lint to v32.1.1

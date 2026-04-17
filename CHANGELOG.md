@@ -12,7 +12,7 @@
 - Bump Play Services Auth to v21.5.1
 - Bump Kotlin to v2.3.20
 - Bump KSP to v2.3.6
-- Bump Sentry to v8.36.0
+- Bump Sentry to v8.39.1
 - Bump dagger to v2.59.2
 - Bump Jackson Core to v2.21.2
 - Bump Compose BOM to v2026.03.01

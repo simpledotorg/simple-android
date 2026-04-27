@@ -30,6 +30,7 @@
 - Bump Mockito Kotlin to v6.3.0
 - Bump RootBeer to 0.1.2
 - Update GH Actions `upload-artifact` to v7
+- Update GH Actions `setup-gradle` to v6
 
 ### Changes
 

@@ -427,7 +427,7 @@
   <string name="settings_update">Mettre à jour</string>
   <string name="settings_software_version">Version %1$s</string>
   <string name="settings_logout">Déconnexion</string>
-  <string name="settings_sync_medical_records">Synchronisation des dossiers médicaux</string>
+  <string name="settings_sync_medical_records">Synchroniser les dossiers médicaux</string>
   <string name="settings_logout_dialog_title">Déconnexion</string>
   <string name="settings_logout_dialog_desc">Êtes-vous sûr de vouloir vous déconnecter \?</string>
   <string name="settings_logout_dialog_positive_action">Oui</string>
@@ -438,7 +438,7 @@
   <string name="changelanguage_done">Terminé</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Veuillez patienter…</string>
+  <string name="placeholder_loading_title">Veuillez patienter...</string>
   <string name="placeholder_loading_message">Maintenance de la base de données en cours. Cela ne prendra qu\'une minute.</string>
 
   <!-- Select Country Screen -->
@@ -531,8 +531,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marquer le patient comme étant \"D\'accord pour une visite\"</string>
-  <string name="contactpatient_remind_call_later">Rappeler plus tard…</string>
-  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards…</string>
+  <string name="contactpatient_remind_call_later">Rappeler plus tard...</string>
+  <string name="contactpatient_remove_from_list">Supprimer de la liste des retards...</string>
   <string name="contactpatient_result_of_call">Résultat de l\'appel</string>
   <string name="contactpatient_call">Appeler</string>
   <string name="contactpatient_call_normal">Normal</string>

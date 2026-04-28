@@ -446,7 +446,7 @@
   <string name="selectcountry_title">Sélectionnez votre pays</string>
   <string name="selectcountry_networkerror">Aucune connexion internet!</string>
   <string name="selectcountry_servererror">Erreur du serveur ! Veuillez réessayer plus tard !</string>
-  <string name="selectcountry_genericerror">Un problème est survenu! Veuillez réessayer.</string>
+  <string name="selectcountry_genericerror">Un problème est survenu ! Veuillez réessayer.</string>
   <string name="selectcountry_retry">Réessayer</string>
   <string name="scheduleappointment_at">à</string>
   <string name="scheduleappointment_change">Modifier</string>

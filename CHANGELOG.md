@@ -82,7 +82,7 @@
 - Bump AndroidX Work to v2.11.0
 - Bump AndroidX ViewModel to v2.10.0
 - Bump Lottie Compose to v6.7.1
-- Bump Gson to v2.13.2
+- Bump Gson to v2.14.0
 - Bump KSP to v2.3.4
 - Bump firebase remote config to v23.0.1
 - Bump Google Truth to v1.4.5

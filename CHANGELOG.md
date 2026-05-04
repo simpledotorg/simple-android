@@ -24,7 +24,7 @@
 - Bump AndroidX Work to v2.11.2
 - Bump AndroidX Activity to v1.13.0
 - Bump Kotlinx-Serialization to v1.11.0
-- Bump sqlCipher to v4.14.1
+- Bump sqlCipher to v4.15.0
 - Bump AndroidX Annotation to v1.10.0
 - Bump AndroidX Core KTX to v1.18.0
 - Bump Mockito Kotlin to v6.3.0

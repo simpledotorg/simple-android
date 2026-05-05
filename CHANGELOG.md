@@ -18,7 +18,7 @@
 - Bump Compose BOM to v2026.04.01
 - Bump AGP to v9.1.1
 - Bump Lint to v32.1.1
-- Bump Gradle to v9.4.1
+- Bump Gradle to v9.5.0
 - Bump AndroidX Camera to v1.6.0
 - Bump AndroidX Camera View to v1.6.0
 - Bump AndroidX Work to v2.11.2

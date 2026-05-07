@@ -15,7 +15,7 @@
 - Bump Sentry to v8.40.0
 - Bump dagger to v2.59.2
 - Bump Jackson Core to v2.21.3
-- Bump Compose BOM to v2026.04.01
+- Bump Compose BOM to v2026.05.00
 - Bump AGP to v9.2.1
 - Bump Lint to v32.2.1
 - Bump Gradle to v9.5.0

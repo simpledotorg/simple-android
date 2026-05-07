@@ -19,7 +19,7 @@
 - Bump AGP to v9.2.1
 - Bump Lint to v32.2.1
 - Bump Gradle to v9.5.0
-- Bump AndroidX Camera to v1.6.0
+- Bump AndroidX Camera to v1.6.1
 - Bump AndroidX Camera View to v1.6.0
 - Bump AndroidX Work to v2.11.2
 - Bump AndroidX Activity to v1.13.0

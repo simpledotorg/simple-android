@@ -31,6 +31,7 @@
 - Bump RootBeer to 0.1.2
 - Update GH Actions `upload-artifact` to v7
 - Update GH Actions `setup-gradle` to v6
+- Bump firebase remote config to v23.1.0
 
 ### Changes
 

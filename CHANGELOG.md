@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump Coroutines to v1.11.0
+- Bump Gradle to v9.5.1
 
 ## 2026.05.11
 

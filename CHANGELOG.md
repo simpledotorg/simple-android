@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump Coroutines to v1.11.0
+
 ## 2026.05.11
 
 ### Internal

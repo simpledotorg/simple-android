@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 2026.05.11
+
 ### Internal
 
 - Add `ReturnScore` table

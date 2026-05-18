@@ -453,8 +453,8 @@ class BloodPressureRepositoryAndroidTest {
     val newestBpForPatient3 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("3d948d3b-6d8f-4608-bde0-d8750fef75d4"),
         patientUuid = patient3Uuid,
-        systolic = 150,
-        diastolic = 90,
+        systolic = 135,
+        diastolic = 85,
         createdAt = Instant.parse("2000-01-01T00:03:00Z"),
         recordedAt = Instant.parse("2000-01-01T00:03:00Z"),
         updatedAt = Instant.parse("2000-01-01T00:03:00Z"),
@@ -475,9 +475,9 @@ class BloodPressureRepositoryAndroidTest {
     ))
 
     // when
-    val isNewestBpEntryHighForPatient1 = repository.isNewestBpEntryHigh(patient1Uuid).blockingFirst()
-    val isNewestBpEntryHighForPatient2 = repository.isNewestBpEntryHigh(patient2Uuid).blockingFirst()
-    val isNewestBpEntryHighForPatient3 = repository.isNewestBpEntryHigh(patient3Uuid).blockingFirst()
+    val isNewestBpEntryHighForPatient1 = repository.isNewestBpEntryHigh(patient1Uuid, isDiabeticPatient = false, isSriLankaEnabled = false).blockingFirst()
+    val isNewestBpEntryHighForPatient2 = repository.isNewestBpEntryHigh(patient2Uuid, isDiabeticPatient = true, isSriLankaEnabled = false).blockingFirst()
+    val isNewestBpEntryHighForPatient3 = repository.isNewestBpEntryHigh(patient3Uuid, isDiabeticPatient = true, isSriLankaEnabled = true).blockingFirst()
 
     // then
     assertThat(isNewestBpEntryHighForPatient1).isTrue()

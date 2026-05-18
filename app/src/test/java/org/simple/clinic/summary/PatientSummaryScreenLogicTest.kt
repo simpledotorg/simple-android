@@ -24,8 +24,7 @@ import org.simple.clinic.cvdrisk.calculator.NonLabBasedCVDRiskCalculator
 import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -35,11 +34,9 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patientattribute.PatientAttributeRepository
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.util.NoOpRemoteConfigService
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -104,16 +101,17 @@ class PatientSummaryScreenLogicTest {
         .atZone(userClock.zone)
         .toInstant()
 
-    whenever(bpRepository.isNewestBpEntryHigh(patientUuid)) doReturn Observable.just(true)
+    val medicalHistory = TestData.medicalHistory(uuid = medicalHistoryUuid)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        defaultHistoryUuid = uuidGenerator.v4(),
+        patientUuid = patientUuid
+    )) doReturn medicalHistory
+    whenever(bpRepository.isNewestBpEntryHigh(patientUuid, isDiabeticPatient = medicalHistory.diagnosedWithDiabetes == Answer.Yes, isSriLankaEnabled = false)) doReturn Observable.just(true)
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
     whenever(bpRepository.hasBPRecordedToday(patientUuid, today)) doReturn Observable.just(true)
     whenever(facilityRepository.facility(assignedFacilityUuid)) doReturn Optional.of(TestData.facility())
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-        defaultHistoryUuid = uuidGenerator.v4(),
-        patientUuid = patientUuid
-    )) doReturn TestData.medicalHistory(uuid = medicalHistoryUuid)
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn emptyList()
   }
 

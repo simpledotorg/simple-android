@@ -401,14 +401,38 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .switchMap {
+
             val patientUuid = it.patientUuid
-            bloodPressureRepository.isNewestBpEntryHigh(patientUuid).map { Pair(patientUuid, it) }
+
+            val hasDiabetes =
+                medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                    defaultHistoryUuid = uuidGenerator.v4(),
+                    patientUuid = patientUuid
+                ).diagnosedWithDiabetes == MedicalHistoryAnswer.Yes
+
+            val isSriLanka =
+                country.isoCountryCode == Country.SRI_LANKA
+
+            bloodPressureRepository.isNewestBpEntryHigh(
+                patientUuid = patientUuid,
+                isDiabeticPatient = hasDiabetes,
+                isSriLankaEnabled = isSriLanka
+            ).map { isNewestBpEntryHigh ->
+              Pair(patientUuid, isNewestBpEntryHigh)
+            }
           }
           .switchMap { (patientUuid, isNewestBpEntryHigh) ->
-            prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid).map { Pair(isNewestBpEntryHigh, it) }
+            prescriptionRepository
+                .hasPrescriptionForPatientChangedToday(patientUuid)
+                .map { hasPrescriptionsChangedToday ->
+                  Pair(isNewestBpEntryHigh, hasPrescriptionsChangedToday)
+                }
           }
           .map { (isNewestBpEntryHigh, hasPrescriptionsChangedToday) ->
-            ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh, hasPrescriptionsChangedToday)
+            ClinicalDecisionSupportInfoLoaded(
+                isNewestBpEntryHigh,
+                hasPrescriptionsChangedToday
+            )
           }
     }
   }

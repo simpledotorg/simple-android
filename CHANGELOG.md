@@ -7,6 +7,10 @@
 - Bump Coroutines to v1.11.0
 - Bump Gradle to v9.5.1
 
+### Changes
+
+- Update Titration nudge threshold for diabetic patients in SriLanka from `140/90` to `130/80`
+
 ## 2026.05.11
 
 ### Internal

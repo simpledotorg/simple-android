@@ -166,9 +166,25 @@ class BloodPressureRepository @Inject constructor(
         )
   }
 
-  fun isNewestBpEntryHigh(patientUuid: UUID): Observable<Boolean> {
+  fun isNewestBpEntryHigh(
+      patientUuid: UUID,
+      isDiabeticPatient: Boolean,
+      isSriLankaEnabled: Boolean
+  ): Observable<Boolean> {
+
     val currentDate = LocalDate.now(utcClock)
 
-    return dao.isNewestBpEntryHigh(patientUuid = patientUuid, currentDate = currentDate)
+    val systolicThreshold =
+        if (isSriLankaEnabled && isDiabeticPatient) 130 else 140
+
+    val diastolicThreshold =
+        if (isSriLankaEnabled && isDiabeticPatient) 80 else 90
+
+    return dao.isNewestBpEntryHigh(
+        patientUuid = patientUuid,
+        currentDate = currentDate,
+        systolicThreshold = systolicThreshold,
+        diastolicThreshold = diastolicThreshold
+    )
   }
 }

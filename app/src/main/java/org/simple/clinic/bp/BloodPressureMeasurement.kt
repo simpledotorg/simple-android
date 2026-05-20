@@ -252,20 +252,25 @@ data class BloodPressureMeasurement(
     fun purgeBloodPressureMeasurementWhenPatientIsNull(): Int
 
     @Query("""
-      SELECT
-        CASE
-            WHEN (COUNT(BP.uuid) >= 1) THEN 1
-            ELSE 0
-        END
-      FROM BloodPressureMeasurement BP
-      WHERE
-        BP.patientUuid = :patientUuid AND
-        date(BP.recordedAt) == :currentDate AND
-        (BP.systolic >= 140 OR BP.diastolic >= 90) AND
-        BP.deletedAt IS NULL
-      ORDER BY BP.recordedAt DESC
-      LIMIT 1
-    """)
-    fun isNewestBpEntryHigh(patientUuid: UUID, currentDate: LocalDate): Observable<Boolean>
+    SELECT
+      CASE
+          WHEN (COUNT(BP.uuid) >= 1) THEN 1
+          ELSE 0
+      END
+    FROM BloodPressureMeasurement BP
+    WHERE
+      BP.patientUuid = :patientUuid AND
+      date(BP.recordedAt) == :currentDate AND
+      (BP.systolic >= :systolicThreshold OR BP.diastolic >= :diastolicThreshold) AND
+      BP.deletedAt IS NULL
+    ORDER BY BP.recordedAt DESC
+    LIMIT 1
+""")
+    fun isNewestBpEntryHigh(
+        patientUuid: UUID,
+        currentDate: LocalDate,
+        systolicThreshold: Int,
+        diastolicThreshold: Int
+    ): Observable<Boolean>
   }
 }

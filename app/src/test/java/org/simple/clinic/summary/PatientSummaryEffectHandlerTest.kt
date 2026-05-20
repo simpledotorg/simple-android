@@ -652,7 +652,14 @@ class PatientSummaryEffectHandlerTest {
     // given
     val patientUuid = UUID.fromString("44daeb85-de4c-4807-8b31-6a88bf597cc7")
 
-    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid)).doReturn(Observable.just(true))
+    val medicalHistory = TestData.medicalHistory()
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        defaultHistoryUuid = uuidGenerator.v4(),
+        patientUuid = patientUuid
+    )) doReturn medicalHistory
+
+    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid, medicalHistory.diagnosedWithDiabetes == Yes, false)).doReturn(Observable.just(true))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)).doReturn(Observable.just(true))
 
     // when

@@ -6,6 +6,7 @@
 
 - Bump Coroutines to v1.11.0
 - Bump Gradle to v9.5.1
+- Bump sqlCipher to v4.16.0
 
 ### Changes
 

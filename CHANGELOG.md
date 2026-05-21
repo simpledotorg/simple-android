@@ -12,6 +12,7 @@
 - Bump asm to v9.10
 - Bump Sentry Android to v6.8.1
 - Bump Compose BOM to v2026.05.01
+- Bump Sentry to v8.42.0
 
 ### Changes
 

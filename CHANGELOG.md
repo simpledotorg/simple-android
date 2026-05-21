@@ -9,6 +9,7 @@
 - Bump sqlCipher to v4.16.0
 - Bump Material Components to v1.14.0
 - Bump KSP to v2.3.8
+- Bump asm to v9.10
 
 ### Changes
 

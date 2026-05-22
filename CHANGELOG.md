@@ -6,6 +6,13 @@
 
 - Bump Coroutines to v1.11.0
 - Bump Gradle to v9.5.1
+- Bump sqlCipher to v4.16.0
+- Bump Material Components to v1.14.0
+- Bump KSP to v2.3.8
+- Bump asm to v9.10
+- Bump Sentry Android to v6.8.1
+- Bump Compose BOM to v2026.05.01
+- Bump Sentry to v8.42.0
 
 ### Changes
 

@@ -31,6 +31,7 @@ class NewMedicalHistoryUpdateTest {
       showIsSmokingQuestion = false,
       showSmokelessTobaccoQuestion = false,
       isScreeningFeatureEnabled = false,
+      showBMIContainer = false,
   )
 
   private val defaultScreeningModel = NewMedicalHistoryModel.default(
@@ -38,6 +39,7 @@ class NewMedicalHistoryUpdateTest {
       showIsSmokingQuestion = false,
       showSmokelessTobaccoQuestion = false,
       isScreeningFeatureEnabled = true,
+      showBMIContainer = true,
   )
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
@@ -317,7 +319,8 @@ class NewMedicalHistoryUpdateTest {
         country = bangladesh,
         showIsSmokingQuestion = false,
         showSmokelessTobaccoQuestion = false,
-        isScreeningFeatureEnabled = true
+        isScreeningFeatureEnabled = true,
+        showBMIContainer = true,
     )
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)

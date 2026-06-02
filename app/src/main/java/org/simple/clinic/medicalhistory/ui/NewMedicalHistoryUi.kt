@@ -125,6 +125,10 @@ fun NewMedicalHistoryUi(
               onAnswerChange = onSelectionChange
           )
         }
+        if (model.showBMIContainer) {
+          BMIContainer(
+          ) { }
+        }
       }
     }
   }
@@ -144,7 +148,8 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     hasShownChangeDiagnosisError = true,
     showIsSmokingQuestion = true,
     showSmokelessTobaccoQuestion = true,
-    isScreeningFeatureEnabled = true
+    isScreeningFeatureEnabled = true,
+    showBMIContainer = true,
 )
 
 @Preview

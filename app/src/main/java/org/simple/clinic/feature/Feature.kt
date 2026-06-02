@@ -30,4 +30,5 @@ enum class Feature(
   ShowDiagnosisButton(false, "show_diagnosis_button"),
   SortOverdueBasedOnReturnScore(false, "sort_overdue_based_on_return_score"),
   ShowReturnScoreDebugValues(false, "show_return_score_debug_values"),
+  ShowBMIContainer(true, "show_bmi_container"),
 }

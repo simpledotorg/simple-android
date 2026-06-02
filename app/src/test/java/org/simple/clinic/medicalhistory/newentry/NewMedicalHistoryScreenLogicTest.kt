@@ -308,6 +308,7 @@ class NewMedicalHistoryScreenLogicTest {
             showIsSmokingQuestion = true,
             showSmokelessTobaccoQuestion = true,
             isScreeningFeatureEnabled = true,
+            showBMIContainer = true,
         ),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),

@@ -23,6 +23,7 @@ data class NewMedicalHistoryModel(
     val showIsSmokingQuestion: Boolean,
     val showSmokelessTobaccoQuestion: Boolean,
     val isScreeningFeatureEnabled: Boolean,
+    val showBMIContainer: Boolean,
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -79,6 +80,7 @@ data class NewMedicalHistoryModel(
         showIsSmokingQuestion: Boolean,
         showSmokelessTobaccoQuestion: Boolean,
         isScreeningFeatureEnabled: Boolean,
+        showBMIContainer: Boolean,
     ): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
@@ -89,6 +91,7 @@ data class NewMedicalHistoryModel(
         showIsSmokingQuestion = showIsSmokingQuestion,
         showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
         isScreeningFeatureEnabled = isScreeningFeatureEnabled,
+        showBMIContainer = showBMIContainer,
     )
   }
 

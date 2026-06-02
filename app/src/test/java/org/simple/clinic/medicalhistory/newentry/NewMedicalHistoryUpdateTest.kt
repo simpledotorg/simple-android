@@ -245,7 +245,7 @@ class NewMedicalHistoryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry) as NewMedicalHistoryEffect)
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading) as NewMedicalHistoryEffect)
             )
         )
   }
@@ -334,7 +334,7 @@ class NewMedicalHistoryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading))
             )
         )
   }
@@ -373,7 +373,7 @@ class NewMedicalHistoryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading))
             )
         )
   }
@@ -392,7 +392,7 @@ class NewMedicalHistoryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.registeringPatient()),
-                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading))
             )
         )
   }
@@ -431,7 +431,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(assertThatNext(
             hasModel(model.registeringPatient()),
-            hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+            hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading))
         ))
   }
 

@@ -1,11 +1,15 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
+import org.simple.clinic.patientattribute.BMIReading
 import java.util.UUID
 
 sealed class NewMedicalHistoryEffect
 
-data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) : NewMedicalHistoryEffect()
+data class RegisterPatient(
+    val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
+    val bmiReading: BMIReading?
+) : NewMedicalHistoryEffect()
 
 data object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 

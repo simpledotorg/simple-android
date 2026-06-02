@@ -127,6 +127,7 @@ fun NewMedicalHistoryUi(
         }
         if (model.showBMIContainer) {
           BMIContainer(
+              bmiReading = model.bmiReading
           ) { }
         }
       }
@@ -143,6 +144,7 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     ),
     ongoingPatientEntry = null,
     ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
+    bmiReading = null,
     currentFacility = null,
     nextButtonState = null,
     hasShownChangeDiagnosisError = true,

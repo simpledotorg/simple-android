@@ -1,6 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import dagger.Lazy
 import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -31,9 +30,10 @@ class NewMedicalHistoryEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = mock(),
       medicalHistoryRepository = mock(),
+      patientAttributeRepository = mock(),
       dataSync = dataSync,
-      currentUser = Lazy { user },
-      currentFacility = Lazy { facility },
+      currentUser = { user },
+      currentFacility = { facility },
       uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
       dateOfBirthFormatter = dateOfBirthFormatter,
       viewEffectsConsumer = viewEffectHandler::handle

@@ -11,12 +11,14 @@ import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patientattribute.BMIReading
 
 @Parcelize
 data class NewMedicalHistoryModel(
     val country: Country,
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
+    val bmiReading: BMIReading?,
     val currentFacility: Facility?,
     val nextButtonState: ButtonState?,
     val hasShownChangeDiagnosisError: Boolean,
@@ -85,6 +87,7 @@ data class NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
+        bmiReading = null,
         currentFacility = null,
         nextButtonState = null,
         hasShownChangeDiagnosisError = false,

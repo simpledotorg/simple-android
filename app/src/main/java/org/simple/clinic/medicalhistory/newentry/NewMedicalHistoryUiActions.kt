@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import org.simple.clinic.patientattribute.BMIReading
 import java.util.UUID
 
 interface NewMedicalHistoryUiActions {
@@ -13,5 +14,6 @@ interface NewMedicalHistoryUiActions {
   fun showChangeDiagnosisErrorDialog()
   fun showOngoingDiabetesTreatmentErrorDialog()
 
+  fun openBMIEntrySheet(bmiReading: BMIReading?)
   fun goBack()
 }

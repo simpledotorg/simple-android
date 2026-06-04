@@ -35,4 +35,8 @@ data object ShowChangeDiagnosisErrorDialog : NewMedicalHistoryViewEffect()
 
 data object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()
 
+data class OpenBMIEntrySheet(
+    val bmiReading: BMIReading?
+) : NewMedicalHistoryViewEffect()
+
 data object GoBack : NewMedicalHistoryViewEffect()

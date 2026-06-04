@@ -29,7 +29,10 @@ import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreen.ScreenRequest
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -106,6 +109,10 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
 
   override fun showOngoingDiabetesTreatmentErrorDialog() {
     SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun openBMIEntrySheet(bmiReading: BMIReading?) {
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(bmiReading))
   }
 
   override fun goBack() {

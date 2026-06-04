@@ -121,4 +121,9 @@ data class NewMedicalHistoryModel(
   fun changeDiagnosisErrorShown(): NewMedicalHistoryModel {
     return copy(hasShownChangeDiagnosisError = true)
   }
+
+  fun changeBMIReading(bmiReading: BMIReading?): NewMedicalHistoryModel {
+    return copy(bmiReading = bmiReading)
+  }
+
 }

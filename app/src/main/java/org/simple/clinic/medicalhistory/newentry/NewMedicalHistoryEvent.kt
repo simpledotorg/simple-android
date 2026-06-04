@@ -4,6 +4,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -28,6 +29,10 @@ data class OngoingPatientEntryLoaded(val ongoingNewPatientEntry: OngoingNewPatie
 data class CurrentFacilityLoaded(val facility: Facility) : NewMedicalHistoryEvent()
 
 data class SyncTriggered(val registeredPatientUuid: UUID) : NewMedicalHistoryEvent()
+
+data class BMIReadingAdded(
+    val bmiReading: BMIReading
+) : NewMedicalHistoryEvent()
 
 data object ChangeDiagnosisNotNowClicked : NewMedicalHistoryEvent() {
   override val analyticsName = "New Medical History:Change Diagnosis:Not Now Clicked"

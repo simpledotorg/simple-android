@@ -24,6 +24,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is ChangeDiagnosisNotNowClicked -> registerPatient(model)
       is BackClicked -> dispatch(GoBack)
       is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.bmiReading))
+      is BMIReadingAdded -> next(model.changeBMIReading(event.bmiReading))
     }
   }
 

@@ -162,7 +162,8 @@ private fun NewMedicalHistoryUiPreview() {
   NewMedicalHistoryUi(
       model = previewMedicalHistoryModel,
       navigationIconClick = {},
-      onNextClick = {}
+      onNextClick = {},
+      onAddBMIClick = {}
   ) { _, _ ->
     //do nothing
   }

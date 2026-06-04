@@ -42,7 +42,7 @@ data object BackClicked : NewMedicalHistoryEvent() {
   override val analyticsName: String = "New Medical History:Back Clicked"
 }
 
-data object AddBMIClicked : NewMedicalHistoryEvent() {
+data object AddOrEditBMIClicked : NewMedicalHistoryEvent() {
   override val analyticsName: String = "New Medical History:Add BMI Clicked"
 }
 

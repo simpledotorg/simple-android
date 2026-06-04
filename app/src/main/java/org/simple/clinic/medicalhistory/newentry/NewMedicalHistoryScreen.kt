@@ -106,7 +106,7 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
                 viewModel.dispatch(SaveMedicalHistoryClicked())
               },
               onAddBMIClick = {
-                viewModel.dispatch(AddBMIClicked)
+                viewModel.dispatch(AddOrEditBMIClicked)
               }
 
           ) { question, answer ->

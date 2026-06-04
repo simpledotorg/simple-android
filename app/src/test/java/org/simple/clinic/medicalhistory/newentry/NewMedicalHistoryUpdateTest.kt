@@ -450,7 +450,7 @@ class NewMedicalHistoryUpdateTest {
   fun `when add bmi is clicked, then open bmi entry sheet`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(AddBMIClicked)
+        .whenEvent(AddOrEditBMIClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenBMIEntrySheet(defaultModel.bmiReading))

@@ -179,10 +179,19 @@ data class TobaccoUseAnswered(
     val isUsingSmokelessTobacco: Answer = Answer.Unanswered
 ) : PatientSummaryEvent()
 
-data object BMIReadingAdded : PatientSummaryEvent()
+data class BMIReadingLoaded(
+    val bmiReading: BMIReading?
+) : PatientSummaryEvent()
+
+data class BMIReadingAdded(
+    val bmiReading: BMIReading
+) : PatientSummaryEvent()
 
 data object AddBMIClicked : PatientSummaryEvent()
 
 data object AddCholesterolClicked: PatientSummaryEvent()
 
 data object CholesterolAdded : PatientSummaryEvent()
+
+data object BMISaved : PatientSummaryEvent()
+

@@ -42,7 +42,7 @@ class PatientSummaryViewEffectHandler(
       ShowDiabetesDiagnosisWarning -> uiActions.showDiabetesDiagnosisWarning()
       is ShowHypertensionDiagnosisWarning -> uiActions.showHypertensionDiagnosisWarning(viewEffect.continueToDiabetesDiagnosisWarning)
       is ShowTobaccoStatusDialog -> uiActions.showTobaccoStatusDialog()
-      is OpenBMIEntrySheet -> uiActions.openBMIEntrySheet(viewEffect.patientUuid)
+      is OpenBMIEntrySheet -> uiActions.openBMIEntrySheet(viewEffect.bmiReading)
       is OpenCholesterolEntrySheet -> uiActions.openCholesterolEntrySheet(viewEffect.patientUuid)
     }.exhaustive()
   }

@@ -23,6 +23,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
       is ChangeDiagnosisNotNowClicked -> registerPatient(model)
       is BackClicked -> dispatch(GoBack)
+      is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.bmiReading))
     }
   }
 
@@ -72,7 +73,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
     } else {
       next(
           model.registeringPatient(),
-          RegisterPatient(model.ongoingMedicalHistoryEntry)
+          RegisterPatient(model.ongoingMedicalHistoryEntry, model.bmiReading)
       )
     }
   }

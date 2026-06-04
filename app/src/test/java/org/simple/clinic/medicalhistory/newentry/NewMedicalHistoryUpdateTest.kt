@@ -445,4 +445,15 @@ class NewMedicalHistoryUpdateTest {
             hasEffects(GoBack)
         ))
   }
+
+  @Test
+  fun `when add bmi is clicked, then open bmi entry sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddBMIClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenBMIEntrySheet(defaultModel.bmiReading))
+        ))
+  }
 }

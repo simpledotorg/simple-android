@@ -39,6 +39,7 @@ fun NewMedicalHistoryUi(
     model: NewMedicalHistoryModel,
     navigationIconClick: () -> Unit,
     onNextClick: () -> Unit,
+    onAddBMIClick: () -> Unit,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
   SimpleTheme {
@@ -127,8 +128,9 @@ fun NewMedicalHistoryUi(
         }
         if (model.showBMIContainer) {
           BMIContainer(
-              bmiReading = model.bmiReading
-          ) { }
+              bmiReading = model.bmiReading,
+              onAddOrClick = onAddBMIClick
+          )
         }
       }
     }

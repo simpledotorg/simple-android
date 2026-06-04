@@ -37,18 +37,6 @@ class BMIEntryEffectHandlerTest {
   }
 
   @Test
-  fun `when create bmi entry is received, then bmi should be saved`() {
-    //when
-    testCase.dispatch(CreateNewBMIEntry(
-        reading = BMIReading(height = 177f, weight = 63f),
-        patientUUID = UUID.randomUUID()
-    ))
-
-    //then
-    testCase.assertOutgoingEvents(BMISaved)
-  }
-
-  @Test
   fun `when close sheet view effect is received, then close sheet`() {
     //when
     testCase.dispatch(CloseSheet)

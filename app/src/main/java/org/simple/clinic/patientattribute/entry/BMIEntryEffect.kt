@@ -6,7 +6,9 @@ sealed class BMIEntryEffect
 
 sealed class BMIEntryViewEffect : BMIEntryEffect()
 
-data object CloseSheet : BMIEntryViewEffect()
+data class CloseSheet(
+    val bmiReading: BMIReading? = null
+) : BMIEntryViewEffect()
 
 data object ChangeFocusToHeight : BMIEntryViewEffect()
 

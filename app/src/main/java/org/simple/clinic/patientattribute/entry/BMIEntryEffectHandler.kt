@@ -20,7 +20,11 @@ class BMIEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<BMIEntryEffect, BMIEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BMIEntryEffect, BMIEntryEvent>()
-        .addAction(CloseSheet::class.java, ui::closeSheet, schedulersProvider.ui())
+        .addConsumer(
+            CloseSheet::class.java,
+            { effect -> ui.closeSheet(effect.bmiReading) },
+            schedulersProvider.ui()
+        )
         .addAction(ChangeFocusToHeight::class.java, ui::changeFocusToHeight, schedulersProvider.ui())
         .addAction(ChangeFocusToWeight::class.java, ui::changeFocusToWeight, schedulersProvider.ui())
         .build()

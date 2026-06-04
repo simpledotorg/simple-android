@@ -4,10 +4,10 @@ import org.junit.After
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.verify
+import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.TestData
 import java.util.UUID
 
 class BMIEntryEffectHandlerTest {
@@ -38,12 +38,14 @@ class BMIEntryEffectHandlerTest {
 
   @Test
   fun `when close sheet view effect is received, then close sheet`() {
+    //given
+    val bmiReading = BMIReading(height = 177f, weight = 63f)
     //when
-    testCase.dispatch(CloseSheet)
+    testCase.dispatch(CloseSheet(bmiReading))
 
     //then
     testCase.assertNoOutgoingEvents()
-    verify(ui).closeSheet()
+    verify(ui).closeSheet(bmiReading)
   }
 
   @Test

@@ -21,25 +21,14 @@ class BMIEntryUpdateTest {
   private val spec = UpdateSpec(update)
 
   @Test
-  fun `when the save button is clicked, then save the bmi`() {
+  fun `when the save button is clicked, then close the sheet and return bmi reading`() {
     val model = defaultModel.weightChanged("63").heightChanged("177")
     spec
         .given(model)
         .whenEvent(SaveClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CreateNewBMIEntry(model.patientUUID, BMIReading(height = model.height.toFloat(), weight = model.weight.toFloat())))
-        ))
-  }
-
-  @Test
-  fun `when bmi is saved, then close the sheet`() {
-    spec
-        .given(defaultModel)
-        .whenEvent(BMISaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CloseSheet)
+            hasEffects(CloseSheet(BMIReading(height = model.height.toFloat(), weight = model.weight.toFloat())))
         ))
   }
 
@@ -109,7 +98,7 @@ class BMIEntryUpdateTest {
         .whenEvent(BackPressed)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CloseSheet)
+            hasEffects(CloseSheet())
         ))
   }
 }

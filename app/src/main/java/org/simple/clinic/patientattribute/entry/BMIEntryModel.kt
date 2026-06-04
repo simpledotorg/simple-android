@@ -2,17 +2,17 @@ package org.simple.clinic.patientattribute.entry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
+import org.simple.clinic.patientattribute.BMIReading
 
 @Parcelize
 data class BMIEntryModel(
-    val patientUUID: UUID,
-    val height: String = "",
-    val weight: String = ""
+    val height: String,
+    val weight: String,
 ) : Parcelable {
   companion object {
-    fun default(patientUUID: UUID) = BMIEntryModel(
-        patientUUID = patientUUID,
+    fun default(bmiReading: BMIReading?) = BMIEntryModel(
+        height = bmiReading?.height?.toInt()?.toString().orEmpty(),
+        weight = bmiReading?.weight?.toInt()?.toString().orEmpty(),
     )
   }
 

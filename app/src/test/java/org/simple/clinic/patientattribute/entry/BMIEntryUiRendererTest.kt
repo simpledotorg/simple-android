@@ -5,14 +5,12 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.patientattribute.BMIReading
-import java.util.UUID
 
 class BMIEntryUiRendererTest {
   private val ui = mock<BMIEntryUi>()
   private val uiRenderer = BMIEntryUiRenderer(ui)
-  private val patientUuid = UUID.fromString("d6dd1708-9061-4c6c-b5c7-47b132198862")
   private val defaultModel = BMIEntryModel
-      .default(patientUuid)
+      .default(BMIReading(height = 177f, weight = 63f))
 
   @Test
   fun `when the sheet is show for a new entry, then hide bmi`() {

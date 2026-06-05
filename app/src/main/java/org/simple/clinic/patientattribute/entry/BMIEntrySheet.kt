@@ -102,11 +102,13 @@ class BMIEntrySheet : BaseBottomSheet<
 
   private fun heightChanges() = heightEditText
       .textChanges()
+      .skipInitialValue()
       .map(CharSequence::toString)
       .map(::HeightChanged)
 
   private fun weightChanges() = weightEditText
       .textChanges()
+      .skipInitialValue()
       .map(CharSequence::toString)
       .map(::WeightChanged)
 
@@ -134,6 +136,18 @@ class BMIEntrySheet : BaseBottomSheet<
     }
   }
 
+  override fun updateHeight(height: String) {
+    if (heightEditText.text.toString() != height) {
+      heightEditText.setText(height)
+    }
+  }
+
+  override fun updateWeight(weight: String) {
+    if (weightEditText.text.toString() != weight) {
+      weightEditText.setText(weight)
+    }
+  }
+
   override fun closeSheet(bmiReading: BMIReading?) {
     router.popWithResult(
         Succeeded(BMIAdded(bmiReading))
@@ -142,10 +156,12 @@ class BMIEntrySheet : BaseBottomSheet<
 
   override fun changeFocusToHeight() {
     heightEditText.requestFocus()
+    heightEditText.setSelection(heightEditText.text?.length ?: 0)
   }
 
   override fun changeFocusToWeight() {
     weightEditText.requestFocus()
+    weightEditText.setSelection(weightEditText.text?.length ?: 0)
   }
 
   override fun showBMI(bmi: String) {

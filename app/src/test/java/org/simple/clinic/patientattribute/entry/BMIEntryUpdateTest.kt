@@ -8,13 +8,10 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.patientattribute.BMIReading
-import java.util.UUID
 
 class BMIEntryUpdateTest {
 
-  private val patientUuid = UUID.fromString("720f6fd4-4c4e-406a-b221-881990a962d4")
-
-  private val defaultModel = BMIEntryModel.default(patientUuid)
+  private val defaultModel = BMIEntryModel.default(BMIReading(height = 177f, weight = 63f))
 
   private val update = BMIEntryUpdate()
 

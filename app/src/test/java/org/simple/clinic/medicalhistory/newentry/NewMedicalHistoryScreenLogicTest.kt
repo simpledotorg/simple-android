@@ -30,6 +30,7 @@ import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -47,6 +48,8 @@ class NewMedicalHistoryScreenLogicTest {
 
   private val uiActions: NewMedicalHistoryUiActions = mock()
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
+
+  private val patientAttributeRepository: PatientAttributeRepository = mock()
   private val patientRepository: PatientRepository = mock()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -291,6 +294,7 @@ class NewMedicalHistoryScreenLogicTest {
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         medicalHistoryRepository = medicalHistoryRepository,
+        patientAttributeRepository = patientAttributeRepository,
         dataSync = mock(),
         currentUser = { user },
         currentFacility = { facility },

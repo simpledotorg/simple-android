@@ -12,6 +12,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
 import org.simple.clinic.TestData
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -136,6 +137,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -234,6 +236,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -274,6 +277,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -336,6 +340,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -374,6 +379,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -438,11 +444,15 @@ class PatientSummaryViewRendererTest {
         facility = facility
     )
 
+    val bmiReading = BMIReading(height = 177f, weight = 68f)
+
     val updatedModel = defaultModel
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
+        .bmiVisibilityUpdated(true)
+        .bmiReadingsLoaded(bmiReading)
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -463,6 +473,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
+    verify(ui).showBMIContainer(bmiReading)
     verifyNoMoreInteractions(ui)
   }
 
@@ -517,6 +528,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -571,6 +583,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -640,6 +653,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -700,6 +714,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -760,6 +775,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 
@@ -842,6 +858,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).updateStatinAlert(StatinInfo(canShowStatinNudge = true))
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideBMIContainer()
     verifyNoMoreInteractions(ui)
   }
 }

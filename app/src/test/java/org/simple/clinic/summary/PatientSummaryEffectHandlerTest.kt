@@ -91,6 +91,7 @@ class PatientSummaryEffectHandlerTest {
       remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
       overrides = mapOf(
           Feature.Screening to true,
+          Feature.ShowBMIContainer to true
       )
   )
 
@@ -1140,6 +1141,6 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadBMIFeature)
 
     //then
-    testCase.assertOutgoingEvents(BMIFeatureLoaded(any()))
+    testCase.assertOutgoingEvents(BMIFeatureLoaded(true))
   }
 }

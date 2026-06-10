@@ -197,6 +197,8 @@ class PatientSummaryScreen :
   private var showClinicalDecisionAlert by mutableStateOf(false)
   private var animateClinicalDecisionSupportAlert by mutableStateOf(false)
 
+  private var bmiReading by mutableStateOf<BMIReading?>(null)
+
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
   }
@@ -827,6 +829,15 @@ class PatientSummaryScreen :
 
   override fun updateStatinAlert(statinInfo: StatinInfo) {
     this.statinInfo = statinInfo
+  }
+
+  override fun showBMIContainer(bmiReading: BMIReading?) {
+    bmiContainerComposeView.visibility = VISIBLE
+    this.bmiReading = bmiReading
+  }
+
+  override fun hideBMIContainer() {
+    bmiContainerComposeView.visibility = GONE
   }
 
   override fun showReassignPatientWarningSheet(

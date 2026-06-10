@@ -104,6 +104,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
+        .addTransformer(LoadBMIFeature::class.java, loadBMIFeature())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
         .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
@@ -390,9 +391,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map {
             val currentFacilityId = currentFacility.get().uuid
             CDSSPilotStatusChecked(isPilotEnabledForFacility =
-            country.isoCountryCode == Country.ETHIOPIA ||
-                country.isoCountryCode == Country.SRI_LANKA ||
-                cdssPilotFacilities.get().contains(currentFacilityId)
+                country.isoCountryCode == Country.ETHIOPIA ||
+                    country.isoCountryCode == Country.SRI_LANKA ||
+                    cdssPilotFacilities.get().contains(currentFacilityId)
+            )
+          }
+    }
+  }
+
+  private fun loadBMIFeature(): ObservableTransformer<LoadBMIFeature, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            BMIFeatureLoaded(
+                isEnabled = feature.isEnabled(Feature.ShowBMIContainer)
             )
           }
     }

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.util.UUID
 
@@ -44,6 +45,6 @@ interface PatientSummaryUiActions {
   fun showDiabetesDiagnosisWarning()
   fun showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning: Boolean)
   fun showTobaccoStatusDialog()
-  fun openBMIEntrySheet(patientUuid: UUID)
+  fun openBMIEntrySheet(bmiReading: BMIReading?)
   fun openCholesterolEntrySheet(patientUuid: UUID)
 }

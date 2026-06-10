@@ -1092,12 +1092,13 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when open BMI entry sheet view effect is received, then open the BMI entry sheet`() {
     // when
-    testCase.dispatch(OpenBMIEntrySheet(patientUuid))
+    val bmiReading = BMIReading(height = 177f, weight = 53f)
+    testCase.dispatch(OpenBMIEntrySheet(bmiReading))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openBMIEntrySheet(patientUuid)
+    verify(uiActions).openBMIEntrySheet(bmiReading)
     verifyNoMoreInteractions(uiActions)
   }
 
@@ -1110,5 +1111,27 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).openCholesterolEntrySheet(patientUuid = patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load bmi reading effect is received, then bmi reading should be loaded`() {
+    // when
+    testCase.dispatch(LoadBMiReading(patientUuid = patientUuid))
+
+    // then
+    //then
+    testCase.assertOutgoingEvents(BMIReadingLoaded(null))
+  }
+
+  @Test
+  fun `when create new bmi entry effect is received, then save bmi`() {
+    // when
+    val bmiReading = BMIReading(height = 177f, weight = 53f)
+
+    testCase.dispatch(CreateNewBMIEntry(patientUuid, bmiReading))
+
+    // then
+    //then
+    testCase.assertOutgoingEvents(BMISaved)
   }
 }

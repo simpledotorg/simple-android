@@ -578,6 +578,7 @@
   <string name="medicalhistorysummaryview_hypertension_diagnosis">Patient has hypertension?</string>
   <string name="medicalhistorysummaryview_diabetes_diagnosis">Patient has diabetes?</string>
   <string name="medicalhistorysummaryview_tobacco_use">Tobacco use</string>
+  <string name="medicalhistorysummaryview_bmi">BMI</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">No medicines added</string>
@@ -1118,6 +1119,9 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="bmi_entry_height_in_cm">Height (cm)</string>
   <string name="bmi_entry_weight_in_kg">Weight (kg)</string>
   <string name="bmi_x">BMI: %s</string>
+  <string name="bmi_add">Add</string>
+  <string name="bmi_edit">Edit</string>
+  <string name="bmi_none">None</string>
 
   <!-- Add Smoking Status Dialog -->
   <string name="tobacco_status_dialog_title">Tobacco use?</string>

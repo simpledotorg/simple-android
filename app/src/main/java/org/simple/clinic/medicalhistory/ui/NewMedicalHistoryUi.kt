@@ -39,6 +39,7 @@ fun NewMedicalHistoryUi(
     model: NewMedicalHistoryModel,
     navigationIconClick: () -> Unit,
     onNextClick: () -> Unit,
+    onAddBMIClick: () -> Unit,
     onSelectionChange: (MedicalHistoryQuestion, Answer) -> Unit,
 ) {
   SimpleTheme {
@@ -125,6 +126,12 @@ fun NewMedicalHistoryUi(
               onAnswerChange = onSelectionChange
           )
         }
+        if (model.showBMIContainer) {
+          BMIContainer(
+              bmiReading = model.bmiReading,
+              onAddOrClick = onAddBMIClick
+          )
+        }
       }
     }
   }
@@ -139,12 +146,14 @@ private val previewMedicalHistoryModel = NewMedicalHistoryModel(
     ),
     ongoingPatientEntry = null,
     ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
+    bmiReading = null,
     currentFacility = null,
     nextButtonState = null,
     hasShownChangeDiagnosisError = true,
     showIsSmokingQuestion = true,
     showSmokelessTobaccoQuestion = true,
-    isScreeningFeatureEnabled = true
+    isScreeningFeatureEnabled = true,
+    showBMIContainer = true,
 )
 
 @Preview
@@ -153,7 +162,8 @@ private fun NewMedicalHistoryUiPreview() {
   NewMedicalHistoryUi(
       model = previewMedicalHistoryModel,
       navigationIconClick = {},
-      onNextClick = {}
+      onNextClick = {},
+      onAddBMIClick = {}
   ) { _, _ ->
     //do nothing
   }

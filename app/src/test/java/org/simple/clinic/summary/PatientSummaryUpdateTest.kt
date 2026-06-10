@@ -2692,7 +2692,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when add bmi button is clicked, then open the bmi entry sheet`() {
+  fun `when add bmi button is clicked, then load bmi reading`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2700,21 +2700,76 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(AddBMIClicked)
         .then(assertThatNext(
-            hasEffects(OpenBMIEntrySheet(model.patientUuid)),
+            hasEffects(LoadBMiReading(model.patientUuid)),
             hasNoModel()
         ))
   }
 
   @Test
-  fun `when BMI reading is added, then calculate the cvd risk`() {
+  fun `when bmi reading is loaded, then open bmi entry sheet`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    val bmiReading = BMIReading(
+        height = 165f,
+        weight = 60f
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingLoaded(bmiReading))
+        .then(assertThatNext(
+            hasEffects(OpenBMIEntrySheet(bmiReading)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when BMI reading is added, then create new bmi entry`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    val bmiReading = BMIReading(
+        height = 165f,
+        weight = 60f
+    )
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingAdded(bmiReading))
+        .then(assertThatNext(
+            hasEffects(CreateNewBMIEntry(patientUuid, bmiReading)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when BMI reading is saved, then calculate non lab based cvd risk`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
 
     updateSpec
         .given(model)
-        .whenEvent(BMIReadingAdded)
+        .whenEvent(BMISaved)
         .then(assertThatNext(
             hasEffects(CalculateNonLabBasedCVDRisk(patientSummaryProfile.patient)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when BMI reading is loaded, then open bmi entry sheet`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    val bmiReading = BMIReading(
+        height = 165f,
+        weight = 60f
+    )
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingLoaded(bmiReading))
+        .then(assertThatNext(
+            hasEffects(OpenBMIEntrySheet(bmiReading)),
             hasNoModel()
         ))
   }

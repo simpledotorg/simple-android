@@ -17,6 +17,7 @@ class NewMedicalHistoryViewEffectHandler(
       ShowHypertensionDiagnosisOrReferralRequiredError -> uiActions.showHypertensionDiagnosisRequiredOrReferralErrorDialog()
       ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
       ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()
+      is OpenBMIEntrySheet -> uiActions.openBMIEntrySheet(viewEffect.bmiReading)
       GoBack -> uiActions.goBack()
     }.exhaustive()
   }

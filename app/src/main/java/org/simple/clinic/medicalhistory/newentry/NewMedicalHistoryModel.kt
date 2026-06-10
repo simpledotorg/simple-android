@@ -11,18 +11,21 @@ import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patientattribute.BMIReading
 
 @Parcelize
 data class NewMedicalHistoryModel(
     val country: Country,
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
+    val bmiReading: BMIReading?,
     val currentFacility: Facility?,
     val nextButtonState: ButtonState?,
     val hasShownChangeDiagnosisError: Boolean,
     val showIsSmokingQuestion: Boolean,
     val showSmokelessTobaccoQuestion: Boolean,
     val isScreeningFeatureEnabled: Boolean,
+    val showBMIContainer: Boolean,
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -79,16 +82,19 @@ data class NewMedicalHistoryModel(
         showIsSmokingQuestion: Boolean,
         showSmokelessTobaccoQuestion: Boolean,
         isScreeningFeatureEnabled: Boolean,
+        showBMIContainer: Boolean,
     ): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
+        bmiReading = null,
         currentFacility = null,
         nextButtonState = null,
         hasShownChangeDiagnosisError = false,
         showIsSmokingQuestion = showIsSmokingQuestion,
         showSmokelessTobaccoQuestion = showSmokelessTobaccoQuestion,
         isScreeningFeatureEnabled = isScreeningFeatureEnabled,
+        showBMIContainer = showBMIContainer,
     )
   }
 
@@ -115,4 +121,9 @@ data class NewMedicalHistoryModel(
   fun changeDiagnosisErrorShown(): NewMedicalHistoryModel {
     return copy(hasShownChangeDiagnosisError = true)
   }
+
+  fun changeBMIReading(bmiReading: BMIReading?): NewMedicalHistoryModel {
+    return copy(bmiReading = bmiReading)
+  }
+
 }

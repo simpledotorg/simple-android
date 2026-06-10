@@ -8,6 +8,9 @@ class BMIEntryUiRenderer(
 ) : ViewRenderer<BMIEntryModel> {
 
   override fun render(model: BMIEntryModel) {
+    ui.updateHeight(model.height)
+    ui.updateWeight(model.weight)
+
     if (model.height.isNotEmpty() && model.weight.isNotEmpty()) {
       val bmi = BMIReading(
           height = model.height.toFloat(),

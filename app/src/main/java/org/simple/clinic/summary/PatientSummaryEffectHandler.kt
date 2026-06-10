@@ -96,6 +96,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
+        .addTransformer(LoadBMiReading::class.java, loadBmiReading())
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
@@ -115,6 +116,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
         .addConsumer(UpdateTobaccoUse::class.java, { updateTobaccoUse(it.patientId, it.isSmoker, it.isUsingSmokelessTobacco) }, schedulersProvider.io())
+        .addTransformer(CreateNewBMIEntry::class.java, createNewBMIEntry())
         .build()
   }
 
@@ -662,4 +664,34 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map(::FetchedHasShownMissingPhoneReminder)
     }
   }
+
+  private fun loadBmiReading(): ObservableTransformer<LoadBMiReading, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(
+                patientUuid = it.patientUuid
+            )
+            BMIReadingLoaded(patientAttribute?.bmiReading)
+          }
+    }
+  }
+
+  private fun createNewBMIEntry(): ObservableTransformer<CreateNewBMIEntry, PatientSummaryEvent> {
+    return ObservableTransformer { createNewBMIEntries ->
+      createNewBMIEntries
+          .observeOn(schedulersProvider.io())
+          .map { createNewBMIEntry ->
+            patientAttributeRepository.save(
+                bmiReading = createNewBMIEntry.reading,
+                patientUuid = createNewBMIEntry.patientUUID,
+                loggedInUserUuid = currentUser.get().uuid,
+                uuid = uuidGenerator.v4(),
+            )
+            BMISaved
+          }
+    }
+  }
+
 }

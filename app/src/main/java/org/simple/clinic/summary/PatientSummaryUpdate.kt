@@ -115,6 +115,13 @@ class PatientSummaryUpdate(
       CholesterolAdded -> dispatch(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       is BMIReadingLoaded -> dispatch(OpenBMIEntrySheet(event.bmiReading))
       is BMISaved -> dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+      is BMISaved -> {
+        next(
+            model.copy(bmiReading = event.bmiReading),
+            setOf(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+        )
+      }
+
       is BMIFeatureLoaded -> next(model.bmiVisibilityUpdated(event.isEnabled))
     }
   }

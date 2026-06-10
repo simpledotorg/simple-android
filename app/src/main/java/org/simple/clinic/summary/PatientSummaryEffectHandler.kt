@@ -702,7 +702,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 loggedInUserUuid = currentUser.get().uuid,
                 uuid = uuidGenerator.v4(),
             )
-            BMISaved
+            BMISaved(createNewBMIEntry.reading)
           }
     }
   }

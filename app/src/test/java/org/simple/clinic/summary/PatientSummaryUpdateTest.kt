@@ -2757,16 +2757,21 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when BMI reading is saved, then calculate non lab based cvd risk`() {
+  fun `when BMI reading is saved, then calculate non lab based cvd risk and update the model`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
 
+    val bmiReading = BMIReading(
+        height = 165f,
+        weight = 60f
+    )
+
     updateSpec
         .given(model)
-        .whenEvent(BMISaved)
+        .whenEvent(BMISaved(bmiReading))
         .then(assertThatNext(
             hasEffects(CalculateNonLabBasedCVDRisk(patientSummaryProfile.patient)),
-            hasNoModel()
+            hasModel(model.bmiReadingsLoaded(bmiReading))
         ))
   }
 

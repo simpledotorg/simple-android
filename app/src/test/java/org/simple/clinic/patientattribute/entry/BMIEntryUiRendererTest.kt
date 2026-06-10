@@ -9,31 +9,41 @@ import org.simple.clinic.patientattribute.BMIReading
 class BMIEntryUiRendererTest {
   private val ui = mock<BMIEntryUi>()
   private val uiRenderer = BMIEntryUiRenderer(ui)
-  private val defaultModel = BMIEntryModel
-      .default(BMIReading(height = 177f, weight = 63f))
 
   @Test
-  fun `when the sheet is show for a new entry, then hide bmi`() {
+  fun `when the sheet is shown for a new entry, then hide bmi`() {
+    // given
+    val model = BMIEntryModel.default(null)
+
     // when
-    uiRenderer.render(defaultModel)
+    uiRenderer.render(model)
 
     // then
+    verify(ui).updateHeight("")
+    verify(ui).updateWeight("")
     verify(ui).hideBMI()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
   fun `when the height and weight are entered, then show bmi`() {
-    //given
+    // given
     val height = 177f
     val weight = 68f
+
     val reading = BMIReading(height, weight)
     val bmi = reading.calculateBMI().toString()
 
+    val model = BMIEntryModel.default(null)
+        .heightChanged(height.toInt().toString())
+        .weightChanged(weight.toInt().toString())
+
     // when
-    uiRenderer.render(defaultModel.heightChanged(height.toString()).weightChanged(weight.toString()))
+    uiRenderer.render(model)
 
     // then
+    verify(ui).updateHeight("177")
+    verify(ui).updateWeight("68")
     verify(ui).showBMI(bmi)
     verifyNoMoreInteractions(ui)
   }

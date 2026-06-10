@@ -79,11 +79,12 @@ class BMIEntryUpdateTest {
 
   @Test
   fun `when weight backspace is clicked and is empty, then update the model and change the focus to height`() {
+    val model = defaultModel.weightChanged("")
     spec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(WeightBackspaceClicked)
         .then(assertThatNext(
-            hasModel(defaultModel.deleteWeightLastDigit()),
+            hasModel(model),
             hasEffects(ChangeFocusToHeight)
         ))
   }

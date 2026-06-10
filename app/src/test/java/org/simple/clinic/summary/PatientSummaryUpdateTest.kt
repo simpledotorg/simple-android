@@ -2692,7 +2692,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when add bmi button is clicked, then open the bmi entry sheet`() {
+  fun `when add bmi button is clicked, then load bmi reading`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2700,7 +2700,26 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(AddBMIClicked)
         .then(assertThatNext(
-            hasEffects(OpenBMIEntrySheet(null)),
+            hasEffects(LoadBMiReading(model.patientUuid)),
+            hasNoModel()
+        ))
+  }
+
+  @Test
+  fun `when bmi reading is loaded, then open bmi entry sheet`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    val bmiReading = BMIReading(
+        height = 165f,
+        weight = 60f
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(BMIReadingLoaded(bmiReading))
+        .then(assertThatNext(
+            hasEffects(OpenBMIEntrySheet(bmiReading)),
             hasNoModel()
         ))
   }

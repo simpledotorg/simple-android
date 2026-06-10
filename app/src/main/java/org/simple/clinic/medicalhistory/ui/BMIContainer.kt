@@ -22,6 +22,7 @@ import org.simple.clinic.common.ui.components.ButtonSize
 import org.simple.clinic.common.ui.components.TextButton
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.patientattribute.BMIReading
+import kotlin.math.roundToInt
 
 @Composable
 fun BMIContainer(
@@ -67,7 +68,7 @@ fun BMIContainer(
 
       val bmiText = buildAnnotatedString {
         if (isBmiRecorded) {
-          append(bmiReading.calculateBMI().toString())
+          append(bmiReading.calculateBMI()?.roundToInt().toString())
 
           append(" ")
 

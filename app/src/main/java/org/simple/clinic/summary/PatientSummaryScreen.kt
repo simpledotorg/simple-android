@@ -49,6 +49,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.ui.BMIContainer
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -141,6 +142,9 @@ class PatientSummaryScreen :
 
   private val facilityNameAndDateTextView
     get() = binding.facilityNameAndDateTextView
+
+  private val bmiContainerComposeView
+    get() = binding.bmiContainerComposeView
 
   private val labelRegistered
     get() = binding.labelRegistered
@@ -334,6 +338,17 @@ class PatientSummaryScreen :
             )
           }
         }
+      }
+    }
+
+    bmiContainerComposeView.setContent {
+      SimpleTheme {
+        BMIContainer(
+            bmiReading = bmiReading,
+            onAddOrClick = {
+              additionalEvents.notify(AddBMIClicked)
+            }
+        )
       }
     }
   }

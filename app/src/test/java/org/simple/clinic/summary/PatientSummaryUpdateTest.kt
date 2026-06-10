@@ -2692,6 +2692,20 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when BMI feature is loaded, then update the model`() {
+    val model = defaultModel
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(BMIFeatureLoaded(true))
+        .then(assertThatNext(
+            hasModel(model.bmiVisibilityUpdated(true)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
   fun `when add bmi button is clicked, then load bmi reading`() {
     val model = defaultModel
         .patientSummaryProfileLoaded(patientSummaryProfile)

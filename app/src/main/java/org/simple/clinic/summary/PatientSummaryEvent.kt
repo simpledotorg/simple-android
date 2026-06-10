@@ -189,9 +189,12 @@ data class BMIReadingAdded(
 
 data object AddBMIClicked : PatientSummaryEvent()
 
-data object AddCholesterolClicked: PatientSummaryEvent()
+data object AddCholesterolClicked : PatientSummaryEvent()
 
 data object CholesterolAdded : PatientSummaryEvent()
 
-data object BMISaved : PatientSummaryEvent()
+
+data class BMIFeatureLoaded(
+    val isEnabled: Boolean
+) : PatientSummaryEvent()
 

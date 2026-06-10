@@ -30,6 +30,7 @@ data class PatientSummaryModel(
     val hasShownDiagnosisWarningDialog: Boolean,
     val statinInfo: StatinInfo?,
     val hasShownTobaccoUseDialog: Boolean,
+    val showBMIContainer: Boolean,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -50,6 +51,7 @@ data class PatientSummaryModel(
           hasShownDiagnosisWarningDialog = false,
           statinInfo = null,
           hasShownTobaccoUseDialog = false,
+          showBMIContainer = false,
       )
     }
   }
@@ -137,5 +139,9 @@ data class PatientSummaryModel(
 
   fun showTobaccoUseDialog(): PatientSummaryModel {
     return copy(hasShownTobaccoUseDialog = true)
+  }
+
+  fun bmiVisibilityUpdated(isEnabled: Boolean): PatientSummaryModel {
+    return copy(showBMIContainer = isEnabled)
   }
 }

@@ -24,6 +24,7 @@ class NewMedicalHistoryViewModel(
             features.isEnabled(Feature.LabBasedStatinNudge),
         showSmokelessTobaccoQuestion = country.isoCountryCode != Country.ETHIOPIA,
         isScreeningFeatureEnabled = features.isEnabled(Feature.Screening),
+        showBMIContainer = features.isEnabled(Feature.ShowBMIContainer)
     ),
     init = NewMedicalHistoryInit(),
     loopFactoryProvider = { viewEffectsConsumer ->

@@ -6,12 +6,15 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -23,6 +26,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val patientAttributeRepository: PatientAttributeRepository,
     private val dataSync: DataSync,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
@@ -57,30 +61,44 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
             val loggedInUser = currentUser.get()
             val facility = currentFacility.get()
             val ongoingMedicalHistoryEntry = registerPatientEffect.ongoingMedicalHistoryEntry
+            val bmiReading = registerPatientEffect.bmiReading
 
-            RegisterPatientData(loggedInUser, facility, ongoingMedicalHistoryEntry)
+            RegisterPatientData(loggedInUser, facility, ongoingMedicalHistoryEntry, bmiReading)
           }
-          .map { (user, facility, ongoingMedicalHistoryEntry) ->
+          .map { registerPatientData ->
             patientRepository
                 .saveOngoingEntryAsPatient(
                     patientEntry = patientRepository.ongoingEntry(),
-                    loggedInUser = user,
-                    facility = facility,
+                    loggedInUser = registerPatientData.user,
+                    facility = registerPatientData.facility,
                     patientUuid = uuidGenerator.v4(),
                     addressUuid = uuidGenerator.v4(),
                     supplyUuidForBpPassport = uuidGenerator::v4,
                     supplyUuidForAlternativeId = uuidGenerator::v4,
                     supplyUuidForPhoneNumber = uuidGenerator::v4,
                     dateOfBirthFormatter = dateOfBirthFormatter
-                ) to ongoingMedicalHistoryEntry
+                ) to registerPatientData
           }
-          .flatMapSingle { (registeredPatient, ongoingMedicalHistoryEntry) ->
+          .flatMapSingle { (registeredPatient, registeredPatientData) ->
+
+            val saveBmi = Completable.fromAction {
+              registeredPatientData.bmiReading?.let {
+                patientAttributeRepository.save(
+                    bmiReading = it,
+                    patientUuid = registeredPatient.patientUuid,
+                    loggedInUserUuid = registeredPatientData.user.uuid,
+                    uuid = uuidGenerator.v4(),
+                )
+              }
+            }
+
             medicalHistoryRepository
                 .save(
                     uuid = uuidGenerator.v4(),
                     patientUuid = registeredPatient.patientUuid,
-                    historyEntry = ongoingMedicalHistoryEntry
+                    historyEntry = registeredPatientData.ongoingMedicalHistoryEntry
                 )
+                .andThen(saveBmi)
                 .toSingleDefault(PatientRegistered(registeredPatient.patientUuid))
           }
     }
@@ -114,6 +132,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
   private data class RegisterPatientData(
       val user: User,
       val facility: Facility,
-      val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry
+      val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
+      val bmiReading: BMIReading?
   )
 }

@@ -56,6 +56,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -358,7 +359,13 @@ class PatientSummaryScreen :
       }
 
       is ScreenRequest.BMIEntrySheet -> {
-        additionalEvents.notify(BMIReadingAdded)
+        val bmiReading = (result.result as BMIEntrySheet.BMIAdded).bmiReading
+
+        if (bmiReading != null) {
+          additionalEvents.notify(BMIReadingAdded(
+              bmiReading = bmiReading
+          ))
+        }
       }
 
       is ScreenRequest.CholesterolEntrySheet -> {
@@ -772,8 +779,8 @@ class PatientSummaryScreen :
     router.pushExpectingResult(ScreenRequest.CholesterolEntrySheet, CholesterolEntrySheet.Key(patientUuid))
   }
 
-  override fun openBMIEntrySheet(patientUuid: UUID) {
-    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
+  override fun openBMIEntrySheet(bmiReading: BMIReading?) {
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(bmiReading))
   }
 
   override fun openSelectFacilitySheet() {

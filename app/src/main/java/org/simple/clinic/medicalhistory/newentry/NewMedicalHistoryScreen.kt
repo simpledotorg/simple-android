@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory.newentry
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,14 @@ import org.simple.clinic.mobius.DisposableViewEffect
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreen.ScreenRequest
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import java.time.Instant
 import java.util.UUID
@@ -73,6 +79,17 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
     context.injector<Injector>().inject(this)
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setFragmentResultListener(
+        ScreenRequest.BMIEntrySheet
+    ) { requestKey, result ->
+      if (result is Succeeded) {
+        handleScreenResult(requestKey, result)
+      }
+    }
+  }
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -87,10 +104,26 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
               navigationIconClick = { onBackPressed() },
               onNextClick = {
                 viewModel.dispatch(SaveMedicalHistoryClicked())
+              },
+              onAddBMIClick = {
+                viewModel.dispatch(AddOrEditBMIClicked)
               }
+
           ) { question, answer ->
             viewModel.dispatch(NewMedicalHistoryAnswerToggled(question, answer))
           }
+        }
+      }
+    }
+  }
+
+  private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
+    when (requestKey) {
+      is ScreenRequest.BMIEntrySheet -> {
+        val bmiReading = (result.result as BMIEntrySheet.BMIAdded).bmiReading
+
+        if (bmiReading != null) {
+          viewModel.dispatch(BMIReadingAdded(bmiReading))
         }
       }
     }
@@ -106,6 +139,10 @@ class NewMedicalHistoryScreen : Fragment(), NewMedicalHistoryUiActions, HandlesB
 
   override fun showOngoingDiabetesTreatmentErrorDialog() {
     SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun openBMIEntrySheet(bmiReading: BMIReading?) {
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(bmiReading))
   }
 
   override fun goBack() {

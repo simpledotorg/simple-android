@@ -6,6 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
 import java.util.UUID
@@ -31,6 +32,10 @@ data class LoadDataForDoneClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant,
     val canShowPatientReassignmentWarning: Boolean
+) : PatientSummaryEffect()
+
+data class LoadBMiReading(
+    val patientUuid: UUID,
 ) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()
@@ -60,6 +65,11 @@ data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
+
+data class CreateNewBMIEntry(
+    val patientUUID: UUID,
+    val reading: BMIReading
+) : PatientSummaryEffect()
 
 data class CalculateNonLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
@@ -150,6 +160,6 @@ data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarni
 
 data object ShowTobaccoStatusDialog : PatientSummaryViewEffect()
 
-data class OpenBMIEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()
+data class OpenBMIEntrySheet(val bmiReading: BMIReading?) : PatientSummaryViewEffect()
 
 data class OpenCholesterolEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()

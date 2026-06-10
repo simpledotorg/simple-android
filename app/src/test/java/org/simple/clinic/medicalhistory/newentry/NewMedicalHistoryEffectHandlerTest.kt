@@ -1,6 +1,5 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import dagger.Lazy
 import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -9,6 +8,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -31,9 +31,10 @@ class NewMedicalHistoryEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = mock(),
       medicalHistoryRepository = mock(),
+      patientAttributeRepository = mock(),
       dataSync = dataSync,
-      currentUser = Lazy { user },
-      currentFacility = Lazy { facility },
+      currentUser = { user },
+      currentFacility = { facility },
       uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
       dateOfBirthFormatter = dateOfBirthFormatter,
       viewEffectsConsumer = viewEffectHandler::handle
@@ -160,6 +161,19 @@ class NewMedicalHistoryEffectHandlerTest {
 
     // then
     verify(uiActions).goBack()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when open bottom sheet effect is received, then open bottom sheet`() {
+    // when
+    val bmiReading = BMIReading(height = 175f, weight = 67f)
+    testCase.dispatch(OpenBMIEntrySheet(bmiReading))
+
+    // then
+    verify(uiActions).openBMIEntrySheet(bmiReading)
     verifyNoMoreInteractions(uiActions)
 
     testCase.assertNoOutgoingEvents()

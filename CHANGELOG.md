@@ -17,6 +17,7 @@
 ### Changes
 
 - Update Titration nudge threshold for diabetic patients in SriLanka from `140/90` to `130/80`
+- Add BMI container to patient registration screen
 
 ## 2026.05.11
 

@@ -30,7 +30,9 @@ class PatientSummaryInitTest {
                     CheckForInvalidPhone(patientUuid),
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
-                    CheckIfCDSSPilotIsEnabled
+                    CheckIfCDSSPilotIsEnabled,
+                    LoadBMIFeature,
+                    LoadBMiReading(patientUuid)
                 )
             )
         )
@@ -63,7 +65,9 @@ class PatientSummaryInitTest {
                 hasModel(model),
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
-                    CheckIfCDSSPilotIsEnabled
+                    CheckIfCDSSPilotIsEnabled,
+                    LoadBMIFeature,
+                    LoadBMiReading(patientUuid)
                 )
             )
         )
@@ -95,7 +99,9 @@ class PatientSummaryInitTest {
             assertThatFirst(
                 hasModel(model),
                 hasEffects(
-                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect
+                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
+                    LoadBMIFeature,
+                    LoadBMiReading(patientUuid)
                 )
             )
         )

@@ -2714,7 +2714,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(AddBMIClicked)
         .then(assertThatNext(
-            hasEffects(LoadBMiReading(model.patientUuid)),
+            hasEffects(OpenBMIEntrySheet(model.bmiReading)),
             hasNoModel()
         ))
   }

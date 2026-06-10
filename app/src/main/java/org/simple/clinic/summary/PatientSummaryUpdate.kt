@@ -110,7 +110,7 @@ class PatientSummaryUpdate(
       is AddTobaccoUseClicked -> dispatch(ShowTobaccoStatusDialog)
       is TobaccoUseAnswered -> dispatch(UpdateTobaccoUse(model.patientUuid, event.isSmoker, event.isUsingSmokelessTobacco))
       is BMIReadingAdded -> dispatch(CreateNewBMIEntry(model.patientUuid, event.bmiReading))
-      is AddBMIClicked -> dispatch(LoadBMiReading(model.patientUuid))
+      is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.bmiReading))
       is AddCholesterolClicked -> dispatch(OpenCholesterolEntrySheet(model.patientUuid))
       CholesterolAdded -> dispatch(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
       is BMIReadingLoaded -> dispatch(OpenBMIEntrySheet(event.bmiReading))

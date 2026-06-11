@@ -93,6 +93,8 @@ data class UpdateTobaccoUse(
     val isUsingSmokelessTobacco: MedicalHistoryAnswer
 ) : PatientSummaryEffect()
 
+data object LoadBMIFeature : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(
@@ -119,9 +121,9 @@ data class ShowScheduleAppointmentSheet(
     val currentFacility: Facility
 ) : PatientSummaryViewEffect()
 
-data object ShowDiagnosisRequiredError: PatientSummaryViewEffect()
+data object ShowDiagnosisRequiredError : PatientSummaryViewEffect()
 
-data object ShowDiagnosisOrReferralRequiredError: PatientSummaryViewEffect()
+data object ShowDiagnosisOrReferralRequiredError : PatientSummaryViewEffect()
 
 data object ShowHypertensionDiagnosisRequiredError : PatientSummaryViewEffect()
 

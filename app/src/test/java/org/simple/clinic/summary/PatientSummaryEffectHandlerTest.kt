@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -90,6 +91,7 @@ class PatientSummaryEffectHandlerTest {
       remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
       overrides = mapOf(
           Feature.Screening to true,
+          Feature.ShowBMIContainer to true
       )
   )
 
@@ -1118,7 +1120,6 @@ class PatientSummaryEffectHandlerTest {
     // when
     testCase.dispatch(LoadBMiReading(patientUuid = patientUuid))
 
-    // then
     //then
     testCase.assertOutgoingEvents(BMIReadingLoaded(null))
   }
@@ -1130,8 +1131,16 @@ class PatientSummaryEffectHandlerTest {
 
     testCase.dispatch(CreateNewBMIEntry(patientUuid, bmiReading))
 
-    // then
     //then
-    testCase.assertOutgoingEvents(BMISaved)
+    testCase.assertOutgoingEvents(BMISaved(bmiReading))
+  }
+
+  @Test
+  fun `when load bmi feature effect is received, then bmi feature should be loaded`() {
+    // when
+    testCase.dispatch(LoadBMIFeature)
+
+    //then
+    testCase.assertOutgoingEvents(BMIFeatureLoaded(true))
   }
 }

@@ -6,6 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
 import java.util.UUID
@@ -31,6 +32,10 @@ data class LoadDataForDoneClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant,
     val canShowPatientReassignmentWarning: Boolean
+) : PatientSummaryEffect()
+
+data class LoadBMiReading(
+    val patientUuid: UUID,
 ) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()
@@ -61,6 +66,11 @@ data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffe
 
 data class LoadStatinPrescriptionCheckInfo(val patient: Patient) : PatientSummaryEffect()
 
+data class CreateNewBMIEntry(
+    val patientUUID: UUID,
+    val reading: BMIReading
+) : PatientSummaryEffect()
+
 data class CalculateNonLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
 
 data class CalculateLabBasedCVDRisk(val patient: Patient) : PatientSummaryEffect()
@@ -82,6 +92,8 @@ data class UpdateTobaccoUse(
     val isSmoker: MedicalHistoryAnswer,
     val isUsingSmokelessTobacco: MedicalHistoryAnswer
 ) : PatientSummaryEffect()
+
+data object LoadBMIFeature : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
@@ -109,9 +121,9 @@ data class ShowScheduleAppointmentSheet(
     val currentFacility: Facility
 ) : PatientSummaryViewEffect()
 
-data object ShowDiagnosisRequiredError: PatientSummaryViewEffect()
+data object ShowDiagnosisRequiredError : PatientSummaryViewEffect()
 
-data object ShowDiagnosisOrReferralRequiredError: PatientSummaryViewEffect()
+data object ShowDiagnosisOrReferralRequiredError : PatientSummaryViewEffect()
 
 data object ShowHypertensionDiagnosisRequiredError : PatientSummaryViewEffect()
 
@@ -150,6 +162,6 @@ data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarni
 
 data object ShowTobaccoStatusDialog : PatientSummaryViewEffect()
 
-data class OpenBMIEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()
+data class OpenBMIEntrySheet(val bmiReading: BMIReading?) : PatientSummaryViewEffect()
 
 data class OpenCholesterolEntrySheet(val patientUuid: UUID) : PatientSummaryViewEffect()

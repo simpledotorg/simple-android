@@ -6,6 +6,7 @@ import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.ParcelableOptional
@@ -30,6 +31,8 @@ data class PatientSummaryModel(
     val hasShownDiagnosisWarningDialog: Boolean,
     val statinInfo: StatinInfo?,
     val hasShownTobaccoUseDialog: Boolean,
+    val showBMIContainer: Boolean,
+    val bmiReading: BMIReading?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -50,6 +53,8 @@ data class PatientSummaryModel(
           hasShownDiagnosisWarningDialog = false,
           statinInfo = null,
           hasShownTobaccoUseDialog = false,
+          showBMIContainer = false,
+          bmiReading = null
       )
     }
   }
@@ -138,4 +143,13 @@ data class PatientSummaryModel(
   fun showTobaccoUseDialog(): PatientSummaryModel {
     return copy(hasShownTobaccoUseDialog = true)
   }
+
+  fun bmiVisibilityUpdated(isEnabled: Boolean): PatientSummaryModel {
+    return copy(showBMIContainer = isEnabled)
+  }
+
+  fun bmiReadingsLoaded(bmiReading: BMIReading?): PatientSummaryModel {
+    return copy(bmiReading = bmiReading)
+  }
+
 }

@@ -49,6 +49,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.ui.BMIContainer
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.HandlesBack
@@ -56,6 +57,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.entry.BMIEntrySheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheet
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -141,6 +143,9 @@ class PatientSummaryScreen :
   private val facilityNameAndDateTextView
     get() = binding.facilityNameAndDateTextView
 
+  private val bmiContainerComposeView
+    get() = binding.bmiContainerComposeView
+
   private val labelRegistered
     get() = binding.labelRegistered
 
@@ -195,6 +200,8 @@ class PatientSummaryScreen :
 
   private var showClinicalDecisionAlert by mutableStateOf(false)
   private var animateClinicalDecisionSupportAlert by mutableStateOf(false)
+
+  private var bmiReading by mutableStateOf<BMIReading?>(null)
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -333,6 +340,17 @@ class PatientSummaryScreen :
         }
       }
     }
+
+    bmiContainerComposeView.setContent {
+      SimpleTheme {
+        BMIContainer(
+            bmiReading = bmiReading,
+            onAddOrClick = {
+              additionalEvents.notify(AddBMIClicked)
+            }
+        )
+      }
+    }
   }
 
   private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
@@ -358,7 +376,13 @@ class PatientSummaryScreen :
       }
 
       is ScreenRequest.BMIEntrySheet -> {
-        additionalEvents.notify(BMIReadingAdded)
+        val bmiReading = (result.result as BMIEntrySheet.BMIAdded).bmiReading
+
+        if (bmiReading != null) {
+          additionalEvents.notify(BMIReadingAdded(
+              bmiReading = bmiReading
+          ))
+        }
       }
 
       is ScreenRequest.CholesterolEntrySheet -> {
@@ -772,8 +796,8 @@ class PatientSummaryScreen :
     router.pushExpectingResult(ScreenRequest.CholesterolEntrySheet, CholesterolEntrySheet.Key(patientUuid))
   }
 
-  override fun openBMIEntrySheet(patientUuid: UUID) {
-    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(patientUuid))
+  override fun openBMIEntrySheet(bmiReading: BMIReading?) {
+    router.pushExpectingResult(ScreenRequest.BMIEntrySheet, BMIEntrySheet.Key(bmiReading))
   }
 
   override fun openSelectFacilitySheet() {
@@ -820,6 +844,15 @@ class PatientSummaryScreen :
 
   override fun updateStatinAlert(statinInfo: StatinInfo) {
     this.statinInfo = statinInfo
+  }
+
+  override fun showBMIContainer(bmiReading: BMIReading?) {
+    bmiContainerComposeView.visibility = VISIBLE
+    this.bmiReading = bmiReading
+  }
+
+  override fun hideBMIContainer() {
+    bmiContainerComposeView.visibility = GONE
   }
 
   override fun showReassignPatientWarningSheet(

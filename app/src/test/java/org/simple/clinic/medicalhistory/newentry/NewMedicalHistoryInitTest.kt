@@ -16,6 +16,7 @@ class NewMedicalHistoryInitTest {
       showIsSmokingQuestion = false,
       showSmokelessTobaccoQuestion = false,
       isScreeningFeatureEnabled = true,
+      showBMIContainer = true
   )
 
   private val initSpec = InitSpec(NewMedicalHistoryInit())

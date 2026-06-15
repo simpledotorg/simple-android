@@ -26,6 +26,7 @@ class PatientSummaryViewRenderer(
         setupUiForAssignedFacility(model)
         renderPatientDiedStatus(model)
         renderPatientSummaryToolbar(model.patientSummaryProfile)
+        renderBMIContainer(model)
       }
 
       if (model.hasLoadedCurrentFacility) {
@@ -156,6 +157,14 @@ class PatientSummaryViewRenderer(
 
     if (model.statinInfo.canShowStatinNudge) {
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+    }
+  }
+
+  private fun renderBMIContainer(model: PatientSummaryModel) {
+    if (model.showBMIContainer) {
+      ui.showBMIContainer(model.bmiReading)
+    } else {
+      ui.hideBMIContainer()
     }
   }
 }

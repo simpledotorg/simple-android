@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.cvdrisk.StatinInfo
+import org.simple.clinic.patientattribute.BMIReading
 
 interface PatientSummaryScreenUi {
   fun renderPatientSummaryToolbar(patientSummaryProfile: PatientSummaryProfile)
@@ -21,4 +22,6 @@ interface PatientSummaryScreenUi {
   fun hideClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlertWithoutAnimation()
   fun updateStatinAlert(statinInfo: StatinInfo)
+  fun showBMIContainer(bmiReading: BMIReading?)
+  fun hideBMIContainer()
 }

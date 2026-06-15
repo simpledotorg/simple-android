@@ -109,10 +109,19 @@ class PatientSummaryUpdate(
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddTobaccoUseClicked -> dispatch(ShowTobaccoStatusDialog)
       is TobaccoUseAnswered -> dispatch(UpdateTobaccoUse(model.patientUuid, event.isSmoker, event.isUsingSmokelessTobacco))
-      is BMIReadingAdded -> dispatch(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
-      is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.patientUuid))
+      is BMIReadingAdded -> dispatch(CreateNewBMIEntry(model.patientUuid, event.bmiReading))
+      is AddBMIClicked -> dispatch(OpenBMIEntrySheet(model.bmiReading))
       is AddCholesterolClicked -> dispatch(OpenCholesterolEntrySheet(model.patientUuid))
       CholesterolAdded -> dispatch(CalculateLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+      is BMIReadingLoaded -> next(model.bmiReadingsLoaded(event.bmiReading))
+      is BMISaved -> {
+        next(
+            model.copy(bmiReading = event.bmiReading),
+            setOf(CalculateNonLabBasedCVDRisk(model.patientSummaryProfile!!.patient))
+        )
+      }
+
+      is BMIFeatureLoaded -> next(model.bmiVisibilityUpdated(event.isEnabled))
     }
   }
 

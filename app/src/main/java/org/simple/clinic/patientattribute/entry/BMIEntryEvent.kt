@@ -18,4 +18,3 @@ data object BackPressed : BMIEntryEvent() {
   override val analyticsName = "BMI Entry::Back Pressed"
 }
 
-data object BMISaved : BMIEntryEvent()

@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## Next Release
+
 ## 2026.06.25
 
 ### Changes

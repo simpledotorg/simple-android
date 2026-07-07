@@ -87,6 +87,8 @@ data class UpdateCVDRisk(
 
 data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
+data class LoadCVDRiskInfo(val patientUuid: UUID) : PatientSummaryEffect()
+
 data class UpdateTobaccoUse(
     val patientId: UUID,
     val isSmoker: MedicalHistoryAnswer,

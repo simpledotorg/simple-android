@@ -26,7 +26,7 @@ class PatientSummaryViewRenderer(
         setupUiForAssignedFacility(model)
         renderPatientDiedStatus(model)
         renderPatientSummaryToolbar(model.patientSummaryProfile)
-        renderBMIContainer(model)
+        renderBMIView(model)
       }
 
       if (model.hasLoadedCurrentFacility) {
@@ -43,7 +43,8 @@ class PatientSummaryViewRenderer(
         ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
 
-      renderStatinAlert(model)
+      renderStatinNudge(model)
+      renderCVDRiskView(model)
     }
   }
 
@@ -151,20 +152,25 @@ class PatientSummaryViewRenderer(
     }
   }
 
-  private fun renderStatinAlert(model: PatientSummaryModel) {
+  private fun renderStatinNudge(model: PatientSummaryModel) {
     if (model.hasStatinInfoLoaded.not()) return
-    ui.updateStatinAlert(model.statinInfo!!)
+    ui.updateStatinNudge(model.statinInfo!!)
 
     if (model.statinInfo.canShowStatinNudge) {
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
     }
   }
 
-  private fun renderBMIContainer(model: PatientSummaryModel) {
-    if (model.showBMIContainer) {
-      ui.showBMIContainer(model.bmiReading)
+  private fun renderBMIView(model: PatientSummaryModel) {
+    if (model.showBMIView) {
+      ui.showBMIView(model.bmiReading)
     } else {
-      ui.hideBMIContainer()
+      ui.hideBMIView()
     }
+  }
+
+  private fun renderCVDRiskView(model: PatientSummaryModel) {
+    if (model.hasCVDRiskInfoLoaded.not()) return
+    ui.updateCVDRiskView(model.cVDRiskInfo!!)
   }
 }

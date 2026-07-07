@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -31,7 +32,7 @@ fun BMIContainer(
     onAddOrClick: () -> Unit,
 ) {
   val isBmiRecorded = bmiReading?.calculateBMI() != null
-  Card(modifier = modifier) {
+  Card(modifier = modifier.fillMaxWidth()) {
     Column(
         modifier = Modifier.padding(
             start = dimensionResource(R.dimen.spacing_16),

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.cvdrisk.StatinInfo
 import org.simple.clinic.patientattribute.BMIReading
+import org.simple.clinic.summary.ui.CVDRiskInfo
 
 interface PatientSummaryScreenUi {
   fun renderPatientSummaryToolbar(patientSummaryProfile: PatientSummaryProfile)
@@ -21,7 +22,9 @@ interface PatientSummaryScreenUi {
   fun showClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlert()
   fun hideClinicalDecisionSupportAlertWithoutAnimation()
-  fun updateStatinAlert(statinInfo: StatinInfo)
-  fun showBMIContainer(bmiReading: BMIReading?)
-  fun hideBMIContainer()
+  fun updateStatinNudge(statinInfo: StatinInfo)
+  fun showBMIView(bmiReading: BMIReading?)
+  fun hideBMIView()
+
+  fun updateCVDRiskView(cvdRiskInfo: CVDRiskInfo)
 }

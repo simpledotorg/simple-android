@@ -97,12 +97,9 @@
         android:layout_height="wrap_content" />
 
       <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/bmiContainerComposeView"
+        android:id="@+id/bottomComposeView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_8"
-        android:layout_marginEnd="@dimen/spacing_8"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"/>
 
       <TextView
         android:id="@+id/labelRegistered"

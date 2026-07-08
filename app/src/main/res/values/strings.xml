@@ -579,6 +579,7 @@
   <string name="medicalhistorysummaryview_diabetes_diagnosis">Patient has diabetes?</string>
   <string name="medicalhistorysummaryview_tobacco_use">Tobacco use</string>
   <string name="medicalhistorysummaryview_bmi">BMI</string>
+  <string name="medicalhistorysummaryview_cvd_risk">Cardiovascular risk</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">No medicines added</string>
@@ -1135,4 +1136,14 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="add_cholesterol_title">Cholesterol (mg/dL)</string>
   <string name="cholesterol_error_upper_limit">Cholesterol cannot be more than 1000</string>
   <string name="cholesterol_error_lower_limit">Cholesterol cannot be less than 25</string>
+
+  <!-- CVD Risk -->
+  <string name="cvd_risk_add_smoking_and_cholesterol_info">Add smoking status and BMI for risk score.</string>
+  <string name="cvd_risk_patient_has_diabetes">Patient has diabetes</string>
+  <string name="cvd_risk_patient_has_cvd">History of heart disease</string>
+  <string name="cvd_risk_low_high">Low–High</string>
+  <string name="cvd_risk_medium_high">Medium–High</string>
+  <string name="cvd_risk_high">High</string>
+  <string name="cvd_risk_very_high">Very High</string>
+
 </resources>

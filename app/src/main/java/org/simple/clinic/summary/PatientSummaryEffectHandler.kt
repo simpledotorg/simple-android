@@ -116,6 +116,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(UpdateCVDRisk::class.java, updateCVDRisk())
         .addTransformer(SaveCVDRisk::class.java, saveCVDRisk())
         .addTransformer(LoadStatinInfo::class.java, loadStatinInfo())
+        .addTransformer(LoadCVDRiskInfo::class.java, loadCVDRiskInfo())
         .addConsumer(UpdateTobaccoUse::class.java, { updateTobaccoUse(it.patientId, it.isSmoker, it.isUsingSmokelessTobacco) }, schedulersProvider.io())
         .addTransformer(CreateNewBMIEntry::class.java, createNewBMIEntry())
         .build()
@@ -171,6 +172,31 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                   wasBPMeasuredWithin90Days = wasBPMeasuredWithin90Days,
                   hasMedicalHistoryChanged = hasMedicalHistoryChanged,
                   wasCVDCalculatedWithin90Days = wasCVDCalculatedWithin90Days,
+              )
+            }
+          }
+    }
+  }
+
+  private fun loadCVDRiskInfo(): ObservableTransformer<LoadCVDRiskInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { effect ->
+            val patientUuid = effect.patientUuid
+            Observable.combineLatest(
+                medicalHistoryRepository.historyForPatientOrDefault(
+                    defaultHistoryUuid = uuidGenerator.v4(),
+                    patientUuid = patientUuid
+                ),
+                prescriptionRepository.newestPrescriptionsForPatient(patientUuid),
+                cvdRiskRepository.getCVDRisk(patientUuid)
+            ) { medicalHistory, prescriptions, cvdRisk ->
+
+              CVDRiskInfoLoaded(
+                  medicalHistory = medicalHistory,
+                  prescriptions = prescriptions,
+                  cvdRiskRange = cvdRisk.riskScore,
               )
             }
           }

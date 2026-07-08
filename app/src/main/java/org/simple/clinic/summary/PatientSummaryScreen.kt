@@ -10,6 +10,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +72,8 @@ import org.simple.clinic.summary.clinicaldecisionsupport.ui.ClinicalDecisionHigh
 import org.simple.clinic.summary.compose.StatinNudge
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
+import org.simple.clinic.summary.ui.CVDRiskInfo
+import org.simple.clinic.summary.ui.CVDRiskView
 import org.simple.clinic.summary.ui.PatientSummaryToolbar
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
@@ -143,8 +147,8 @@ class PatientSummaryScreen :
   private val facilityNameAndDateTextView
     get() = binding.facilityNameAndDateTextView
 
-  private val bmiContainerComposeView
-    get() = binding.bmiContainerComposeView
+  private val bottomComposeView
+    get() = binding.bottomComposeView
 
   private val labelRegistered
     get() = binding.labelRegistered
@@ -202,6 +206,9 @@ class PatientSummaryScreen :
   private var animateClinicalDecisionSupportAlert by mutableStateOf(false)
 
   private var bmiReading by mutableStateOf<BMIReading?>(null)
+  private var showBMIView by mutableStateOf(false)
+
+  private var cvdRiskInfo by mutableStateOf(CVDRiskInfo.default())
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -250,6 +257,7 @@ class PatientSummaryScreen :
         isPatientStatinNudgeV1Enabled = features.isEnabled(Feature.PatientStatinNudge),
         isNonLabBasedStatinNudgeEnabled = features.isEnabled(Feature.NonLabBasedStatinNudge),
         isLabBasedStatinNudgeEnabled = features.isEnabled(Feature.LabBasedStatinNudge),
+        isCVDRiskViewEnabled = features.isEnabled(Feature.ShowCVDRisk),
     )
   }
 
@@ -341,14 +349,27 @@ class PatientSummaryScreen :
       }
     }
 
-    bmiContainerComposeView.setContent {
+    bottomComposeView.setContent {
       SimpleTheme {
-        BMIContainer(
-            bmiReading = bmiReading,
-            onAddOrClick = {
-              additionalEvents.notify(AddBMIClicked)
-            }
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_8))
+        ) {
+          if (showBMIView) {
+            BMIContainer(
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.spacing_8)),
+                bmiReading = bmiReading,
+                onAddOrClick = {
+                  additionalEvents.notify(AddBMIClicked)
+                }
+            )
+          }
+          if (cvdRiskInfo.canShowCVDRisk) {
+            CVDRiskView(
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.spacing_8)),
+                cvdRiskInfo = cvdRiskInfo
+            )
+          }
+        }
       }
     }
   }
@@ -842,17 +863,21 @@ class PatientSummaryScreen :
     animateClinicalDecisionSupportAlert = false
   }
 
-  override fun updateStatinAlert(statinInfo: StatinInfo) {
+  override fun updateStatinNudge(statinInfo: StatinInfo) {
     this.statinInfo = statinInfo
   }
 
-  override fun showBMIContainer(bmiReading: BMIReading?) {
-    bmiContainerComposeView.visibility = VISIBLE
+  override fun showBMIView(bmiReading: BMIReading?) {
+    showBMIView = true
     this.bmiReading = bmiReading
   }
 
-  override fun hideBMIContainer() {
-    bmiContainerComposeView.visibility = GONE
+  override fun hideBMIView() {
+    showBMIView = false
+  }
+
+  override fun updateCVDRiskView(cvdRiskInfo: CVDRiskInfo) {
+    this.cvdRiskInfo = cvdRiskInfo
   }
 
   override fun showReassignPatientWarningSheet(

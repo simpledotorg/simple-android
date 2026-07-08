@@ -8,6 +8,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
+import org.simple.clinic.summary.ui.CVDRiskInfo
 import org.simple.clinic.user.User
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.parcelable
@@ -31,8 +32,9 @@ data class PatientSummaryModel(
     val hasShownDiagnosisWarningDialog: Boolean,
     val statinInfo: StatinInfo?,
     val hasShownTobaccoUseDialog: Boolean,
-    val showBMIContainer: Boolean,
-    val bmiReading: BMIReading?
+    val showBMIView: Boolean,
+    val bmiReading: BMIReading?,
+    val cVDRiskInfo: CVDRiskInfo?,
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -53,8 +55,9 @@ data class PatientSummaryModel(
           hasShownDiagnosisWarningDialog = false,
           statinInfo = null,
           hasShownTobaccoUseDialog = false,
-          showBMIContainer = false,
-          bmiReading = null
+          showBMIView = false,
+          bmiReading = null,
+          cVDRiskInfo = null
       )
     }
   }
@@ -91,6 +94,9 @@ data class PatientSummaryModel(
 
   val hasStatinInfoLoaded: Boolean
     get() = statinInfo != null
+
+  val hasCVDRiskInfoLoaded: Boolean
+    get() = cVDRiskInfo != null
 
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
@@ -145,11 +151,15 @@ data class PatientSummaryModel(
   }
 
   fun bmiVisibilityUpdated(isEnabled: Boolean): PatientSummaryModel {
-    return copy(showBMIContainer = isEnabled)
+    return copy(showBMIView = isEnabled)
   }
 
   fun bmiReadingsLoaded(bmiReading: BMIReading?): PatientSummaryModel {
     return copy(bmiReading = bmiReading)
+  }
+
+  fun cvdRiskInfoLoaded(cVDRiskInfo: CVDRiskInfo): PatientSummaryModel {
+    return copy(cVDRiskInfo = cVDRiskInfo)
   }
 
 }

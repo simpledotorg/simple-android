@@ -14,6 +14,7 @@
 - Bump Sentry to v8.48.0
 - Bump AndroidX Benchmark to v1.5.0-alpha07
 - Bump Google Service to v4.5.0
+- Bump Sentry Android to v6.14.0
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

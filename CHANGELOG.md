@@ -9,6 +9,7 @@
 - Bump AndroidX ViewModel to v2.11.0
 - Bump AndroidX Lifecycle to v2.11.0
 - Bump dagger to v2.60.1
+- Bump OkHttp to v5.4.0
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

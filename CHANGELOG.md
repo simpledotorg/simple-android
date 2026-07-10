@@ -2,6 +2,9 @@
 
 ## Next Release
 
+###Internal
+- Bump Kotlin to v2.4.0
+
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`
 

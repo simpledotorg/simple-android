@@ -7,6 +7,7 @@
 - Bump AndroidX Core KTX to v1.19.0
 - Bump Compose BOM to v2026.06.01
 - Bump AndroidX ViewModel to v2.11.0
+- Bump AndroidX Lifecycle to v2.11.0
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

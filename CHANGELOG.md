@@ -17,6 +17,7 @@
 - Bump Sentry Android to v6.14.0
 - Bump threeten-extra to v1.10.0
 - Bump Play Services Location to v21.4.0
+- Bump Jackson Core to v2.22.1
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

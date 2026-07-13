@@ -137,7 +137,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -236,7 +236,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -277,7 +277,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -340,7 +340,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -379,7 +379,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -473,7 +473,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
-    verify(ui).showBMIContainer(bmiReading)
+    verify(ui).showBMIView(bmiReading)
     verifyNoMoreInteractions(ui)
   }
 
@@ -528,7 +528,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -583,7 +583,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -653,7 +653,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -714,7 +714,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -775,12 +775,12 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when statin info is loaded then update the statin alert`() {
+  fun `when statin info is loaded then update the statin nudge`() {
     //given
     val statinInfo = StatinInfo(canShowStatinNudge = true)
     val model = defaultModel
@@ -795,7 +795,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
     verify(ui, times(2)).hideClinicalDecisionSupportAlertWithoutAnimation()
-    verify(ui).updateStatinAlert(statinInfo)
+    verify(ui).updateStatinNudge(statinInfo)
     verifyNoMoreInteractions(ui)
   }
 
@@ -855,10 +855,10 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
-    verify(ui).updateStatinAlert(StatinInfo(canShowStatinNudge = true))
+    verify(ui).updateStatinNudge(StatinInfo(canShowStatinNudge = true))
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).showNextAppointmentCard()
-    verify(ui).hideBMIContainer()
+    verify(ui).hideBMIView()
     verifyNoMoreInteractions(ui)
   }
 }

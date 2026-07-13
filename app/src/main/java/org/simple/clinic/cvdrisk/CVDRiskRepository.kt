@@ -83,6 +83,10 @@ class CVDRiskRepository @Inject constructor(
     return dao.cvdRiskImmediate(patientUuid)
   }
 
+  fun getCVDRisk(patientUuid: UUID): Observable<CVDRisk> {
+    return dao.cvdRisk(patientUuid).toObservable()
+  }
+
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<CVDRisk> {
     return dao.recordsWithSyncStatus(syncStatus)
   }

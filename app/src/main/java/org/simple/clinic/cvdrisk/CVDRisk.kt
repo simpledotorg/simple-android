@@ -88,6 +88,14 @@ data class CVDRisk(
       ORDER BY updatedAt DESC
       LIMIT 1
     """)
+    fun cvdRisk(patientUuid: UUID): Flowable<CVDRisk>
+
+    @Query("""
+      SELECT * FROM CVDRisk
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+      ORDER BY updatedAt DESC
+      LIMIT 1
+    """)
     fun cvdRiskImmediate(patientUuid: UUID): CVDRisk?
 
     @Query("DELETE FROM CVDRisk")

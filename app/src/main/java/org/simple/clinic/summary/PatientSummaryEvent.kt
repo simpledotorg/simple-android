@@ -157,6 +157,12 @@ data class StatinPrescriptionCheckInfoLoaded(
     val wasCVDCalculatedWithin90Days: Boolean,
 ) : PatientSummaryEvent()
 
+data class CVDRiskInfoLoaded(
+    val medicalHistory: MedicalHistory,
+    val prescriptions: List<PrescribedDrug>,
+    val cvdRiskRange: CVDRiskRange?,
+) : PatientSummaryEvent()
+
 data class CVDRiskCalculated(
     val oldRisk: CVDRisk?,
     val newRiskRange: CVDRiskRange?

@@ -3,6 +3,11 @@
 ## Next Release
 
 ### Changes
+- Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`
+
+## 2026.06.25
+
+### Changes
 - Add BMI container to patient registration screen
 - Add BMI container to patient summary screen
 

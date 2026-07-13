@@ -90,6 +90,7 @@ class PatientSummaryUpdateTest {
       isPatientStatinNudgeV1Enabled = true,
       isNonLabBasedStatinNudgeEnabled = true,
       isLabBasedStatinNudgeEnabled = true,
+      isCVDRiskViewEnabled = false
   ))
 
   @Test
@@ -116,6 +117,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
 
     updateSpec
@@ -134,6 +136,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
 
     updateSpec
@@ -152,6 +155,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
 
     updateSpec
@@ -170,6 +174,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
 
     updateSpec
@@ -1859,6 +1864,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false,
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1889,6 +1895,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -1919,6 +1926,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel
         .currentFacilityLoaded(facility)
@@ -2316,6 +2324,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     updateSpec
         .given(defaultModel)
@@ -2349,6 +2358,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = false,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     updateSpec
         .given(defaultModel)
@@ -2382,6 +2392,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     updateSpec
         .given(defaultModel)
@@ -2415,6 +2426,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
@@ -2451,6 +2463,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2570,6 +2583,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = false,
+        isCVDRiskViewEnabled = false,
     ))
 
     updateSpec
@@ -2610,6 +2624,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = true,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false,
     ))
 
     updateSpec
@@ -2800,6 +2815,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2835,6 +2851,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -2870,6 +2887,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
     updateSpec
         .given(defaultModel)
@@ -2903,6 +2921,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
@@ -2939,6 +2958,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
 
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
@@ -2975,6 +2995,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 
@@ -3010,6 +3031,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
 
     updateSpec
@@ -3028,6 +3050,7 @@ class PatientSummaryUpdateTest {
         isPatientStatinNudgeV1Enabled = true,
         isNonLabBasedStatinNudgeEnabled = false,
         isLabBasedStatinNudgeEnabled = true,
+        isCVDRiskViewEnabled = false
     ))
     val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
 

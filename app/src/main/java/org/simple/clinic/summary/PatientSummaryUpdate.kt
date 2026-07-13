@@ -24,6 +24,7 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.ui.CVDRiskInfo
 import java.util.UUID
 import org.simple.clinic.medicalhistory.Answer as MedicalHistoryAnswer
 
@@ -32,6 +33,7 @@ class PatientSummaryUpdate(
     private val isPatientStatinNudgeV1Enabled: Boolean,
     private val isNonLabBasedStatinNudgeEnabled: Boolean,
     private val isLabBasedStatinNudgeEnabled: Boolean,
+    private val isCVDRiskViewEnabled: Boolean,
     private val minAgeForStatin: Int = 40,
     private val maxAgeForCVDRisk: Int = 74,
 ) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -122,6 +124,7 @@ class PatientSummaryUpdate(
       }
 
       is BMIFeatureLoaded -> next(model.bmiVisibilityUpdated(event.isEnabled))
+      is CVDRiskInfoLoaded -> cvdRiskInfoLoaded(event, model)
     }
   }
 
@@ -548,6 +551,10 @@ class PatientSummaryUpdate(
       }
     }
 
+    if (isCVDRiskViewEnabled) {
+      effects.add(LoadCVDRiskInfo(patientUuid = model.patientUuid))
+    }
+
     if (model.openIntention is LinkIdWithPatient &&
         !event.patientSummaryProfile.hasIdentifier(model.openIntention.identifier)) {
       effects.add(ShowLinkIdWithPatientView(model.patientUuid, model.openIntention.identifier))
@@ -749,5 +756,28 @@ class PatientSummaryUpdate(
       ViewNewPatient, is LinkIdWithPatient -> GoToHomeScreen
       is ViewExistingPatientWithTeleconsultLog -> GoToHomeScreen
     }
+  }
+
+  private fun cvdRiskInfoLoaded(
+      event: CVDRiskInfoLoaded,
+      model: PatientSummaryModel
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val hasHadStroke = event.medicalHistory.hasHadStroke == Yes
+    val hasHadHeartAttack = event.medicalHistory.hasHadHeartAttack == Yes
+    val hasDiabetes = event.medicalHistory.diagnosedWithDiabetes == Yes
+
+    val hasCVD = hasHadStroke || hasHadHeartAttack
+    val areStatinsPrescribedAlready = event.prescriptions.any { it.name.contains("statin", ignoreCase = true) }
+    val canShowCVDRisk = areStatinsPrescribedAlready && (
+        event.cvdRiskRange?.canPrescribeStatin == true || hasCVD || hasDiabetes
+        )
+
+    val cvdRiskInfo = CVDRiskInfo(
+        canShowCVDRisk = canShowCVDRisk,
+        cvdRisk = event.cvdRiskRange,
+        hasCVD = hasCVD,
+        hasDiabetes = hasDiabetes,
+    )
+    return next(model.cvdRiskInfoLoaded(cvdRiskInfo))
   }
 }

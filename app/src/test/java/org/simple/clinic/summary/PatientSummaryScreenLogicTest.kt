@@ -250,6 +250,7 @@ class PatientSummaryScreenLogicTest {
             isPatientStatinNudgeV1Enabled = false,
             isNonLabBasedStatinNudgeEnabled = false,
             isLabBasedStatinNudgeEnabled = false,
+            isCVDRiskViewEnabled = false
         ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render

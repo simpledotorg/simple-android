@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Internal
-- Bump Kotlin to v2.4.0
+- Bump Kotlin to v2.4.10
 - Bump AndroidX Core KTX to v1.19.0
 - Bump Compose BOM to v2026.06.01
 - Bump AndroidX ViewModel to v2.11.0

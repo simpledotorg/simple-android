@@ -21,6 +21,7 @@
 - Bump sqlCipher to v4.17.0
 - Bump KSP to v2.3.10
 - Bump Play Services Auth to v21.6.0
+- Bump Sentry to v8.49.0
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

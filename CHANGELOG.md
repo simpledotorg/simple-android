@@ -14,7 +14,7 @@
 - Bump Sentry to v8.48.0
 - Bump AndroidX Benchmark to v1.5.0-alpha07
 - Bump Google Service to v4.5.0
-- Bump Sentry Android to v6.14.0
+- Bump Sentry Android to v6.15.0
 - Bump threeten-extra to v1.10.0
 - Bump Play Services Location to v21.4.0
 - Bump Jackson Core to v2.22.1

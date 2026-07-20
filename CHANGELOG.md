@@ -20,6 +20,7 @@
 - Bump Jackson Core to v2.22.1
 - Bump sqlCipher to v4.17.0
 - Bump KSP to v2.3.10
+- Bump Play Services Auth to v21.6.0
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

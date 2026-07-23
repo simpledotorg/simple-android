@@ -2,6 +2,29 @@
 
 ## Next Release
 
+### Internal
+- Bump Kotlin to v2.4.10
+- Bump AndroidX Core KTX to v1.19.0
+- Bump Compose BOM to v2026.06.01
+- Bump AndroidX ViewModel to v2.11.0
+- Bump AndroidX Lifecycle to v2.11.0
+- Bump dagger to v2.60.1
+- Bump OkHttp to v5.4.0
+- Bump target and compile SDK version to 37
+- Bump Sentry to v8.48.0
+- Bump AndroidX Benchmark to v1.5.0-alpha07
+- Bump Google Service to v4.5.0
+- Bump Sentry Android to v6.15.0
+- Bump threeten-extra to v1.10.0
+- Bump Play Services Location to v21.4.0
+- Bump Jackson Core to v2.22.1
+- Bump sqlCipher to v4.17.0
+- Bump KSP to v2.3.10
+- Bump Play Services Auth to v21.6.0
+- Bump Sentry to v8.49.0
+- Bump AGP to v9.3.0
+- Bump Gradle to v9.6.1
+
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`
 

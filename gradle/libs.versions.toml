@@ -183,7 +183,7 @@ rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 
 sentry-android = "io.sentry:sentry-android:8.49.0"
 
-signaturepad = "com.github.gcacace:signature-pad:1.3.1"
+signaturepad = "com.github.gcacace:signature-pad:1.4.0"
 
 sqlite-android = "com.github.requery:sqlite-android:3.49.0"
 

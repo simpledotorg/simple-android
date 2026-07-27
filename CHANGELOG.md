@@ -24,6 +24,7 @@
 - Bump Sentry to v8.50.1
 - Bump AGP to v9.3.0
 - Bump Gradle to v9.6.1
+- Bump Lint to v32.3.1
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

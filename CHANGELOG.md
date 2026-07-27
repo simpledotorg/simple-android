@@ -21,9 +21,11 @@
 - Bump sqlCipher to v4.17.0
 - Bump KSP to v2.3.10
 - Bump Play Services Auth to v21.6.0
-- Bump Sentry to v8.49.0
+- Bump Sentry to v8.50.1
 - Bump AGP to v9.3.0
 - Bump Gradle to v9.6.1
+- Bump Lint to v32.3.1
+- Bump GH Actions `cache` to v6
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

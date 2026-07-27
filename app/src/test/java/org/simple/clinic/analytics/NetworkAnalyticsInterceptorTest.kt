@@ -2,12 +2,8 @@ package org.simple.clinic.analytics
 
 import android.net.NetworkCapabilities
 import com.google.common.truth.Truth.assertThat
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import okhttp3.Call
-import okhttp3.Connection
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Protocol
@@ -18,11 +14,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.simple.clinic.platform.analytics.Analytics
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
 
 private fun <T> throwError(): T {
   throw NotImplementedError()
@@ -70,7 +67,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request).build()
 
-    val chain = SuccessfulChain(request, response, requestDuration)
+    val chain = successfulChain(request, response, requestDuration)
 
     interceptor.intercept(chain)
 
@@ -93,7 +90,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request).build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -118,7 +115,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request).build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -147,7 +144,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request).build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -163,7 +160,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request, code = responseCode).build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -181,7 +178,7 @@ class NetworkAnalyticsInterceptorTest {
         .header("Content-Length", contentLength.toString())
         .build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -196,7 +193,7 @@ class NetworkAnalyticsInterceptorTest {
 
     val response = responseBuilder(request).build()
 
-    val chain = SuccessfulChain(request, response)
+    val chain = successfulChain(request, response)
 
     interceptor.intercept(chain)
 
@@ -212,7 +209,7 @@ class NetworkAnalyticsInterceptorTest {
       shouldReportTimeout: Boolean
   ) {
     val request = requestBuilder("https://simple.org").build()
-    val chain = FailingChain(request, cause)
+    val chain = failingChain(request, cause)
 
     // Intentionally not using ExpectedException here because it seems to have a problem where it
     // does not fail the test if the assertions fail. We verify the exception manually.
@@ -247,7 +244,7 @@ class NetworkAnalyticsInterceptorTest {
   fun `if the request fails with a timeout, it must not report it to analytics if there is no active network`() {
     val request = requestBuilder("https://simple.org").build()
     val cause = SocketTimeoutException()
-    val chain = FailingChain(request, cause)
+    val chain = failingChain(request, cause)
     whenever(networkCapabilitiesProvider.activeNetworkCapabilities()).thenReturn(null)
 
     // Intentionally not using ExpectedException here because it seems to have a problem where it
@@ -279,7 +276,7 @@ class NetworkAnalyticsInterceptorTest {
       transportType: Analytics.NetworkTransportType
   ) {
     val request = requestBuilder("https://simple.org").build()
-    val chain = FailingChain(request, SocketTimeoutException())
+    val chain = failingChain(request, SocketTimeoutException())
     whenever(networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)).thenReturn(meteredConnection.not())
     whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).thenReturn(wifiTransport)
     whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)).thenReturn(bluetoothTransport)
@@ -389,53 +386,35 @@ class NetworkAnalyticsInterceptorTest {
     )
   }
 
+  private fun successfulChain(
+      request: Request,
+      response: Response,
+      requestTimeMillis: Int = 0
+  ): Interceptor.Chain {
+    val chain = mock<Interceptor.Chain>()
 
-  private class SuccessfulChain(
-      val request: Request,
-      val response: Response,
-      val requestTimeMillis: Int = 0
-  ) : FakeChain() {
+    whenever(chain.request()).thenReturn(request)
 
-    override fun proceed(request: Request): Response {
+    whenever(chain.proceed(request)).thenAnswer {
       if (requestTimeMillis > 0) {
         Thread.sleep(requestTimeMillis.toLong())
       }
-      return response
+      response
     }
 
-    override fun request() = request
+    return chain
   }
 
-  private class FailingChain(val request: Request, val throwable: Throwable) : FakeChain() {
+  private fun failingChain(
+      request: Request,
+      throwable: Throwable
+  ): Interceptor.Chain {
+    val chain = mock<Interceptor.Chain>()
 
-    override fun proceed(request: Request): Response {
-      throw throwable
-    }
+    whenever(chain.request()).thenReturn(request)
+    whenever(chain.proceed(request)).thenThrow(throwable)
 
-    override fun request() = request
-  }
-
-  private open class FakeChain : Interceptor.Chain {
-
-    override fun writeTimeoutMillis() = throwError<Int>()
-
-    override fun call() = throwError<Call>()
-
-    override fun proceed(request: Request) = throwError<Response>()
-
-    override fun withWriteTimeout(timeout: Int, unit: TimeUnit) = throwError<Interceptor.Chain>()
-
-    override fun connectTimeoutMillis() = throwError<Int>()
-
-    override fun connection() = throwError<Connection?>()
-
-    override fun withConnectTimeout(timeout: Int, unit: TimeUnit) = throwError<Interceptor.Chain>()
-
-    override fun withReadTimeout(timeout: Int, unit: TimeUnit) = throwError<Interceptor.Chain>()
-
-    override fun request() = throwError<Request>()
-
-    override fun readTimeoutMillis() = throwError<Int>()
+    return chain
   }
 }
 

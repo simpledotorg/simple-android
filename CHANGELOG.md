@@ -26,6 +26,7 @@
 - Bump Gradle to v9.6.1
 - Bump Lint to v32.3.1
 - Bump GH Actions `cache` to v6
+- Update GH Actions `checkout` to v7
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

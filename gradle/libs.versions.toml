@@ -1,5 +1,5 @@
 [versions]
-agp = "9.3.0"
+agp = "9.3.1"
 
 androidx-cameraView = "1.6.1"
 androidx-camera = "1.6.1"
@@ -231,7 +231,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version = "4.5.0" }
-sentry = { id = "io.sentry.android.gradle", version = "6.15.0" }
+sentry = { id = "io.sentry.android.gradle", version = "6.16.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

@@ -29,6 +29,7 @@
 - Bump GH Actions `cache` to v6
 - Update GH Actions `checkout` to v7
 - Bump Signature Pad to v1.4.0
+- Bump ConstraintLayout to v2.2.2
 
 ### Changes
 

@@ -14,7 +14,7 @@
 - Bump Sentry to v8.48.0
 - Bump AndroidX Benchmark to v1.5.0-alpha07
 - Bump Google Service to v4.5.0
-- Bump Sentry Android to v6.15.0
+- Bump Sentry Android to v6.16.0
 - Bump threeten-extra to v1.10.0
 - Bump Play Services Location to v21.4.0
 - Bump Jackson Core to v2.22.1
@@ -22,8 +22,11 @@
 - Bump KSP to v2.3.10
 - Bump Play Services Auth to v21.6.0
 - Bump Sentry to v8.50.1
-- Bump AGP to v9.3.0
+- Bump AGP to v9.3.1
 - Bump Gradle to v9.6.1
+- Bump Lint to v32.3.1
+- Bump GH Actions `cache` to v6
+- Update GH Actions `checkout` to v7
 
 ### Changes
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`

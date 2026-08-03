@@ -31,6 +31,7 @@
 - Bump Signature Pad to v1.4.0
 - Bump ConstraintLayout to v2.2.2
 - Bump AndroidX Benchmark to v1.5.0-beta01
+- Bump Sentry to v8.51.0
 
 ### Changes
 

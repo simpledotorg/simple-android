@@ -12,6 +12,7 @@
 - Remove `android.enableAppCompileTimeRClass` compatibility flag
 - Bump KSP to v2.3.11
 - Remove `android.uniquePackageNames` compatibility flag
+- Remove `android.r8.optimizedResourceShrinking` compatibility flag
 
 ## 2026.08.03
 

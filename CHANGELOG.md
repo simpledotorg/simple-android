@@ -11,6 +11,7 @@
 - Bump Sentry Android to v6.17.0
 - Remove `android.enableAppCompileTimeRClass` compatibility flag
 - Bump KSP to v2.3.11
+- Remove `android.uniquePackageNames` compatibility flag
 
 ## 2026.08.03
 

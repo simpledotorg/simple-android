@@ -35,7 +35,7 @@
 
   <declare-styleable name="ProgressMaterialButton">
     <attr name="buttonState" format="enum">
-      <enum name="in-progress" value="0" />
+      <enum name="in_progress" value="0" />
       <enum name="enabled" value="1" />
       <enum name="disabled" value="2" />
     </attr>
@@ -43,8 +43,8 @@
 
   <declare-styleable name="FacilityPickerView">
     <attr name="pickFrom" format="enum">
-      <enum name="all-facilities" value="0" />
-      <enum name="in-current-group" value="1" />
+      <enum name="all_facilities" value="0" />
+      <enum name="in_current_group" value="1" />
     </attr>
   </declare-styleable>
 

@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ዝደንጎየ ተሓካሚ የለን</string>
   <string name="overdue_empty_desc">ንምክትታል ፀቕጢ ደም ቆጸራ ተመዲቡሎም ዝነበሩ እሞ ዘይመፅኡ ተሓከምቲ ክትድውለሎም ትኽእል ኢኻ/ኺ።</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s መዓልቲ ደንጉዩ</item>
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>

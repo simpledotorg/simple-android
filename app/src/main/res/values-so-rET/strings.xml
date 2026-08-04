@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">Ma jiraan bukaanno daahay</string>
   <string name="overdue_empty_desc">Waxaad awoodi doontaa inaad wacdo bukaanada ka baaqda booqashadooda jadwalka ah ee akhriska cadaadiska dhiigga karka ee soo socda.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%smaalin dhaaftay</item>
     <item quantity="other">%smaalmaha la dhaafiyay</item>

@@ -260,7 +260,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">Dhukkubsattoonni irra darbe hin jiran</string>
   <string name="overdue_empty_desc">Dhukkubsattoota sagantaa hordoffii dubbisa dhiibbaa dhiigaa isaanii bilbiluufii ni dandeessa.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">Guyyaa %s irra darbe</item>
     <item quantity="other">Guyyoota %s irra darbe</item>

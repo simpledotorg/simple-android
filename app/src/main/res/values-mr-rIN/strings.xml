@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">कोणतेही ओव्‍हरड्यू रूग्ण नाहीत</string>
   <string name="overdue_empty_desc">फॉलो-अप रक्‍त्‍दाब रिडिंगसाठी शेड्यूल भेट विसरलेल्‍या रूग्णांना तुम्‍ही कॉल करू शकाल.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिवस थकीत</item>
     <item quantity="other">%s दिवस थकीत</item>

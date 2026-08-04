@@ -79,7 +79,7 @@
       android:layout_weight="1"
       android:gravity="center"
       android:text="@string/change_patient_facility"
-      app:buttonState="in-progress"
+      app:buttonState="in_progress"
       tools:ignore="ButtonStyle" />
 
   </LinearLayout>

@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">තවදුරටත් ඉතිරි වූ කිසිදු රෝගියකු නැත</string>
   <string name="overdue_empty_desc">රුධිර පීඩනය බැලීමේ පසු විපරම් හමුව මඟ හැරුණු රෝගීන්ට ඇමතීමට ඔබට හැකි වනු ඇත.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">දින %s ක කාලයක් ඉකුත් වී ඇත</item>
     <item quantity="other">දින %s ක කාලයක් ඉකුත් වී ඇත</item>

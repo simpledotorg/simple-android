@@ -316,7 +316,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue</string>
   <string name="overdue_empty_desc">You will be able to call patients who miss their scheduled visit for a follow-up blood pressure reading.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>

@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">గడువు దాటిన రోగులు లేరు</string>
   <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s రోజు గడువు మించింది</item>
     <item quantity="other">%s రోజుల గడువు మించింది</item>

@@ -9,6 +9,7 @@
 - Bump AndroidX Benchmark to v1.5.0-beta01
 - Bump Sentry to v8.51.0
 - Bump Sentry Android to v6.17.0
+- Remove `android.enableAppCompileTimeRClass` compatibility flag
 
 ## 2026.08.03
 

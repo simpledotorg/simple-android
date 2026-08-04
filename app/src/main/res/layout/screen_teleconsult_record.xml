@@ -167,7 +167,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/screen_teleconsult_record_done"
-      app:buttonState="in-progress"
+      app:buttonState="in_progress"
       app:icon="@drawable/ic_done_24dp"
       app:iconGravity="textStart" />
 

@@ -16,6 +16,7 @@
 - Remove `android.nonFinalResIds=false` compatibility flag
 - Remove `android.experimental.enableTestFixturesKotlinSupport=true` compatibility flag
 - Bump Mobius to v2.1.2
+- Bump Gradle to v9.7.0
 
 ## 2026.08.03
 

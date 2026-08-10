@@ -7,7 +7,7 @@
 - Bump Signature Pad to v1.4.0
 - Bump ConstraintLayout to v2.2.2
 - Bump AndroidX Benchmark to v1.5.0-beta01
-- Bump Sentry to v8.51.0
+- Bump Sentry to v8.52.0
 - Bump Sentry Android to v6.17.0
 - Remove `android.enableAppCompileTimeRClass` compatibility flag
 - Bump KSP to v2.3.11

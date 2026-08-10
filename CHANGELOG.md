@@ -3,6 +3,21 @@
 ## Next Release
 
 ### Internal
+
+- Bump Signature Pad to v1.4.0
+- Bump ConstraintLayout to v2.2.2
+- Bump AndroidX Benchmark to v1.5.0-beta01
+- Bump Sentry to v8.51.0
+- Bump Sentry Android to v6.17.0
+- Remove `android.enableAppCompileTimeRClass` compatibility flag
+- Bump KSP to v2.3.11
+- Remove `android.uniquePackageNames` compatibility flag
+- Remove `android.r8.optimizedResourceShrinking` compatibility flag
+
+## 2026.08.03
+
+### Internal
+
 - Bump Kotlin to v2.4.10
 - Bump AndroidX Core KTX to v1.19.0
 - Bump Compose BOM to v2026.06.01
@@ -29,11 +44,13 @@
 - Update GH Actions `checkout` to v7
 
 ### Changes
+
 - Add CVD risk view to patient summary screen behind feature flag `show_cvd_risk`
 
 ## 2026.06.25
 
 ### Changes
+
 - Add BMI container to patient registration screen
 - Add BMI container to patient summary screen
 

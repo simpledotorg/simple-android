@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">ምንም የዘገየ ታካሚ የለም</string>
   <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር ተቀጥረው ያልመጡትን ታካሚዎችመደወል ይችላሉ</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ቀን አልduል</item>
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>

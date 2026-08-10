@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">Shima yanara keshino xiwamanichi dino</string>
   <string name="overdue_empty_desc">Qaxarote bara sorino xiwamanicho Mundeete xiiwo mageshitero la’ate konini anichite wosha danidato.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>

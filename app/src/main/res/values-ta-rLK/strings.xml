@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">எந்த நோயாளர்களும் தாமதமாகவில்லை</string>
   <string name="overdue_empty_desc">பின்தொடர்தல் இரத்த அழுத்த அளவீட்டிற்காகத் திட்டமிடப்பட்ட வருகையைத் தவறவிட்ட நோயாளர்களை நீங்கள் அழைக்கலாம்.</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
     <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>

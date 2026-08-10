@@ -259,7 +259,7 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No hay pacientes atrasados</string>
   <string name="overdue_empty_desc">Podrá llamar a los pacientes que no acudan a sus visitas programadas para seguimiento de lectura de presión arterial</string>
-  <string name="overdue_list_item_name_age">%s, %s</string>
+  <string name="overdue_list_item_name_age">%1$s, %2$s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s día de atraso</item>
     <item quantity="many">%s días de atraso</item>

@@ -158,7 +158,7 @@
       android:layout_weight="1"
       android:gravity="center"
       android:text="@string/scheduleappointment_done"
-      app:buttonState="in-progress"
+      app:buttonState="in_progress"
       tools:ignore="ButtonStyle" />
 
     <org.simple.clinic.widgets.ProgressMaterialButton

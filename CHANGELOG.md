@@ -13,6 +13,8 @@
 - Bump KSP to v2.3.11
 - Remove `android.uniquePackageNames` compatibility flag
 - Remove `android.r8.optimizedResourceShrinking` compatibility flag
+- Remove `android.nonFinalResIds=false` compatibility flag
+- Remove `android.experimental.enableTestFixturesKotlinSupport=true` compatibility flag
 
 ## 2026.08.03
 

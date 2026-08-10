@@ -15,6 +15,7 @@
 - Remove `android.r8.optimizedResourceShrinking` compatibility flag
 - Remove `android.nonFinalResIds=false` compatibility flag
 - Remove `android.experimental.enableTestFixturesKotlinSupport=true` compatibility flag
+- Bump Mobius to v2.1.2
 
 ## 2026.08.03
 

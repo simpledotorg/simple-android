@@ -21,6 +21,7 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.focusChanges
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.spotify.mobius.functions.Consumer
@@ -424,7 +425,7 @@ class PatientEntryScreen : BaseScreen<
         fullNameEditText.textChanges(::FullNameChanged),
         phoneNumberEditText.textChanges(::PhoneNumberChanged),
         dateOfBirthEditText.textChanges(::DateOfBirthChanged),
-        dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged),
+        dateOfBirthEditText.focusChanges().map(::DateOfBirthFocusChanged),
         ageEditText.textChanges(::AgeChanged),
         colonyOrVillageEditText.textChanges(::ColonyOrVillageChanged),
         districtEditText.textChanges(::DistrictChanged),

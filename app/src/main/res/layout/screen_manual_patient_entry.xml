@@ -94,18 +94,17 @@
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
-          <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
+          <com.vicmikhailau.maskededittext.MaskedEditText
             android:id="@+id/dateOfBirthEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_date_of_birth_unfocused"
             android:imeOptions="flagNoFullscreen"
             android:inputType="number"
-            app:allowed_chars="1234567890"
             app:mask="##/##/####" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
+00
       </LinearLayout>
 
       <LinearLayout

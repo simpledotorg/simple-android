@@ -103,7 +103,7 @@ chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", versi
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 
-edittext-masked = "com.github.egslava:edittext-mask:1.0.7"
+edittext-masked = "io.github.vicmikhailau:MaskedEditText:5.0.3"
 edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
 faker = "com.github.blocoio:faker:2.0.4"

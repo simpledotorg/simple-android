@@ -19,6 +19,7 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.focusChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -553,7 +554,7 @@ class EditPatientScreen : BaseScreen<
     return addBpPassportButton.clicks().map { AddBpPassportButtonClicked() }
   }
 
-  private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
+  private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges().map(::DateOfBirthFocusChanged)
 
   override fun displayBpPassports(bpPassports: List<BPPassportListItem>) {
     bpPassportsContainer.removeAllViews()

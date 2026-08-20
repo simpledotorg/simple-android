@@ -17,6 +17,7 @@
 - Remove `android.experimental.enableTestFixturesKotlinSupport=true` compatibility flag
 - Bump Mobius to v2.1.2
 - Bump Gradle to v9.7.0
+- Replace legacy edittext-mask dependency with custom DateOfBirthEditText for DOB input masking
 
 ## 2026.08.03
 

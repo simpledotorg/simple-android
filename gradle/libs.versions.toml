@@ -23,7 +23,7 @@ ktlint = "0.36.0"
 
 lint = "32.3.1"
 
-mobius = "2.1.1"
+mobius = "2.1.2"
 
 moshi = "1.15.2"
 
@@ -103,7 +103,6 @@ chucker-no-op = { module = "com.github.chuckerteam.chucker:library-no-op", versi
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 
-edittext-masked = "com.github.egslava:edittext-mask:1.0.7"
 edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
 faker = "com.github.blocoio:faker:2.0.4"
@@ -181,7 +180,7 @@ rx-java = "io.reactivex.rxjava2:rxjava:2.2.21"
 rx-kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
 rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 
-sentry-android = "io.sentry:sentry-android:8.51.0"
+sentry-android = "io.sentry:sentry-android:8.52.0"
 
 signaturepad = "com.github.gcacace:signature-pad:1.4.0"
 
@@ -231,7 +230,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version = "4.5.0" }
-sentry = { id = "io.sentry.android.gradle", version = "6.17.0" }
+sentry = { id = "io.sentry.android.gradle", version = "6.18.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

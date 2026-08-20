@@ -27,7 +27,7 @@ mobius = "2.1.2"
 
 moshi = "1.15.2"
 
-okhttp = "5.4.0"
+okhttp = "5.5.0"
 
 retrofit = "3.0.0"
 

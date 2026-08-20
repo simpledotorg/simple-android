@@ -314,7 +314,6 @@ dependencies {
   implementation(libs.dagger.dagger)
   ksp(libs.dagger.compiler)
 
-  implementation(libs.edittext.masked)
   implementation(libs.edittext.pinentry)
 
   implementation(libs.firebase.config)

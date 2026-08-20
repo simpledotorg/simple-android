@@ -425,7 +425,7 @@ class PatientEntryScreen : BaseScreen<
         fullNameEditText.textChanges(::FullNameChanged),
         phoneNumberEditText.textChanges(::PhoneNumberChanged),
         dateOfBirthEditText.textChanges(::DateOfBirthChanged),
-        dateOfBirthEditText.focusChanges().map(::DateOfBirthFocusChanged),
+        dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged),
         ageEditText.textChanges(::AgeChanged),
         colonyOrVillageEditText.textChanges(::ColonyOrVillageChanged),
         districtEditText.textChanges(::DistrictChanged),

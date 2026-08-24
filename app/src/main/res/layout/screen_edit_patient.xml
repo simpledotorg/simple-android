@@ -120,9 +120,7 @@
             android:hint="@string/patientedit_date_of_birth_unfocused"
             android:imeOptions="flagNoFullscreen"
             android:inputType="number"
-            android:saveEnabled="false"
-            app:allowed_chars="1234567890"
-            app:mask="##/##/####" />
+            android:saveEnabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

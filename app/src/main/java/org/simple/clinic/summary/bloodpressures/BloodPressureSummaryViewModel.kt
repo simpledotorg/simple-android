@@ -38,7 +38,7 @@ data class BloodPressureSummaryViewModel(
     get() = facility!!.config.diabetesManagementEnabled
 
   override fun readyToRender(): Boolean {
-    return hasLoadedCountOfBloodSugars && latestBloodPressuresToDisplay != null
+    return hasLoadedCountOfBloodSugars && latestBloodPressuresToDisplay != null && diagnosedWithDiabetes != null
   }
 
   fun bloodPressuresLoaded(bloodPressures: List<BloodPressureMeasurement>): BloodPressureSummaryViewModel =

@@ -8,9 +8,10 @@ class BloodPressureSummaryViewInit(
     private val config: BloodPressureSummaryViewConfig
 ) : Init<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect> {
   override fun init(model: BloodPressureSummaryViewModel): First<BloodPressureSummaryViewModel, BloodPressureSummaryViewEffect> {
-    val effects = mutableSetOf<BloodPressureSummaryViewEffect>()
-
-    effects.add(LoadBloodPressuresCount(model.patientUuid))
+    val effects = mutableSetOf(
+        LoadBloodPressuresCount(model.patientUuid),
+        LoadMedicalHistory(model.patientUuid)
+    )
 
     if (!model.hasLoadedFacility) {
       effects.add(LoadCurrentFacility)

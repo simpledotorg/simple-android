@@ -13,8 +13,10 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
@@ -22,7 +24,7 @@ import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.TestData
+import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -33,13 +35,18 @@ class BloodPressureHistoryScreenEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
   private val viewEffectHandler = BloodPressureHistoryViewEffectHandler(uiActions)
   private val pagerFactory = mock<PagerFactory>()
   private val pagingCacheScope = TestScope()
+
+  private val uuidGenerator = FakeUuidGenerator(uuid = UUID.fromString("e78ec5f7-6fe9-4812-a894-9e34e55c670e"))
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
+      medicalHistoryRepository,
       patientRepository,
       TestSchedulersProvider.trampoline(),
       pagerFactory = pagerFactory,
@@ -48,6 +55,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
           bpEditableDuration = Duration.ofMinutes(10),
           numberOfMeasurementsForTeleconsultation = 0,
       ),
+      uuidGenerator = uuidGenerator,
       viewEffectsConsumer = viewEffectHandler::handle,
       pagingCacheScope = { pagingCacheScope }
   ).build()

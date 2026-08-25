@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
@@ -153,6 +154,18 @@ class BloodPressureHistoryScreenEffectHandlerTest {
             bpTime = "12:00 AM"
         ),
     ))
+
+    val medicalHistory = TestData.medicalHistory(
+        hasDiabetes = Answer.No
+    )
+
+    whenever(
+        medicalHistoryRepository.historyForPatientOrDefault(
+            defaultHistoryUuid = any(),
+            patientUuid = eq(patientUuid)
+        )
+    ) doReturn Observable.just(medicalHistory)
+
 
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, BloodPressureHistoryListItem>>(),

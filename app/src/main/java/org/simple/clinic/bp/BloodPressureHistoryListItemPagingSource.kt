@@ -10,6 +10,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.rx2.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem.BloodPressureHistoryItem
 import org.simple.clinic.util.INVALID
@@ -29,17 +30,20 @@ class BloodPressureHistoryListItemPagingSource @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
+    private val country: Country,
     @Named("full_date") private val dateFormatter: DateTimeFormatter,
     @Named("time_for_measurement_history") private val timeFormatter: DateTimeFormatter,
     @Assisted private val bpEditableDuration: Duration,
-    @Assisted private val source: PagingSource<Int, BloodPressureMeasurement>
+    @Assisted private val source: PagingSource<Int, BloodPressureMeasurement>,
+    @Assisted private val hasDiabetes: Boolean
 ) : PagingSource<Int, BloodPressureHistoryListItem>() {
 
   @AssistedFactory
   interface Factory {
     fun create(
         bpEditableDuration: Duration,
-        source: PagingSource<Int, BloodPressureMeasurement>
+        source: PagingSource<Int, BloodPressureMeasurement>,
+        hasDiabetes: Boolean
     ): BloodPressureHistoryListItemPagingSource
   }
 
@@ -75,7 +79,9 @@ class BloodPressureHistoryListItemPagingSource @AssistedInject constructor(
     }
   }
 
-  private fun convertToBloodPressureHistoryListItems(measurements: List<BloodPressureMeasurement>): List<BloodPressureHistoryListItem> {
+  private fun convertToBloodPressureHistoryListItems(
+      measurements: List<BloodPressureMeasurement>,
+  ): List<BloodPressureHistoryListItem> {
     val measurementsByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
     return measurementsByDate.mapValues { (_, measurementsList) ->
@@ -91,10 +97,16 @@ class BloodPressureHistoryListItemPagingSource @AssistedInject constructor(
           null
         }
 
+        val isHighBp = BloodPressureLevel.isHigh(
+            measurement = measurement,
+            country = country,
+            hasDiabetes = hasDiabetes
+        )
+
         BloodPressureHistoryItem(
             measurement = measurement,
             isBpEditable = isBpEditable,
-            isBpHigh = measurement.level.isHigh,
+            isBpHigh = isHighBp,
             bpDate = dateFormatter.format(recordedAt),
             bpTime = bpTime
         )

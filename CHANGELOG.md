@@ -19,6 +19,10 @@
 - Bump Gradle to v9.7.0
 - Replace legacy edittext-mask dependency with custom DateOfBirthEditText for DOB input masking
 
+### Changes
+
+- Update blood pressure high-range criteria for diabetic patients in Bangladesh to ≥130/80 mmHg
+
 ## 2026.08.03
 
 ### Internal

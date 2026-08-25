@@ -10,6 +10,10 @@ data class LoadBloodPressures(
     val numberOfBpsToDisplay: Int
 ) : BloodPressureSummaryViewEffect()
 
+data class LoadMedicalHistory(
+    val patientUuid: UUID,
+) : BloodPressureSummaryViewEffect()
+
 data class LoadBloodPressuresCount(val patientUuid: UUID) : BloodPressureSummaryViewEffect()
 
 data class OpenBloodPressureEntrySheet(

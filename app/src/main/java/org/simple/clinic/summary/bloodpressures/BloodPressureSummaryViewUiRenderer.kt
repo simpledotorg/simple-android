@@ -10,7 +10,7 @@ class BloodPressureSummaryViewUiRenderer(
     when {
       model.latestBloodPressuresToDisplay == null -> return
       model.latestBloodPressuresToDisplay.isEmpty() -> ui.showNoBloodPressuresView()
-      else -> ui.showBloodPressures(model.latestBloodPressuresToDisplay)
+      else -> ui.showBloodPressures(model.latestBloodPressuresToDisplay, model.diagnosedWithDiabetes)
     }
 
     if (model.hasLoadedFacility && model.hasLoadedCountOfBloodSugars) {

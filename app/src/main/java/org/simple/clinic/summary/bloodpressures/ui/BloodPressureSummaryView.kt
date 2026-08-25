@@ -189,7 +189,10 @@ class BloodPressureSummaryView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  override fun showBloodPressures(bloodPressures: List<BloodPressureMeasurement>) {
+  override fun showBloodPressures(
+      bloodPressures: List<BloodPressureMeasurement>,
+      diagnosedWithDiabetes: Answer?,
+  ) {
     val bpSummaryItems = generateBPSummaryItems(
         measurements = bloodPressures,
         canEditFor = patientSummaryConfig.bpEditableDuration,

@@ -48,7 +48,7 @@ class BloodPressureSummaryViewUiRendererTest {
   }
 
   @Test
-  fun `when blood pressures are loaded, then show blood pressures`() {
+  fun `when blood pressures and medical history are loaded, then show blood pressures`() {
     // given
     val bloodPressure = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("58ff9789-c295-41ca-bab3-becb4e9b7861"),
@@ -57,16 +57,22 @@ class BloodPressureSummaryViewUiRendererTest {
     val bloodPressures = listOf(bloodPressure)
     val bloodPressuresCount = bloodPressures.size
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("8568fd00-7de8-469e-a869-e92e54eb7f9b"),
+        patientUuid = patientUuid
+    )
+
     // when
     uiRenderer.render(
         defaultModel
             .currentFacilityLoaded(facility)
             .bloodPressuresCountLoaded(bloodPressuresCount)
             .bloodPressuresLoaded(bloodPressures)
+            .medicalHistoryLoaded(medicalHistory)
     )
 
     // then
-    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).showBloodPressures(bloodPressures, medicalHistory.diagnosedWithDiabetes)
     verify(ui).hideSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
@@ -102,16 +108,22 @@ class BloodPressureSummaryViewUiRendererTest {
         )
     )
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("8568fd00-7de8-469e-a869-e92e54eb7f9b"),
+        patientUuid = patientUuid
+    )
+
     // when
     uiRenderer.render(
         defaultModel
             .currentFacilityLoaded(facility)
             .bloodPressuresLoaded(bloodPressures)
             .bloodPressuresCountLoaded(bloodPressuresCount)
+            .medicalHistoryLoaded(medicalHistory)
     )
 
     // then
-    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).showBloodPressures(bloodPressures, medicalHistory.diagnosedWithDiabetes)
     verify(ui).showSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
@@ -177,16 +189,22 @@ class BloodPressureSummaryViewUiRendererTest {
         )
     )
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("8568fd00-7de8-469e-a869-e92e54eb7f9b"),
+        patientUuid = patientUuid
+    )
+
     // when
     uiRenderer.render(
         defaultModel
             .currentFacilityLoaded(facility)
             .bloodPressuresLoaded(bloodPressures)
             .bloodPressuresCountLoaded(bloodPressuresCount)
+            .medicalHistoryLoaded(medicalHistory)
     )
 
     // then
-    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).showBloodPressures(bloodPressures, medicalHistory.diagnosedWithDiabetes)
     verify(ui).showSeeAllButton()
     verifyNoMoreInteractions(ui)
   }
@@ -209,16 +227,22 @@ class BloodPressureSummaryViewUiRendererTest {
     val bloodPressures = listOf(bloodPressure1, bloodPressure2, bloodPressure3)
     val bloodPressureCount = bloodPressures.size
 
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("8568fd00-7de8-469e-a869-e92e54eb7f9b"),
+        patientUuid = patientUuid
+    )
+
     // when
     uiRenderer.render(
         defaultModel
             .currentFacilityLoaded(facility)
             .bloodPressuresLoaded(bloodPressures)
             .bloodPressuresCountLoaded(bloodPressureCount)
+            .medicalHistoryLoaded(medicalHistory)
     )
 
     // then
-    verify(ui).showBloodPressures(bloodPressures)
+    verify(ui).showBloodPressures(bloodPressures, medicalHistory.diagnosedWithDiabetes)
     verify(ui).hideSeeAllButton()
     verifyNoMoreInteractions(ui)
   }

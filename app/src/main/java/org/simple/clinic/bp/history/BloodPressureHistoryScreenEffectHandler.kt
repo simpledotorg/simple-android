@@ -8,21 +8,27 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import kotlinx.coroutines.CoroutineScope
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bp.BloodPressureHistoryListItemPagingSource
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 
 class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val pagerFactory: PagerFactory,
     private val pagingSourceFactory: BloodPressureHistoryListItemPagingSource.Factory,
     private val patientSummaryConfig: PatientSummaryConfig,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>,
     @Assisted private val pagingCacheScope: () -> CoroutineScope
 ) {
@@ -44,22 +50,36 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun loadBloodPressureHistory(): ObservableTransformer<LoadBloodPressureHistory, BloodPressureHistoryScreenEvent> {
+  private fun loadBloodPressureHistory():
+      ObservableTransformer<LoadBloodPressureHistory, BloodPressureHistoryScreenEvent> {
+
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMap {
-            val pagingSource = bloodPressureRepository.allBloodPressuresPagingSource(it.patientUuid)
+          .flatMap { effect ->
+            val pagingSource =
+                bloodPressureRepository.allBloodPressuresPagingSource(
+                    effect.patientUuid
+                )
 
-            pagerFactory.createPager(
-                sourceFactory = {
-                  pagingSourceFactory.create(
-                      bpEditableDuration = patientSummaryConfig.bpEditableDuration,
-                      source = pagingSource,
+            medicalHistoryRepository
+                .historyForPatientOrDefault(
+                    defaultHistoryUuid = uuidGenerator.v4(),
+                    patientUuid = effect.patientUuid
+                )
+                .flatMap { history ->
+
+                  pagerFactory.createPager(
+                      sourceFactory = {
+                        pagingSourceFactory.create(
+                            bpEditableDuration = patientSummaryConfig.bpEditableDuration,
+                            source = pagingSource,
+                            hasDiabetes = history.diagnosedWithDiabetes == Answer.Yes
+                        )
+                      },
+                      cacheScope = pagingCacheScope.invoke(),
                   )
-                },
-                cacheScope = pagingCacheScope.invoke(),
-            )
+                }
           }
           .map(::BloodPressuresHistoryLoaded)
     }

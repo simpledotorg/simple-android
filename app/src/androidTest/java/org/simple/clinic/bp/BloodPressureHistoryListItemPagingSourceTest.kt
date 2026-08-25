@@ -15,6 +15,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.history.adapter.BloodPressureHistoryListItem
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -138,11 +139,13 @@ class BloodPressureHistoryListItemPagingSourceTest {
         appDatabase = appDatabase,
         utcClock = utcClock,
         userClock = userClock,
-        bpEditableDuration = Duration.ofMinutes(10),
         schedulersProvider = schedulersProvider,
+        country = TestData.country(),
         dateFormatter = dateFormatter,
         timeFormatter = timeFormatter,
-        source = appDatabase.bloodPressureDao().allBloodPressuresPagingSource(patientUuid)
+        bpEditableDuration = Duration.ofMinutes(10),
+        source = appDatabase.bloodPressureDao().allBloodPressuresPagingSource(patientUuid),
+        hasDiabetes = false
     )
 
     val pager = TestPager(

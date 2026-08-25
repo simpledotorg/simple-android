@@ -1,6 +1,7 @@
 package org.simple.clinic.bp
 
 import org.simple.clinic.R
+import org.simple.clinic.appconfig.Country
 import java.util.Optional
 
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
@@ -23,7 +24,20 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
       MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
     }
 
+
   companion object {
+
+    fun isHigh(
+        measurement: BloodPressureMeasurement,
+        country: Country,
+        hasDiabetes: Boolean
+    ): Boolean {
+      return when (compute(measurement)) {
+        LOW, NORMAL -> false
+        MILDLY_HIGH -> country.isoCountryCode == Country.BANGLADESH && hasDiabetes
+        MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
+      }
+    }
 
     fun compute(measurement: BloodPressureMeasurement): BloodPressureLevel {
       val systolicLevel = computeSystolic(measurement)

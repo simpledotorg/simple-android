@@ -15,7 +15,7 @@ class BloodPressureSummaryViewUpdateTest {
   private val patientUuid = UUID.fromString("8f1befda-f99e-4d26-aff3-cecb90925df1")
   private val defaultModel = BloodPressureSummaryViewModel.create(patientUuid)
   private val config = BloodPressureSummaryViewConfig(numberOfBpsToDisplay = 3, numberOfBpsToDisplayWithoutDiabetesManagement = 8)
-  private val updateSpec = UpdateSpec<BloodPressureSummaryViewModel, BloodPressureSummaryViewEvent, BloodPressureSummaryViewEffect>(BloodPressureSummaryViewUpdate(config))
+  private val updateSpec = UpdateSpec(BloodPressureSummaryViewUpdate(config))
 
   @Test
   fun `when blood pressures are loaded, then show blood pressures`() {
@@ -148,5 +148,20 @@ class BloodPressureSummaryViewUpdateTest {
             hasNoModel(),
             hasEffects(ShowBloodPressureHistoryScreen(patientUuid) as BloodPressureSummaryViewEffect)
         ))
+  }
+
+  @Test
+  fun `when medical history is loaded, then update the model`() {
+    val medicalHistory = TestData.medicalHistory(UUID.fromString("8568fd00-7de8-469e-a869-e92e54eb7f9b"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MedicalHistoryLoaded(medicalHistory))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.medicalHistoryLoaded(medicalHistory)),
+                hasNoEffects()
+            )
+        )
   }
 }

@@ -20,6 +20,7 @@
 - Replace legacy edittext-mask dependency with custom DateOfBirthEditText for DOB input masking
 - Bump AndroidX Paging to v3.5.1
 - Bump AndroidX AppCompat to v1.8.0
+- Bump Compose BOM to v2026.08.00
 
 ### Changes
 

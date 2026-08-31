@@ -23,6 +23,7 @@
 - Bump Compose BOM to v2026.08.00
 - Bump Jackson Core to v2.22.2
 - Bump AndroidX Fragment KTX to v1.9.0
+- Bump OkHttp to v5.5.0
 
 ### Changes
 

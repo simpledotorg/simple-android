@@ -17,6 +17,8 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
+import org.simple.clinic.bp.BloodPressureLevel
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
@@ -25,6 +27,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
@@ -102,6 +105,9 @@ class BloodPressureSummaryView(
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
+  lateinit var country: Country
 
   private val viewEvents = PublishSubject.create<BloodPressureSummaryViewEvent>()
 
@@ -189,14 +195,18 @@ class BloodPressureSummaryView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  override fun showBloodPressures(bloodPressures: List<BloodPressureMeasurement>) {
+  override fun showBloodPressures(
+      bloodPressures: List<BloodPressureMeasurement>,
+      diagnosedWithDiabetes: Answer?,
+  ) {
     val bpSummaryItems = generateBPSummaryItems(
         measurements = bloodPressures,
         canEditFor = patientSummaryConfig.bpEditableDuration,
         utcClock = utcClock,
         userClock = userClock,
         dateFormatter = dateFormatter,
-        timeFormatter = timeFormatter
+        timeFormatter = timeFormatter,
+        diagnosedWithDiabetes = diagnosedWithDiabetes
     )
 
     summaryItems = bpSummaryItems
@@ -253,7 +263,8 @@ class BloodPressureSummaryView(
       utcClock: UtcClock,
       userClock: UserClock,
       dateFormatter: DateTimeFormatter,
-      timeFormatter: DateTimeFormatter
+      timeFormatter: DateTimeFormatter,
+      diagnosedWithDiabetes: Answer?,
   ): List<BloodPressureSummaryItem> {
     val measurementByDate = measurements.groupBy { it.recordedAt.toLocalDateAtZone(userClock.zone) }
 
@@ -268,13 +279,19 @@ class BloodPressureSummaryView(
           null
         }
 
+        val isHighBp = BloodPressureLevel.isHigh(
+            measurement = measurement,
+            country = country,
+            hasDiabetes = diagnosedWithDiabetes == Answer.Yes
+        )
+
         BloodPressureSummaryItem(
             id = measurement.uuid,
             systolic = measurement.reading.systolic,
             diastolic = measurement.reading.diastolic,
             date = dateFormatter.format(recordedAt),
             time = bpTime,
-            isHigh = measurement.level.isHigh,
+            isHigh = isHighBp,
             canEdit = isBpEditable
         )
       }

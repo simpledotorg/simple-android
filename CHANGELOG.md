@@ -25,6 +25,8 @@
 - Bump AndroidX Fragment KTX to v1.9.0
 - Bump OkHttp to v5.5.0
 - Bump sqlCipher to v4.18.0
+- Bump AndroidX Camera to v1.6.2
+- Bump AndroidX Camera View to v1.6.2
 
 ### Changes
 

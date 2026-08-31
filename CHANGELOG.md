@@ -28,6 +28,7 @@
 - Bump AndroidX Camera to v1.6.2
 - Bump AndroidX Camera View to v1.6.2
 - Bump Play Services Auth to v22.0.0
+- Bump AGP to v9.3.2
 
 ### Changes
 

@@ -8,7 +8,7 @@
 - Bump ConstraintLayout to v2.2.2
 - Bump AndroidX Benchmark to v1.5.0-beta01
 - Bump Sentry to v8.54.0
-- Bump Sentry Android to v6.18.0
+- Bump Sentry Android to v6.20.0
 - Remove `android.enableAppCompileTimeRClass` compatibility flag
 - Bump KSP to v2.3.11
 - Remove `android.uniquePackageNames` compatibility flag

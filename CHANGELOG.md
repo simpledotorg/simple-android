@@ -4,6 +4,26 @@
 
 ### Internal
 
+- Bump AndroidX Benchmark to v1.5.0-rc02
+- Bump Sentry to v8.54.0
+- Bump Sentry Android to v6.20.0
+- Bump AndroidX Paging to v3.5.1
+- Bump AndroidX AppCompat to v1.8.0
+- Bump Compose BOM to v2026.08.00
+- Bump Jackson Core to v2.22.2
+- Bump AndroidX Fragment KTX to v1.9.0
+- Bump OkHttp to v5.5.0
+- Bump sqlCipher to v4.18.0
+- Bump AndroidX Camera to v1.6.2
+- Bump AndroidX Camera View to v1.6.2
+- Bump Play Services Auth to v22.0.0
+- Bump AGP to v9.3.2
+- Bump Lint to v32.3.2
+
+## 2026.08.31
+
+### Internal
+
 - Bump Signature Pad to v1.4.0
 - Bump ConstraintLayout to v2.2.2
 - Bump AndroidX Benchmark to v1.5.0-rc02

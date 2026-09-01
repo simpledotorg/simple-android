@@ -19,6 +19,7 @@
 - Bump Play Services Auth to v22.0.0
 - Bump AGP to v9.3.2
 - Bump Lint to v32.3.2
+- Bump Gradle to v9.7.1
 
 ## 2026.08.31
 

@@ -20,6 +20,7 @@
 - Bump AGP to v9.3.2
 - Bump Lint to v32.3.2
 - Bump Gradle to v9.7.1
+- Update GH Actions `setup-jdk` to v6
 
 ## 2026.08.31
 
@@ -209,7 +210,7 @@
 - Bump Compose BOM to v2026.01.00
 - Bump Sentry Android to v5.12.2
 - Update GH Actions `checkout` to v6
-- Update GH Actions `setup-jdk` to to v5
+- Update GH Actions `setup-jdk` to v5
 - Bump Gradle to v9.2.1
 - Bump Mockito Kotlin to v6.2.1
 - Add helper function `diagnosedAt` to update the htn and dm diagnosed at fields in medical history

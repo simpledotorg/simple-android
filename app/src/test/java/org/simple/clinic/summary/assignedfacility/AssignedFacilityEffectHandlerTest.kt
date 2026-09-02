@@ -90,4 +90,22 @@ class AssignedFacilityEffectHandlerTest {
     verify(uiActions).notifyAssignedFacilityChanged()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when load assigned facility effect is received and patient is not found, then assigned facility is empty`() {
+    // given
+    val patientUuid = UUID.fromString("17bb9690-9a17-4d90-a45f-8bfdcc4153e4")
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn null
+
+    // when
+    effectHandlerTestCase.dispatch(LoadAssignedFacility(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(
+        AssignedFacilityLoaded(Optional.empty())
+    )
+
+    verifyNoInteractions(uiActions)
+  }
 }

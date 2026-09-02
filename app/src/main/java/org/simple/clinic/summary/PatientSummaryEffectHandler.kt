@@ -72,7 +72,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     private val prescriptionRepository: PrescriptionRepository,
-    private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     private val nonLabBasedCVDRiskCalculator: NonLabBasedCVDRiskCalculator,
     private val labBasedCVDRiskCalculator: LabBasedCVDRiskCalculator,
@@ -103,7 +102,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
-        .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadBMIFeature::class.java, loadBMIFeature())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
@@ -410,21 +408,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            val currentFacilityId = currentFacility.get().uuid
-            CDSSPilotStatusChecked(isPilotEnabledForFacility =
-                country.isoCountryCode == Country.ETHIOPIA ||
-                    country.isoCountryCode == Country.SRI_LANKA ||
-                    cdssPilotFacilities.get().contains(currentFacilityId)
-            )
-          }
-    }
-  }
-
   private fun loadBMIFeature(): ObservableTransformer<LoadBMIFeature, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
@@ -451,13 +434,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                     patientUuid = patientUuid
                 ).diagnosedWithDiabetes == MedicalHistoryAnswer.Yes
 
-            val isSriLanka =
-                country.isoCountryCode == Country.SRI_LANKA
-
             bloodPressureRepository.isNewestBpEntryHigh(
                 patientUuid = patientUuid,
                 isDiabeticPatient = hasDiabetes,
-                isSriLankaEnabled = isSriLanka
+                country = country
             ).map { isNewestBpEntryHigh ->
               Pair(patientUuid, isNewestBpEntryHigh)
             }

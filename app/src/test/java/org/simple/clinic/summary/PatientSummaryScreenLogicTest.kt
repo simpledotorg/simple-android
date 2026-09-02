@@ -106,13 +106,16 @@ class PatientSummaryScreenLogicTest {
         defaultHistoryUuid = uuidGenerator.v4(),
         patientUuid = patientUuid
     )) doReturn medicalHistory
-    whenever(bpRepository.isNewestBpEntryHigh(patientUuid, isDiabeticPatient = medicalHistory.diagnosedWithDiabetes == Answer.Yes, isSriLankaEnabled = false)) doReturn Observable.just(true)
+    whenever(bpRepository.isNewestBpEntryHigh(patientUuid, isDiabeticPatient = medicalHistory.diagnosedWithDiabetes == Answer.Yes, country = TestData.country())) doReturn Observable.just(true)
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
     whenever(bpRepository.hasBPRecordedToday(patientUuid, today)) doReturn Observable.just(true)
     whenever(facilityRepository.facility(assignedFacilityUuid)) doReturn Optional.of(TestData.facility())
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn emptyList()
+    whenever(
+        prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)
+    ) doReturn Observable.just(false)
   }
 
   @After
@@ -233,10 +236,9 @@ class PatientSummaryScreenLogicTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
         prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
-        labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator() { TestData.labBasedCVDRiskCalculationSheet() },
+        labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator { TestData.labBasedCVDRiskCalculationSheet() },
         viewEffectsConsumer = viewEffectHandler::handle,
         feature = mock()
     )

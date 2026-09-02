@@ -113,6 +113,9 @@ class PatientSummaryScreenLogicTest {
     whenever(bpRepository.hasBPRecordedToday(patientUuid, today)) doReturn Observable.just(true)
     whenever(facilityRepository.facility(assignedFacilityUuid)) doReturn Optional.of(TestData.facility())
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn emptyList()
+    whenever(
+        prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)
+    ) doReturn Observable.just(false)
   }
 
   @After

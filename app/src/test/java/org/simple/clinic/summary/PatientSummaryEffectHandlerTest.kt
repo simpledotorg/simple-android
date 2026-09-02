@@ -653,7 +653,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid
     )) doReturn medicalHistory
 
-    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid, medicalHistory.diagnosedWithDiabetes == Yes, false)).doReturn(Observable.just(true))
+    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid, medicalHistory.diagnosedWithDiabetes == Yes, country = TestData.country())).doReturn(Observable.just(true))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)).doReturn(Observable.just(true))
 
     // when

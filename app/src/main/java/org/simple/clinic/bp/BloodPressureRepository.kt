@@ -3,6 +3,7 @@ package org.simple.clinic.bp
 import androidx.paging.PagingSource
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
@@ -169,16 +170,19 @@ class BloodPressureRepository @Inject constructor(
   fun isNewestBpEntryHigh(
       patientUuid: UUID,
       isDiabeticPatient: Boolean,
-      isSriLankaEnabled: Boolean
+      country: Country,
   ): Observable<Boolean> {
 
     val currentDate = LocalDate.now(utcClock)
 
-    val systolicThreshold =
-        if (isSriLankaEnabled && isDiabeticPatient) 130 else 140
+    val useLowerThreshold =
+        BloodPressureLevel.usesLowerThreshold(
+            country = country,
+            hasDiabetes = isDiabeticPatient
+        )
 
-    val diastolicThreshold =
-        if (isSriLankaEnabled && isDiabeticPatient) 80 else 90
+    val systolicThreshold = if (useLowerThreshold) 130 else 140
+    val diastolicThreshold = if (useLowerThreshold) 80 else 90
 
     return dao.isNewestBpEntryHigh(
         patientUuid = patientUuid,

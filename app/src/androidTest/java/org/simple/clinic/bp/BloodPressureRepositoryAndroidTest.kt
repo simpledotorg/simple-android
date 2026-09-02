@@ -6,6 +6,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
@@ -13,11 +15,10 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
-import org.simple.clinic.util.toUtcInstant
-import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toUtcInstant
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -475,9 +476,9 @@ class BloodPressureRepositoryAndroidTest {
     ))
 
     // when
-    val isNewestBpEntryHighForPatient1 = repository.isNewestBpEntryHigh(patient1Uuid, isDiabeticPatient = false, isSriLankaEnabled = false).blockingFirst()
-    val isNewestBpEntryHighForPatient2 = repository.isNewestBpEntryHigh(patient2Uuid, isDiabeticPatient = true, isSriLankaEnabled = false).blockingFirst()
-    val isNewestBpEntryHighForPatient3 = repository.isNewestBpEntryHigh(patient3Uuid, isDiabeticPatient = true, isSriLankaEnabled = true).blockingFirst()
+    val isNewestBpEntryHighForPatient1 = repository.isNewestBpEntryHigh(patient1Uuid, isDiabeticPatient = false, country = TestData.country()).blockingFirst()
+    val isNewestBpEntryHighForPatient2 = repository.isNewestBpEntryHigh(patient2Uuid, isDiabeticPatient = true, country = TestData.country(Country.ETHIOPIA)).blockingFirst()
+    val isNewestBpEntryHighForPatient3 = repository.isNewestBpEntryHigh(patient3Uuid, isDiabeticPatient = true, country = TestData.country(Country.BANGLADESH)).blockingFirst()
 
     // then
     assertThat(isNewestBpEntryHighForPatient1).isTrue()

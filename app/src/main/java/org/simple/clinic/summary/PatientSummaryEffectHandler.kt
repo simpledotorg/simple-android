@@ -434,13 +434,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                     patientUuid = patientUuid
                 ).diagnosedWithDiabetes == MedicalHistoryAnswer.Yes
 
-            val isSriLanka =
-                country.isoCountryCode == Country.SRI_LANKA
-
             bloodPressureRepository.isNewestBpEntryHigh(
                 patientUuid = patientUuid,
                 isDiabeticPatient = hasDiabetes,
-                isSriLankaEnabled = isSriLanka
+                country = country
             ).map { isNewestBpEntryHigh ->
               Pair(patientUuid, isNewestBpEntryHigh)
             }

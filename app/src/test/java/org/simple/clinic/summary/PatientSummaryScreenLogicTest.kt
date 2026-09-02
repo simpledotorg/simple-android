@@ -106,7 +106,7 @@ class PatientSummaryScreenLogicTest {
         defaultHistoryUuid = uuidGenerator.v4(),
         patientUuid = patientUuid
     )) doReturn medicalHistory
-    whenever(bpRepository.isNewestBpEntryHigh(patientUuid, isDiabeticPatient = medicalHistory.diagnosedWithDiabetes == Answer.Yes, isSriLankaEnabled = false)) doReturn Observable.just(true)
+    whenever(bpRepository.isNewestBpEntryHigh(patientUuid, isDiabeticPatient = medicalHistory.diagnosedWithDiabetes == Answer.Yes, country = TestData.country())) doReturn Observable.just(true)
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()

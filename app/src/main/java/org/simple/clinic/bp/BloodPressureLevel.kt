@@ -27,7 +27,7 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
     ): Boolean {
       return when (compute(measurement)) {
         LOW, NORMAL -> false
-        MILDLY_HIGH -> country.isoCountryCode == Country.BANGLADESH && hasDiabetes
+        MILDLY_HIGH -> usesLowerThreshold(country, hasDiabetes)
         MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
       }
     }
@@ -69,6 +69,15 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
           else -> throw AssertionError("Shouldn't reach here: $measurement")
         }
       }
+    }
+
+    fun usesLowerThreshold(
+        country: Country,
+        hasDiabetes: Boolean
+    ): Boolean {
+      return hasDiabetes &&
+          (country.isoCountryCode == Country.BANGLADESH ||
+              country.isoCountryCode == Country.SRI_LANKA)
     }
   }
 }

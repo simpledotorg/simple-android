@@ -21,6 +21,13 @@
 - Bump Lint to v32.3.2
 - Bump Gradle to v9.7.1
 - Update GH Actions `setup-jdk` to v6
+- Replaced deprecated Gradle Kotlin DSL by project property delegates with explicit project.property(...) access to improve Gradle 10 compatibility.
+
+
+### Changes
+
+- Enabled CDSS nudges for all countries, previously limited to Sri Lanka and Ethiopia.
+- Applied the lower blood pressure threshold of 130/80 for diabetic patients in Sri Lanka.
 
 ## 2026.08.31
 

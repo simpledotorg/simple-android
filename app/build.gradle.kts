@@ -16,10 +16,10 @@ plugins {
 }
 
 sentry {
-  val sentryOrg: String by project
-  val sentryProject: String by project
-  val sentryAuthToken: String by project
-  val sentryUploadProguard: String by project
+  val sentryOrg: String = project.property("sentryOrg") as String
+  val sentryProject: String = project.property("sentryProject") as String
+  val sentryAuthToken: String = project.property("sentryAuthToken") as String
+  val sentryUploadProguard: String = project.property("sentryUploadProguard") as String
 
   org = sentryOrg
   projectName = sentryProject
@@ -39,10 +39,10 @@ sentry {
 android {
   namespace = "org.simple.clinic"
 
-  val androidNdkVersion: String by project
-  val compileSdkVersion: Int by rootProject.extra
-  val minSdkVersion: Int by rootProject.extra
-  val targetSdkVersion: Int by rootProject.extra
+  val androidNdkVersion: String = project.property("androidNdkVersion") as String
+  val compileSdkVersion: Int = rootProject.extra["compileSdkVersion"] as Int
+  val minSdkVersion: Int = rootProject.extra["minSdkVersion"] as Int
+  val targetSdkVersion: Int = rootProject.extra["targetSdkVersion"] as Int
 
   compileSdk = compileSdkVersion
   // Needed to switch NDK versions on the CI server since they have different
@@ -63,8 +63,8 @@ android {
     minSdk = minSdkVersion
     targetSdk = targetSdkVersion
 
-    val versionCode = (project.properties["VERSION_CODE"] as? String)?.toInt() ?: 1
-    val versionName = (project.properties["VERSION_NAME"] as? String) ?: "0.1"
+    val versionCode = (project.findProperty("VERSION_CODE") as? String)?.toInt() ?: 1
+    val versionName = (project.findProperty("VERSION_NAME") as? String) ?: "0.1"
 
     this.versionCode = versionCode
     this.versionName = versionName
@@ -73,7 +73,7 @@ android {
 
     testInstrumentationRunner = "org.simple.clinic.AndroidTestJUnitRunner"
 
-    val defaultProguardFile: String by project
+    val defaultProguardFile: String = project.property("defaultProguardFile") as String
     proguardFiles(
         getDefaultProguardFile(defaultProguardFile),
         "proguard-rules.pro"
@@ -81,11 +81,11 @@ android {
 
     vectorDrawables.useSupportLibrary = true
 
-    val sentryDsn: String by project
-    val sentryEnvironment: String by project
-    val manifestEndpoint: String by project
-    val disableScreenshot: String by project
-    val allowRootedDevice: String by project
+    val sentryDsn: String = project.property("sentryDsn") as String
+    val sentryEnvironment: String = project.property("sentryEnvironment") as String
+    val manifestEndpoint: String = project.property("manifestEndpoint") as String
+    val disableScreenshot: String = project.property("disableScreenshot") as String
+    val allowRootedDevice: String = project.property("allowRootedDevice") as String
 
     buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
     buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
@@ -103,9 +103,9 @@ android {
   signingConfigs {
     create("release") {
       storeFile = file("$rootDir/release/simple.store")
-      storePassword = "${project.properties["KEYSTORE_PASSWORD"]}"
-      keyAlias = "${project.properties["KEY_ALIAS"]}"
-      keyPassword = "${project.properties["KEY_PASSWORD"]}"
+      storePassword = "${project.findProperty("KEYSTORE_PASSWORD")}"
+      keyAlias = "${project.findProperty("KEY_ALIAS")}"
+      keyPassword = "${project.findProperty("KEY_PASSWORD")}"
     }
   }
 
@@ -115,8 +115,8 @@ android {
       isMinifyEnabled = false
     }
 
-    val runProguard: String by project
-    val maestroTests: String by project
+    val runProguard: String = project.property("runProguard") as String
+    val maestroTests: String = project.property("maestroTests") as String
 
     getByName("release") {
       isDebuggable = false

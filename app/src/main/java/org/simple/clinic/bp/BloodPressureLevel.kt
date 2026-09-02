@@ -18,13 +18,6 @@ enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Opti
 
   LOW(-1, Optional.of(R.string.bloodpressure_level_low));
 
-  val isHigh: Boolean
-    get() = when (this) {
-      LOW, NORMAL, MILDLY_HIGH -> false
-      MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
-    }
-
-
   companion object {
 
     fun isHigh(

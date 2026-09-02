@@ -30,7 +30,8 @@ class PatientSummaryInitTest {
                     CheckForInvalidPhone(patientUuid),
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
-                    CheckIfCDSSPilotIsEnabled,
+                    LoadClinicalDecisionSupportInfo(patientUuid),
+                    LoadLatestScheduledAppointment(patientUuid),
                     LoadBMIFeature,
                     LoadBMiReading(patientUuid)
                 )
@@ -65,8 +66,9 @@ class PatientSummaryInitTest {
                 hasModel(model),
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
-                    CheckIfCDSSPilotIsEnabled,
                     LoadBMIFeature,
+                    LoadClinicalDecisionSupportInfo(patientUuid),
+                    LoadLatestScheduledAppointment(patientUuid),
                     LoadBMiReading(patientUuid)
                 )
             )

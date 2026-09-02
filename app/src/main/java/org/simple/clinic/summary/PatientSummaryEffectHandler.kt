@@ -72,7 +72,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     private val prescriptionRepository: PrescriptionRepository,
-    private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     private val nonLabBasedCVDRiskCalculator: NonLabBasedCVDRiskCalculator,
     private val labBasedCVDRiskCalculator: LabBasedCVDRiskCalculator,
@@ -103,7 +102,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
-        .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadBMIFeature::class.java, loadBMIFeature())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
@@ -406,21 +404,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map {
             val appointment = appointmentRepository.latestScheduledAppointmentForPatient(it.patientUuid)
             LatestScheduledAppointmentLoaded(appointment)
-          }
-    }
-  }
-
-  private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            val currentFacilityId = currentFacility.get().uuid
-            CDSSPilotStatusChecked(isPilotEnabledForFacility =
-                country.isoCountryCode == Country.ETHIOPIA ||
-                    country.isoCountryCode == Country.SRI_LANKA ||
-                    cdssPilotFacilities.get().contains(currentFacilityId)
-            )
           }
     }
   }

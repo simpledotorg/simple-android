@@ -42,24 +42,6 @@ class PatientSummaryModule {
   @Provides
   fun teleconsultationFacilityWithMedicalOfficersDao(appDatabase: AppDatabase) = appDatabase.teleconsultFacilityWithMedicalOfficersDao()
 
-  // TODO (SM): Remove once CDSS pilot is finished
-  @Provides
-  fun cdssPilotFacilitiesIds(
-      moshi: Moshi,
-      configReader: ConfigReader
-  ): List<UUID> {
-    val type = Types.newParameterizedType(List::class.java, UUID::class.java)
-    val adapter = moshi.adapter<List<UUID>>(type)
-    val json = configReader.string("cdss_pilot_facilities_ids_v0", "[]")
-
-    return try {
-      adapter.fromJson(json)!!
-    } catch (e: Exception) {
-      CrashReporter.report(e)
-      emptyList()
-    }
-  }
-
   @Provides
   @OptIn(ExperimentalStdlibApi::class)
   fun diagnosisWarningPrescriptions(moshi: Moshi, configReader: ConfigReader): DiagnosisWarningPrescriptions {

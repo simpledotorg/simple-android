@@ -233,10 +233,9 @@ class PatientSummaryScreenLogicTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
         prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = NonLabBasedCVDRiskCalculator { TestData.nonLabBasedCVDRiskCalculationSheet() },
-        labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator() { TestData.labBasedCVDRiskCalculationSheet() },
+        labBasedCVDRiskCalculator = LabBasedCVDRiskCalculator { TestData.labBasedCVDRiskCalculationSheet() },
         viewEffectsConsumer = viewEffectHandler::handle,
         feature = mock()
     )

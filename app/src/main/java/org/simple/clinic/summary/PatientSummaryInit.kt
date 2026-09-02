@@ -9,7 +9,8 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
     val effects = mutableSetOf(
         LoadPatientSummaryProfile(model.patientUuid),
-        CheckIfCDSSPilotIsEnabled,
+        LoadClinicalDecisionSupportInfo(model.patientUuid),
+        LoadLatestScheduledAppointment(model.patientUuid),
         LoadBMIFeature,
         LoadBMiReading(model.patientUuid),
     )

@@ -1639,31 +1639,6 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when cdss pilot is enabled for facility, then load clinical decision support info and latest scheduled appointment`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(
-                LoadClinicalDecisionSupportInfo(patientUuid),
-                LoadLatestScheduledAppointment(patientUuid)
-            )
-        ))
-  }
-
-  @Test
-  fun `when cdss pilot is not enabled for facility, then do nothing`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CDSSPilotStatusChecked(isPilotEnabledForFacility = false))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
   fun `when scheduled appointment is loaded, then update the model`() {
     val appointment = TestData.appointment(
         uuid = UUID.fromString("adec28f7-0761-4514-b036-2737d9a6064b")

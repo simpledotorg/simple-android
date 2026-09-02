@@ -48,8 +48,6 @@ data class LoadPatientRegistrationData(val patientUuid: UUID) : PatientSummaryEf
 
 data class LoadClinicalDecisionSupportInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
-data object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
-
 data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Answer) : PatientSummaryEffect()

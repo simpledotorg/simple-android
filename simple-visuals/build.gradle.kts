@@ -5,8 +5,8 @@ plugins {
 android {
   namespace = "org.simple.clinic.visuals"
 
-  val compileSdkVersion: Int by rootProject.extra
-  val minSdkVersion: Int by rootProject.extra
+  val compileSdkVersion: Int = rootProject.extra["compileSdkVersion"] as Int
+  val minSdkVersion: Int = rootProject.extra["minSdkVersion"] as Int
 
   compileSdk = compileSdkVersion
 

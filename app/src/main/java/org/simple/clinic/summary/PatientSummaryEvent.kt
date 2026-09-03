@@ -122,8 +122,6 @@ data object AssignedFacilityChanged : PatientSummaryEvent()
 
 data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean, val hasPrescribedDrugsChangedToday: Boolean) : PatientSummaryEvent()
 
-data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()
-
 data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()
 
 data class PatientReassignmentStatusLoaded(

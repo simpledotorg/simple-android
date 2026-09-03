@@ -72,7 +72,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     private val prescriptionRepository: PrescriptionRepository,
-    private val cdssPilotFacilities: Lazy<List<UUID>>,
     private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     private val nonLabBasedCVDRiskCalculator: NonLabBasedCVDRiskCalculator,
     private val labBasedCVDRiskCalculator: LabBasedCVDRiskCalculator,
@@ -103,7 +102,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
-        .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadBMIFeature::class.java, loadBMIFeature())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
@@ -309,14 +307,13 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect ->
-            val patientUuid = effect.patientUuid
-            val patient = patientRepository.patientImmediate(patientUuid)
+            val patient = effect.patient
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patientUuid
+                patientUuid = patient.uuid
             )
-            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
-            val riskRange = cvdRiskRepository.getCVDRiskImmediate(patientUuid)?.riskScore
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patient.uuid)
+            val riskRange = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)?.riskScore
             val canPrescribeStatin = if (country.isoCountryCode == Country.SRI_LANKA) {
               riskRange?.canPrescribeStatinInSriLanka ?: false
             } else {
@@ -324,7 +321,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
 
             StatinInfoLoaded(
-                age = patient!!.ageDetails.estimateAge(userClock),
+                age = patient.ageDetails.estimateAge(userClock),
                 medicalHistory = medicalHistory,
                 canPrescribeStatin = canPrescribeStatin,
                 riskRange = riskRange,
@@ -410,21 +407,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            val currentFacilityId = currentFacility.get().uuid
-            CDSSPilotStatusChecked(isPilotEnabledForFacility =
-                country.isoCountryCode == Country.ETHIOPIA ||
-                    country.isoCountryCode == Country.SRI_LANKA ||
-                    cdssPilotFacilities.get().contains(currentFacilityId)
-            )
-          }
-    }
-  }
-
   private fun loadBMIFeature(): ObservableTransformer<LoadBMIFeature, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
@@ -451,13 +433,10 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                     patientUuid = patientUuid
                 ).diagnosedWithDiabetes == MedicalHistoryAnswer.Yes
 
-            val isSriLanka =
-                country.isoCountryCode == Country.SRI_LANKA
-
             bloodPressureRepository.isNewestBpEntryHigh(
                 patientUuid = patientUuid,
                 isDiabeticPatient = hasDiabetes,
-                isSriLankaEnabled = isSriLanka
+                country = country
             ).map { isNewestBpEntryHigh ->
               Pair(patientUuid, isNewestBpEntryHigh)
             }
@@ -543,12 +522,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .flatMap(Function { facilityRepository.facility(it) })
   }
 
-  private fun getAssignedFacility(assignedFacilityId: UUID?): Optional<Facility> {
-    return Optional
-        .ofNullable(assignedFacilityId)
-        .flatMap { facilityRepository.facility(it) }
-  }
-
   private fun mapPatientProfileToSummaryProfile(
       patientProfile: PatientProfile,
       facility: Optional<Facility>
@@ -584,7 +557,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             missingPhoneReminderRepository
                 .markReminderAsShownFor(effect.patientUuid)
                 .subscribeOn(scheduler)
-                .andThen(Observable.empty<PatientSummaryEvent>())
+                .andThen(Observable.empty())
           }
     }
   }

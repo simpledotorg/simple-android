@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -115,7 +114,6 @@ class PatientSummaryEffectHandlerTest {
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
       prescriptionRepository = prescriptionRepository,
-      cdssPilotFacilities = { emptyList() },
       diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
       nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
       labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
@@ -163,7 +161,6 @@ class PatientSummaryEffectHandlerTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
@@ -183,7 +180,7 @@ class PatientSummaryEffectHandlerTest {
     )
 
     val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
     whenever(facilityRepository.facility(registeredFacilityUuid)) doReturn Optional.of(facility)
 
     // when
@@ -228,7 +225,6 @@ class PatientSummaryEffectHandlerTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { emptyList() },
         diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
         labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
@@ -243,7 +239,7 @@ class PatientSummaryEffectHandlerTest {
     val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
 
     val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
-    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
 
     // when
     testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
@@ -615,10 +611,6 @@ class PatientSummaryEffectHandlerTest {
   fun `when load patient registration data effect is received, then load patient registration data`() {
     // given
     val patientUuid = UUID.fromString("31b34900-52aa-4892-8bed-2c720951880e")
-    val medicalHistory = TestData.medicalHistory(
-        uuid = UUID.fromString("333a13f9-4a5b-4fd9-84f3-e169d26331ba"),
-        patientUuid = patientUuid
-    )
 
     whenever(prescriptionRepository.prescriptionCountImmediate(patientUuid)) doReturn 2
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
@@ -661,7 +653,7 @@ class PatientSummaryEffectHandlerTest {
         patientUuid = patientUuid
     )) doReturn medicalHistory
 
-    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid, medicalHistory.diagnosedWithDiabetes == Yes, false)).doReturn(Observable.just(true))
+    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid, medicalHistory.diagnosedWithDiabetes == Yes, country = TestData.country())).doReturn(Observable.just(true))
     whenever(prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)).doReturn(Observable.just(true))
 
     // when
@@ -674,53 +666,6 @@ class PatientSummaryEffectHandlerTest {
             hasPrescribedDrugsChangedToday = true
         ))
     verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when check if cdss pilot is enabled effect is received, then check the cdss enabled status`() {
-    // given
-    val cdssPilotFacilities = listOf(UUID.fromString("635bf319-d6bb-426e-b5f0-6003614ad4fe"))
-    val facility = TestData.facility(
-        uuid = UUID.fromString("635bf319-d6bb-426e-b5f0-6003614ad4fe"),
-        name = "CHC Obvious"
-    )
-    val effectHandler = PatientSummaryEffectHandler(
-        clock = clock,
-        userClock = userClock,
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        patientRepository = patientRepository,
-        bloodPressureRepository = bloodPressureRepository,
-        appointmentRepository = appointmentRepository,
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        bloodSugarRepository = bloodSugarRepository,
-        dataSync = dataSync,
-        medicalHistoryRepository = medicalHistoryRepository,
-        cvdRiskRepository = cvdRiskRepository,
-        patientAttributeRepository = patientAttributeRepository,
-        country = TestData.country(),
-        currentUser = { user },
-        currentFacility = { facility },
-        uuidGenerator = uuidGenerator,
-        facilityRepository = facilityRepository,
-        teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        prescriptionRepository = prescriptionRepository,
-        cdssPilotFacilities = { cdssPilotFacilities },
-        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
-        nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
-        labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
-        viewEffectsConsumer = viewEffectHandler::handle,
-        feature = features
-    )
-    val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
-
-    // when
-    testCase.dispatch(CheckIfCDSSPilotIsEnabled)
-
-    // then
-    verifyNoInteractions(uiActions)
-
-    testCase.assertOutgoingEvents(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
-    testCase.dispose()
   }
 
   @Test
@@ -1043,9 +988,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when load statin info effect is received, then load statin info`() {
     //given
-    val bmiReading = BMIReading(height = 177f, weight = 53f)
-
-    whenever(patientRepository.patientImmediate(patientUuid)) doReturn TestData.patient(
+    val patient = TestData.patient(
         uuid = patientUuid,
         patientAgeDetails = PatientAgeDetails(
             ageValue = 55,
@@ -1053,6 +996,9 @@ class PatientSummaryEffectHandlerTest {
             dateOfBirth = null,
         )
     )
+    val bmiReading = BMIReading(height = 177f, weight = 53f)
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
     val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
 
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
@@ -1067,7 +1013,7 @@ class PatientSummaryEffectHandlerTest {
         TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
 
     //when
-    testCase.dispatch(LoadStatinInfo(patientUuid))
+    testCase.dispatch(LoadStatinInfo(patient))
 
     //then
     testCase.assertOutgoingEvents(StatinInfoLoaded(

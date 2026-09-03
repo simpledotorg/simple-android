@@ -97,7 +97,6 @@ class PatientSummaryUpdate(
           model.clinicalDecisionSupportInfoLoaded(event.isNewestBpEntryHigh, event.hasPrescribedDrugsChangedToday)
       )
 
-      is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
@@ -107,7 +106,7 @@ class PatientSummaryUpdate(
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
       is StatinPrescriptionCheckInfoLoaded -> statinPrescriptionCheckInfoLoaded(event, model)
       is CVDRiskCalculated -> saveOrUpdateCVDRisk(event, model)
-      is CVDRiskUpdated -> dispatch(LoadStatinInfo(model.patientUuid))
+      is CVDRiskUpdated -> dispatch(LoadStatinInfo(model.patientSummaryProfile!!.patient))
       is StatinInfoLoaded -> statinInfoLoaded(event, model)
       is AddTobaccoUseClicked -> dispatch(ShowTobaccoStatusDialog)
       is TobaccoUseAnswered -> dispatch(UpdateTobaccoUse(model.patientUuid, event.isSmoker, event.isUsingSmokelessTobacco))
@@ -238,7 +237,7 @@ class PatientSummaryUpdate(
       }
 
       isEligibleForLabBasedCvdRisk -> {
-        dispatch(LoadStatinInfo(model.patientUuid))
+        dispatch(LoadStatinInfo(model.patientSummaryProfile!!.patient))
       }
 
       else -> {
@@ -295,7 +294,7 @@ class PatientSummaryUpdate(
       }
 
       isEligibleForNonLabBasedCvdRisk -> {
-        dispatch(LoadStatinInfo(model.patientUuid))
+        dispatch(LoadStatinInfo(model.patientSummaryProfile!!.patient))
       }
 
       else -> {
@@ -315,7 +314,7 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when {
-      event.newRiskRange == null -> dispatch(LoadStatinInfo(model.patientUuid))
+      event.newRiskRange == null -> dispatch(LoadStatinInfo(model.patientSummaryProfile!!.patient))
       event.oldRisk != null -> dispatch(UpdateCVDRisk(event.oldRisk, event.newRiskRange))
       else -> dispatch(SaveCVDRisk(model.patientUuid, event.newRiskRange))
     }
@@ -462,20 +461,6 @@ class PatientSummaryUpdate(
     }
 
     return dispatch(effect)
-  }
-
-  private fun cdssPilotStatusChecked(
-      event: CDSSPilotStatusChecked,
-      model: PatientSummaryModel
-  ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return if (event.isPilotEnabledForFacility) {
-      dispatch(
-          LoadClinicalDecisionSupportInfo(model.patientUuid),
-          LoadLatestScheduledAppointment(model.patientUuid)
-      )
-    } else {
-      noChange()
-    }
   }
 
   private fun patientRegistrationDataLoaded(

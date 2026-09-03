@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump AGP to v9.4.0
+- Bump Lint to v32.4.0
 
 ## 2026.09.03
 

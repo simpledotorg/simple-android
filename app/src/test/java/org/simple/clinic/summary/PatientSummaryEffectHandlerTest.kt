@@ -988,9 +988,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when load statin info effect is received, then load statin info`() {
     //given
-    val bmiReading = BMIReading(height = 177f, weight = 53f)
-
-    whenever(patientRepository.patientImmediate(patientUuid)) doReturn TestData.patient(
+    val patient = TestData.patient(
         uuid = patientUuid,
         patientAgeDetails = PatientAgeDetails(
             ageValue = 55,
@@ -998,6 +996,9 @@ class PatientSummaryEffectHandlerTest {
             dateOfBirth = null,
         )
     )
+    val bmiReading = BMIReading(height = 177f, weight = 53f)
+
+    whenever(patientRepository.patientImmediate(patientUuid)) doReturn patient
     val medicalHistory = TestData.medicalHistory(isSmoking = Yes)
 
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
@@ -1012,7 +1013,7 @@ class PatientSummaryEffectHandlerTest {
         TestData.cvdRisk(riskScore = CVDRiskRange(27, 27))
 
     //when
-    testCase.dispatch(LoadStatinInfo(patientUuid))
+    testCase.dispatch(LoadStatinInfo(patient))
 
     //then
     testCase.assertOutgoingEvents(StatinInfoLoaded(

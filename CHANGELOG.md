@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Bump AGP to v9.4.0
+- Bump Lint to v32.4.0
+
+## 2026.09.03
+
+### Internal
+
 - Bump AndroidX Benchmark to v1.5.0-rc02
 - Bump Sentry to v8.54.0
 - Bump Sentry Android to v6.20.0
@@ -23,11 +30,15 @@
 - Update GH Actions `setup-jdk` to v6
 - Replaced deprecated Gradle Kotlin DSL by project property delegates with explicit project.property(...) access to improve Gradle 10 compatibility.
 
-
 ### Changes
 
 - Enabled CDSS nudges for all countries, previously limited to Sri Lanka and Ethiopia.
 - Applied the lower blood pressure threshold of 130/80 for diabetic patients in Sri Lanka.
+
+### Fixes
+
+- Fixed a crash when loading statin information for a patient.
+- Fixed a crash when loading the patient's assigned facility.
 
 ## 2026.08.31
 

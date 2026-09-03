@@ -36,7 +36,7 @@ class AssignedFacilityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { (patientUuid, assignedFacilityId) ->
+          .doOnNext { (patientUuid, assignedFacilityId) ->
             patientRepository.updateAssignedFacilityId(patientUuid, assignedFacilityId)
           }
           .map { AssignedFacilityChanged }
@@ -47,8 +47,11 @@ class AssignedFacilityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { patientRepository.patientImmediate(it.patientUuid) }
-          .map(::getAssignedFacility)
+          .map { effect ->
+            patientRepository.patientImmediate(effect.patientUuid)
+                ?.let(::getAssignedFacility)
+                ?: Optional.empty()
+          }
           .map(::AssignedFacilityLoaded)
     }
   }

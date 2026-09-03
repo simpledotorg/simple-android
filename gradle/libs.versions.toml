@@ -1,5 +1,5 @@
 [versions]
-agp = "9.3.2"
+agp = "9.4.0"
 
 androidx-cameraView = "1.6.2"
 androidx-camera = "1.6.2"
@@ -21,7 +21,7 @@ ksp = "2.3.11"
 
 ktlint = "0.36.0"
 
-lint = "32.3.2"
+lint = "32.4.0"
 
 mobius = "2.1.2"
 

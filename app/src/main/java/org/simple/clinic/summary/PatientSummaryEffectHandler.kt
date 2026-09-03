@@ -307,14 +307,13 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect ->
-            val patientUuid = effect.patientUuid
-            val patient = patientRepository.patientImmediate(patientUuid)
+            val patient = effect.patient
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
-                patientUuid = patientUuid
+                patientUuid = patient.uuid
             )
-            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patientUuid)
-            val riskRange = cvdRiskRepository.getCVDRiskImmediate(patientUuid)?.riskScore
+            val patientAttribute = patientAttributeRepository.getPatientAttributeImmediate(patient.uuid)
+            val riskRange = cvdRiskRepository.getCVDRiskImmediate(patient.uuid)?.riskScore
             val canPrescribeStatin = if (country.isoCountryCode == Country.SRI_LANKA) {
               riskRange?.canPrescribeStatinInSriLanka ?: false
             } else {
@@ -322,7 +321,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             }
 
             StatinInfoLoaded(
-                age = patient!!.ageDetails.estimateAge(userClock),
+                age = patient.ageDetails.estimateAge(userClock),
                 medicalHistory = medicalHistory,
                 canPrescribeStatin = canPrescribeStatin,
                 riskRange = riskRange,
@@ -523,12 +522,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .flatMap(Function { facilityRepository.facility(it) })
   }
 
-  private fun getAssignedFacility(assignedFacilityId: UUID?): Optional<Facility> {
-    return Optional
-        .ofNullable(assignedFacilityId)
-        .flatMap { facilityRepository.facility(it) }
-  }
-
   private fun mapPatientProfileToSummaryProfile(
       patientProfile: PatientProfile,
       facility: Optional<Facility>
@@ -564,7 +557,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
             missingPhoneReminderRepository
                 .markReminderAsShownFor(effect.patientUuid)
                 .subscribeOn(scheduler)
-                .andThen(Observable.empty<PatientSummaryEvent>())
+                .andThen(Observable.empty())
           }
     }
   }

@@ -2463,7 +2463,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadStatinInfo(patientUuid))
+            hasEffects(LoadStatinInfo(model.patientSummaryProfile!!.patient))
         ))
   }
 
@@ -2496,14 +2496,15 @@ class PatientSummaryUpdateTest {
 
   @Test
   fun `when cvd risk score is calculated and both range and old cvd risk are null, then load statin info`() {
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
     updateSpec
-        .given(defaultModel)
+        .given(model)
         .whenEvent(CVDRiskCalculated(
             oldRisk = null,
             newRiskRange = null
         ))
         .then(assertThatNext(
-            hasEffects(LoadStatinInfo(defaultModel.patientUuid))
+            hasEffects(LoadStatinInfo(model.patientSummaryProfile!!.patient))
         ))
   }
 
@@ -2995,7 +2996,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadStatinInfo(patientUuid))
+            hasEffects(LoadStatinInfo(model.patientSummaryProfile!!.patient))
         ))
   }
 

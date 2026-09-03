@@ -83,7 +83,9 @@ data class UpdateCVDRisk(
     val newRiskRange: CVDRiskRange
 ) : PatientSummaryEffect()
 
-data class LoadStatinInfo(val patientUuid: UUID) : PatientSummaryEffect()
+data class LoadStatinInfo(
+    val patient: Patient
+) : PatientSummaryEffect()
 
 data class LoadCVDRiskInfo(val patientUuid: UUID) : PatientSummaryEffect()
 

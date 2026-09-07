@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Bump AGP to v9.4.0
+- Bump Lint to v32.4.0
+
+## 2026.09.03
+
+### Internal
+
 - Bump AndroidX Benchmark to v1.5.0-rc02
 - Bump Sentry to v8.54.0
 - Bump Sentry Android to v6.20.0

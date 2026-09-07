@@ -125,10 +125,17 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { patientRepository.patientImmediate(it.patientUuid) }
-          .map {
-            val assignedFacility = getAssignedFacility(it).toNullable()
-            AppointmentFacilitiesLoaded(assignedFacility, currentFacility.get())
+          .map { effect ->
+            val patient = patientRepository.patientImmediate(effect.patientUuid)
+
+            val assignedFacility = patient
+                ?.let(::getAssignedFacility)
+                ?.toNullable()
+
+            AppointmentFacilitiesLoaded(
+                assignedFacility = assignedFacility,
+                currentFacility = currentFacility.get()
+            )
           }
     }
   }

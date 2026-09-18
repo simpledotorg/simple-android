@@ -6,8 +6,6 @@
 
 - Bump AGP to v9.4.0
 - Bump Lint to v32.4.0
-- Enabled R8 obfuscation for production builds to improve application code protection. 
-- Preserved generated Room DAO class names to maintain SQL performance monitoring functionality.
 
 ## 2026.09.03
 

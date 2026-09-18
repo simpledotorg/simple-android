@@ -46,6 +46,12 @@
     <fields>;
 }
 
+# SyncProgress is serialized by Moshi's reflective EnumJsonAdapter.
+# Keep enum field names unchanged so Moshi can resolve them by reflection.
+-keepclassmembers enum org.simple.clinic.sync.SyncProgress {
+    <fields>;
+}
+
 # The name of @JsonClass types is used to look up the generated adapter.
 -keepnames @com.squareup.moshi.JsonClass class *
 

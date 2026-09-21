@@ -8,6 +8,7 @@
 - Bump Sentry Android to v6.22.0
 - Bump AndroidX Room to v2.8.5
 - Bump KSP to v2.3.12
+- Bump Kotlin to v2.4.20
 
 ## 2026.09.18
 

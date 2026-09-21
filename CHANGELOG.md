@@ -12,6 +12,7 @@
 - Bump AndroidX Benchmark to v1.5.0
 - Bump Compose BOM to v2026.09.00
 - Bump sqlCipher to v4.19.0
+- Bump necojackarc auto request review to v0.14.0
 
 ## 2026.09.18
 

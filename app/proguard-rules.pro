@@ -1,8 +1,8 @@
-# No obfuscation because open source
-# We depend on the convention of generated DAO names by Room in order to support performance profiling.
-# If you decide to obfuscate the final APK, please verify the performance profiling tool continues to function.
+# We obfuscate the final APK while keeping generated Room DAO names unchanged.
+# We depend on the convention of generated DAO names by Room to support performance profiling.
+# If you modify this rule, please verify that the performance profiling tool continues to function.
 # See: https://github.com/simpledotorg/simple-android/issues/2470
--dontobfuscate
+-keepnames class **_RoomDao_Impl
 
 # We process generated Room DAO metadata and use a runtime exception for performance profiling.
 # If you remove this, please ensure that the profiling does not break.
@@ -43,6 +43,12 @@
 # Enum field names are used by the integrated EnumJsonAdapter.
 # Annotate enums with @JsonClass(generateAdapter = false) to use them with Moshi.
 -keepclassmembers @com.squareup.moshi.JsonClass class * extends java.lang.Enum {
+    <fields>;
+}
+
+# SyncProgress is serialized by Moshi's reflective EnumJsonAdapter.
+# Keep enum field names unchanged so Moshi can resolve them by reflection.
+-keepclassmembers enum org.simple.clinic.sync.SyncProgress {
     <fields>;
 }
 

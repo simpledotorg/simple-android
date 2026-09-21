@@ -11,6 +11,7 @@
 - Bump Kotlin to v2.4.20
 - Bump AndroidX Benchmark to v1.5.0
 - Bump Compose BOM to v2026.09.00
+- Bump sqlCipher to v4.19.0
 
 ## 2026.09.18
 

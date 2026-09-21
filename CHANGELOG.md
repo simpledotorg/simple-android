@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Bump Sentry to v8.57.0
+
+## 2026.09.18
+
+### Internal
+
 - Bump AGP to v9.4.0
 - Bump Lint to v32.4.0
 

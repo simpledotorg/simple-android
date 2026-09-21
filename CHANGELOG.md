@@ -10,6 +10,7 @@
 - Bump KSP to v2.3.12
 - Bump Kotlin to v2.4.20
 - Bump AndroidX Benchmark to v1.5.0
+- Bump Compose BOM to v2026.09.00
 
 ## 2026.09.18
 

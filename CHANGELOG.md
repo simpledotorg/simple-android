@@ -13,6 +13,8 @@
 - Bump Compose BOM to v2026.09.00
 - Bump sqlCipher to v4.19.0
 - Bump necojackarc auto request review to v0.14.0
+- Enabled R8 obfuscation for production builds to improve application code protection.
+- Preserved generated Room DAO class names to maintain SQL performance monitoring functionality.
 
 ## 2026.09.18
 

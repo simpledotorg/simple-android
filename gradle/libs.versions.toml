@@ -4,7 +4,7 @@ agp = "9.4.0"
 androidx-cameraView = "1.6.2"
 androidx-camera = "1.6.2"
 androidx-paging = "3.5.1"
-androidx-room = "2.8.4"
+androidx-room = "2.8.5"
 androidx-work = "2.11.2"
 androidx-security-crypto = "1.1.0"
 androidx-viewmodel = "2.11.0"
@@ -14,10 +14,10 @@ androidx-activity = "1.13.0"
 chucker = "4.3.0"
 dagger = "2.60.1"
 
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 kotlinx-serialization = "1.11.0"
 
-ksp = "2.3.11"
+ksp = "2.3.12"
 
 ktlint = "0.36.0"
 
@@ -39,11 +39,11 @@ coroutines = "1.11.0"
 
 compose-compiler = "1.5.13"
 
-androidx-compose-bom = "2026.08.00"
+androidx-compose-bom = "2026.09.00"
 
 composeThemeAdapter = "0.36.0"
 
-sqlCipher = "4.18.0"
+sqlCipher = "4.19.0"
 
 [libraries]
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -180,7 +180,7 @@ rx-java = "io.reactivex.rxjava2:rxjava:2.2.21"
 rx-kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
 rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 
-sentry-android = "io.sentry:sentry-android:8.54.0"
+sentry-android = "io.sentry:sentry-android:8.57.0"
 
 signaturepad = "com.github.gcacace:signature-pad:1.4.0"
 
@@ -224,13 +224,13 @@ sqlCipher = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlCipher
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
-androidx-benchmark = { id = "androidx.benchmark", version = "1.5.0-rc02" }
+androidx-benchmark = { id = "androidx.benchmark", version = "1.5.0" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version = "4.5.0" }
-sentry = { id = "io.sentry.android.gradle", version = "6.20.0" }
+sentry = { id = "io.sentry.android.gradle", version = "6.22.0" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

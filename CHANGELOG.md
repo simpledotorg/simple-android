@@ -4,6 +4,22 @@
 
 ### Internal
 
+- Bump Sentry to v8.57.0
+- Bump Sentry Android to v6.22.0
+- Bump AndroidX Room to v2.8.5
+- Bump KSP to v2.3.12
+- Bump Kotlin to v2.4.20
+- Bump AndroidX Benchmark to v1.5.0
+- Bump Compose BOM to v2026.09.00
+- Bump sqlCipher to v4.19.0
+- Bump necojackarc auto request review to v0.14.0
+- Enabled R8 obfuscation for production builds to improve application code protection.
+- Preserved generated Room DAO class names to maintain SQL performance monitoring functionality.
+
+## 2026.09.18
+
+### Internal
+
 - Bump AGP to v9.4.0
 - Bump Lint to v32.4.0
 

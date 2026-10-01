@@ -4,6 +4,10 @@
 
 ### Internal
 
+## 2026.09.24
+
+### Internal
+
 - Bump Sentry to v8.57.0
 - Bump Sentry Android to v6.22.0
 - Bump AndroidX Room to v2.8.5

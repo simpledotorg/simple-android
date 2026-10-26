@@ -132,7 +132,7 @@ class InstantSearchUpdate @Inject constructor(
       ongoingPatientEntry = ongoingPatientEntry.withPatientPrefillInfo(model.patientPrefillInfo!!, model.additionalIdentifier!!, dateTimeFormatter)
     }
 
-    if (model.isAdditionalIdentifierBpPassport) {
+    if (model.isAdditionalIdentifierBpPassport || model.isAdditionalIdentifierAnSHRID) {
       ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
     }
 

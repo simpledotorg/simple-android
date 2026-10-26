@@ -6,6 +6,7 @@ import com.google.android.gms.dynamite.DynamiteModule.LoadingException
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_CODE_128
 import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE
 import com.google.mlkit.vision.common.InputImage
 import org.simple.clinic.util.BitmapUtils
@@ -17,7 +18,7 @@ class MLKitQrCodeAnalyzer(
 ) : ImageAnalysis.Analyzer {
 
   private val options = BarcodeScannerOptions.Builder()
-      .setBarcodeFormats(FORMAT_QR_CODE)
+      .setBarcodeFormats(FORMAT_QR_CODE, FORMAT_CODE_128)
       .build()
   private val scanner = BarcodeScanning.getClient(options)
 

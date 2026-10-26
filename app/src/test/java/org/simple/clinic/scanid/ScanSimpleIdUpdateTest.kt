@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
@@ -53,57 +54,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the qr code is scanned and the returned string is json then parse the json into object`() {
-    spec
-        .given(defaultModel)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned(expectedJson))
-        .then(assertThatNext(
-            hasModel(defaultModel
-                .clearInvalidQrCodeError()
-                .searching()),
-            hasEffects(ParseScannedJson(expectedJson))
-        ))
-  }
-
-  @Test
-  fun `when json is parsed with a valid health id number, then search patient with NHID and save patient prefill info`() {
-    val indiaNationalHealthID = "12341234123412"
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    )
-    val indiaNHIDInfo = indiaNHIDInfoPayload.healthIdNumber
-    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    spec
-        .given(defaultModel)
-        .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
-        .then(assertThatNext(
-            hasModel(defaultModel.searching().patientPrefillInfoChanged(patientPrefillInfo)),
-            hasEffects(SearchPatientByIdentifier(identifier))
-        ))
-  }
-
-  @Test
-  fun `when json is parsed with an invalid health id number, then search patient with NHID and save patient prefill info`() {
-    val indiaNationalHealthID = ""
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    )
-    val indiaNHIDInfo = indiaNHIDInfoPayload.healthIdNumber
-    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-
-    spec
-        .given(defaultModel)
-        .whenEvent(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
-        .then(assertThatNext(
-            hasModel(defaultModel.notSearching().invalidQrCode()),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
   fun `when the entered short code is valid, then open patient search`() {
     val enteredShortCode = "1234567"
     val model = defaultModel.enteredCodeChanged(EnteredCodeInput(enteredShortCode))
@@ -141,29 +91,6 @@ class ScanSimpleIdUpdateTest {
 
     spec
         .given(defaultModel)
-        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OnlinePatientLookupWithIdentifier(identifier))
-        ))
-  }
-
-  @Test
-  fun `when NHID is scanned and patient is not found, then send the identifier to patient search screen with patient prefill info`() {
-    val patients = emptyList<Patient>()
-
-    val indiaNationalHealthID = "12341234123412"
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    )
-    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    val patientPrefillInfoChangedModel = defaultModel.patientPrefillInfoChanged(patientPrefillInfo)
-
-    spec
-        .given(patientPrefillInfoChangedModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
             hasNoModel(),
@@ -341,22 +268,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID, then parse the json into object`() {
-    val scannedId = "12341234123412"
-    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
-
-    spec
-        .given(defaultModel)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
-        .then(assertThatNext(
-            hasModel(defaultModel
-                .clearInvalidQrCodeError()
-                .searching()),
-            hasEffects(ParseScannedJson(scannedId))
-        ))
-  }
-
-  @Test
   fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID but the user scanned bp passport, then show scanned qr code error`() {
     val scannedId = "0486cdb8-b617-41bf-9b9f-4a89434c68cf"
     val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
@@ -484,4 +395,74 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when a valid SHR barcode is scanned, then search for patient with SHR identifier`() {
+    val shrId = "98146050888"
+    val identifier = Identifier(shrId, BangladeshSharedHealthRecordId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(shrId))
+        .then(assertThatNext(
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when a QR code containing multiline SHR details is scanned, then search using the SHR ID`() {
+    val shrId = "98146050888"
+    val qrPayload = """
+    Nilphamari 250 bed District Hospital
+    Shah Ali Akbar Ashrafi
+    $shrId
+    male
+    59 Y 10 M 7 D
+    Mohammadpur, Dhaka, Dhaka
+    01-04-2026
+    5 BDT
+  """.trimIndent()
+
+    val identifier = Identifier(shrId, BangladeshSharedHealthRecordId)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(qrPayload))
+        .then(assertThatNext(
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when scanned text does not contain a valid SHR ID or BP Passport, then show invalid QR error`() {
+    val invalidText = "Not a valid SHR ID"
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(invalidText))
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching().invalidQrCode()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when an invalid SHR ID is scanned, then show invalid QR error`() {
+    val invalidShrId = "88146050888"
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(invalidShrId))
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching().invalidQrCode()),
+            hasNoEffects()
+        ))
+  }
 }
+

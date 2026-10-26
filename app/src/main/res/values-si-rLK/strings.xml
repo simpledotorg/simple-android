@@ -691,7 +691,6 @@
   <string name="sheet_bp_passport_register_new_patient">නව රෝගියා ලියාපදංචි කරන්න</string>
   <string name="sheet_bp_passport_add_to_existing_patient">දැනටමත් සිටින රෝගියෙකුට එකතු කරන්න</string>
   <string name="sheet_bp_passport_number">බීපී පාස්පෝට් %1$s</string>
-  <string name="sheet_national_health_id">ජාතික සෞඛ්‍ය හැඳුනුම්පත %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ට අනුයුක්ත කර ඇත</string>

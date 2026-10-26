@@ -690,7 +690,6 @@
   <string name="sheet_bp_passport_register_new_patient">புதிய நோயாளரைப் பதிவுசெய்க</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ஏற்கனவே இருக்கும் நோயாளரில் சேர்க்கவும்</string>
   <string name="sheet_bp_passport_number">பீபி பாஸ்போர்ட் %1$s</string>
-  <string name="sheet_national_health_id">தேசிய சுகாதார ஐடி %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s க்கு ஒதுக்கப்பட்டுள்ளது</string>

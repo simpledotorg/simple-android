@@ -686,7 +686,6 @@
   <string name="sheet_bp_passport_register_new_patient">Haro xiwamanicho boresi</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Fuloha xawanicho ledi</string>
   <string name="sheet_bp_passport_number">Mundeete xiiwo passporte  %1$s</string>
-  <string name="sheet_national_health_id">Dagoomu fayyimmate ayimma %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">La’ate %1$s</string>

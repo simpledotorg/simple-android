@@ -58,9 +58,9 @@ class EnteredCodeInputTest {
   }
 
   @Test
-  fun `when entered code length is equal to 14 then validation should succeed`() {
+  fun `when entered code length is equal to 11 ans tarts with 9 then validation should succeed`() {
     //given
-    val enteredCodeInput = EnteredCodeInput(enteredCodeText = "34567899876543")
+    val enteredCodeInput = EnteredCodeInput(enteredCodeText = "91234567890")
 
     //when
     val result = enteredCodeInput.validate()

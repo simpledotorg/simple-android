@@ -11,8 +11,6 @@ data class ValidateEnteredCode(val enteredCode: EnteredCodeInput) : ScanSimpleId
 
 data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
 
-data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()
-
 data class OnlinePatientLookupWithIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
 
 data class SaveCompleteMedicalRecords(

@@ -12,12 +12,12 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.Unicode
@@ -122,7 +122,16 @@ data class Identifier(
     data object SriLankaPersonalHealthNumber : IdentifierType()
 
     @Parcelize
-    data object BangladeshSharedHealthRecordId: IdentifierType()
+    data object BangladeshSharedHealthRecordId : IdentifierType() {
+
+      @IgnoredOnParcel
+      private val shrIdRegex = Regex("^9\\d{10}$")
+
+      fun isValid(value: String): Boolean {
+        return shrIdRegex.matches(value)
+      }
+
+    }
 
 
     @Parcelize

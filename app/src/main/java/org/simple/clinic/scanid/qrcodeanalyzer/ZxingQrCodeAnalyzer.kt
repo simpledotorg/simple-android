@@ -27,7 +27,7 @@ class ZxingQrCodeAnalyzer(
 
   private val reader = MultiFormatReader().apply {
     val map = mapOf(
-        DecodeHintType.POSSIBLE_FORMATS to arrayListOf(BarcodeFormat.QR_CODE)
+        DecodeHintType.POSSIBLE_FORMATS to arrayListOf(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128)
     )
     setHints(map)
   }

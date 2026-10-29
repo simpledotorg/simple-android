@@ -36,6 +36,7 @@
   <string name="identifiertype_india_national_health_id">National Health ID</string>
   <string name="identifiertype_sri_lanka_national_id">National ID</string>
   <string name="identifiertype_sri_lanka_personal_health_number">Personal Health Number</string>
+  <string name="identifiertype_bangladesh_shared_health_record_id">Shared Health Record ID</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Name, phone, or ID</string>
@@ -802,7 +803,7 @@
   <string name="sheet_bp_passport_register_new_patient">Register new patient</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Add to existing patient</string>
   <string name="sheet_bp_passport_number">BP Passport %1$s</string>
-  <string name="sheet_national_health_id">National Health ID %1$s</string>
+  <string name="sheet_shared_health_record_id">HID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Assigned to %1$s</string>

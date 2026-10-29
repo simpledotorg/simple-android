@@ -16,6 +16,9 @@
 - Enabled R8 obfuscation for production builds to improve application code protection.
 - Preserved generated Room DAO class names to maintain SQL performance monitoring functionality.
 
+### Changes
+- Add Bangladesh SHR identifier support to patient scanning
+
 ## 2026.09.18
 
 ### Internal

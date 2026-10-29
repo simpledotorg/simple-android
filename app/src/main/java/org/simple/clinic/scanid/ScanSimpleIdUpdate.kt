@@ -3,15 +3,13 @@ package org.simple.clinic.scanid
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.INDIA_NHID_LENGTH
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId.isValid
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
@@ -39,7 +37,6 @@ class ScanSimpleIdUpdate @Inject constructor(
       is EnteredCodeSearched -> next(model.enteredCodeChanged(event.enteredCode), ValidateEnteredCode(event.enteredCode))
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
-      is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
       InvalidQrCode -> invalidQrCode(model)
       is OnlinePatientLookupWithIdentifierCompleted -> onlinePatientLookupWithIdentifierCompleted(model, event)
       is CompleteMedicalRecordsSaved -> patientsFoundByOnlineLookup(event.completeMedicalRecords)
@@ -84,36 +81,6 @@ class ScanSimpleIdUpdate @Inject constructor(
       OpenPatientSummary(patientId)
     }
     return dispatch(effect)
-  }
-
-  private fun scannedQRCodeParsed(
-      model: ScanSimpleIdModel,
-      event: ScannedQRCodeJsonParsed
-  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (event.patientPrefillInfo != null && event.healthIdNumber != null) {
-      searchPatientByIdentifierIfHealthIdNumberIsValid(event.patientPrefillInfo, event.healthIdNumber, model)
-    } else {
-      noChange()
-    }
-  }
-
-  private fun searchPatientByIdentifierIfHealthIdNumberIsValid(
-      patientPrefillInfo: PatientPrefillInfo,
-      healthIdNumber: String,
-      model: ScanSimpleIdModel
-  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> =
-      if (healthIdNumberIsValid(healthIdNumber)) {
-        val identifier = Identifier(healthIdNumber, IndiaNationalHealthId)
-        next(model = model.searching().patientPrefillInfoChanged(patientPrefillInfo), SearchPatientByIdentifier(identifier))
-      } else {
-        next(model = model.notSearching().invalidQrCode())
-      }
-
-  private fun healthIdNumberIsValid(healthIdNumber: String): Boolean {
-    return when (healthIdNumber.length) {
-      INDIA_NHID_LENGTH -> true
-      else -> false
-    }
   }
 
   private fun patientSearchByIdentifierCompleted(
@@ -179,20 +146,36 @@ class ScanSimpleIdUpdate @Inject constructor(
     return try {
       searchPatientByBpPassport(event, model, clearInvalidQrCodeModel)
     } catch (e: Exception) {
-      searchPatientByNHID(model, clearInvalidQrCodeModel, event)
+      searchPatientBySharedHealthRecordId(event, model, clearInvalidQrCodeModel)
     }
   }
 
-  private fun searchPatientByNHID(
+  private fun searchPatientBySharedHealthRecordId(
+      event: ScanSimpleIdScreenQrCodeScanned,
       model: ScanSimpleIdModel,
-      clearInvalidQrCodeModel: ScanSimpleIdModel,
-      event: ScanSimpleIdScreenQrCodeScanned
-  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> =
-      if (model.isOpenedFromEditPatientScreenToAddBpPassport) {
-        next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-      } else {
-        searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
-      }
+      clearInvalidQrCodeModel: ScanSimpleIdModel
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val sharedHealthRecordId = extractSharedHealthRecordId(event.text)
+
+    if (sharedHealthRecordId == null || !isValid(sharedHealthRecordId)) {
+      return invalidQrCode(model)
+    }
+
+    val identifier = Identifier(sharedHealthRecordId, Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+
+    return if (model.isOpenedFromEditPatientScreenToAddBpPassport) {
+      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+    } else {
+      next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
+    }
+  }
+
+  private fun extractSharedHealthRecordId(scannedText: String): String? {
+    return scannedText
+        .lineSequence()
+        .map(String::trim)
+        .firstOrNull { isValid(it) }
+  }
 
   private fun searchPatientByBpPassport(
       event: ScanSimpleIdScreenQrCodeScanned,
@@ -207,20 +190,6 @@ class ScanSimpleIdUpdate @Inject constructor(
     } else {
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     }
-  }
-
-  private fun searchPatientWhenNHIDEnabled(
-      model: ScanSimpleIdModel,
-      event: ScanSimpleIdScreenQrCodeScanned
-  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return searchPatientWithNhid(model, event)
-  }
-
-  private fun searchPatientWithNhid(
-      model: ScanSimpleIdModel,
-      event: ScanSimpleIdScreenQrCodeScanned
-  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return next(model = model.searching(), ParseScannedJson(event.text))
   }
 
   private fun enteredCodeValidated(

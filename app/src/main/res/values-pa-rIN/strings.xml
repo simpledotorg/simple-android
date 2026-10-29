@@ -687,7 +687,6 @@
   <string name="sheet_bp_passport_register_new_patient">ਨਵੇਂ ਮਰੀਜ਼ ਨੂੰ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ਮੌਜੂਦਾ ਮਰੀਜ਼ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="sheet_bp_passport_number">ਬੀਪੀ ਪਾਸਪੋਰਟ %1$s</string>
-  <string name="sheet_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ਨੂੰ ਸਪੁਰਦ ਕੀਤਾ ਹੈ</string>

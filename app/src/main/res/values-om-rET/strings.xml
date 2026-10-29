@@ -692,7 +692,6 @@
   <string name="sheet_bp_passport_register_new_patient">Dhukkubsattoota haaraa galmeessi</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Dhukkumbsattoota jiranitti dabali</string>
   <string name="sheet_bp_passport_number">Paaspoortii BP%1$s</string>
-  <string name="sheet_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Gara %1$s qajeelfame</string>

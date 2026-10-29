@@ -6,6 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 
 @Parcelize
@@ -33,6 +34,8 @@ data class InstantSearchModel(
   val isAdditionalIdentifierAnNHID: Boolean
     get() = additionalIdentifier?.type == IndiaNationalHealthId && hasAdditionalIdentifier
 
+  val isAdditionalIdentifierAnSHRID: Boolean
+    get() = additionalIdentifier?.type == BangladeshSharedHealthRecordId && hasAdditionalIdentifier
   val canBePrefilled: Boolean
     get() = patientPrefillInfo != null && isAdditionalIdentifierAnNHID
 

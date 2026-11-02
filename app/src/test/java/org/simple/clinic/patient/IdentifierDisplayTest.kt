@@ -5,6 +5,7 @@ import org.junit.Test
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
@@ -74,6 +75,12 @@ class IdentifierDisplayTest {
         val sriLankaPersonalHealthNumber = Identifier(value = sriLankaPersonalHealthNumberValue, type = SriLankaPersonalHealthNumber)
 
         IdentifierTestData(identifier = sriLankaPersonalHealthNumber, expectedDisplayValue = sriLankaPersonalHealthNumberValue)
+      }
+      BangladeshSharedHealthRecordId -> {
+        val bangladeshSharedHealthRecordIdValue = "98765432111"
+        val bangladeshSharedHealthRecordId = Identifier(value = bangladeshSharedHealthRecordIdValue, type = BangladeshSharedHealthRecordId)
+
+        IdentifierTestData(identifier = bangladeshSharedHealthRecordId, expectedDisplayValue = bangladeshSharedHealthRecordIdValue)
       }
     }
   }

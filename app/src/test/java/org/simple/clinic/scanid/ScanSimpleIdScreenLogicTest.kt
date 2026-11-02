@@ -9,7 +9,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
@@ -17,7 +16,6 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRe
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
-import org.simple.clinic.TestData
 
 class ScanSimpleIdScreenLogicTest {
 
@@ -135,8 +133,6 @@ class ScanSimpleIdScreenLogicTest {
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
-        qrCodeJsonParser = mock(),
-        country = TestData.country(isoCountryCode = Country.INDIA),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectHandler::handle,
     )

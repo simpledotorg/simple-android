@@ -6,7 +6,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 
 class ScannedQrCodeUiRendererTest {
 
@@ -30,18 +30,18 @@ class ScannedQrCodeUiRendererTest {
   }
 
   @Test
-  fun `when the qr code is scanned by a national health id number, render national health id values in scanned qr code sheet`() {
+  fun `when the qr code is scanned by a shared health record id, render shared health record id values in scanned qr code sheet`() {
     // given
     val defaultModel = ScannedQrCodeModel.create(Identifier(
-        value = "28-3123-2283-6682",
-        type = IndiaNationalHealthId
+        value = "98146050888",
+        type = BangladeshSharedHealthRecordId
     ))
 
     // when
     uiRenderer.render(defaultModel)
 
     // then
-    verify(ui).showIndianNationalHealthIdValue()
+    verify(ui).showBangladeshSharedHealthRecordId()
     verifyNoMoreInteractions(ui)
   }
 }

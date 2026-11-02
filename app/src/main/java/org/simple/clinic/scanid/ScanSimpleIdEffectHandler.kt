@@ -16,8 +16,6 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    private val qrCodeJsonParser: QRCodeJsonParser,
-    private val country: Country,
     private val lookupPatientOnline: LookupPatientOnline,
     @Assisted private val viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>
 ) {
@@ -32,7 +30,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addConsumer(ScanSimpleIdViewEffect::class.java, viewEffectsConsumer::accept, schedulersProvider.ui())
       .addTransformer(ValidateEnteredCode::class.java, validateEnteredCode())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
-      .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
       .addTransformer(OnlinePatientLookupWithIdentifier::class.java, onlinePatientLookupWithIdentifier())
       .addTransformer(SaveCompleteMedicalRecords::class.java, saveCompleteMedicalRecords())
       .build()
@@ -56,34 +53,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             val results = lookupPatientOnline.lookupWithIdentifier(it.identifier.value)
             OnlinePatientLookupWithIdentifierCompleted(results, it.identifier)
           }
-    }
-  }
-
-  private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            try {
-              parseJsonBasedOnCountry(it)
-            } catch (e: JsonDataException) {
-              InvalidQrCode
-            } catch (e: JsonEncodingException) {
-              InvalidQrCode
-            }
-          }
-    }
-  }
-
-  private fun parseJsonBasedOnCountry(effect: ParseScannedJson): ScanSimpleIdEvent {
-    return when (country.isoCountryCode) {
-      Country.INDIA -> {
-        val payload = qrCodeJsonParser.parseQRCodeJson(effect.text)
-        val healthIdNumber = payload?.healthIdNumber?.filter { it.isDigit() }
-
-        ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), healthIdNumber)
-      }
-      else -> InvalidQrCode
     }
   }
 

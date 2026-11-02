@@ -22,6 +22,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
@@ -109,6 +110,7 @@ data class BusinessId(
           IndiaNationalHealthId -> IndiaNationalHealthIdMetaDataV1
           SriLankaNationalId -> SriLankaNationIdMetaDataV1
           SriLankaPersonalHealthNumber -> SriLankaPersonalHealthNumberMetaDataV1
+          BangladeshSharedHealthRecordId -> BangladeshSharedHealthRecordIdV1
           is IdentifierType.Unknown -> null
         }
 
@@ -135,6 +137,9 @@ data class BusinessId(
     data object SriLankaPersonalHealthNumberMetaDataV1 : MetaDataVersion()
 
     @Parcelize
+    data object BangladeshSharedHealthRecordIdV1 : MetaDataVersion()
+
+    @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
@@ -144,7 +149,8 @@ data class BusinessId(
             MedicalRecordNumberMetaDataV1 to "org.simple.ethiopia_medical_record.meta.v1",
             IndiaNationalHealthIdMetaDataV1 to "org.simple.india_national_health_id.meta.v1",
             SriLankaNationIdMetaDataV1 to "org.simple.sri_lanka_national_id.meta.v1",
-            SriLankaPersonalHealthNumberMetaDataV1 to "org.simple.sri_lanka_personal_health_number.meta.v1"
+            SriLankaPersonalHealthNumberMetaDataV1 to "org.simple.sri_lanka_personal_health_number.meta.v1",
+            BangladeshSharedHealthRecordIdV1 to "org.simple.bangladesh_shared_health_record_id.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

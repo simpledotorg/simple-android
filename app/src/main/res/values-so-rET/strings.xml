@@ -688,7 +688,6 @@
   <string name="sheet_bp_passport_register_new_patient">Diiwaangeli bukaan cusub</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Ku dar bukaan hore</string>
   <string name="sheet_bp_passport_number">Baasaboorka BP %1$s</string>
-  <string name="sheet_national_health_id">Aqoonsiga Caafimaadka Qaran %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Loo xilsaaray %1$s</string>

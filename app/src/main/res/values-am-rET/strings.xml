@@ -691,7 +691,6 @@
   <string name="sheet_bp_passport_register_new_patient">አዲስ ታካሚ ይመዝግቡ</string>
   <string name="sheet_bp_passport_add_to_existing_patient">ወደ ነባር ህመምተኛ ያክሉ</string>
   <string name="sheet_bp_passport_number">የ BP  ፓስፖርት %1$s</string>
-  <string name="sheet_national_health_id">ብሄራዊ የጤና መታወቂያ%1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">ለ %1$s ተመድቧል</string>

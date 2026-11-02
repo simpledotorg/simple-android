@@ -40,11 +40,6 @@ data class PatientSearchByIdentifierCompleted(
     val identifier: Identifier
 ) : ScanSimpleIdEvent()
 
-data class ScannedQRCodeJsonParsed(
-    val patientPrefillInfo: PatientPrefillInfo?,
-    val healthIdNumber: String?
-) : ScanSimpleIdEvent()
-
 data object InvalidQrCode : ScanSimpleIdEvent() {
   override val analyticsName = "Scan Simple Card:Invalid QR Code scanned"
 }

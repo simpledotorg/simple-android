@@ -695,7 +695,6 @@
   <string name="sheet_bp_passport_register_new_patient">Registrar paciente nuevo</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Añadir a paciente existente</string>
   <string name="sheet_bp_passport_number">BP Passport %1$s</string>
-  <string name="sheet_national_health_id">ID de Salud Nacional %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Asignado a %1$s</string>

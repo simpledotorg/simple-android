@@ -1,15 +1,14 @@
 package org.simple.clinic.scanid
 
+import org.junit.After
+import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import org.junit.After
-import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -23,15 +22,12 @@ class ScanSimpleIdEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<ScanSimpleIdUiActions>()
-  private val qrCodeJsonParser = mock<QRCodeJsonParser>()
   private val lookupPatientOnline = mock<LookupPatientOnline>()
   private val viewEffectHandler = ScanSimpleIdViewEffectHandler(uiActions)
   private val viewEffectConsumer = viewEffectHandler::handle
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      qrCodeJsonParser = qrCodeJsonParser,
-      country = TestData.country(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
       viewEffectsConsumer = viewEffectConsumer
   ).build())
@@ -63,96 +59,6 @@ class ScanSimpleIdEffectHandlerTest {
         patients = listOf(patient),
         identifier = identifier
     ))
-    verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when parse json into patient prefill info object effect is received, then parse the json`() {
-    // given
-    val expectedJson = """
-    {
-    "hidn":"12-3412-3456-7856",
-    "hid":"Mohit",
-    "name":"Mohit Ahuja",
-    "gender":"M",
-    "statelgd":"Maharashtra",
-    "distlgd":"Thane",
-    "dob":"12/12/1997",
-    "address":"Obvious HQ"
-     }
-     """
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = "12-3412-3456-7856"
-    )
-
-    whenever(qrCodeJsonParser.parseQRCodeJson(expectedJson)) doReturn indiaNHIDInfoPayload
-    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-    val healthIdNumber = "12341234567856"
-
-    // when
-    testCase.dispatch(ParseScannedJson(expectedJson))
-
-    // then
-    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo, healthIdNumber))
-    verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `show invalid qr code, when parsing json outside specified country`() {
-    // given
-    val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        patientRepository = patientRepository,
-        qrCodeJsonParser = qrCodeJsonParser,
-        country = TestData.country(isoCountryCode = Country.BANGLADESH),
-        lookupPatientOnline = lookupPatientOnline,
-        viewEffectsConsumer = viewEffectConsumer
-    ).build())
-
-    val expectedJson = """
-    {
-    "hidn":"1234123456785678",
-    "hid":"Mohit",
-    "name":"Mohit Ahuja",
-    "gender":"M",
-    "statelgd":"Maharashtra",
-    "distlgd":"Thane",
-    "dob":"12/12/1997",
-    "address":"Obvious HQ"
-     }
-     """
-
-    // when
-    testCase.dispatch(ParseScannedJson(expectedJson))
-
-    // then
-    testCase.assertOutgoingEvents(InvalidQrCode)
-    verifyNoInteractions(uiActions)
-
-    testCase.dispose()
-  }
-
-  @Test
-  fun `when parsing invalid json, then show invalid qr code`() {
-    // given
-    val expectedJson = """
-    {
-    "hodn":"1234123456785678",
-    "hid":"Mohit",
-    "name":"Mohit Ahuja",
-    "gender":"M",
-    "statelgd":"Maharashtra",
-    "distlgd":"Thane",
-    "dob":"12/12/1997",
-    "address":"Obvious HQ"
-     }
-     """
-
-    // when
-    testCase.dispatch(ParseScannedJson(expectedJson))
-
-    // then
-    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo = null, healthIdNumber = null))
     verifyNoInteractions(uiActions)
   }
 

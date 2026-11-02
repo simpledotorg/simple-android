@@ -129,6 +129,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
       IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType), false)
       Identifier.IdentifierType.BpPassport,
+      Identifier.IdentifierType.BangladeshSharedHealthRecordId,
       is Identifier.IdentifierType.Unknown -> throw IllegalArgumentException("Unknown alternative id: $alternateId")
     }.exhaustive()
   }

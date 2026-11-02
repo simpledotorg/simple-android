@@ -92,8 +92,8 @@ class ScannedQrCodeSheet : BaseBottomSheet<
     patientIdentifierNumberTextView.text = getString(R.string.sheet_bp_passport_number, identifier.displayValue())
   }
 
-  override fun showIndianNationalHealthIdValue() {
-    patientIdentifierNumberTextView.text = getString(R.string.sheet_national_health_id, identifier.displayValue())
+  override fun showBangladeshSharedHealthRecordId() {
+    patientIdentifierNumberTextView.text = getString(R.string.sheet_shared_health_record_id, identifier.displayValue())
   }
 
   override fun sendScannedQrCodeResult(blankScannedQRCodeResult: BlankScannedQRCodeResult) {

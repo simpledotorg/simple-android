@@ -12,6 +12,7 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
@@ -58,6 +59,7 @@ data class Identifier(
 
         SriLankaNationalId -> value
         SriLankaPersonalHealthNumber -> value
+        BangladeshSharedHealthRecordId -> value
         is Unknown -> value
       }
     } catch (e: StringIndexOutOfBoundsException) {
@@ -82,6 +84,7 @@ data class Identifier(
       IndiaNationalHealthId -> R.string.identifiertype_india_national_health_id
       SriLankaNationalId -> R.string.identifiertype_sri_lanka_national_id
       SriLankaPersonalHealthNumber -> R.string.identifiertype_sri_lanka_personal_health_number
+      BangladeshSharedHealthRecordId -> R.string.identifiertype_bangladesh_shared_health_record_id
       is Unknown -> R.string.identifiertype_unknown
     }
   }
@@ -119,6 +122,19 @@ data class Identifier(
     data object SriLankaPersonalHealthNumber : IdentifierType()
 
     @Parcelize
+    data object BangladeshSharedHealthRecordId : IdentifierType() {
+
+      @IgnoredOnParcel
+      private val shrIdRegex = Regex("^9\\d{10}$")
+
+      fun isValid(value: String): Boolean {
+        return shrIdRegex.matches(value)
+      }
+
+    }
+
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
@@ -128,7 +144,8 @@ data class Identifier(
             EthiopiaMedicalRecordNumber to "ethiopia_medical_record",
             IndiaNationalHealthId to "india_national_health_id",
             SriLankaNationalId to "sri_lanka_national_id",
-            SriLankaPersonalHealthNumber to "sri_lanka_personal_health_number"
+            SriLankaPersonalHealthNumber to "sri_lanka_personal_health_number",
+            BangladeshSharedHealthRecordId to "bangladesh_shr_id"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

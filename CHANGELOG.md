@@ -20,6 +20,7 @@
 - Add Bangladesh SHR identifier support to patient scanning
 - Add Bangladesh SHR identifier support to the edit patient and patient summary screens
 - Remove India National Health ID (NHID) support
+- Add the Health ID alongside the BP Passport on the patient entry screen in Bangladesh
 
 ## 2026.09.18
 

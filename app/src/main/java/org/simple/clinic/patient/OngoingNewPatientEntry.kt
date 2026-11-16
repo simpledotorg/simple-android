@@ -47,6 +47,7 @@ data class OngoingNewPatientEntry(
     val phoneNumber: PhoneNumber? = null,
     val identifier: Identifier? = null,
     val alternateId: Identifier? = null,
+    val shrId: Identifier? = null,
     val reminderConsent: ReminderConsent = Granted
 ) : Parcelable {
 
@@ -73,6 +74,10 @@ data class OngoingNewPatientEntry(
 
   fun withIdentifier(identifier: Identifier): OngoingNewPatientEntry {
     return this.copy(identifier = identifier)
+  }
+
+  fun withShrId(shrId: Identifier?): OngoingNewPatientEntry {
+    return this.copy(shrId = shrId)
   }
 
   fun withFullName(fullName: String): OngoingNewPatientEntry =

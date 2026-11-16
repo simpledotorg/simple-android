@@ -32,6 +32,7 @@ class PatientEntryViewEffectHandler(
       OpenMedicalHistoryEntryScreen -> uiActions.openMedicalHistoryEntryScreen()
       is HideValidationError -> hideValidationError(viewEffect.field)
       is ShowValidationErrors -> showValidationErrors(viewEffect.errors)
+      OpenScanShrIdScreen -> uiActions.openScanShrIdScreen()
     }.exhaustive()
   }
 

@@ -18,6 +18,7 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
   override fun render(model: PatientEntryModel) {
     val patientEntry = model.patientEntry
     identifierValueChangedCallback.pass(patientEntry.identifier.toOptional()) { renderIdentifier(patientEntry.identifier) }
+    renderShrId(model)
 
     if (model.hasColonyOrVillagesList) {
       ui.setColonyOrVillagesAutoComplete(model.colonyOrVillagesList!!)
@@ -43,9 +44,19 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
 
   private fun renderIdentifier(identifier: Identifier?) {
     if (identifier != null) {
-      ui.showIdentifierSection()
+      ui.showIdentifierSection(identifier)
     } else {
       ui.hideIdentifierSection()
+    }
+  }
+
+  private fun renderShrId(model: PatientEntryModel) {
+    val shrId = model.patientEntry.shrId
+
+    when {
+      shrId != null -> ui.displayShrId(shrId)
+      model.canAddShrId -> ui.showAddShrIdButton()
+      else -> ui.hideShrId()
     }
   }
 

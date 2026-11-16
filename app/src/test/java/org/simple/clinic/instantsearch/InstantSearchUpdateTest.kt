@@ -14,6 +14,7 @@ import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
@@ -265,6 +266,22 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveNewOngoingPatientEntry(ongoingPatientEntry))
+        ))
+  }
+
+  @Test
+  fun `when register new patient is clicked with an SHR ID, then save ongoing patient entry with the SHR ID and without a bp passport`() {
+    val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
+    val model = InstantSearchModel
+        .create(additionalIdentifier = shrId, searchQuery = null)
+        .facilityLoaded(TestData.facility(uuid = UUID.fromString("2bd05cc3-5c16-464d-87e1-25b6b1a8a99a")))
+
+    updateSpec
+        .given(model)
+        .whenEvent(RegisterNewPatientClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveNewOngoingPatientEntry(OngoingNewPatientEntry.fromFullName("").withShrId(shrId)))
         ))
   }
 

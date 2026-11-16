@@ -3,6 +3,7 @@ package org.simple.clinic.newentry
 import android.content.Context
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -27,9 +28,13 @@ import com.spotify.mobius.functions.Consumer
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
@@ -37,6 +42,8 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AlternativeIdInputField
@@ -63,9 +70,13 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNa
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom
+import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.applyInsetsBottomPadding
 import org.simple.clinic.util.applyStatusBarPadding
 import org.simple.clinic.util.lightStatusBar
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton
@@ -113,6 +124,14 @@ class PatientEntryScreen : BaseScreen<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  private val hotEvents = PublishSubject.create<PatientEntryEvent>()
 
   private val rootView
     get() = binding.root
@@ -225,6 +244,18 @@ class PatientEntryScreen : BaseScreen<
   private val saveButton
     get() = binding.saveButton
 
+  private val shrIdSection
+    get() = binding.shrIdSection
+
+  private val shrIdTextView
+    get() = binding.shrIdTextView
+
+  private val removeShrIdButton
+    get() = binding.removeShrIdButton
+
+  private val addShrIdButton
+    get() = binding.addShrIdButton
+
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
         requireContext(),
@@ -258,7 +289,9 @@ class PatientEntryScreen : BaseScreen<
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
-  override fun defaultModel() = PatientEntryModel.DEFAULT
+  override fun defaultModel() = PatientEntryModel.DEFAULT.copy(
+      isUserCountryBangladesh = country.isoCountryCode == Country.BANGLADESH
+  )
 
   override fun createInit() = PatientEntryInit()
 
@@ -275,7 +308,8 @@ class PatientEntryScreen : BaseScreen<
   )
 
   override fun events() = Observable
-      .merge(formChanges(), saveClicks(), consentChanges())
+      .mergeArray(formChanges(), saveClicks(), consentChanges(), shrIdClicks(), hotEvents)
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
       .cast<PatientEntryEvent>()
 
@@ -295,6 +329,19 @@ class PatientEntryScreen : BaseScreen<
     saveButtonFrame.applyInsetsBottomPadding()
     backButton.setOnClickListener { router.pop() }
     colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+
+    setFragmentResultListener(ScanShrId) { _, result ->
+      if (result is Succeeded) {
+        hotEvents.onNext(ShrIdAdded(ScanSimpleIdScreen.readIdentifier(result)))
+      }
+    }
+  }
+
+  private fun shrIdClicks(): Observable<PatientEntryEvent> {
+    return Observable.merge(
+        addShrIdButton.clicks().map { AddShrIdButtonClicked() },
+        removeShrIdButton.clicks().map { RemoveShrIdClicked }
+    )
   }
 
   override fun onResume() {
@@ -471,7 +518,6 @@ class PatientEntryScreen : BaseScreen<
     districtEditText.setTextAndCursor(entry.address?.district)
     stateEditText.setTextAndCursor(entry.address?.state)
     entry.personalDetails?.gender?.let(this::prefillGender)
-    entry.identifier?.let(this::prefillIdentifier)
     entry.alternateId?.let(this::prefillAlternateId)
 
     showKeyboardForFirstEmptyTextField()
@@ -498,10 +544,6 @@ class PatientEntryScreen : BaseScreen<
 
   private fun setAlternateIdTextField(alternateId: Identifier) {
     alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
-  }
-
-  private fun prefillIdentifier(identifier: Identifier) {
-    identifierTextView.text = identifier.displayValue()
   }
 
   private fun prefillGender(gender: Gender) {
@@ -695,12 +737,36 @@ class PatientEntryScreen : BaseScreen<
     }
   }
 
-  override fun showIdentifierSection() {
+  override fun showIdentifierSection(identifier: Identifier) {
+    identifierTextView.text = identifier.displayValue()
     identifierContainer.visibleOrGone(isVisible = true)
   }
 
   override fun hideIdentifierSection() {
     identifierContainer.visibleOrGone(isVisible = false)
+  }
+
+  override fun displayShrId(shrId: Identifier) {
+    shrIdSection.visibility = View.VISIBLE
+    shrIdTextView.visibility = View.VISIBLE
+    shrIdTextView.text = shrId.displayValue()
+    removeShrIdButton.visibility = View.VISIBLE
+    addShrIdButton.visibility = View.GONE
+  }
+
+  override fun showAddShrIdButton() {
+    shrIdSection.visibility = View.VISIBLE
+    shrIdTextView.visibility = View.GONE
+    removeShrIdButton.visibility = View.GONE
+    addShrIdButton.visibility = View.VISIBLE
+  }
+
+  override fun hideShrId() {
+    shrIdSection.visibility = View.GONE
+  }
+
+  override fun openScanShrIdScreen() {
+    router.pushExpectingResult(ScanShrId, ScanSimpleIdScreenKey(OpenedFrom.PatientEntryScreen.ToAddShrId))
   }
 
   override fun nextButtonShowInProgress() {
@@ -722,4 +788,7 @@ class PatientEntryScreen : BaseScreen<
 
     override fun instantiateFragment() = PatientEntryScreen()
   }
+
+  @Parcelize
+  object ScanShrId : Parcelable
 }

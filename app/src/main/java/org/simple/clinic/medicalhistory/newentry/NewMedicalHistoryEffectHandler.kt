@@ -75,6 +75,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
                     addressUuid = uuidGenerator.v4(),
                     supplyUuidForBpPassport = uuidGenerator::v4,
                     supplyUuidForAlternativeId = uuidGenerator::v4,
+                    supplyUuidForShrId = uuidGenerator::v4,
                     supplyUuidForPhoneNumber = uuidGenerator::v4,
                     dateOfBirthFormatter = dateOfBirthFormatter
                 ) to registerPatientData

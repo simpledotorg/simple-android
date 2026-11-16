@@ -123,8 +123,12 @@ class InstantSearchUpdate @Inject constructor() : Update<InstantSearchModel, Ins
       is NumericCriteria -> OngoingNewPatientEntry.default()
     }
 
-    if (model.isAdditionalIdentifierBpPassport || model.isAdditionalIdentifierAnSHRID) {
+    if (model.isAdditionalIdentifierBpPassport) {
       ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
+    }
+
+    if (model.isAdditionalIdentifierAnSHRID) {
+      ongoingPatientEntry = ongoingPatientEntry.withShrId(model.additionalIdentifier!!)
     }
 
     return dispatch(SaveNewOngoingPatientEntry(ongoingPatientEntry))

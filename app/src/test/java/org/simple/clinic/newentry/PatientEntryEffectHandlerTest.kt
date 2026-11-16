@@ -95,6 +95,18 @@ class PatientEntryEffectHandlerTest {
   }
 
   @Test
+  fun `when the open scan SHR ID screen effect is received, then open the scanner`() {
+    // when
+    setupTestCase()
+    testCase.dispatch(OpenScanShrIdScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).openScanShrIdScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
   fun `when the load input fields effect is received, the input fields must be loaded`() {
     // given
     whenever(inputFieldsFactory.provideFields()) doReturn inputFields.fields

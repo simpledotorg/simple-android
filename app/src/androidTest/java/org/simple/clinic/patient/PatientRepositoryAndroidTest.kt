@@ -1214,6 +1214,27 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun deleting_a_business_id_should_mark_it_deleted_and_mark_the_patient_as_pending_sync() {
+    val shrId = testData.businessId(
+        uuid = UUID.fromString("3c1e5a7b-9d2f-4e6a-8b4c-0d1e2f3a4b5c"),
+        identifier = Identifier("91234567890", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+    )
+    val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
+        .let { it.copy(businessIds = listOf(shrId.copy(patientUuid = it.patientUuid))) }
+    patientRepository.save(listOf(patientProfile))
+
+    clock.advanceBy(Duration.ofMinutes(5))
+    patientRepository.deleteBusinessId(patientProfile.businessIds.first()).blockingAwait()
+
+    val deletedShrId = database.businessIdDao().get(shrId.uuid)!!
+    assertThat(deletedShrId.deletedAt).isEqualTo(Instant.now(clock))
+    assertThat(deletedShrId.updatedAt).isEqualTo(Instant.now(clock))
+
+    val patient = database.patientDao().getOne(patientProfile.patientUuid)!!
+    assertThat(patient.syncStatus).isEqualTo(PENDING)
+  }
+
+  @Test
   fun saving_bangladesh_national_identifier_for_a_patient_must_work_as_expected() {
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
     patientRepository.save(listOf(patientProfile))

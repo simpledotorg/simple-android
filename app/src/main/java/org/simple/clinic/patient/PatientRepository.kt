@@ -612,6 +612,7 @@ class PatientRepository @Inject constructor(
           deletedAt = now
       )
       database.businessIdDao().save(listOf(deletedBusinessId))
+      setSyncStatus(listOf(businessId.patientUuid), PENDING)
     }
   }
 

@@ -30,7 +30,6 @@ class EditPatientInitTest {
         bangladeshNationalId,
         EditPatientState.NOT_SAVING_PATIENT,
         false,
-        false,
     )
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
@@ -54,7 +53,6 @@ class EditPatientInitTest {
         dateOfBirthFormat,
         bangladeshNationalId,
         EditPatientState.NOT_SAVING_PATIENT,
-        false,
         false,
     ).updateColonyOrVillagesList(colonyOrVillages)
 

@@ -30,7 +30,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
@@ -234,12 +233,6 @@ class EditPatientScreen : BaseScreen<
   private val bpPassportsContainer
     get() = binding.bpPassportsContainer
 
-  private val alternateIdLabel
-    get() = binding.alternateIdLabel
-
-  private val alternateIdContainer
-    get() = binding.alternateIdContainer
-
   private val formScrollView
     get() = binding.formScrollView
 
@@ -251,9 +244,6 @@ class EditPatientScreen : BaseScreen<
 
   private val addBpPassportButton
     get() = binding.addBpPassportButton
-
-  private val addNHIDButton
-    get() = binding.addNHIDButton
 
   private val shrIdLabel
     get() = binding.shrIdLabel
@@ -352,7 +342,6 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryIndia = country.isoCountryCode == Country.INDIA,
       isUserCountryBangladesh = country.isoCountryCode == Country.BANGLADESH,
   )
 
@@ -375,7 +364,6 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFocusChanges(),
       backClicks(),
       addBpPassportClicks(),
-      addNHIDButtonClicks(),
       addShrIdClicks(),
       removeShrIdClicks(),
       hotEvents
@@ -428,18 +416,13 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun handleScanIdentifierResult() {
-    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID, ScanShrId) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport, ScanShrId) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
       when (requestKey) {
         ScanBpPassport -> {
           val scannedBpPassport = ScanSimpleIdScreen.readIdentifier(result)
           hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
-        }
-
-        ScanIndiaNationalHealthID -> {
-          val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
-          hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
         }
 
         ScanShrId -> {
@@ -464,20 +447,11 @@ class EditPatientScreen : BaseScreen<
   override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
     val requestType = when (openedFrom) {
       is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
-      is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
       is OpenedFrom.EditPatientScreen.ToAddShrId -> ScanShrId
       else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
     }
 
     router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
-  }
-
-  override fun showAddNHIDButton() {
-    addNHIDButton.visibility = VISIBLE
-  }
-
-  override fun hideAddNHIDButton() {
-    addNHIDButton.visibility = GONE
   }
 
   override fun displayShrId(shrId: Identifier, isHighlighted: Boolean) {
@@ -511,11 +485,6 @@ class EditPatientScreen : BaseScreen<
     shrIdContainer.visibility = GONE
     removeShrIdButton.visibility = GONE
     addShrIdButton.visibility = GONE
-  }
-
-  override fun showIndiaNHIDLabel() {
-    alternateIdLabel.visibility = VISIBLE
-    alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -594,10 +563,6 @@ class EditPatientScreen : BaseScreen<
 
   private fun saveClicks(): Observable<EditPatientEvent> {
     return saveButton.clicks().map { SaveClicked }
-  }
-
-  private fun addNHIDButtonClicks(): Observable<EditPatientEvent> {
-    return addNHIDButton.clicks().map { AddNHIDButtonClicked() }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {
@@ -922,45 +887,6 @@ class EditPatientScreen : BaseScreen<
     alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  override fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean) {
-    alternateIdLabel.visibility = VISIBLE
-    alternateIdLabel.text = alternateId.displayType(resources)
-
-    alternateIdContainer.visibility = VISIBLE
-
-    inflateAlternateIdView(alternateId.displayValue(), hasHighlight)
-  }
-
-  private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
-    val layoutInflater = LayoutInflater.from(requireContext())
-    val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
-
-    // Setting a negative margin, so that the highlighted alternative ids can be rendered
-    // little bit outside of the parent view as per design requirements.
-    alternateIdView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
-    }
-    alternateIdView.alternateIdentifier.text = identifier
-    alternateIdContainer.removeAllViews()
-
-    setHighlight(hasHighlight, alternateIdView)
-
-    alternateIdContainer.addView(alternateIdView.root)
-  }
-
-  private fun setHighlight(
-      hasHighlight: Boolean,
-      alternateIdView: PatientEditAlternateIdViewBinding
-  ) {
-    if (hasHighlight) {
-      alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
-
-      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
-
-      alternateIdView.alternateIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
-    }
-  }
-
   override fun onBackPressed(): Boolean {
     hardwareBackPressEvents.onNext(BackClicked)
     return true
@@ -984,9 +910,6 @@ class EditPatientScreen : BaseScreen<
 
   @Parcelize
   object ScanBpPassport : Parcelable
-
-  @Parcelize
-  object ScanIndiaNationalHealthID : Parcelable
 
   @Parcelize
   object ScanShrId : Parcelable

@@ -11,27 +11,22 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
-import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val updateSpec = UpdateSpec(InstantSearchUpdate(dateOfBirthFormatter))
+  private val updateSpec = UpdateSpec(InstantSearchUpdate())
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
   )
-  private val defaultModel = InstantSearchModel.create(identifier, null, null)
+  private val defaultModel = InstantSearchModel.create(identifier, null)
 
   @Test
   fun `when current facility is loaded and search query is not present, then update the model and load all patients`() {
@@ -53,7 +48,6 @@ class InstantSearchUpdateTest {
   fun `when current facility is loaded and search query is present, then update the model and prefill the search query`() {
     val model = InstantSearchModel.create(
         additionalIdentifier = identifier,
-        patientPrefillInfo = null,
         searchQuery = "Pat"
     )
     val facility = TestData.facility(
@@ -160,14 +154,14 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when search result is clicked and has no NHID as additional identifier, then open patient summary`() {
+  fun `when search result is clicked and has no additional identifier, then open patient summary`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val facility = TestData.facility(
         uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = null, patientPrefillInfo = null, searchQuery = null)
+        .create(additionalIdentifier = null, searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -181,37 +175,6 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when search result is clicked and has NHID as additional identifier, then check if patient has an existing NHID assigned to them`() {
-    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
-    val facility = TestData.facility(
-        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
-        name = "PHC Obvious"
-    )
-
-    val indiaNationalHealthID = "28-3123-2283-6682"
-    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    ).toPatientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    val model = InstantSearchModel
-        .create(additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo,
-            searchQuery = null)
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pat")
-
-    updateSpec
-        .given(model)
-        .whenEvent(SearchResultClicked(patientUuid))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CheckIfPatientAlreadyHasAnExistingNHID(patientUuid))
-        ))
-  }
-
-  @Test
   fun `when the search result is clicked from the scanning qr code flow, open the link id with patient screen`() {
     val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
     val identifier = TestData.identifier("123456", BpPassport)
@@ -220,7 +183,7 @@ class InstantSearchUpdateTest {
         name = "PHC Obvious"
     )
     val model = InstantSearchModel
-        .create(additionalIdentifier = identifier, patientPrefillInfo = null, searchQuery = null)
+        .create(additionalIdentifier = identifier, searchQuery = null)
         .facilityLoaded(facility)
         .searchQueryChanged("Pat")
 
@@ -306,41 +269,6 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when register new patient is clicked and patient prefill info is not empty, then save it in ongoing patient entry with alternate id`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
-    )
-    val searchQueryModel = defaultModel
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pat")
-
-    val indiaNationalHealthID = "28-3123-2283-6682"
-    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    ).toPatientPrefillInfo()
-
-    val alternateId = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    val ongoingNewPatientEntry = OngoingNewPatientEntry(
-        personalDetails = OngoingNewPatientEntry.PersonalDetails(
-            fullName = patientPrefillInfo.fullName,
-            dateOfBirth = patientPrefillInfo.dateOfBirth.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-            gender = Gender.Male,
-            age = null),
-        address = OngoingNewPatientEntry.Address.BLANK.withColonyOrVillage(patientPrefillInfo.address),
-        alternateId = alternateId,
-        identifier = null)
-
-    updateSpec
-        .given(searchQueryModel.patientPrefillInfoUpdated(patientPrefillInfo).additionalIdentifierUpdated(alternateId))
-        .whenEvent(RegisterNewPatientClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveNewOngoingPatientEntry(ongoingNewPatientEntry))
-        ))
-  }
-
-  @Test
   fun `when register new patient is selected in blank scanned qr code sheet, then register new patient`() {
     val ongoingPatientEntry = OngoingNewPatientEntry.fromFullName("")
         .withIdentifier(identifier)
@@ -389,68 +317,6 @@ class InstantSearchUpdateTest {
   }
 
   @Test
-  fun `when patient already has an existing national health id, then show national health id error dialog`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
-        name = "PHC Obvious"
-    )
-
-    val indiaNationalHealthID = "28-3123-2283-6682"
-    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    ).toPatientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    val model = InstantSearchModel
-        .create(additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo,
-            searchQuery = null)
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pat")
-
-    updateSpec
-        .given(model)
-        .whenEvent(PatientAlreadyHasAnExistingNHID)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowNHIDErrorDialog)
-        ))
-  }
-
-  @Test
-  fun `when patient does not have an existing national health id, then open link id with patient screen`() {
-    val patientUuid = UUID.fromString("f607be71-630d-4adb-8d3a-76fdf347fe8a")
-    val facility = TestData.facility(
-        uuid = UUID.fromString("885c6339-9a96-4c8d-bfea-7eea74de6862"),
-        name = "PHC Obvious"
-    )
-
-    val indiaNationalHealthID = "28-3123-2283-6682"
-    val patientPrefillInfo = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    ).toPatientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    val model = InstantSearchModel
-        .create(
-            additionalIdentifier = identifier,
-            patientPrefillInfo = patientPrefillInfo,
-            searchQuery = null)
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pat")
-
-    updateSpec
-        .given(model)
-        .whenEvent(PatientDoesNotHaveAnExistingNHID(patientUuid))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenLinkIdWithPatientScreen(patientUuid, identifier))
-        ))
-  }
-
-  @Test
   fun `when search results are being loaded, then update the ui to show progress`() {
     updateSpec
         .given(defaultModel)
@@ -469,7 +335,6 @@ class InstantSearchUpdateTest {
     )
     val modelWithoutIdentifier = InstantSearchModel.create(
         additionalIdentifier = null,
-        patientPrefillInfo = null,
         searchQuery = "Ram"
     ).facilityLoaded(facility)
 

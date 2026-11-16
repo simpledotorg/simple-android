@@ -60,7 +60,6 @@ class EditPatientUpdateTest {
     dateOfBirthFormatter = dateOfBirthFormat,
     bangladeshNationalId = null,
     saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-    isUserCountryIndia = false,
     isUserCountryBangladesh = false,
   )
 
@@ -111,19 +110,6 @@ class EditPatientUpdateTest {
   }
 
   @Test
-  fun `when add NHID button is clicked, then open scan simple id screen to add NHID`() {
-    updateSpec
-        .given(model)
-        .whenEvent(AddNHIDButtonClicked())
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(OpenSimpleScanIdScreen(OpenedFrom.EditPatientScreen.ToAddNHID))
-            )
-        )
-  }
-
-  @Test
   fun `when add bp passport button is clicked, then open scan simple id screen`() {
     updateSpec
         .given(model)
@@ -159,7 +145,6 @@ class EditPatientUpdateTest {
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryIndia = false,
       isUserCountryBangladesh = true,
   )
 

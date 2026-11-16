@@ -31,7 +31,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.databinding.PatientEntryAlternateIdViewBinding
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
@@ -60,7 +59,6 @@ import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
@@ -226,12 +224,6 @@ class PatientEntryScreen : BaseScreen<
 
   private val saveButton
     get() = binding.saveButton
-
-  private val alternateIdLabel
-    get() = binding.alternateIdLabel
-
-  private val alternateIdContainer
-    get() = binding.alternateIdContainer
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -500,25 +492,8 @@ class PatientEntryScreen : BaseScreen<
       SriLankaPersonalHealthNumber,
       EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
 
-      IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
       else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
     }
-  }
-
-  private fun setAlternateIdContainer(alternateId: Identifier) {
-    alternateIdLabel.visibility = View.VISIBLE
-    alternateIdLabel.text = alternateId.displayType(resources)
-
-    alternateIdContainer.visibility = View.VISIBLE
-
-    inflateAlternateIdView(alternateId.displayValue())
-  }
-
-  private fun inflateAlternateIdView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(requireContext())
-    val alternateIdView = PatientEntryAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
-    alternateIdView.alternateIdentifier.text = identifier
-    alternateIdContainer.addView(alternateIdView.root)
   }
 
   private fun setAlternateIdTextField(alternateId: Identifier) {

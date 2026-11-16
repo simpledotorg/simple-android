@@ -20,6 +20,5 @@ interface InstantSearchUiActions {
   fun openPatientEntryScreen(facility: Facility)
   fun showKeyboard()
   fun openQrCodeScanner()
-  fun showNHIDErrorDialog()
   fun prefillSearchQuery(initialSearchQuery: String)
 }

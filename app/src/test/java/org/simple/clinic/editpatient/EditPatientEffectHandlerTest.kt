@@ -439,7 +439,7 @@ class EditPatientEffectHandlerTest {
   @Test
   fun `when open scan simple id screen effect is received, then open scan simple id screen`() {
     // given
-    val openedFrom = OpenedFrom.EditPatientScreen.ToAddNHID
+    val openedFrom = OpenedFrom.EditPatientScreen.ToAddBpPassport
 
     // when
     testCase.dispatch(OpenSimpleScanIdScreen(openedFrom))

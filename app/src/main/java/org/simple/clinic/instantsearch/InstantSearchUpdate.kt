@@ -16,14 +16,9 @@ import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
-import java.time.format.DateTimeFormatter
-import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Named
 
-class InstantSearchUpdate @Inject constructor(
-    @Named("date_for_user_input") private val dateTimeFormatter: DateTimeFormatter
-) : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
+class InstantSearchUpdate @Inject constructor() : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
 
   /**
    * Regular expression that matches digits with interleaved white spaces
@@ -40,8 +35,6 @@ class InstantSearchUpdate @Inject constructor(
       is SearchResultsLoaded -> searchResultsLoaded(model, event)
       is SearchQueryValidated -> searchQueryValidated(model, event)
       is SearchResultClicked -> searchResultClicked(model, event)
-      is PatientAlreadyHasAnExistingNHID -> dispatch(ShowNHIDErrorDialog)
-      is PatientDoesNotHaveAnExistingNHID -> dispatch(OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!))
       is SearchQueryChanged -> searchQueryChanged(model, event)
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
@@ -105,12 +98,14 @@ class InstantSearchUpdate @Inject constructor(
   private fun searchResultClicked(
       model: InstantSearchModel,
       event: SearchResultClicked
-  ): Next<InstantSearchModel, InstantSearchEffect> =
-      if (model.isAdditionalIdentifierAnNHID) {
-        dispatch(CheckIfPatientAlreadyHasAnExistingNHID(event.patientId))
-      } else {
-        searchResultClickedWithoutNHID(model, event.patientId)
-      }
+  ): Next<InstantSearchModel, InstantSearchEffect> {
+    val effect = if (model.hasAdditionalIdentifier)
+      OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!)
+    else
+      OpenPatientSummary(event.patientId)
+
+    return dispatch(effect)
+  }
 
   private fun blankScannedQrCodeResult(
       model: InstantSearchModel,
@@ -128,27 +123,11 @@ class InstantSearchUpdate @Inject constructor(
       is NumericCriteria -> OngoingNewPatientEntry.default()
     }
 
-    if (model.canBePrefilled) {
-      ongoingPatientEntry = ongoingPatientEntry.withPatientPrefillInfo(model.patientPrefillInfo!!, model.additionalIdentifier!!, dateTimeFormatter)
-    }
-
     if (model.isAdditionalIdentifierBpPassport || model.isAdditionalIdentifierAnSHRID) {
       ongoingPatientEntry = ongoingPatientEntry.withIdentifier(model.additionalIdentifier!!)
     }
 
     return dispatch(SaveNewOngoingPatientEntry(ongoingPatientEntry))
-  }
-
-  private fun searchResultClickedWithoutNHID(
-      model: InstantSearchModel,
-      patientId: UUID
-  ): Next<InstantSearchModel, InstantSearchEffect> {
-    val effect = if (model.hasAdditionalIdentifier)
-      OpenLinkIdWithPatientScreen(patientId, model.additionalIdentifier!!)
-    else
-      OpenPatientSummary(patientId)
-
-    return dispatch(effect)
   }
 
   private fun searchQueryValidated(

@@ -354,7 +354,6 @@
   <string name="scansimpleid_identfier_already_exists">Este número ya ha sido asignado a otro paciente.\nEscanée un nuevo número de identificación de salud.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP Passport o número de ID Nacional de Salud</string>
   <string name="scansimpleid_bp_passport_title">BP Passport</string>
-  <string name="scansimpleid_national_id_title">Documento de Identidad Oficial</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Sincronización pendiente</string>
@@ -713,8 +712,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">La fecha no puede ser después de un año</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">No se puede asignar una ID Nacional de Salud a un paciente con una ID Nacional de Salud que está asignada a otro paciente</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">Entrada obligatoria</string>

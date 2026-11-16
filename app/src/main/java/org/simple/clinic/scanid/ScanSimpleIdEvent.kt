@@ -2,7 +2,6 @@ package org.simple.clinic.scanid
 
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.widgets.UiEvent

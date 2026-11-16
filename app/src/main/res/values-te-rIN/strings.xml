@@ -350,7 +350,6 @@
   <string name="scansimpleid_identfier_already_exists">ఐడి ఇప్పటికే మరొక రోగికి ఇవ్వబడింది.\nకొత్త హెల్త్ ఐడి ని స్కాన్ చేయండి.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">బిపి పాస్‌పోర్ట్ లేదా జాతీయ ఆరోగ్య ID</string>
   <string name="scansimpleid_bp_passport_title">బిపి పాస్‌పోర్ట్</string>
-  <string name="scansimpleid_national_id_title">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
@@ -704,8 +703,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">తేదీ సంవత్సరం తరువాతది కాకూడదు</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ఇదివరకే జాతీయ ఆరోగ్య IDని కలిగి ఉన్న రోగికి జాతీయ ఆరోగ్య IDని కేటాయించలేము</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">సరే</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా?</string>

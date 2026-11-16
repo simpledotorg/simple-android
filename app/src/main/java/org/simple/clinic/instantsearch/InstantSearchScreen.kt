@@ -49,7 +49,6 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
-import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -64,11 +63,9 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class InstantSearchScreen :
     BaseScreen<
@@ -101,10 +98,6 @@ class InstantSearchScreen :
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
-
-  @Inject
-  @Named("date_for_user_input")
-  lateinit var dateTimeFormatter: DateTimeFormatter
 
   private val subscriptions = CompositeDisposable()
   private val loadStateChanges = PublishSubject.create<SearchResultsLoadStateChanged>()
@@ -157,7 +150,7 @@ class InstantSearchScreen :
 
   private val blankScannedQrCodeResults = PublishSubject.create<UiEvent>()
 
-  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.patientPrefillInfo, screenKey.initialSearchQuery)
+  override fun defaultModel() = InstantSearchModel.create(screenKey.additionalIdentifier, screenKey.initialSearchQuery)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenInstantSearchBinding.inflate(layoutInflater, container, false)
@@ -176,7 +169,7 @@ class InstantSearchScreen :
       .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
-  override fun createUpdate() = InstantSearchUpdate(dateTimeFormatter)
+  override fun createUpdate() = InstantSearchUpdate()
 
   override fun createInit() = InstantSearchInit()
 
@@ -297,10 +290,6 @@ class InstantSearchScreen :
 
   override fun openQrCodeScanner() {
     router.push(ScanSimpleIdScreenKey(OpenedFrom.InstantSearchScreen))
-  }
-
-  override fun showNHIDErrorDialog() {
-    NationalHealthIDErrorDialog.show(activity.supportFragmentManager)
   }
 
   override fun prefillSearchQuery(initialSearchQuery: String) {

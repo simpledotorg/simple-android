@@ -11,7 +11,6 @@ import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
-import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Gender : Parcelable {
@@ -54,16 +53,6 @@ sealed class Gender : Parcelable {
 
     @ToJson
     fun toJson(answer: Gender): String? = TypeAdapter.fromEnum(answer)
-  }
-
-  companion object {
-    fun fromIndiaNHIDToGender(value: IndiaNHIDGender): Gender {
-      return when (value) {
-        IndiaNHIDGender.MALE -> Male
-        IndiaNHIDGender.FEMALE -> Female
-        else -> Unknown("U")
-      }
-    }
   }
 }
 

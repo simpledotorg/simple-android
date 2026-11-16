@@ -18,7 +18,6 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
-import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddNHID
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddShrId
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -61,7 +60,6 @@ class EditPatientUpdate(
       is PatientIdentifiersFetched -> next(model.patientIdentifiersLoaded(event.bpPassports, event.shrId))
       is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
-      is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
       is AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
       is BpPassportAdded -> addBpPassports(model, event)
       is AddShrIdButtonClicked -> addShrIdButtonClicked(model)

@@ -127,40 +127,6 @@
       </LinearLayout>
 
       <TextView
-        android:id="@+id/alternateIdLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_24"
-        android:layout_marginEnd="@dimen/spacing_16"
-        android:visibility="gone"
-        tools:text="Health ID"
-        tools:visibility="visible" />
-
-      <LinearLayout
-        android:id="@+id/alternateIdContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-      <com.google.android.material.button.MaterialButton
-        android:id="@+id/addNHIDButton"
-        style="?attr/borderlessButtonDenseStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:paddingStart="@dimen/spacing_2"
-        android:text="@string/patientedit_add_button"
-        android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceButton"
-        android:visibility="gone"
-        app:icon="@drawable/ic_add_circle_outline_24px"
-        app:iconGravity="start"
-        app:iconPadding="@dimen/spacing_8" />
-
-      <TextView
         android:id="@+id/bpPassportsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

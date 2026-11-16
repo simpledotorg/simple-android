@@ -354,7 +354,6 @@
   <string name="scansimpleid_identfier_already_exists">Lakkoofsi eenyummeessaa kun nama biraaf kennameera; kan biraa yaalaa.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">Paaspoortii BP yookan Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
   <string name="scansimpleid_bp_passport_title">Paaspoortii BP</string>
-  <string name="scansimpleid_national_id_title">Lakkoosa eenyummeessaa biyyaalessa</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
@@ -710,8 +709,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Guyyaan waggaa tokko booda tahuu hin danda\'u</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Waraqaa Eenyummaa Fayyaa Biyyaalessaa Waraqaa Eenyummaa Biyyaalessaa Amma Jiru Kanaan Dhukkubsataaf Hin Kennamu</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Tole</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">Dhukkubsataan ji\'a darbe keessa yeroo ta\'etti dawaa BP fudhateera?</string>

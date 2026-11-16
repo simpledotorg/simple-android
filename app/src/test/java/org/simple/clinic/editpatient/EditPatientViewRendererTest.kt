@@ -10,7 +10,6 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
@@ -46,7 +45,6 @@ class EditPatientViewRendererTest {
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.SAVING_PATIENT,
-      isUserCountryIndia = false,
       isUserCountryBangladesh = false,
   )
 
@@ -179,7 +177,6 @@ class EditPatientViewRendererTest {
             identifier = identifier
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
         isUserCountryBangladesh = false,
     )
 
@@ -204,119 +201,6 @@ class EditPatientViewRendererTest {
   }
 
   @Test
-  fun `when indian national health id is present, then display alternate id container`() {
-    // given
-    val identifier = TestData.identifier(
-        value = "1234567",
-        type = IndiaNationalHealthId
-    )
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = TestData.businessId(
-            uuid = UUID.fromString("ed74922a-3909-4084-a667-1f2bf1c36322"),
-            identifier = identifier
-        ),
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
-        isUserCountryBangladesh = false,
-    )
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier, false)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when NHID is added after qr code scan and feature flag is enabled, then display NHID with highligh in the ui and hide add NHID button`() {
-    // given
-    val indiaNHID = "23432123456434"
-    val identifier = Identifier(indiaNHID, IndiaNationalHealthId)
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = null,
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = true,
-        isUserCountryBangladesh = false,
-    ).updateAlternativeId(indiaNHID)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier, true)
-    verify(ui).hideAddNHIDButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when there is no NHID in edit screen, the user country is India and feature flag is enabled, then show add NHID button`() {
-    // given
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = null,
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = true,
-        isUserCountryBangladesh = false,
-    )
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).showAddNHIDButton()
-    verify(ui).showIndiaNHIDLabel()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when adding health ids from edit patient is enabled, then show bp passport button and label`() {
     // given
     val model = EditPatientModel.from(
@@ -326,7 +210,6 @@ class EditPatientViewRendererTest {
         dateOfBirthFormatter = dateOfBirthFormat,
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
         isUserCountryBangladesh = false)
 
     // when
@@ -356,7 +239,6 @@ class EditPatientViewRendererTest {
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.SAVING_PATIENT,
-      isUserCountryIndia = false,
       isUserCountryBangladesh = true,
   )
 

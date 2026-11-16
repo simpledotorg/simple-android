@@ -5,7 +5,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import java.util.UUID
 
 @Parcelize
@@ -34,12 +33,6 @@ data class PatientProfile(
 
   val patientUuid: UUID
     get() = patient.uuid
-
-  val hasNationalHealthID: Boolean
-    get() = businessIds
-        .any {
-          it.identifier.type == IndiaNationalHealthId
-        }
 
   fun withoutDeletedBusinessIds(): PatientProfile {
     return copy(businessIds = businessIds.filter { it.deletedAt == null })

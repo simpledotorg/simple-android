@@ -7,7 +7,6 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.util.exhaustive
@@ -41,8 +40,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
     fillFormFields(
         model.ongoingEntry,
-        model.savedBangladeshNationalId,
-        model.canAddNHID
+        model.savedBangladeshNationalId
     )
 
     displayBpPassports(model)
@@ -63,16 +61,6 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }
   }
 
-  private fun displayNewlyAddedNHID(alternativeId: String) {
-    if (alternativeId.isNotEmpty()) {
-      ui.hideAddNHIDButton()
-      ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId), true)
-    } else {
-      ui.showIndiaNHIDLabel()
-      ui.showAddNHIDButton()
-    }
-  }
-
   private fun displayBpPassports(model: EditPatientModel) {
     val newlyAddedBpPassports = model.ongoingEntry.bpPassports?.map { BPPassportListItem(identifierValue = it.displayValue(), isHighlighted = true) }.orEmpty()
     val identifiers = model.bpPassports?.map { BPPassportListItem(identifierValue = it.identifier.displayValue(), isHighlighted = false) }.orEmpty()
@@ -90,8 +78,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
   private fun fillFormFields(
       ongoingEntry: EditablePatientEntry,
-      alternateId: BusinessId?,
-      canAddNHID: Boolean
+      alternateId: BusinessId?
   ) {
     with(ui) {
       setPatientName(ongoingEntry.name)
@@ -102,11 +89,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
       setColonyOrVillage(ongoingEntry.colonyOrVillage)
-      setAlternateIdIfNHIDIsUpdated(
-          ongoingEntry,
-          alternateId,
-          canAddNHID
-      )
+      setAlternateId(alternateId, ongoingEntry)
     }
 
     val ageOrDateOfBirth = ongoingEntry.ageOrDateOfBirth
@@ -114,18 +97,6 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       is EntryWithAge -> ui.setPatientAge(ageOrDateOfBirth.age)
       is EntryWithDateOfBirth -> ui.setPatientDateOfBirth(ageOrDateOfBirth.dateOfBirth)
     }.exhaustive()
-  }
-
-  private fun setAlternateIdIfNHIDIsUpdated(
-      ongoingEntry: EditablePatientEntry,
-      alternateId: BusinessId?,
-      canAddNHID: Boolean
-  ) {
-    if (canAddNHID) {
-      displayNewlyAddedNHID(ongoingEntry.alternativeId)
-    } else {
-      setAlternateId(alternateId, ongoingEntry)
-    }
   }
 
   private fun setAlternateId(
@@ -142,7 +113,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       SriLankaNationalId,
       SriLankaPersonalHealthNumber -> ui.setAlternateIdTextField(ongoingEntry.alternativeId)
 
-      IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType), false)
+      Identifier.IdentifierType.IndiaNationalHealthId,
       Identifier.IdentifierType.BpPassport,
       Identifier.IdentifierType.BangladeshSharedHealthRecordId,
       is Identifier.IdentifierType.Unknown -> throw IllegalArgumentException("Unknown alternative id: $alternateId")

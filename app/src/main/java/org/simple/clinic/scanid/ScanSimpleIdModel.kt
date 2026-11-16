@@ -2,7 +2,6 @@ package org.simple.clinic.scanid
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.scanid.ScanSearchState.NotSearching
 import org.simple.clinic.scanid.ScanSearchState.Searching
 
@@ -11,7 +10,6 @@ data class ScanSimpleIdModel(
     val enteredCode: EnteredCodeInput?,
     val scanSearchState: ScanSearchState,
     val scanErrorState: ScanErrorState?,
-    val patientPrefillInfo: PatientPrefillInfo?,
     val openedFrom: OpenedFrom
 ) : Parcelable {
 
@@ -19,7 +17,6 @@ data class ScanSimpleIdModel(
     fun create(openedFrom: OpenedFrom) = ScanSimpleIdModel(enteredCode = null,
         scanSearchState = NotSearching,
         scanErrorState = null,
-        patientPrefillInfo = null,
         openedFrom = openedFrom)
   }
 
@@ -31,9 +28,6 @@ data class ScanSimpleIdModel(
 
   val isOpenedFromEditPatientScreenToAddBpPassport
     get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddBpPassport
-
-  val isOpenedFromEditPatientScreenToAddNhid
-    get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID
 
   val isOpenedFromEditPatientScreenToAddShrId
     get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddShrId
@@ -62,9 +56,5 @@ data class ScanSimpleIdModel(
 
   fun clearInvalidQrCodeError(): ScanSimpleIdModel {
     return copy(scanErrorState = null)
-  }
-
-  fun patientPrefillInfoChanged(patientPrefillInfo: PatientPrefillInfo): ScanSimpleIdModel {
-    return copy(patientPrefillInfo = patientPrefillInfo)
   }
 }

@@ -113,7 +113,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     return if (model.openedFrom is EditPatientScreen)
       GoBackToEditPatientScreen(identifier)
     else
-      OpenPatientSearch(identifier, null, model.patientPrefillInfo)
+      OpenPatientSearch(identifier, null)
   }
 
   private fun patientFoundByIdentifierSearch(
@@ -130,8 +130,8 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun multiplePatientsWithId(identifier: Identifier): ScanSimpleIdEffect {
     return when (identifier.type) {
-      BpPassport -> OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = BpPassport.shortCode(identifier), patientPrefillInfo = null)
-      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value, null)
+      BpPassport -> OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = BpPassport.shortCode(identifier))
+      else -> OpenPatientSearch(null, initialSearchQuery = identifier.value)
     }
   }
 
@@ -206,6 +206,6 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun searchEnteredCode(model: ScanSimpleIdModel): ScanSimpleIdEffect {
     val enteredCodeToSearch = model.enteredCode!!.enteredCodeText
-    return OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch, patientPrefillInfo = null)
+    return OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCodeToSearch)
   }
 }

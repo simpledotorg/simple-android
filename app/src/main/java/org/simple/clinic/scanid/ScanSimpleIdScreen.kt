@@ -39,7 +39,6 @@ import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.qrcodeanalyzer.MLKitQrCodeAnalyzer
@@ -269,10 +268,9 @@ class ScanSimpleIdScreen : BaseScreen<
         screenCreatedTimestamp = Instant.now(utcClock)))
   }
 
-  override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?) {
+  override fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?) {
     val keyToPush = InstantSearchScreenKey(additionalIdentifier = additionalIdentifier,
-        initialSearchQuery = initialSearchQuery,
-        patientPrefillInfo = patientPrefillInfo)
+        initialSearchQuery = initialSearchQuery)
 
     when (val openedFrom = screenKey.openedFrom) {
       OpenedFrom.InstantSearchScreen -> router.replaceKeyOfSameType(keyToPush)
@@ -347,7 +345,6 @@ class ScanSimpleIdScreen : BaseScreen<
     toolBar.title = when (openedFrom) {
       OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
       OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
-      OpenedFrom.EditPatientScreen.ToAddNHID -> resources.getString(R.string.scansimpleid_national_id_title)
       OpenedFrom.EditPatientScreen.ToAddShrId -> resources.getString(R.string.identifiertype_health_id)
     }
   }

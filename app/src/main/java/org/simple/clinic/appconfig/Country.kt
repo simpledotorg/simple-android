@@ -29,8 +29,6 @@ data class Country(
   val alternativeIdentifierType: Identifier.IdentifierType?
     get() {
       return when (isoCountryCode) {
-        DEMO,
-        INDIA -> Identifier.IdentifierType.IndiaNationalHealthId
         BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
         ETHIOPIA -> Identifier.IdentifierType.EthiopiaMedicalRecordNumber
         SRI_LANKA -> Identifier.IdentifierType.SriLankaPersonalHealthNumber

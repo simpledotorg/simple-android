@@ -19,6 +19,7 @@
 ### Changes
 - Add Bangladesh SHR identifier support to patient scanning
 - Add Bangladesh SHR identifier support to the edit patient and patient summary screens
+- Remove India National Health ID (NHID) support
 
 ## 2026.09.18
 

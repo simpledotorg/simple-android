@@ -81,14 +81,6 @@ data class InputFieldsLoaded(val inputFields: InputFields) : EditPatientEvent()
 
 data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPatientEvent()
 
-data class AddNHIDButtonClicked(
-    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
-    override val permissionString: String = Manifest.permission.CAMERA,
-    override val permissionRequestCode: Int = 2
-) : EditPatientEvent(), RequiresPermission {
-  override val analyticsName = "Edit Patient Entry:Add NHID Button Clicked"
-}
-
 data class AddBpPassportButtonClicked(
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.CAMERA,

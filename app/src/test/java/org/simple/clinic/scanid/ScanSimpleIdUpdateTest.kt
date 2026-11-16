@@ -11,7 +11,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import org.simple.clinic.TestData
@@ -63,7 +62,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredShortCode, patientPrefillInfo = null))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredShortCode))
         ))
   }
 
@@ -113,7 +112,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = "4751081", patientPrefillInfo = null))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = "4751081"))
         ))
   }
 
@@ -125,14 +124,14 @@ class ScanSimpleIdUpdateTest {
     val patient1 = TestData.patient(uuid = patientId1)
     val patient2 = TestData.patient(uuid = patientId2)
 
-    val identifier = Identifier("12345612345612", IndiaNationalHealthId)
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
 
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient1, patient2), identifier))
         .then(assertThatNext(
             hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(null, "12345612345612", null))
+            hasEffects(OpenPatientSearch(null, "98146050888"))
         ))
   }
 
@@ -146,7 +145,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(EnteredCodeValidated(EnteredCodeValidationResult.Success))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode, null))
+            hasEffects(OpenPatientSearch(additionalIdentifier = null, initialSearchQuery = enteredCode))
         ))
   }
 
@@ -185,7 +184,7 @@ class ScanSimpleIdUpdateTest {
         .then(
             assertThatNext(
                 hasModel(defaultModel.notSearching()),
-                hasEffects(OpenPatientSearch(identifier, null, null))
+                hasEffects(OpenPatientSearch(identifier, null))
             )
         )
   }
@@ -200,7 +199,7 @@ class ScanSimpleIdUpdateTest {
         .then(
             assertThatNext(
                 hasModel(defaultModel.notSearching()),
-                hasEffects(OpenPatientSearch(identifier, null, null))
+                hasEffects(OpenPatientSearch(identifier, null))
             )
         )
   }
@@ -262,27 +261,13 @@ class ScanSimpleIdUpdateTest {
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(OpenPatientSearch(additionalIdentifier = null, "8766460", null))
+                hasEffects(OpenPatientSearch(additionalIdentifier = null, "8766460"))
             )
         )
   }
 
   @Test
-  fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID but the user scanned bp passport, then show scanned qr code error`() {
-    val scannedId = "0486cdb8-b617-41bf-9b9f-4a89434c68cf"
-    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
-
-    spec
-        .given(defaultModel)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
-        .then(assertThatNext(
-            hasModel(defaultModel.notSearching()),
-            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-        ))
-  }
-
-  @Test
-  fun `when the qr code is scanned and screen is opened from edit patient screen to add BP Passport but the user scanned an NHID, then show scanned qr code error`() {
+  fun `when the qr code is scanned and screen is opened from edit patient screen to add BP Passport but the user scanned a code that is not a BP passport, then show scanned qr code error`() {
     val scannedId = "12341234123412"
     val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
 
@@ -293,22 +278,6 @@ class ScanSimpleIdUpdateTest {
             hasModel(defaultModel.notSearching()),
             hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
         ))
-  }
-
-  @Test
-  fun `when online patient lookup is completed, screen is opened from edit patient and patient is not found, then go back to edit patient screen`() {
-    val identifier = TestData.identifier(value = "12341234123412", type = IndiaNationalHealthId)
-    val openedToAddNHIDModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
-
-    spec
-        .given(openedToAddNHIDModel)
-        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
-        .then(
-            assertThatNext(
-                hasModel(openedToAddNHIDModel.notSearching()),
-                hasEffects(GoBackToEditPatientScreen(identifier))
-            )
-        )
   }
 
   @Test
@@ -518,19 +487,6 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when an SHR ID is scanned and screen is opened from edit patient screen to add NHID, then show scanned qr code error`() {
-    val modelToAddNhid = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
-
-    spec
-        .given(modelToAddNhid)
-        .whenEvent(ScanSimpleIdScreenQrCodeScanned("98146050888"))
-        .then(assertThatNext(
-            hasModel(modelToAddNhid.notSearching()),
-            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-        ))
-  }
-
-  @Test
   fun `when screen is opened from edit patient to add SHR ID and patient is not found online, then go back to edit patient screen with the SHR ID`() {
     val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
     val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId).searching()
@@ -558,4 +514,5 @@ class ScanSimpleIdUpdateTest {
             hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists))
         ))
   }
+
 }

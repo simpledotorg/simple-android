@@ -33,7 +33,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
-import java.time.format.DateTimeFormatter
 import java.util.Optional
 
 /**
@@ -114,20 +113,6 @@ data class OngoingNewPatientEntry(
 
   fun withZone(zone: String): OngoingNewPatientEntry =
       copy(address = addressOrBlank().copy(zone = zone))
-
-  fun withPatientPrefillInfo(
-      patientProfileInfo: PatientPrefillInfo,
-      alternateId: Identifier,
-      dateTimeFormatter: DateTimeFormatter
-  ): OngoingNewPatientEntry =
-      copy(
-          personalDetails = PersonalDetails(
-              fullName = patientProfileInfo.fullName,
-              dateOfBirth = patientProfileInfo.dateOfBirth.format(dateTimeFormatter),
-              gender = patientProfileInfo.gender,
-              age = null),
-          address = addressOrBlank().withColonyOrVillage(patientProfileInfo.address),
-          alternateId = alternateId)
 
   fun validationErrors(
       dobValidator: UserInputDateValidator,

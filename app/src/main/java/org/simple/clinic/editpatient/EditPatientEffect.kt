@@ -4,6 +4,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.OpenedFrom
 import java.util.UUID
 
@@ -17,7 +18,7 @@ data class SavePatientEffect(
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
     val saveAlternativeId: BusinessId?,
-    val savedShrId: BusinessId?
+    val savedShrId: Identifier?
 ) : EditPatientEffect()
 
 data object LoadInputFields : EditPatientEffect()

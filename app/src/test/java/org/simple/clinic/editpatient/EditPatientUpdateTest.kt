@@ -169,8 +169,7 @@ class EditPatientUpdateTest {
     val expectedModel = bangladeshModel.copy(
         savedEntry = bangladeshModel.savedEntry.updateShrId(savedShrId.identifier),
         ongoingEntry = bangladeshModel.ongoingEntry.updateShrId(savedShrId.identifier),
-        bpPassports = bpPassports,
-        savedShrId = savedShrId
+        bpPassports = bpPassports
     )
 
     updateSpec
@@ -190,7 +189,48 @@ class EditPatientUpdateTest {
         .given(modelWithAddedShrId)
         .whenEvent(PatientIdentifiersFetched(emptyList(), null))
         .then(assertThatNext(
-            hasModel(modelWithAddedShrId.copy(bpPassports = emptyList(), savedShrId = null)),
+            hasModel(modelWithAddedShrId.copy(bpPassports = emptyList())),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient identifiers are loaded again with a changed SHR ID and the user has not changed it, then follow the saved SHR ID`() {
+    val loadedModel = bangladeshModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+    val syncedShrId = TestData.businessId(
+        uuid = UUID.fromString("9a4e7d5f-1b6c-4e8d-8f0a-4b5c6d7e8f90"),
+        identifier = Identifier("95555555555", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+    )
+
+    updateSpec
+        .given(loadedModel)
+        .whenEvent(PatientIdentifiersFetched(emptyList(), syncedShrId))
+        .then(assertThatNext(
+            hasModel(loadedModel.copy(
+                savedEntry = loadedModel.savedEntry.updateShrId(syncedShrId.identifier),
+                ongoingEntry = loadedModel.ongoingEntry.updateShrId(syncedShrId.identifier)
+            )),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient identifiers are loaded again after the user removed the SHR ID, then keep it removed and update the saved SHR ID`() {
+    val modelWithRemovedShrId = bangladeshModel
+        .patientIdentifiersLoaded(emptyList(), savedShrId)
+        .removeShrId()
+    val syncedShrId = TestData.businessId(
+        uuid = UUID.fromString("9a4e7d5f-1b6c-4e8d-8f0a-4b5c6d7e8f90"),
+        identifier = Identifier("95555555555", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+    )
+
+    updateSpec
+        .given(modelWithRemovedShrId)
+        .whenEvent(PatientIdentifiersFetched(emptyList(), syncedShrId))
+        .then(assertThatNext(
+            hasModel(modelWithRemovedShrId.copy(
+                savedEntry = modelWithRemovedShrId.savedEntry.updateShrId(syncedShrId.identifier)
+            )),
             hasNoEffects()
         ))
   }

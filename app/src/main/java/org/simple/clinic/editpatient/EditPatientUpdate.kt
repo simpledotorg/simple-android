@@ -140,7 +140,7 @@ class EditPatientUpdate(
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId) = model
       next(
           model.buttonStateChanged(EditPatientState.SAVING_PATIENT),
-          SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId, model.savedShrId)
+          SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId, model.savedEntry.shrId)
       )
     } else {
       dispatch(ShowValidationErrorsEffect(validationErrors))

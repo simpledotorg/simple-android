@@ -26,7 +26,6 @@ data class EditPatientModel(
     val colonyOrVillagesList: List<String>?,
     val inputFields: InputFields?,
     val bpPassports: List<BusinessId>?,
-    val savedShrId: BusinessId?,
     val isUserCountryBangladesh: Boolean,
 ) : Parcelable {
   companion object {
@@ -58,7 +57,6 @@ data class EditPatientModel(
           colonyOrVillagesList = null,
           inputFields = null,
           bpPassports = null,
-          savedShrId = null,
           isUserCountryBangladesh = isUserCountryBangladesh,
       )
     }
@@ -133,17 +131,19 @@ data class EditPatientModel(
       bpPassports: List<BusinessId>,
       shrId: BusinessId?
   ): EditPatientModel {
-    val updatedModel = if (hasLoadedPatientIdentifiers) {
-      this
-    } else {
-      val savedShrIdentifier = shrId?.identifier
-      copy(
-          savedEntry = savedEntry.updateShrId(savedShrIdentifier),
-          ongoingEntry = ongoingEntry.updateShrId(savedShrIdentifier)
-      )
-    }
+    val savedShrIdentifier = shrId?.identifier
+    val hasUserChangedShrId = hasLoadedPatientIdentifiers && ongoingEntry.shrId != savedEntry.shrId
 
-    return updatedModel.copy(bpPassports = bpPassports, savedShrId = shrId)
+    // The patient's identifiers are loaded again whenever the patient changes in the database
+    // (for example, after a sync). Keep an SHR ID the user has added or removed on this screen,
+    // and otherwise follow the saved one.
+    val updatedOngoingEntry = if (hasUserChangedShrId) ongoingEntry else ongoingEntry.updateShrId(savedShrIdentifier)
+
+    return copy(
+        savedEntry = savedEntry.updateShrId(savedShrIdentifier),
+        ongoingEntry = updatedOngoingEntry,
+        bpPassports = bpPassports
+    )
   }
 
   fun addShrId(shrId: Identifier): EditPatientModel =

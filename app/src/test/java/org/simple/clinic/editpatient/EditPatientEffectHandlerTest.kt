@@ -35,6 +35,7 @@ import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
@@ -572,6 +573,16 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
   }
 
+  private fun stubSavedShrIds(vararg shrIds: BusinessId) {
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patient.uuid,
+        patientAddressUuid = patientAddress.uuid,
+        generateBusinessId = false
+    ).copy(businessIds = shrIds.toList())
+
+    whenever(patientRepository.patientProfileImmediate(patient.uuid)) doReturn patientProfile.toOptional()
+  }
+
   private fun verifyPatientSaved() {
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
@@ -637,6 +648,7 @@ class EditPatientEffectHandlerTest {
     // given
     val testCase = bangladeshTestCase()
     stubPatientSave()
+    stubSavedShrIds()
     whenever(patientRepository.addIdentifierToPatient(
         uuid = shrIdentifierUuid,
         patientUuid = patient.uuid,
@@ -649,6 +661,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
     verify(patientRepository).addIdentifierToPatient(
         uuid = shrIdentifierUuid,
         patientUuid = patient.uuid,
@@ -666,13 +679,15 @@ class EditPatientEffectHandlerTest {
     // given
     val testCase = bangladeshTestCase()
     stubPatientSave()
+    stubSavedShrIds(savedShrId)
     whenever(patientRepository.deleteBusinessId(savedShrId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.updateShrId(null), patient, patientAddress, phoneNumber, null, savedShrId))
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(null), patient, patientAddress, phoneNumber, null, savedShrId.identifier))
 
     // then
     verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
     verify(patientRepository).deleteBusinessId(savedShrId)
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
@@ -688,7 +703,7 @@ class EditPatientEffectHandlerTest {
     stubPatientSave()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.updateShrId(savedShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId))
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(savedShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId.identifier))
 
     // then
     verifyPatientSaved()
@@ -705,6 +720,7 @@ class EditPatientEffectHandlerTest {
     // given
     val testCase = bangladeshTestCase()
     stubPatientSave()
+    stubSavedShrIds(savedShrId)
     whenever(patientRepository.deleteBusinessId(savedShrId)) doReturn Completable.complete()
     whenever(patientRepository.addIdentifierToPatient(
         uuid = shrIdentifierUuid,
@@ -714,10 +730,11 @@ class EditPatientEffectHandlerTest {
     )) doReturn Single.just(newShrId)
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.updateShrId(newShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId))
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(newShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId.identifier))
 
     // then
     verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
     verify(patientRepository).deleteBusinessId(savedShrId)
     verify(patientRepository).addIdentifierToPatient(
         uuid = shrIdentifierUuid,
@@ -754,6 +771,7 @@ class EditPatientEffectHandlerTest {
         assigningUser = user
     )) doReturn Single.just(newShrId)
 
+    stubSavedShrIds()
     val ongoingEntry = entry
         .addBpPassports(listOf(bpPassport.identifier))
         .updateShrId(newShrId.identifier)
@@ -763,6 +781,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
     verify(patientRepository).createBusinessIdFromIdentifier(
         id = shrIdentifierUuid,
         patientUuid = patient.uuid,
@@ -804,6 +823,7 @@ class EditPatientEffectHandlerTest {
         assigningUser = user
     )) doReturn Single.just(newShrId)
 
+    stubSavedShrIds()
     val ongoingEntry = entry
         .updateAlternativeId(nationalIdIdentifier.value)
         .updateShrId(newShrId.identifier)
@@ -813,6 +833,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
     verify(patientRepository).addIdentifierToPatient(
         uuid = shrIdentifierUuid,
         patientUuid = patient.uuid,
@@ -827,6 +848,62 @@ class EditPatientEffectHandlerTest {
     )
     verify(patientRepository, never()).saveBusinessId(any())
     verify(patientRepository, never()).deleteBusinessId(any())
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved after removing the SHR ID, then delete every active SHR ID on the patient`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    val olderShrId = TestData.businessId(
+        uuid = UUID.fromString("6d1b4a2c-8e3f-4b5a-9c7d-1e2f3a4b5c6d"),
+        patientUuid = patient.uuid,
+        identifier = Identifier("95555555555", BangladeshSharedHealthRecordId)
+    )
+    val deletedShrId = TestData.businessId(
+        uuid = UUID.fromString("7e2c5b3d-9f4a-4c6b-8d8e-2f3a4b5c6d7e"),
+        patientUuid = patient.uuid,
+        identifier = Identifier("96666666666", BangladeshSharedHealthRecordId),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    stubSavedShrIds(savedShrId, olderShrId, deletedShrId)
+    whenever(patientRepository.deleteBusinessId(any())) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(null), patient, patientAddress, phoneNumber, null, savedShrId.identifier))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
+    verify(patientRepository).deleteBusinessId(savedShrId)
+    verify(patientRepository).deleteBusinessId(olderShrId)
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved with an SHR ID that is already saved on the patient, then do not add it again`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    val syncedShrId = newShrId.copy(uuid = UUID.fromString("8f3d6c4e-0a5b-4d7c-9e9f-3a4b5c6d7e8f"))
+    stubSavedShrIds(savedShrId, syncedShrId)
+    whenever(patientRepository.deleteBusinessId(savedShrId)) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(newShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId.identifier))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).patientProfileImmediate(patient.uuid)
+    verify(patientRepository).deleteBusinessId(savedShrId)
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyNoInteractions(ui)

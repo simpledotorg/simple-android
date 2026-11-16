@@ -50,7 +50,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
   private fun displayShrId(model: EditPatientModel) {
     val shrId = model.ongoingEntry.shrId
-    val hasShrIdToRender = shrId != null || model.savedShrId != null
+    val hasShrIdToRender = shrId != null || model.savedEntry.shrId != null
 
     if (!model.isUserCountryBangladesh && !hasShrIdToRender) return
 

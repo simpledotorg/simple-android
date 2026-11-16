@@ -118,31 +118,43 @@ class EditPatientEffectHandler @AssistedInject constructor(
       savePatientEffects: Observable<SavePatientEffect>
   ): Observable<EditPatientEvent> {
     return savePatientEffects
-        .filter { it.savedShrId?.identifier != it.ongoingEntry.shrId }
+        .filter { it.savedShrId != it.ongoingEntry.shrId }
         .flatMapCompletable { savePatientEffect ->
-          val savedShrId = savePatientEffect.savedShrId
-          val newShrId = savePatientEffect.ongoingEntry.shrId
+          Completable.defer {
+            val patientUuid = savePatientEffect.ongoingEntry.patientUuid
+            val newShrId = savePatientEffect.ongoingEntry.shrId
 
-          val deleteSavedShrId = if (savedShrId != null) {
-            patientRepository.deleteBusinessId(savedShrId)
-          } else {
-            Completable.complete()
+            // Read the patient's SHR IDs from the database at save time, so that every SHR ID
+            // other than the new one is removed, including any that arrived through a sync.
+            val existingShrIds = patientRepository
+                .patientProfileImmediate(patientUuid)
+                .map { it.withoutDeletedBusinessIds().businessIds }
+                .orElse(emptyList())
+                .filter { it.identifier.type == BangladeshSharedHealthRecordId }
+
+            val deleteOtherShrIds = Completable.concat(
+                existingShrIds
+                    .filter { it.identifier != newShrId }
+                    .map(patientRepository::deleteBusinessId)
+            )
+
+            val isNewShrIdAlreadySaved = existingShrIds.any { it.identifier == newShrId }
+
+            val addNewShrId = if (newShrId != null && !isNewShrIdAlreadySaved) {
+              patientRepository
+                  .addIdentifierToPatient(
+                      uuid = uuidGenerator.v4(),
+                      patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                      identifier = newShrId,
+                      assigningUser = currentUser.get()
+                  )
+                  .ignoreElement()
+            } else {
+              Completable.complete()
+            }
+
+            deleteOtherShrIds.andThen(addNewShrId)
           }
-
-          val addNewShrId = if (newShrId != null) {
-            patientRepository
-                .addIdentifierToPatient(
-                    uuid = uuidGenerator.v4(),
-                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
-                    identifier = newShrId,
-                    assigningUser = currentUser.get()
-                )
-                .ignoreElement()
-          } else {
-            Completable.complete()
-          }
-
-          deleteSavedShrId.andThen(addNewShrId)
         }
         .toObservable()
   }

@@ -515,4 +515,59 @@ class ScanSimpleIdUpdateTest {
         ))
   }
 
+  @Test
+  fun `when an SHR ID is scanned and screen is opened from patient entry screen to add SHR ID, then search for the patient`() {
+    val model = ScanSimpleIdModel.create(OpenedFrom.PatientEntryScreen.ToAddShrId)
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+
+    spec
+        .given(model)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("98146050888"))
+        .then(assertThatNext(
+            hasModel(model.searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when a bp passport is scanned and screen is opened from patient entry screen to add SHR ID, then show scanned qr code error`() {
+    val model = ScanSimpleIdModel.create(OpenedFrom.PatientEntryScreen.ToAddShrId)
+
+    spec
+        .given(model)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("0486cdb8-b617-41bf-9b9f-4a89434c68cf"))
+        .then(assertThatNext(
+            hasModel(model.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when screen is opened from patient entry to add SHR ID and patient is not found online, then go back with the SHR ID`() {
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+    val model = ScanSimpleIdModel.create(OpenedFrom.PatientEntryScreen.ToAddShrId).searching()
+
+    spec
+        .given(model)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
+        .then(assertThatNext(
+            hasModel(model.notSearching()),
+            hasEffects(GoBackToEditPatientScreen(identifier))
+        ))
+  }
+
+  @Test
+  fun `when screen is opened from patient entry to add SHR ID and a patient with the SHR ID already exists, then show identifier already exists error`() {
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+    val model = ScanSimpleIdModel.create(OpenedFrom.PatientEntryScreen.ToAddShrId).searching()
+    val patient = TestData.patient(uuid = UUID.fromString("3a2b3c4d-5e6f-4a1b-8c9d-0e1f2a3b4c5d"))
+
+    spec
+        .given(model)
+        .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
+        .then(assertThatNext(
+            hasModel(model.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.IdentifierAlreadyExists))
+        ))
+  }
 }

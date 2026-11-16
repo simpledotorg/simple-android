@@ -15,9 +15,6 @@ import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Not
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
-import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen
-import org.simple.clinic.scanid.OpenedFrom.InstantSearchScreen
-import org.simple.clinic.scanid.OpenedFrom.PatientsTabScreen
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import java.util.UUID
 import javax.inject.Inject
@@ -44,9 +41,10 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun invalidQrCode(model: ScanSimpleIdModel): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return when (model.openedFrom) {
-      is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-      InstantSearchScreen, PatientsTabScreen -> next(model.notSearching().invalidQrCode())
+    return if (model.isOpenedToAddIdentifier) {
+      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+    } else {
+      next(model.notSearching().invalidQrCode())
     }
   }
 
@@ -64,11 +62,10 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       result: Found
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return when (model.openedFrom) {
-      is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
-      InstantSearchScreen, PatientsTabScreen -> next(
-          model.notSearching(), SaveCompleteMedicalRecords(result.medicalRecords)
-      )
+    return if (model.isOpenedToAddIdentifier) {
+      next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
+    } else {
+      next(model.notSearching(), SaveCompleteMedicalRecords(result.medicalRecords))
     }
   }
 
@@ -90,9 +87,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     return if (event.patients.isEmpty()) {
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event)
     } else {
-      when (model.openedFrom) {
-        is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
-        InstantSearchScreen, PatientsTabScreen -> next(
+      if (model.isOpenedToAddIdentifier) {
+        next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
+      } else {
+        next(
             model = model.notSearching(),
             patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
         )
@@ -110,7 +108,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       identifier: Identifier
   ): ScanSimpleIdViewEffect {
-    return if (model.openedFrom is EditPatientScreen)
+    return if (model.isOpenedToAddIdentifier)
       GoBackToEditPatientScreen(identifier)
     else
       OpenPatientSearch(identifier, null)

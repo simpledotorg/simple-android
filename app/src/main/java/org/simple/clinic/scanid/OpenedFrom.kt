@@ -19,4 +19,10 @@ sealed class OpenedFrom : Parcelable {
     @Parcelize
     data object ToAddShrId : EditPatientScreen()
   }
+
+  sealed class PatientEntryScreen : OpenedFrom() {
+
+    @Parcelize
+    data object ToAddShrId : PatientEntryScreen()
+  }
 }

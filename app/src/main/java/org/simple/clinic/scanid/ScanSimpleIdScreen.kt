@@ -345,7 +345,8 @@ class ScanSimpleIdScreen : BaseScreen<
     toolBar.title = when (openedFrom) {
       OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
       OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
-      OpenedFrom.EditPatientScreen.ToAddShrId -> resources.getString(R.string.identifiertype_health_id)
+      OpenedFrom.EditPatientScreen.ToAddShrId,
+      OpenedFrom.PatientEntryScreen.ToAddShrId -> resources.getString(R.string.identifiertype_health_id)
     }
   }
 

@@ -12,7 +12,7 @@ class ScanSimpleIdUiRenderer(private val ui: ScanSimpleIdUi) : ViewRenderer<Scan
 
     renderScanQrError(model.scanErrorState)
 
-    if (model.isOpenedFromEditPatientScreen)
+    if (model.isOpenedToAddIdentifier)
       ui.hideEnteredCodeContainerView()
 
     ui.setToolBarTitle(model.openedFrom)

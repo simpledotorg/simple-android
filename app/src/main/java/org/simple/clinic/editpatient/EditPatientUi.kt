@@ -5,6 +5,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import java.util.UUID
 
 interface EditPatientUi {
   fun displayBpPassports(bpPassports: List<BPPassportListItem>)
@@ -31,7 +32,7 @@ interface EditPatientUi {
   fun hideProgress()
   fun setupUi(inputFields: InputFields)
   fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>)
-  fun openSimpleScanIdScreen(openedFrom: OpenedFrom)
+  fun openSimpleScanIdScreen(openedFrom: OpenedFrom, patientUuidBeingEdited: UUID?)
   fun showConfirmRemoveShrIdSheet()
   fun displayShrId(shrId: Identifier, isHighlighted: Boolean)
   fun showAddShrIdButton()

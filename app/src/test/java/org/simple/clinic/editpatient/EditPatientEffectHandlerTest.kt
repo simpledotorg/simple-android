@@ -446,7 +446,7 @@ class EditPatientEffectHandlerTest {
     testCase.dispatch(OpenSimpleScanIdScreen(openedFrom))
 
     // then
-    verify(ui).openSimpleScanIdScreen(openedFrom)
+    verify(ui).openSimpleScanIdScreen(openedFrom, null)
     testCase.assertNoOutgoingEvents()
     verifyNoMoreInteractions(ui)
   }

@@ -4,20 +4,26 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.scanid.ScanSearchState.NotSearching
 import org.simple.clinic.scanid.ScanSearchState.Searching
+import java.util.UUID
 
 @Parcelize
 data class ScanSimpleIdModel(
     val enteredCode: EnteredCodeInput?,
     val scanSearchState: ScanSearchState,
     val scanErrorState: ScanErrorState?,
-    val openedFrom: OpenedFrom
+    val openedFrom: OpenedFrom,
+    val patientUuidBeingEdited: UUID?
 ) : Parcelable {
 
   companion object {
-    fun create(openedFrom: OpenedFrom) = ScanSimpleIdModel(enteredCode = null,
+    fun create(
+        openedFrom: OpenedFrom,
+        patientUuidBeingEdited: UUID? = null
+    ) = ScanSimpleIdModel(enteredCode = null,
         scanSearchState = NotSearching,
         scanErrorState = null,
-        openedFrom = openedFrom)
+        openedFrom = openedFrom,
+        patientUuidBeingEdited = patientUuidBeingEdited)
   }
 
   val isSearching: Boolean

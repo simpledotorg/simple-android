@@ -70,7 +70,7 @@ class EditPatientUpdate(
   }
 
   private fun addShrIdButtonClicked(model: EditPatientModel): Next<EditPatientModel, EditPatientEffect> {
-    return if (model.canAddShrId) dispatch(OpenSimpleScanIdScreen(ToAddShrId)) else noChange()
+    return if (model.canAddShrId) dispatch(OpenSimpleScanIdScreen(ToAddShrId, model.savedPatient.uuid)) else noChange()
   }
 
   private fun addShrId(model: EditPatientModel, event: ShrIdAdded): Next<EditPatientModel, EditPatientEffect> {

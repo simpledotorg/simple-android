@@ -242,7 +242,7 @@ class EditPatientUpdateTest {
         .whenEvent(AddShrIdButtonClicked())
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenSimpleScanIdScreen(ToAddShrId))
+            hasEffects(OpenSimpleScanIdScreen(ToAddShrId, patientProfile.patient.uuid))
         ))
   }
 

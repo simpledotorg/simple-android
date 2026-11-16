@@ -105,6 +105,7 @@ import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -447,14 +448,14 @@ class EditPatientScreen : BaseScreen<
     villageTypeAheadAdapter.addAll(colonyOrVillageList)
   }
 
-  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
+  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom, patientUuidBeingEdited: UUID?) {
     val requestType = when (openedFrom) {
       is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
       is OpenedFrom.EditPatientScreen.ToAddShrId -> ScanShrId
       else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
     }
 
-    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
+    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom, patientUuidBeingEdited))
   }
 
   override fun showConfirmRemoveShrIdSheet() {

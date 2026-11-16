@@ -43,6 +43,9 @@ data object GoBackEffect : EditPatientViewEffect()
 
 data object ShowDiscardChangesAlertEffect : EditPatientViewEffect()
 
-data class OpenSimpleScanIdScreen(val openedFrom: OpenedFrom) : EditPatientViewEffect()
+data class OpenSimpleScanIdScreen(
+    val openedFrom: OpenedFrom,
+    val patientUuidBeingEdited: UUID? = null
+) : EditPatientViewEffect()
 
 data object ShowConfirmRemoveShrIdSheet : EditPatientViewEffect()

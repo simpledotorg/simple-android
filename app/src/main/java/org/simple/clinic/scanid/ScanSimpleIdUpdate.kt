@@ -54,15 +54,20 @@ class ScanSimpleIdUpdate @Inject constructor(
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event.result) {
       is NotFound, is OtherError -> next(model.notSearching(), checkIfOpenedFromEditPatient(model, event.identifier))
-      is Found -> patientIsFoundWhileSearchingFromOnlineLookup(model, event.result)
+      is Found -> patientIsFoundWhileSearchingFromOnlineLookup(model, event.result, event.identifier)
     }
   }
 
   private fun patientIsFoundWhileSearchingFromOnlineLookup(
       model: ScanSimpleIdModel,
-      result: Found
+      result: Found,
+      identifier: Identifier
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (model.isOpenedToAddIdentifier) {
+    val isFoundOnlyOnPatientBeingEdited = result.medicalRecords.all { it.patient.patientUuid == model.patientUuidBeingEdited }
+
+    return if (model.isOpenedToAddIdentifier && isFoundOnlyOnPatientBeingEdited) {
+      next(model.notSearching(), checkIfOpenedFromEditPatient(model, identifier))
+    } else if (model.isOpenedToAddIdentifier) {
       next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
     } else {
       next(model.notSearching(), SaveCompleteMedicalRecords(result.medicalRecords))
@@ -84,7 +89,10 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return if (event.patients.isEmpty()) {
+    val isFoundOnlyOnPatientBeingEdited = model.isOpenedToAddIdentifier &&
+        event.patients.all { it.uuid == model.patientUuidBeingEdited }
+
+    return if (event.patients.isEmpty() || isFoundOnlyOnPatientBeingEdited) {
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event)
     } else {
       if (model.isOpenedToAddIdentifier) {

@@ -82,6 +82,9 @@ data class EditPatientModel(
   val hasLoadedPatientIdentifiers: Boolean
     get() = bpPassports != null
 
+  val canAddShrId: Boolean
+    get() = isUserCountryBangladesh && hasLoadedPatientIdentifiers && ongoingEntry.shrId == null
+
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
 
@@ -145,6 +148,12 @@ data class EditPatientModel(
 
     return updatedModel.copy(bpPassports = bpPassports, savedShrId = shrId)
   }
+
+  fun addShrId(shrId: Identifier): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateShrId(shrId))
+
+  fun removeShrId(): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateShrId(null))
 
   fun addBpPassports(bpPassports: List<Identifier>): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.addBpPassports(bpPassports))

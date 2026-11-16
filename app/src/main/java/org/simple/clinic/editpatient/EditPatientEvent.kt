@@ -101,3 +101,18 @@ data class BpPassportAdded(val identifier: List<Identifier>) : EditPatientEvent(
   override val analyticsName: String = "Edit Patient Entry:Bp Passport Added"
 }
 
+data class AddShrIdButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 3
+) : EditPatientEvent(), RequiresPermission {
+  override val analyticsName = "Edit Patient Entry:Add SHR ID Button Clicked"
+}
+
+data class ShrIdAdded(val identifier: Identifier) : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:SHR ID Added"
+}
+
+data object RemoveShrIdClicked : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Remove SHR ID Clicked"
+}

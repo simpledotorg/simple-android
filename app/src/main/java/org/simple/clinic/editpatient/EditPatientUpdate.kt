@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
 import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
@@ -14,9 +15,11 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddNHID
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddShrId
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
@@ -61,7 +64,22 @@ class EditPatientUpdate(
       is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
       is AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
       is BpPassportAdded -> addBpPassports(model, event)
+      is AddShrIdButtonClicked -> addShrIdButtonClicked(model)
+      is ShrIdAdded -> addShrId(model, event)
+      RemoveShrIdClicked -> next(model.removeShrId())
     }
+  }
+
+  private fun addShrIdButtonClicked(model: EditPatientModel): Next<EditPatientModel, EditPatientEffect> {
+    return if (model.canAddShrId) dispatch(OpenSimpleScanIdScreen(ToAddShrId)) else noChange()
+  }
+
+  private fun addShrId(model: EditPatientModel, event: ShrIdAdded): Next<EditPatientModel, EditPatientEffect> {
+    val identifier = event.identifier
+    val isValidShrId = identifier.type == BangladeshSharedHealthRecordId &&
+        BangladeshSharedHealthRecordId.isValid(identifier.value)
+
+    return if (isValidShrId && model.canAddShrId) next(model.addShrId(identifier)) else noChange()
   }
 
   private fun addBpPassports(model: EditPatientModel, event: BpPassportAdded): Next<EditPatientModel, EditPatientEffect> {

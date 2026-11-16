@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,6 +56,7 @@ fun PatientSummaryToolbar(
     phoneNumber: PatientPhoneNumber?,
     bpPassport: BusinessId?,
     alternativeId: BusinessId?,
+    shrId: BusinessId?,
     onBack: () -> Unit,
     onContact: () -> Unit,
     onEditPatient: () -> Unit,
@@ -109,7 +111,8 @@ fun PatientSummaryToolbar(
           age = age,
           address = address,
           bpPassport = bpPassport,
-          alternativeId = alternativeId
+          alternativeId = alternativeId,
+          shrId = shrId
       )
     }
   }
@@ -122,7 +125,8 @@ private fun PatientInfoContent(
     age: Int,
     address: String,
     bpPassport: BusinessId?,
-    alternativeId: BusinessId?
+    alternativeId: BusinessId?,
+    shrId: BusinessId?
 ) {
   Column(
       modifier = Modifier
@@ -156,13 +160,28 @@ private fun PatientInfoContent(
     Column(
         modifier = Modifier.padding(top = dimensionResource(id = R.dimen.spacing_4))
     ) {
-      if (bpPassport != null) {
-        Text(
-            text = buildBusinessIdString(businessId = bpPassport),
-            style = MaterialTheme.typography.body2,
-            color = SimpleTheme.colors.onToolbarPrimary72,
-            modifier = Modifier.padding(end = dimensionResource(id = R.dimen.spacing_8))
-        )
+      val inlineIds = listOfNotNull(bpPassport, shrId)
+      if (inlineIds.isNotEmpty()) {
+        // The BP passport and SHR ID are shown on the same line, separated by a dot,
+        // and wrap onto the next line as a whole when there is not enough space.
+        FlowRow {
+          inlineIds.forEachIndexed { index, businessId ->
+            if (index > 0) {
+              Text(
+                  text = "•",
+                  style = MaterialTheme.typography.body2,
+                  color = SimpleTheme.colors.onToolbarPrimary72,
+                  modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.spacing_12))
+              )
+            }
+
+            Text(
+                text = buildBusinessIdString(businessId = businessId),
+                style = MaterialTheme.typography.body2,
+                color = SimpleTheme.colors.onToolbarPrimary72,
+            )
+          }
+        }
       }
 
       if (alternativeId != null) {
@@ -170,7 +189,7 @@ private fun PatientInfoContent(
             text = buildBusinessIdString(businessId = alternativeId),
             style = MaterialTheme.typography.body2,
             color = SimpleTheme.colors.onToolbarPrimary72,
-            modifier = Modifier.padding(top = if (bpPassport != null) dimensionResource(id = R.dimen.spacing_4) else 0.dp)
+            modifier = Modifier.padding(top = if (inlineIds.isNotEmpty()) dimensionResource(id = R.dimen.spacing_4) else 0.dp)
         )
       }
     }
@@ -234,53 +253,62 @@ private fun buildBusinessIdString(businessId: BusinessId): AnnotatedString {
   }
 }
 
-@Preview
+private val previewPhoneNumber = PatientPhoneNumber(
+    uuid = UUID.fromString("73f2c465-9833-4922-8fb2-6700094fdb3a"),
+    patientUuid = UUID.fromString("6878819c-aeb1-4b1f-bcb5-22059697329a"),
+    number = "83217387122",
+    phoneType = PatientPhoneNumberType.Mobile,
+    active = true,
+    createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+    updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+    deletedAt = null,
+)
+
+private val previewBpPassport = BusinessId(
+    uuid = UUID.fromString("d758d820-b8d4-448d-be6c-ed2e970d193f"),
+    patientUuid = UUID.fromString("4ea1e739-1d5f-4f23-8e73-d42b1445c58e"),
+    identifier = Identifier(
+        value = "9828b60b-b6d1-4f8a-bcfc-b9ddfc8fc1e2",
+        type = Identifier.IdentifierType.BpPassport
+    ),
+    metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1,
+    metaData = "",
+    createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+    updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+    deletedAt = null,
+    searchHelp = "123456"
+)
+
+private val previewShrId = BusinessId(
+    uuid = UUID.fromString("3b0e3ad5-2b0a-4a43-9a5e-5c2f2a0f8b11"),
+    patientUuid = UUID.fromString("4ea1e739-1d5f-4f23-8e73-d42b1445c58e"),
+    identifier = Identifier(
+        value = "91234567890",
+        type = Identifier.IdentifierType.BangladeshSharedHealthRecordId
+    ),
+    metaDataVersion = BusinessId.MetaDataVersion.BangladeshSharedHealthRecordIdV1,
+    metaData = "",
+    createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+    updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+    deletedAt = null,
+    searchHelp = "91234567890"
+)
+
 @Composable
-private fun PatientSummaryToolbarPreview() {
+private fun PatientSummaryToolbarPreviewContent(
+    bpPassport: BusinessId?,
+    shrId: BusinessId?
+) {
   SimpleTheme {
     PatientSummaryToolbar(
         patientName = "SpongeBob",
         gender = Gender.Male,
         age = 25,
         address = "124 Conch Street, Bikini Bottom, Pacific Ocean",
-        phoneNumber = PatientPhoneNumber(
-            uuid = UUID.fromString("73f2c465-9833-4922-8fb2-6700094fdb3a"),
-            patientUuid = UUID.fromString("6878819c-aeb1-4b1f-bcb5-22059697329a"),
-            number = "83217387122",
-            phoneType = PatientPhoneNumberType.Mobile,
-            active = true,
-            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-            deletedAt = null,
-        ),
-        bpPassport = BusinessId(
-            uuid = UUID.fromString("d758d820-b8d4-448d-be6c-ed2e970d193f"),
-            patientUuid = UUID.fromString("4ea1e739-1d5f-4f23-8e73-d42b1445c58e"),
-            identifier = Identifier(
-                value = "9828b60b-b6d1-4f8a-bcfc-b9ddfc8fc1e2",
-                type = Identifier.IdentifierType.BpPassport
-            ),
-            metaDataVersion = BusinessId.MetaDataVersion.BpPassportMetaDataV1,
-            metaData = "",
-            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-            deletedAt = null,
-            searchHelp = "123456"
-        ),
-        alternativeId = BusinessId(
-            uuid = UUID.fromString("edfcf367-26a7-40a6-8af7-570c718ab387"),
-            patientUuid = UUID.fromString("f17756f9-4a45-486e-940d-16cd6c2a2e1b"),
-            identifier = Identifier(
-                value = "1276417263891739",
-                type = Identifier.IdentifierType.BangladeshNationalId
-            ),
-            metaDataVersion = BusinessId.MetaDataVersion.BangladeshNationalIdMetaDataV1,
-            metaData = "",
-            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
-            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-            deletedAt = null,
-            searchHelp = "1276417263891739"
-        ),
+        phoneNumber = previewPhoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = null,
+        shrId = shrId,
         onBack = {
           // no-op
         },
@@ -292,4 +320,28 @@ private fun PatientSummaryToolbarPreview() {
         }
     )
   }
+}
+
+@Preview(name = "BP passport and SHR ID")
+@Composable
+private fun PatientSummaryToolbarWithBpPassportAndShrIdPreview() {
+  PatientSummaryToolbarPreviewContent(bpPassport = previewBpPassport, shrId = previewShrId)
+}
+
+@Preview(name = "BP passport only")
+@Composable
+private fun PatientSummaryToolbarWithBpPassportPreview() {
+  PatientSummaryToolbarPreviewContent(bpPassport = previewBpPassport, shrId = null)
+}
+
+@Preview(name = "SHR ID only")
+@Composable
+private fun PatientSummaryToolbarWithShrIdPreview() {
+  PatientSummaryToolbarPreviewContent(bpPassport = null, shrId = previewShrId)
+}
+
+@Preview(name = "No BP passport or SHR ID")
+@Composable
+private fun PatientSummaryToolbarWithoutIdsPreview() {
+  PatientSummaryToolbarPreviewContent(bpPassport = null, shrId = null)
 }

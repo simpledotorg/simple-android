@@ -535,6 +535,7 @@ class PatientSummaryScreen :
               phoneNumber = patientSummaryProfile.phoneNumber,
               bpPassport = patientSummaryProfile.bpPassport,
               alternativeId = patientSummaryProfile.alternativeId,
+              shrId = patientSummaryProfile.shrId,
               onBack = {
                 hotEvents.onNext(PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp))
               },

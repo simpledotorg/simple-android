@@ -85,6 +85,9 @@ data class EditPatientModel(
   val canAddShrId: Boolean
     get() = isUserCountryBangladesh && hasLoadedPatientIdentifiers && ongoingEntry.shrId == null
 
+  val isShrIdNewlyAdded: Boolean
+    get() = ongoingEntry.shrId != null && ongoingEntry.shrId != savedEntry.shrId
+
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
 

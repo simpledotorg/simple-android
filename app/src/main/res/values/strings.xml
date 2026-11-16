@@ -130,6 +130,7 @@
   <string name="patientedit_zone" translatable="false">@string/patiententry_zone</string>
   <string name="patientedit_delete_patient">Delete</string>
   <string name="patientedit_add_button">ADD</string>
+  <string name="patientedit_remove_id_button">REMOVE ID</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

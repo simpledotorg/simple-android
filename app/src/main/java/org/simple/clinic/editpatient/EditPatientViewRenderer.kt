@@ -46,6 +46,21 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     )
 
     displayBpPassports(model)
+
+    displayShrId(model)
+  }
+
+  private fun displayShrId(model: EditPatientModel) {
+    val shrId = model.ongoingEntry.shrId
+    val hasShrIdToRender = shrId != null || model.savedShrId != null
+
+    if (!model.isUserCountryBangladesh && !hasShrIdToRender) return
+
+    when {
+      shrId != null -> ui.displayShrId(shrId, isHighlighted = model.isShrIdNewlyAdded)
+      model.canAddShrId -> ui.showAddShrIdButton()
+      else -> ui.hideShrId()
+    }
   }
 
   private fun displayNewlyAddedNHID(alternativeId: String) {

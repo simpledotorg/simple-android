@@ -36,4 +36,7 @@ interface EditPatientUi {
   fun showAddNHIDButton()
   fun hideAddNHIDButton()
   fun showIndiaNHIDLabel()
+  fun displayShrId(shrId: Identifier, isHighlighted: Boolean)
+  fun showAddShrIdButton()
+  fun hideShrId()
 }

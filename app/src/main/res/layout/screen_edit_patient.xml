@@ -191,6 +191,71 @@
         app:iconGravity="start"
         app:iconPadding="@dimen/spacing_8" />
 
+      <TextView
+        android:id="@+id/shrIdLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:text="@string/identifiertype_health_id"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+      <LinearLayout
+        android:id="@+id/shrIdContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+          android:id="@+id/shrIdText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:drawablePadding="@dimen/spacing_8"
+          android:gravity="center_vertical"
+          android:paddingHorizontal="@dimen/spacing_8"
+          android:textAppearance="?attr/textAppearanceBody1Numeric"
+          android:textColor="?attr/colorOnSurface"
+          app:drawableStartCompat="@drawable/patient_id_card"
+          app:drawableTint="@color/color_on_surface_67"
+          tools:text="91234567890" />
+
+      </LinearLayout>
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/removeShrIdButton"
+        style="?attr/borderlessButtonDenseStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_2"
+        android:text="@string/patientedit_remove_id_button"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceButton"
+        android:visibility="gone"
+        app:icon="@drawable/ic_highlight_off_24px"
+        app:iconGravity="start"
+        app:iconPadding="@dimen/spacing_8"
+        tools:visibility="visible" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/addShrIdButton"
+        style="?attr/borderlessButtonDenseStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_2"
+        android:text="@string/patientedit_add_button"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceButton"
+        android:visibility="gone"
+        app:icon="@drawable/ic_add_circle_outline_24px"
+        app:iconGravity="start"
+        app:iconPadding="@dimen/spacing_8" />
+
       <RadioGroup
         android:id="@+id/genderRadioGroup"
         android:layout_width="match_parent"

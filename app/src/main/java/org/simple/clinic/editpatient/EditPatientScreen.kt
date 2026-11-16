@@ -255,6 +255,21 @@ class EditPatientScreen : BaseScreen<
   private val addNHIDButton
     get() = binding.addNHIDButton
 
+  private val shrIdLabel
+    get() = binding.shrIdLabel
+
+  private val shrIdContainer
+    get() = binding.shrIdContainer
+
+  private val shrIdText
+    get() = binding.shrIdText
+
+  private val removeShrIdButton
+    get() = binding.removeShrIdButton
+
+  private val addShrIdButton
+    get() = binding.addShrIdButton
+
   private val saveButtonFrame
     get() = binding.saveButtonFrame
 
@@ -361,6 +376,8 @@ class EditPatientScreen : BaseScreen<
       backClicks(),
       addBpPassportClicks(),
       addNHIDButtonClicks(),
+      addShrIdClicks(),
+      removeShrIdClicks(),
       hotEvents
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -400,6 +417,10 @@ class EditPatientScreen : BaseScreen<
     saveButtonFrame.applyInsetsBottomPadding()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+
+    shrIdContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
   }
 
   private fun setAdapterWhenVillageTypeAheadIsEnabled() {
@@ -407,7 +428,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun handleScanIdentifierResult() {
-    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID, ScanShrId) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
       when (requestKey) {
@@ -419,6 +440,11 @@ class EditPatientScreen : BaseScreen<
         ScanIndiaNationalHealthID -> {
           val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
           hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
+        }
+
+        ScanShrId -> {
+          val scannedShrId = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(ShrIdAdded(scannedShrId))
         }
       }
     }
@@ -439,6 +465,7 @@ class EditPatientScreen : BaseScreen<
     val requestType = when (openedFrom) {
       is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
       is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
+      is OpenedFrom.EditPatientScreen.ToAddShrId -> ScanShrId
       else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
     }
 
@@ -451,6 +478,39 @@ class EditPatientScreen : BaseScreen<
 
   override fun hideAddNHIDButton() {
     addNHIDButton.visibility = GONE
+  }
+
+  override fun displayShrId(shrId: Identifier, isHighlighted: Boolean) {
+    shrIdLabel.visibility = VISIBLE
+    shrIdLabel.text = shrId.displayType(resources)
+    shrIdContainer.visibility = VISIBLE
+    shrIdText.text = shrId.displayValue()
+    removeShrIdButton.visibility = VISIBLE
+    addShrIdButton.visibility = GONE
+
+    if (isHighlighted) {
+      shrIdText.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
+      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+      shrIdText.updatePadding(top = verticalPadding, bottom = verticalPadding)
+    } else {
+      shrIdText.background = null
+      shrIdText.updatePadding(top = 0, bottom = 0)
+    }
+  }
+
+  override fun showAddShrIdButton() {
+    shrIdLabel.visibility = VISIBLE
+    shrIdLabel.setText(R.string.identifiertype_health_id)
+    shrIdContainer.visibility = GONE
+    removeShrIdButton.visibility = GONE
+    addShrIdButton.visibility = VISIBLE
+  }
+
+  override fun hideShrId() {
+    shrIdLabel.visibility = GONE
+    shrIdContainer.visibility = GONE
+    removeShrIdButton.visibility = GONE
+    addShrIdButton.visibility = GONE
   }
 
   override fun showIndiaNHIDLabel() {
@@ -548,6 +608,14 @@ class EditPatientScreen : BaseScreen<
     return backButtonClicks
         .mergeWith(hardwareBackPressEvents)
         .cast()
+  }
+
+  private fun addShrIdClicks(): Observable<EditPatientEvent> {
+    return addShrIdButton.clicks().map { AddShrIdButtonClicked() }
+  }
+
+  private fun removeShrIdClicks(): Observable<EditPatientEvent> {
+    return removeShrIdButton.clicks().map { RemoveShrIdClicked }
   }
 
   private fun addBpPassportClicks(): Observable<EditPatientEvent> {
@@ -919,4 +987,7 @@ class EditPatientScreen : BaseScreen<
 
   @Parcelize
   object ScanIndiaNationalHealthID : Parcelable
+
+  @Parcelize
+  object ScanShrId : Parcelable
 }

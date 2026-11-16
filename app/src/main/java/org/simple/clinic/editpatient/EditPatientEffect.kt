@@ -16,7 +16,8 @@ data class SavePatientEffect(
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
-    val saveAlternativeId: BusinessId?
+    val saveAlternativeId: BusinessId?,
+    val savedShrId: BusinessId?
 ) : EditPatientEffect()
 
 data object LoadInputFields : EditPatientEffect()

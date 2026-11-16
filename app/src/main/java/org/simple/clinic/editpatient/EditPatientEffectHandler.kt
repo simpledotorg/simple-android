@@ -104,13 +104,47 @@ class EditPatientEffectHandler @AssistedInject constructor(
           .subscribeOn(scheduler)
           .share()
 
-      Observable.merge(
+      Observable.mergeArray(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
           handleAlternativeId(sharedSavePatientEffects),
-          linkBpPassportToThePatient(sharedSavePatientEffects)
+          linkBpPassportToThePatient(sharedSavePatientEffects),
+          saveShrId(sharedSavePatientEffects)
       )
     }
+  }
+
+  private fun saveShrId(
+      savePatientEffects: Observable<SavePatientEffect>
+  ): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter { it.savedShrId?.identifier != it.ongoingEntry.shrId }
+        .flatMapCompletable { savePatientEffect ->
+          val savedShrId = savePatientEffect.savedShrId
+          val newShrId = savePatientEffect.ongoingEntry.shrId
+
+          val deleteSavedShrId = if (savedShrId != null) {
+            patientRepository.deleteBusinessId(savedShrId)
+          } else {
+            Completable.complete()
+          }
+
+          val addNewShrId = if (newShrId != null) {
+            patientRepository
+                .addIdentifierToPatient(
+                    uuid = uuidGenerator.v4(),
+                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                    identifier = newShrId,
+                    assigningUser = currentUser.get()
+                )
+                .ignoreElement()
+          } else {
+            Completable.complete()
+          }
+
+          deleteSavedShrId.andThen(addNewShrId)
+        }
+        .toObservable()
   }
 
   private fun linkBpPassportToThePatient(

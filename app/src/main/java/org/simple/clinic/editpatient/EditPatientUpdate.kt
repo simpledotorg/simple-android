@@ -121,7 +121,10 @@ class EditPatientUpdate(
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator, ageValidator)
     return if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId) = model
-      next(model.buttonStateChanged(EditPatientState.SAVING_PATIENT), SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId))
+      next(
+          model.buttonStateChanged(EditPatientState.SAVING_PATIENT),
+          SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId, model.savedShrId)
+      )
     } else {
       dispatch(ShowValidationErrorsEffect(validationErrors))
     }

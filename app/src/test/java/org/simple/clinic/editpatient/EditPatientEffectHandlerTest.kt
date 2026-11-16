@@ -145,7 +145,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.deleteBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.updateAlternativeId(""), patient, patientAddress, phoneNumber, bangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(entry.updateAlternativeId(""), patient, patientAddress, phoneNumber, bangladeshNationalId, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -168,7 +168,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.deleteBusinessId(bangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, bangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(entry, patient, patientAddress, phoneNumber, bangladeshNationalId, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -200,7 +200,7 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.saveBusinessId(updatedBangladeshNationalId)) doReturn Completable.complete()
 
     // when
-    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber, bangladeshNationalId))
+    testCase.dispatch(SavePatientEffect(ongoingEntryWithBangladeshId, patient, patientAddress, phoneNumber, bangladeshNationalId, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -256,6 +256,7 @@ class EditPatientEffectHandlerTest {
         patient,
         patientAddress,
         phoneNumber,
+        null,
         null
     ))
 
@@ -370,7 +371,8 @@ class EditPatientEffectHandlerTest {
         savedPatient = patientProfile.patient,
         savedAddress = patientProfile.address,
         savedPhoneNumber = patientProfile.phoneNumbers.firstOrNull(),
-        saveAlternativeId = null
+        saveAlternativeId = null,
+        savedShrId = null
     ))
 
     // then
@@ -422,7 +424,8 @@ class EditPatientEffectHandlerTest {
         savedPatient = patientProfile.patient,
         savedAddress = patientProfile.address,
         savedPhoneNumber = patientProfile.phoneNumbers.firstOrNull(),
-        saveAlternativeId = null
+        saveAlternativeId = null,
+        savedShrId = null
     ))
 
     // then
@@ -495,7 +498,7 @@ class EditPatientEffectHandlerTest {
     )) doReturn bpPassportBusinessId2
 
     // when
-    testCase.dispatch(SavePatientEffect(entry.addBpPassports(listOfBpPassports), patient, patientAddress, phoneNumber, null))
+    testCase.dispatch(SavePatientEffect(entry.addBpPassports(listOfBpPassports), patient, patientAddress, phoneNumber, null, null))
 
     // then
     verify(patientRepository).updatePatient(patient)
@@ -522,11 +525,47 @@ class EditPatientEffectHandlerTest {
     verifyNoInteractions(ui)
   }
 
+  private val shrIdentifierUuid = UUID.fromString("b8a5d3f2-6f3c-4a0e-9a59-8f4f1b1c6a21")
+
   private val savedShrId = TestData.businessId(
       uuid = UUID.fromString("0f7a9d2e-31a8-4c39-9d43-0a4f1e2e9b55"),
       patientUuid = patient.uuid,
       identifier = Identifier("91234567890", BangladeshSharedHealthRecordId)
   )
+
+  private val newShrId = TestData.businessId(
+      uuid = shrIdentifierUuid,
+      patientUuid = patient.uuid,
+      identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+  )
+
+  private fun bangladeshTestCase(): EffectHandlerTestCase<EditPatientEffect, EditPatientEvent> {
+    val effectHandler = EditPatientEffectHandler(
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        country = bangladesh,
+        uuidGenerator = FakeUuidGenerator.fixed(shrIdentifierUuid),
+        currentUser = Lazy { user },
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        viewEffectsConsumer = viewEffectHandler::handle
+    )
+
+    return EffectHandlerTestCase(effectHandler.build())
+  }
+
+  private fun stubPatientSave() {
+    whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
+    whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
+    whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
+  }
+
+  private fun verifyPatientSaved() {
+    verify(patientRepository).updatePatient(patient)
+    verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
+    verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
+  }
 
   @Test
   fun `when fetch patient identifiers effect is received, then bp passports and the SHR ID should be fetched`() {
@@ -580,5 +619,206 @@ class EditPatientEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(PatientIdentifiersFetched(emptyList(), null))
     verifyNoInteractions(ui)
+  }
+
+  @Test
+  fun `when the patient is saved with a newly added SHR ID, then add the SHR ID to the patient`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )) doReturn Single.just(newShrId)
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(newShrId.identifier), patient, patientAddress, phoneNumber, null, null))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved after removing the saved SHR ID, then delete the SHR ID`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    whenever(patientRepository.deleteBusinessId(savedShrId)) doReturn Completable.complete()
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(null), patient, patientAddress, phoneNumber, null, savedShrId))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).deleteBusinessId(savedShrId)
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved with the saved SHR ID unchanged, then do not add or delete the SHR ID`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(savedShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
+    verify(patientRepository, never()).deleteBusinessId(any())
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved after replacing the saved SHR ID, then delete the old SHR ID and add the new one`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    whenever(patientRepository.deleteBusinessId(savedShrId)) doReturn Completable.complete()
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )) doReturn Single.just(newShrId)
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.updateShrId(newShrId.identifier), patient, patientAddress, phoneNumber, null, savedShrId))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).deleteBusinessId(savedShrId)
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved with a new bp passport and a new SHR ID, then save both identifiers independently`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    val bpPassport = TestData.businessId(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = Identifier("e116bf4c-53e0-46a3-b95d-295d7178d66e", BpPassport)
+    )
+    whenever(patientRepository.createBusinessIdFromIdentifier(
+        id = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassport.identifier,
+        user = user
+    )) doReturn bpPassport
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )) doReturn Single.just(newShrId)
+
+    val ongoingEntry = entry
+        .addBpPassports(listOf(bpPassport.identifier))
+        .updateShrId(newShrId.identifier)
+
+    // when
+    testCase.dispatch(SavePatientEffect(ongoingEntry, patient, patientAddress, phoneNumber, null, null))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).createBusinessIdFromIdentifier(
+        id = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassport.identifier,
+        user = user
+    )
+    verify(patientRepository).addIdentifiersToPatient(
+        patientUuid = patient.uuid,
+        businessIds = listOf(bpPassport)
+    )
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
+  }
+
+  @Test
+  fun `when the patient is saved with a new SHR ID and a new national ID, then save the national ID as the alternative ID and the SHR ID separately`() {
+    // given
+    val testCase = bangladeshTestCase()
+    stubPatientSave()
+    val nationalIdIdentifier = Identifier("1569273", BangladeshNationalId)
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = nationalIdIdentifier,
+        assigningUser = user
+    )) doReturn Single.just(bangladeshNationalId)
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )) doReturn Single.just(newShrId)
+
+    val ongoingEntry = entry
+        .updateAlternativeId(nationalIdIdentifier.value)
+        .updateShrId(newShrId.identifier)
+
+    // when
+    testCase.dispatch(SavePatientEffect(ongoingEntry, patient, patientAddress, phoneNumber, null, null))
+
+    // then
+    verifyPatientSaved()
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = nationalIdIdentifier,
+        assigningUser = user
+    )
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = shrIdentifierUuid,
+        patientUuid = patient.uuid,
+        identifier = newShrId.identifier,
+        assigningUser = user
+    )
+    verify(patientRepository, never()).saveBusinessId(any())
+    verify(patientRepository, never()).deleteBusinessId(any())
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+    testCase.dispose()
   }
 }

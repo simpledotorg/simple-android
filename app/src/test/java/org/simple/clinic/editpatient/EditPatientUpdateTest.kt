@@ -59,6 +59,7 @@ class EditPatientUpdateTest {
     bangladeshNationalId = null,
     saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
     isUserCountryIndia = false,
+    isUserCountryBangladesh = false,
   )
 
   @Test
@@ -100,9 +101,9 @@ class EditPatientUpdateTest {
 
     updateSpec
         .given(model)
-        .whenEvent(BpPassportsFetched(bpPassports))
+        .whenEvent(PatientIdentifiersFetched(bpPassports, null))
         .then(assertThatNext(
-            hasModel(model.bpPassportsLoaded(bpPassports)),
+            hasModel(model.patientIdentifiersLoaded(bpPassports, null)),
             hasNoEffects()
         ))
   }
@@ -147,5 +148,46 @@ class EditPatientUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+  private val bangladeshModel = EditPatientModel.from(
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = null,
+      saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
+      isUserCountryIndia = false,
+      isUserCountryBangladesh = true,
+  )
+
+  private val savedShrId = TestData.businessId(
+      uuid = UUID.fromString("5a6c55d4-4c7b-4f86-8a7e-1d0e6bb5f0a3"),
+      identifier = Identifier("91234567890", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+  )
+
+  @Test
+  fun `when patient identifiers are loaded for the first time, then set the saved SHR ID on the entries`() {
+    val bpPassports = listOf(
+        TestData.businessId(
+            uuid = UUID.fromString("0c8b3b47-2a52-4c9e-9f0b-7d1a0f6b0d11"),
+            identifier = Identifier("8ccc4438-8158-41f9-9a3a-a96e4a221aa0", Identifier.IdentifierType.BpPassport)
+        )
+    )
+
+    val expectedModel = bangladeshModel.copy(
+        savedEntry = bangladeshModel.savedEntry.updateShrId(savedShrId.identifier),
+        ongoingEntry = bangladeshModel.ongoingEntry.updateShrId(savedShrId.identifier),
+        bpPassports = bpPassports,
+        savedShrId = savedShrId
+    )
+
+    updateSpec
+        .given(bangladeshModel)
+        .whenEvent(PatientIdentifiersFetched(bpPassports, savedShrId))
+        .then(assertThatNext(
+            hasModel(expectedModel),
+            hasNoEffects()
+        ))
   }
 }

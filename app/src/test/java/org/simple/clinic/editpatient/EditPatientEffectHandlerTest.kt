@@ -37,6 +37,7 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.util.TestUserClock
@@ -304,10 +305,10 @@ class EditPatientEffectHandlerTest {
     whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(profileWithBusinessIds.toOptional())
 
     //when
-    testCase.dispatch(FetchBpPassportsEffect(patient.uuid))
+    testCase.dispatch(FetchPatientIdentifiersEffect(patient.uuid))
 
     //then
-    testCase.assertOutgoingEvents(BpPassportsFetched(listOf(bpPassport1, bpPassport2)))
+    testCase.assertOutgoingEvents(PatientIdentifiersFetched(listOf(bpPassport1, bpPassport2), null))
     verifyNoInteractions(ui)
   }
 
@@ -518,6 +519,66 @@ class EditPatientEffectHandlerTest {
     )
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
+    verifyNoInteractions(ui)
+  }
+
+  private val savedShrId = TestData.businessId(
+      uuid = UUID.fromString("0f7a9d2e-31a8-4c39-9d43-0a4f1e2e9b55"),
+      patientUuid = patient.uuid,
+      identifier = Identifier("91234567890", BangladeshSharedHealthRecordId)
+  )
+
+  @Test
+  fun `when fetch patient identifiers effect is received, then bp passports and the SHR ID should be fetched`() {
+    // given
+    val bpPassport = TestData.businessId(
+        uuid = UUID.fromString("f92e79df-7f45-4cdf-bebd-e449697083bf"),
+        identifier = Identifier("8eae0ea0-eea4-453a-8b40-f7585301957a", BpPassport),
+        patientUuid = patient.uuid
+    )
+    val deletedShrId = TestData.businessId(
+        uuid = UUID.fromString("7c1d2f2a-8f4e-4b9e-8a0a-1c1a5d8f2e33"),
+        identifier = Identifier("95555555555", BangladeshSharedHealthRecordId),
+        patientUuid = patient.uuid,
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val nationalId = TestData.businessId(
+        uuid = UUID.fromString("13ab18c3-3ae1-4d6c-ba5a-418ea0c5a9d7"),
+        identifier = Identifier("1234567890123", BangladeshNationalId),
+        patientUuid = patient.uuid
+    )
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patient.uuid,
+        patientAddressUuid = patientAddress.uuid,
+        generateBusinessId = false
+    ).copy(businessIds = listOf(bpPassport, deletedShrId, savedShrId, nationalId))
+
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(patientProfile.toOptional())
+
+    // when
+    testCase.dispatch(FetchPatientIdentifiersEffect(patient.uuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientIdentifiersFetched(listOf(bpPassport), savedShrId))
+    verifyNoInteractions(ui)
+  }
+
+  @Test
+  fun `when fetch patient identifiers effect is received and the patient has no SHR ID, then the SHR ID should be null`() {
+    // given
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patient.uuid,
+        patientAddressUuid = patientAddress.uuid,
+        generateBusinessId = false
+    )
+
+    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(patientProfile.toOptional())
+
+    // when
+    testCase.dispatch(FetchPatientIdentifiersEffect(patient.uuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientIdentifiersFetched(emptyList(), null))
     verifyNoInteractions(ui)
   }
 }

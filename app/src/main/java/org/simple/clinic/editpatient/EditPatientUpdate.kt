@@ -55,7 +55,7 @@ class EditPatientUpdate(
       is PatientSaved -> next(model.buttonStateChanged(EditPatientState.NOT_SAVING_PATIENT), GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
-      is BpPassportsFetched -> next(model.bpPassportsLoaded(event.bpPasssports))
+      is PatientIdentifiersFetched -> next(model.patientIdentifiersLoaded(event.bpPassports, event.shrId))
       is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
       is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))

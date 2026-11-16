@@ -338,6 +338,7 @@ class EditPatientScreen : BaseScreen<
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
       isUserCountryIndia = country.isoCountryCode == Country.INDIA,
+      isUserCountryBangladesh = country.isoCountryCode == Country.BANGLADESH,
   )
 
   override fun createInit() = EditPatientInit(

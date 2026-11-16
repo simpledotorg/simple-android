@@ -30,12 +30,13 @@ class EditPatientInitTest {
         bangladeshNationalId,
         EditPatientState.NOT_SAVING_PATIENT,
         false,
+        false,
     )
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
         hasModel(defaultModel),
         hasEffects(
-            FetchBpPassportsEffect(patientUuid),
+            FetchPatientIdentifiersEffect(patientUuid),
             LoadInputFields,
             FetchColonyOrVillagesEffect
         )
@@ -54,12 +55,13 @@ class EditPatientInitTest {
         bangladeshNationalId,
         EditPatientState.NOT_SAVING_PATIENT,
         false,
+        false,
     ).updateColonyOrVillagesList(colonyOrVillages)
 
     initSpec.whenInit(updatedVillageOrColonyNamesModel).then(assertThatFirst(
         hasModel(updatedVillageOrColonyNamesModel),
         hasEffects(
-            FetchBpPassportsEffect(patientUuid),
+            FetchPatientIdentifiersEffect(patientUuid),
             LoadInputFields
         )
     ))

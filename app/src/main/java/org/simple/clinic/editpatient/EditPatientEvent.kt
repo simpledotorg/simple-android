@@ -12,7 +12,10 @@ import java.util.Optional
 
 sealed class EditPatientEvent : UiEvent
 
-data class BpPassportsFetched(val bpPasssports: List<BusinessId>) : EditPatientEvent()
+data class PatientIdentifiersFetched(
+    val bpPassports: List<BusinessId>,
+    val shrId: BusinessId?
+) : EditPatientEvent()
 
 data class NameChanged(val name: String) : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"
@@ -97,3 +100,4 @@ data class AddBpPassportButtonClicked(
 data class BpPassportAdded(val identifier: List<Identifier>) : EditPatientEvent() {
   override val analyticsName: String = "Edit Patient Entry:Bp Passport Added"
 }
+

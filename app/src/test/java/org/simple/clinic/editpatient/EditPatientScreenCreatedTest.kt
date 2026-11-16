@@ -44,7 +44,7 @@ class EditPatientScreenCreatedTest {
     // given
     val (patient, address, phoneNumber) = patientFormTestParams
     val model = EditPatientModel
-        .from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false)
+        .from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false)
 
     // when
     viewRenderer.render(model)

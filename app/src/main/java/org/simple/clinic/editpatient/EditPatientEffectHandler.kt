@@ -27,6 +27,7 @@ import org.simple.clinic.patient.PhoneNumberDetails
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
@@ -61,7 +62,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
+        .addTransformer(FetchPatientIdentifiersEffect::class.java, fetchPatientIdentifiers(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .addTransformer(LoadInputFields::class.java, loadInputFields())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
@@ -77,21 +78,24 @@ class EditPatientEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun fetchBpPassports(scheduler: Scheduler): ObservableTransformer<FetchBpPassportsEffect, EditPatientEvent> {
-    return ObservableTransformer { fetchBpPassportsEffect ->
-      fetchBpPassportsEffect
+  private fun fetchPatientIdentifiers(scheduler: Scheduler): ObservableTransformer<FetchPatientIdentifiersEffect, EditPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
           .flatMap { patientRepository.patientProfile(it.patientUuid).subscribeOn(scheduler) }
           .filterAndUnwrapJust()
-          .map { patientProfile -> bpPassports(patientProfile) }
-          .map(::BpPassportsFetched)
+          .map(::patientIdentifiersFetched)
     }
   }
 
-  private fun bpPassports(patientProfile: PatientProfile): List<BusinessId> {
-    return patientProfile
-        .withoutDeletedBusinessIds()
-        .businessIds
-        .filter { it.identifier.type == BpPassport }
+  private fun patientIdentifiersFetched(patientProfile: PatientProfile): PatientIdentifiersFetched {
+    val businessIds = patientProfile.withoutDeletedBusinessIds().businessIds
+
+    return PatientIdentifiersFetched(
+        bpPassports = businessIds.filter { it.identifier.type == BpPassport },
+        shrId = businessIds
+            .filter { it.identifier.type == BangladeshSharedHealthRecordId }
+            .maxByOrNull { it.createdAt }
+    )
   }
 
   private fun savePatientTransformer(scheduler: Scheduler): ObservableTransformer<SavePatientEffect, EditPatientEvent> {

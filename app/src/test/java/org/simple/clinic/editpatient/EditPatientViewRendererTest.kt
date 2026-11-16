@@ -46,6 +46,7 @@ class EditPatientViewRendererTest {
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.SAVING_PATIENT,
       isUserCountryIndia = false,
+      isUserCountryBangladesh = false,
   )
 
   @Test
@@ -178,6 +179,7 @@ class EditPatientViewRendererTest {
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = false,
+        isUserCountryBangladesh = false,
     )
 
     // when
@@ -218,6 +220,7 @@ class EditPatientViewRendererTest {
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = false,
+        isUserCountryBangladesh = false,
     )
 
     // when
@@ -253,6 +256,7 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
+        isUserCountryBangladesh = false,
     ).updateAlternativeId(indiaNHID)
 
     // when
@@ -287,6 +291,7 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
+        isUserCountryBangladesh = false,
     )
 
     // when
@@ -320,7 +325,8 @@ class EditPatientViewRendererTest {
         dateOfBirthFormatter = dateOfBirthFormat,
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false)
+        isUserCountryIndia = false,
+        isUserCountryBangladesh = false)
 
     // when
     uiRenderer.render(model)

@@ -9,7 +9,7 @@ import java.util.UUID
 
 sealed class EditPatientEffect
 
-data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
+data class FetchPatientIdentifiersEffect(val patientUuid: UUID) : EditPatientEffect()
 
 data class SavePatientEffect(
     val ongoingEntry: EditablePatientEntry,

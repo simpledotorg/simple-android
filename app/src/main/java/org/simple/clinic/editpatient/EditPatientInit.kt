@@ -10,7 +10,7 @@ class EditPatientInit(
 ) : Init<EditPatientModel, EditPatientEffect> {
   override fun init(model: EditPatientModel): First<EditPatientModel, EditPatientEffect> {
     val effects = mutableSetOf(
-        FetchBpPassportsEffect(patient.uuid),
+        FetchPatientIdentifiersEffect(patient.uuid),
         LoadInputFields,
     )
 

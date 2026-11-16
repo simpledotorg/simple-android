@@ -32,6 +32,7 @@ import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patientattribute.PatientAttributeRepository
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
@@ -532,6 +533,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
         bpPassport = patientProfile.businessIds.filter { it.identifier.type == BpPassport }.maxByOrNull { it.createdAt },
         alternativeId = patientProfile.businessIds.filter { it.identifier.type == country.alternativeIdentifierType }.maxByOrNull { it.createdAt },
+        shrId = patientProfile.businessIds.filter { it.identifier.type == BangladeshSharedHealthRecordId }.maxByOrNull { it.createdAt },
         facility = facility.toNullable(),
     )
   }

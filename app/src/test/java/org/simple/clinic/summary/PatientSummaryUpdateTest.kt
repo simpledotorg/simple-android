@@ -52,6 +52,7 @@ class PatientSummaryUpdateTest {
       phoneNumber = phoneNumber,
       bpPassport = bpPassport,
       alternativeId = bangladeshNationalId,
+      shrId = null,
       facility = facility
   )
 
@@ -194,6 +195,7 @@ class PatientSummaryUpdateTest {
         address = patientAddress,
         phoneNumber = phoneNumber,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility,
         bpPassport = null
     )
@@ -1304,6 +1306,7 @@ class PatientSummaryUpdateTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -1353,6 +1356,7 @@ class PatientSummaryUpdateTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -1681,6 +1685,7 @@ class PatientSummaryUpdateTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 

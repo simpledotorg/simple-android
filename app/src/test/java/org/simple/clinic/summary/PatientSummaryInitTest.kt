@@ -49,6 +49,7 @@ class PatientSummaryInitTest {
         phoneNumber = null,
         bpPassport = null,
         alternativeId = null,
+        shrId = null,
         facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("fc5b49de-0e07-4d33-8b77-6611b47cb403"))
@@ -85,6 +86,7 @@ class PatientSummaryInitTest {
         phoneNumber = null,
         bpPassport = null,
         alternativeId = null,
+        shrId = null,
         facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("9954b4e5-7126-41b1-94d8-74d84b8e0b20"))

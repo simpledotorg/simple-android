@@ -30,6 +30,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
@@ -416,7 +417,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun handleScanIdentifierResult() {
-    setFragmentResultListener(ScanBpPassport, ScanShrId) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport, ScanShrId, ConfirmRemoveShrId) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
       when (requestKey) {
@@ -429,6 +430,8 @@ class EditPatientScreen : BaseScreen<
           val scannedShrId = ScanSimpleIdScreen.readIdentifier(result)
           hotEvents.onNext(ShrIdAdded(scannedShrId))
         }
+
+        ConfirmRemoveShrId -> hotEvents.onNext(RemoveShrIdConfirmed)
       }
     }
   }
@@ -452,6 +455,10 @@ class EditPatientScreen : BaseScreen<
     }
 
     router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
+  }
+
+  override fun showConfirmRemoveShrIdSheet() {
+    router.pushExpectingResult(ConfirmRemoveShrId, ConfirmRemoveIdSheet.Key())
   }
 
   override fun displayShrId(shrId: Identifier, isHighlighted: Boolean) {
@@ -913,4 +920,7 @@ class EditPatientScreen : BaseScreen<
 
   @Parcelize
   object ScanShrId : Parcelable
+
+  @Parcelize
+  object ConfirmRemoveShrId : Parcelable
 }

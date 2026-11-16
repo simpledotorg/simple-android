@@ -28,3 +28,5 @@ data class HideValidationError(val field: Field) : PatientEntryViewEffect()
 data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryViewEffect()
 
 data object OpenScanShrIdScreen : PatientEntryViewEffect()
+
+data object ShowConfirmRemoveShrIdSheet : PatientEntryViewEffect()

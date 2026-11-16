@@ -90,3 +90,7 @@ data class ShrIdAdded(val identifier: Identifier) : PatientEntryEvent()
 data object RemoveShrIdClicked : PatientEntryEvent() {
   override val analyticsName = "Create Patient Entry:Remove SHR ID Clicked"
 }
+
+data object RemoveShrIdConfirmed : PatientEntryEvent() {
+  override val analyticsName = "Create Patient Entry:Remove SHR ID Confirmed"
+}

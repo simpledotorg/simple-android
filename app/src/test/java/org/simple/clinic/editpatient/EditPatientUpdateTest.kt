@@ -269,12 +269,25 @@ class EditPatientUpdateTest {
   }
 
   @Test
-  fun `when remove SHR ID is clicked, then remove the SHR ID from the ongoing entry`() {
+  fun `when remove SHR ID is clicked, then ask for confirmation without removing the SHR ID`() {
     val modelWithSavedShrId = bangladeshModel.patientIdentifiersLoaded(emptyList(), savedShrId)
 
     updateSpec
         .given(modelWithSavedShrId)
         .whenEvent(RemoveShrIdClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmRemoveShrIdSheet)
+        ))
+  }
+
+  @Test
+  fun `when removing the SHR ID is confirmed, then remove the SHR ID from the ongoing entry`() {
+    val modelWithSavedShrId = bangladeshModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    updateSpec
+        .given(modelWithSavedShrId)
+        .whenEvent(RemoveShrIdConfirmed)
         .then(assertThatNext(
             hasModel(modelWithSavedShrId.removeShrId()),
             hasNoEffects()

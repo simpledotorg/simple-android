@@ -64,7 +64,8 @@ class EditPatientUpdate(
       is BpPassportAdded -> addBpPassports(model, event)
       is AddShrIdButtonClicked -> addShrIdButtonClicked(model)
       is ShrIdAdded -> addShrId(model, event)
-      RemoveShrIdClicked -> next(model.removeShrId())
+      RemoveShrIdClicked -> dispatch(ShowConfirmRemoveShrIdSheet)
+      RemoveShrIdConfirmed -> next(model.removeShrId())
     }
   }
 

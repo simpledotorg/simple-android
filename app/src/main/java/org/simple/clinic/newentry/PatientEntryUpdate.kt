@@ -55,7 +55,8 @@ class PatientEntryUpdate(
       is ColonyOrVillagesFetched -> next(model.colonyOrVillageListUpdated(event.colonyOrVillages))
       is AddShrIdButtonClicked -> if (model.canAddShrId) dispatch(OpenScanShrIdScreen) else noChange()
       is ShrIdAdded -> onShrIdAdded(model, event.identifier)
-      RemoveShrIdClicked -> next(model.shrIdRemoved())
+      RemoveShrIdClicked -> dispatch(ShowConfirmRemoveShrIdSheet)
+      RemoveShrIdConfirmed -> next(model.shrIdRemoved())
     }
   }
 

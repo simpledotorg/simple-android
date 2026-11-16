@@ -107,6 +107,18 @@ class PatientEntryEffectHandlerTest {
   }
 
   @Test
+  fun `when the show confirm remove SHR ID sheet effect is received, then show the confirmation sheet`() {
+    // when
+    setupTestCase()
+    testCase.dispatch(ShowConfirmRemoveShrIdSheet)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showConfirmRemoveShrIdSheet()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
   fun `when the load input fields effect is received, the input fields must be loaded`() {
     // given
     whenever(inputFieldsFactory.provideFields()) doReturn inputFields.fields

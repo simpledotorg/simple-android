@@ -23,4 +23,5 @@ interface PatientEntryUiActions {
   fun showAgeExceedsMinLimitError(show: Boolean)
   fun showDOBExceedsMinLimitError(show: Boolean)
   fun openScanShrIdScreen()
+  fun showConfirmRemoveShrIdSheet()
 }

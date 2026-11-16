@@ -451,6 +451,17 @@ class EditPatientEffectHandlerTest {
   }
 
   @Test
+  fun `when show confirm remove SHR ID sheet effect is received, then show the confirmation sheet`() {
+    // when
+    testCase.dispatch(ShowConfirmRemoveShrIdSheet)
+
+    // then
+    verify(ui).showConfirmRemoveShrIdSheet()
+    testCase.assertNoOutgoingEvents()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
   fun `when save the patient effect is received, then link the newly added bp passport to the patient`() {
     // given
     val identifierUuid = UUID.fromString("a2df66fd-e207-47c4-af4c-e59ffa7cf706")

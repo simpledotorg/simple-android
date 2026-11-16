@@ -36,6 +36,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
@@ -330,9 +331,12 @@ class PatientEntryScreen : BaseScreen<
     backButton.setOnClickListener { router.pop() }
     colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
 
-    setFragmentResultListener(ScanShrId) { _, result ->
-      if (result is Succeeded) {
-        hotEvents.onNext(ShrIdAdded(ScanSimpleIdScreen.readIdentifier(result)))
+    setFragmentResultListener(ScanShrId, ConfirmRemoveShrId) { requestKey, result ->
+      if (result !is Succeeded) return@setFragmentResultListener
+
+      when (requestKey) {
+        ScanShrId -> hotEvents.onNext(ShrIdAdded(ScanSimpleIdScreen.readIdentifier(result)))
+        ConfirmRemoveShrId -> hotEvents.onNext(RemoveShrIdConfirmed)
       }
     }
   }
@@ -769,6 +773,10 @@ class PatientEntryScreen : BaseScreen<
     router.pushExpectingResult(ScanShrId, ScanSimpleIdScreenKey(OpenedFrom.PatientEntryScreen.ToAddShrId))
   }
 
+  override fun showConfirmRemoveShrIdSheet() {
+    router.pushExpectingResult(ConfirmRemoveShrId, ConfirmRemoveIdSheet.Key())
+  }
+
   override fun nextButtonShowInProgress() {
     saveButton.setButtonState(ProgressMaterialButton.ButtonState.InProgress)
   }
@@ -791,4 +799,7 @@ class PatientEntryScreen : BaseScreen<
 
   @Parcelize
   object ScanShrId : Parcelable
+
+  @Parcelize
+  object ConfirmRemoveShrId : Parcelable
 }

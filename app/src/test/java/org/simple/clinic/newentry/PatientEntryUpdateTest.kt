@@ -505,10 +505,21 @@ class PatientEntryUpdateTest {
   }
 
   @Test
-  fun `when remove SHR ID is clicked, then remove the SHR ID from the patient entry`() {
+  fun `when remove SHR ID is clicked, then ask for confirmation without removing the SHR ID`() {
     updateSpec
         .given(bangladeshModel.shrIdAdded(shrId))
         .whenEvent(RemoveShrIdClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmRemoveShrIdSheet)
+        ))
+  }
+
+  @Test
+  fun `when removing the SHR ID is confirmed, then remove the SHR ID from the patient entry`() {
+    updateSpec
+        .given(bangladeshModel.shrIdAdded(shrId))
+        .whenEvent(RemoveShrIdConfirmed)
         .then(assertThatNext(
             hasModel(bangladeshModel),
             hasNoEffects()

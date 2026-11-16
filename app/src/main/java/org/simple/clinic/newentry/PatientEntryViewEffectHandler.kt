@@ -33,6 +33,7 @@ class PatientEntryViewEffectHandler(
       is HideValidationError -> hideValidationError(viewEffect.field)
       is ShowValidationErrors -> showValidationErrors(viewEffect.errors)
       OpenScanShrIdScreen -> uiActions.openScanShrIdScreen()
+      ShowConfirmRemoveShrIdSheet -> uiActions.showConfirmRemoveShrIdSheet()
     }.exhaustive()
   }
 

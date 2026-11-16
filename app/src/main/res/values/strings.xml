@@ -132,6 +132,12 @@
   <string name="patientedit_add_button">ADD</string>
   <string name="patientedit_remove_id_button">REMOVE ID</string>
 
+  <!-- Confirm remove ID -->
+  <string name="confirmremoveid_title">Remove ID</string>
+  <string name="confirmremoveid_message">Are you sure?</string>
+  <string name="confirmremoveid_back">Back</string>
+  <string name="confirmremoveid_remove">Yes, remove</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

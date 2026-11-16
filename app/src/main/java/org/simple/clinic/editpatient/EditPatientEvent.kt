@@ -108,3 +108,7 @@ data class ShrIdAdded(val identifier: Identifier) : EditPatientEvent() {
 data object RemoveShrIdClicked : EditPatientEvent() {
   override val analyticsName: String = "Edit Patient Entry:Remove SHR ID Clicked"
 }
+
+data object RemoveShrIdConfirmed : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Remove SHR ID Confirmed"
+}

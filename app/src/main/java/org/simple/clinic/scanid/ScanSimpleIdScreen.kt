@@ -348,6 +348,7 @@ class ScanSimpleIdScreen : BaseScreen<
       OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
       OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
       OpenedFrom.EditPatientScreen.ToAddNHID -> resources.getString(R.string.scansimpleid_national_id_title)
+      OpenedFrom.EditPatientScreen.ToAddShrId -> resources.getString(R.string.identifiertype_health_id)
     }
   }
 

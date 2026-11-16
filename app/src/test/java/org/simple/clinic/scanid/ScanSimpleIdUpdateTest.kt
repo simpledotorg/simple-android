@@ -464,5 +464,98 @@ class ScanSimpleIdUpdateTest {
             hasNoEffects()
         ))
   }
-}
 
+  @Test
+  fun `when a valid SHR ID is scanned and screen is opened from edit patient screen to add SHR ID, then search for the patient`() {
+    val shrId = "98146050888"
+    val identifier = Identifier(shrId, BangladeshSharedHealthRecordId)
+    val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId)
+
+    spec
+        .given(modelToAddShrId)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(shrId))
+        .then(assertThatNext(
+            hasModel(modelToAddShrId.clearInvalidQrCodeError().searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when an invalid SHR ID is scanned and screen is opened from edit patient screen to add SHR ID, then show scanned qr code error`() {
+    val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId)
+
+    spec
+        .given(modelToAddShrId)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("88146050888"))
+        .then(assertThatNext(
+            hasModel(modelToAddShrId.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when a bp passport is scanned and screen is opened from edit patient screen to add SHR ID, then show scanned qr code error`() {
+    val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId)
+
+    spec
+        .given(modelToAddShrId)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("0486cdb8-b617-41bf-9b9f-4a89434c68cf"))
+        .then(assertThatNext(
+            hasModel(modelToAddShrId.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when an SHR ID is scanned and screen is opened from edit patient screen to add bp passport, then show scanned qr code error`() {
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("98146050888"))
+        .then(assertThatNext(
+            hasModel(openedToAddBpPassportModel.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when an SHR ID is scanned and screen is opened from edit patient screen to add NHID, then show scanned qr code error`() {
+    val modelToAddNhid = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
+
+    spec
+        .given(modelToAddNhid)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("98146050888"))
+        .then(assertThatNext(
+            hasModel(modelToAddNhid.notSearching()),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when screen is opened from edit patient to add SHR ID and patient is not found online, then go back to edit patient screen with the SHR ID`() {
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+    val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId).searching()
+
+    spec
+        .given(modelToAddShrId)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
+        .then(assertThatNext(
+            hasModel(modelToAddShrId.notSearching()),
+            hasEffects(GoBackToEditPatientScreen(identifier))
+        ))
+  }
+
+  @Test
+  fun `when screen is opened from edit patient to add SHR ID and a patient with the SHR ID already exists, then show identifier already exists error`() {
+    val identifier = Identifier("98146050888", BangladeshSharedHealthRecordId)
+    val patient = TestData.patient(uuid = UUID.fromString("4e3a4b8b-4a6a-4d55-9d0c-2a6f8f2b5b7e"))
+    val modelToAddShrId = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddShrId).searching()
+
+    spec
+        .given(modelToAddShrId)
+        .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
+        .then(assertThatNext(
+            hasModel(modelToAddShrId.notSearching()),
+            hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        ))
+  }
+}

@@ -163,10 +163,10 @@ class ScanSimpleIdUpdate @Inject constructor(
 
     val identifier = Identifier(sharedHealthRecordId, Identifier.IdentifierType.BangladeshSharedHealthRecordId)
 
-    return if (model.isOpenedFromEditPatientScreenToAddBpPassport) {
-      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-    } else {
+    return if (model.canAcceptShrId) {
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
+    } else {
+      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
     }
   }
 
@@ -185,10 +185,10 @@ class ScanSimpleIdUpdate @Inject constructor(
     val bpPassportCode = UUID.fromString(event.text)
     val identifier = Identifier(bpPassportCode.toString(), BpPassport)
 
-    return if (model.isOpenedFromEditPatientScreenToAddNhid) {
-      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
-    } else {
+    return if (model.canAcceptBpPassport) {
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
+    } else {
+      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
     }
   }
 

@@ -35,6 +35,15 @@ data class ScanSimpleIdModel(
   val isOpenedFromEditPatientScreenToAddNhid
     get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID
 
+  val isOpenedFromEditPatientScreenToAddShrId
+    get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddShrId
+
+  val canAcceptBpPassport
+    get() = !isOpenedFromEditPatientScreen || isOpenedFromEditPatientScreenToAddBpPassport
+
+  val canAcceptShrId
+    get() = !isOpenedFromEditPatientScreen || isOpenedFromEditPatientScreenToAddShrId
+
   fun enteredCodeChanged(enteredCode: EnteredCodeInput): ScanSimpleIdModel {
     return copy(enteredCode = enteredCode)
   }

@@ -26,7 +26,7 @@ data class EditPatientModel(
     val colonyOrVillagesList: List<String>?,
     val inputFields: InputFields?,
     val bpPassports: List<BusinessId>?,
-    val isUserCountryBangladesh: Boolean,
+    val isSharedHealthRecordEnabled: Boolean,
 ) : Parcelable {
   companion object {
     fun from(
@@ -36,7 +36,7 @@ data class EditPatientModel(
         dateOfBirthFormatter: DateTimeFormatter,
         bangladeshNationalId: BusinessId?,
         saveButtonState: EditPatientState?,
-        isUserCountryBangladesh: Boolean,
+        isSharedHealthRecordEnabled: Boolean,
     ): EditPatientModel {
       val savedEntry = EditablePatientEntry.from(
           patient,
@@ -57,7 +57,7 @@ data class EditPatientModel(
           colonyOrVillagesList = null,
           inputFields = null,
           bpPassports = null,
-          isUserCountryBangladesh = isUserCountryBangladesh,
+          isSharedHealthRecordEnabled = isSharedHealthRecordEnabled,
       )
     }
   }
@@ -75,7 +75,7 @@ data class EditPatientModel(
     get() = bpPassports != null
 
   val canAddShrId: Boolean
-    get() = isUserCountryBangladesh && hasLoadedPatientIdentifiers && ongoingEntry.shrId == null
+    get() = isSharedHealthRecordEnabled && hasLoadedPatientIdentifiers && ongoingEntry.shrId == null
 
   val isShrIdNewlyAdded: Boolean
     get() = ongoingEntry.shrId != null && ongoingEntry.shrId != savedEntry.shrId

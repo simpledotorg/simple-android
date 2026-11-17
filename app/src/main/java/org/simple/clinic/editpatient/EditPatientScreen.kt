@@ -29,7 +29,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
@@ -48,6 +47,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
+import org.simple.clinic.feature.Feature.SharedHealthRecord
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -147,9 +147,6 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var screenResults: ScreenResultBus
-
-  @Inject
-  lateinit var country: Country
 
   private val rootView
     get() = binding.root
@@ -344,7 +341,7 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryBangladesh = country.isoCountryCode == Country.BANGLADESH,
+      isSharedHealthRecordEnabled = features.isEnabled(SharedHealthRecord),
   )
 
   override fun createInit() = EditPatientInit(

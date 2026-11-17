@@ -49,10 +49,9 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   }
 
   private fun displayShrId(model: EditPatientModel) {
-    val shrId = model.ongoingEntry.shrId
-    val hasShrIdToRender = shrId != null || model.savedEntry.shrId != null
+    if (!model.isSharedHealthRecordEnabled) return
 
-    if (!model.isUserCountryBangladesh && !hasShrIdToRender) return
+    val shrId = model.ongoingEntry.shrId
 
     when {
       shrId != null -> ui.displayShrId(shrId, isHighlighted = model.isShrIdNewlyAdded)

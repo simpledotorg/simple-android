@@ -1,10 +1,13 @@
 package org.simple.clinic.newentry
 
+import android.Manifest
+import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import java.util.Optional
 
@@ -73,3 +76,21 @@ data class AlternativeIdChanged(val identifier: Identifier) : PatientEntryEvent(
 data class InputFieldsLoaded(val inputFields: InputFields) : PatientEntryEvent()
 
 data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : PatientEntryEvent()
+
+data class AddShrIdButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 1
+) : PatientEntryEvent(), RequiresPermission {
+  override val analyticsName = "Create Patient Entry:Add SHR ID Button Clicked"
+}
+
+data class ShrIdAdded(val identifier: Identifier) : PatientEntryEvent()
+
+data object RemoveShrIdClicked : PatientEntryEvent() {
+  override val analyticsName = "Create Patient Entry:Remove SHR ID Clicked"
+}
+
+data object RemoveShrIdConfirmed : PatientEntryEvent() {
+  override val analyticsName = "Create Patient Entry:Remove SHR ID Confirmed"
+}

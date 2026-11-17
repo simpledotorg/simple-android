@@ -12,7 +12,10 @@ import java.util.Optional
 
 sealed class EditPatientEvent : UiEvent
 
-data class BpPassportsFetched(val bpPasssports: List<BusinessId>) : EditPatientEvent()
+data class PatientIdentifiersFetched(
+    val bpPassports: List<BusinessId>,
+    val shrId: BusinessId?
+) : EditPatientEvent()
 
 data class NameChanged(val name: String) : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"
@@ -78,14 +81,6 @@ data class InputFieldsLoaded(val inputFields: InputFields) : EditPatientEvent()
 
 data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPatientEvent()
 
-data class AddNHIDButtonClicked(
-    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
-    override val permissionString: String = Manifest.permission.CAMERA,
-    override val permissionRequestCode: Int = 2
-) : EditPatientEvent(), RequiresPermission {
-  override val analyticsName = "Edit Patient Entry:Add NHID Button Clicked"
-}
-
 data class AddBpPassportButtonClicked(
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.CAMERA,
@@ -96,4 +91,24 @@ data class AddBpPassportButtonClicked(
 
 data class BpPassportAdded(val identifier: List<Identifier>) : EditPatientEvent() {
   override val analyticsName: String = "Edit Patient Entry:Bp Passport Added"
+}
+
+data class AddShrIdButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 3
+) : EditPatientEvent(), RequiresPermission {
+  override val analyticsName = "Edit Patient Entry:Add SHR ID Button Clicked"
+}
+
+data class ShrIdAdded(val identifier: Identifier) : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:SHR ID Added"
+}
+
+data object RemoveShrIdClicked : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Remove SHR ID Clicked"
+}
+
+data object RemoveShrIdConfirmed : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Remove SHR ID Confirmed"
 }

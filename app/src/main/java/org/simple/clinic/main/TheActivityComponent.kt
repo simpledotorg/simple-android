@@ -15,6 +15,7 @@ import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveB
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
 import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog.BloodSugarUnitSelectionDialogInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
+import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
 import org.simple.clinic.datepicker.calendar.CalendarDatePicker
@@ -144,6 +145,7 @@ interface TheActivityComponent :
     AlertFacilityChangeSheet.Injector,
     FacilityChangeScreen.Injector,
     ConfirmFacilityChangeSheet.Injector,
+    ConfirmRemoveIdSheet.Injector,
     ContactPatientBottomSheet.Injector,
     SetAppointmentReminderView.Injector,
     ScheduleAppointmentSheet.Injector,

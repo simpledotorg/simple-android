@@ -32,4 +32,5 @@ enum class Feature(
   ShowReturnScoreDebugValues(false, "show_return_score_debug_values"),
   ShowBMIContainer(false, "show_bmi_container"),
   ShowCVDRisk(false, "show_cvd_risk"),
+  SharedHealthRecord(false, "shared_health_record_v0"),
 }

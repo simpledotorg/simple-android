@@ -4,19 +4,21 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.OpenedFrom
 import java.util.UUID
 
 sealed class EditPatientEffect
 
-data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
+data class FetchPatientIdentifiersEffect(val patientUuid: UUID) : EditPatientEffect()
 
 data class SavePatientEffect(
     val ongoingEntry: EditablePatientEntry,
     val savedPatient: Patient,
     val savedAddress: PatientAddress,
     val savedPhoneNumber: PatientPhoneNumber?,
-    val saveAlternativeId: BusinessId?
+    val saveAlternativeId: BusinessId?,
+    val savedShrId: Identifier?
 ) : EditPatientEffect()
 
 data object LoadInputFields : EditPatientEffect()
@@ -41,4 +43,9 @@ data object GoBackEffect : EditPatientViewEffect()
 
 data object ShowDiscardChangesAlertEffect : EditPatientViewEffect()
 
-data class OpenSimpleScanIdScreen(val openedFrom: OpenedFrom) : EditPatientViewEffect()
+data class OpenSimpleScanIdScreen(
+    val openedFrom: OpenedFrom,
+    val patientUuidBeingEdited: UUID? = null
+) : EditPatientViewEffect()
+
+data object ShowConfirmRemoveShrIdSheet : EditPatientViewEffect()

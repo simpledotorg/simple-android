@@ -84,7 +84,7 @@ data class Identifier(
       IndiaNationalHealthId -> R.string.identifiertype_india_national_health_id
       SriLankaNationalId -> R.string.identifiertype_sri_lanka_national_id
       SriLankaPersonalHealthNumber -> R.string.identifiertype_sri_lanka_personal_health_number
-      BangladeshSharedHealthRecordId -> R.string.identifiertype_bangladesh_shared_health_record_id
+      BangladeshSharedHealthRecordId -> R.string.identifiertype_health_id
       is Unknown -> R.string.identifiertype_unknown
     }
   }

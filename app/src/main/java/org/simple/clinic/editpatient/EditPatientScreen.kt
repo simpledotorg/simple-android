@@ -29,8 +29,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
-import org.simple.clinic.appconfig.Country
-import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
+import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
 import org.simple.clinic.di.injector
@@ -48,6 +47,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
+import org.simple.clinic.feature.Feature.SharedHealthRecord
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -105,6 +105,7 @@ import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -146,9 +147,6 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var screenResults: ScreenResultBus
-
-  @Inject
-  lateinit var country: Country
 
   private val rootView
     get() = binding.root
@@ -234,12 +232,6 @@ class EditPatientScreen : BaseScreen<
   private val bpPassportsContainer
     get() = binding.bpPassportsContainer
 
-  private val alternateIdLabel
-    get() = binding.alternateIdLabel
-
-  private val alternateIdContainer
-    get() = binding.alternateIdContainer
-
   private val formScrollView
     get() = binding.formScrollView
 
@@ -252,8 +244,20 @@ class EditPatientScreen : BaseScreen<
   private val addBpPassportButton
     get() = binding.addBpPassportButton
 
-  private val addNHIDButton
-    get() = binding.addNHIDButton
+  private val shrIdLabel
+    get() = binding.shrIdLabel
+
+  private val shrIdContainer
+    get() = binding.shrIdContainer
+
+  private val shrIdText
+    get() = binding.shrIdText
+
+  private val removeShrIdButton
+    get() = binding.removeShrIdButton
+
+  private val addShrIdButton
+    get() = binding.addShrIdButton
 
   private val saveButtonFrame
     get() = binding.saveButtonFrame
@@ -337,7 +341,7 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryIndia = country.isoCountryCode == Country.INDIA,
+      isSharedHealthRecordEnabled = features.isEnabled(SharedHealthRecord),
   )
 
   override fun createInit() = EditPatientInit(
@@ -359,7 +363,8 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFocusChanges(),
       backClicks(),
       addBpPassportClicks(),
-      addNHIDButtonClicks(),
+      addShrIdClicks(),
+      removeShrIdClicks(),
       hotEvents
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -399,6 +404,10 @@ class EditPatientScreen : BaseScreen<
     saveButtonFrame.applyInsetsBottomPadding()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+
+    shrIdContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
   }
 
   private fun setAdapterWhenVillageTypeAheadIsEnabled() {
@@ -406,7 +415,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun handleScanIdentifierResult() {
-    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport, ScanShrId, ConfirmRemoveShrId) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
       when (requestKey) {
@@ -415,10 +424,12 @@ class EditPatientScreen : BaseScreen<
           hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
         }
 
-        ScanIndiaNationalHealthID -> {
-          val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
-          hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
+        ScanShrId -> {
+          val scannedShrId = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(ShrIdAdded(scannedShrId))
         }
+
+        ConfirmRemoveShrId -> hotEvents.onNext(RemoveShrIdConfirmed)
       }
     }
   }
@@ -434,27 +445,51 @@ class EditPatientScreen : BaseScreen<
     villageTypeAheadAdapter.addAll(colonyOrVillageList)
   }
 
-  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
+  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom, patientUuidBeingEdited: UUID?) {
     val requestType = when (openedFrom) {
       is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
-      is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
+      is OpenedFrom.EditPatientScreen.ToAddShrId -> ScanShrId
       else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
     }
 
-    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
+    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom, patientUuidBeingEdited))
   }
 
-  override fun showAddNHIDButton() {
-    addNHIDButton.visibility = VISIBLE
+  override fun showConfirmRemoveShrIdSheet() {
+    router.pushExpectingResult(ConfirmRemoveShrId, ConfirmRemoveIdSheet.Key())
   }
 
-  override fun hideAddNHIDButton() {
-    addNHIDButton.visibility = GONE
+  override fun displayShrId(shrId: Identifier, isHighlighted: Boolean) {
+    shrIdLabel.visibility = VISIBLE
+    shrIdLabel.text = shrId.displayType(resources)
+    shrIdContainer.visibility = VISIBLE
+    shrIdText.text = shrId.displayValue()
+    removeShrIdButton.visibility = VISIBLE
+    addShrIdButton.visibility = GONE
+
+    if (isHighlighted) {
+      shrIdText.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
+      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+      shrIdText.updatePadding(top = verticalPadding, bottom = verticalPadding)
+    } else {
+      shrIdText.background = null
+      shrIdText.updatePadding(top = 0, bottom = 0)
+    }
   }
 
-  override fun showIndiaNHIDLabel() {
-    alternateIdLabel.visibility = VISIBLE
-    alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
+  override fun showAddShrIdButton() {
+    shrIdLabel.visibility = VISIBLE
+    shrIdLabel.setText(R.string.identifiertype_health_id)
+    shrIdContainer.visibility = GONE
+    removeShrIdButton.visibility = GONE
+    addShrIdButton.visibility = VISIBLE
+  }
+
+  override fun hideShrId() {
+    shrIdLabel.visibility = GONE
+    shrIdContainer.visibility = GONE
+    removeShrIdButton.visibility = GONE
+    addShrIdButton.visibility = GONE
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -535,10 +570,6 @@ class EditPatientScreen : BaseScreen<
     return saveButton.clicks().map { SaveClicked }
   }
 
-  private fun addNHIDButtonClicks(): Observable<EditPatientEvent> {
-    return addNHIDButton.clicks().map { AddNHIDButtonClicked() }
-  }
-
   private fun backClicks(): Observable<EditPatientEvent> {
     val backButtonClicks = backButton
         .clicks()
@@ -547,6 +578,14 @@ class EditPatientScreen : BaseScreen<
     return backButtonClicks
         .mergeWith(hardwareBackPressEvents)
         .cast()
+  }
+
+  private fun addShrIdClicks(): Observable<EditPatientEvent> {
+    return addShrIdButton.clicks().map { AddShrIdButtonClicked() }
+  }
+
+  private fun removeShrIdClicks(): Observable<EditPatientEvent> {
+    return removeShrIdButton.clicks().map { RemoveShrIdClicked }
   }
 
   private fun addBpPassportClicks(): Observable<EditPatientEvent> {
@@ -853,45 +892,6 @@ class EditPatientScreen : BaseScreen<
     alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  override fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean) {
-    alternateIdLabel.visibility = VISIBLE
-    alternateIdLabel.text = alternateId.displayType(resources)
-
-    alternateIdContainer.visibility = VISIBLE
-
-    inflateAlternateIdView(alternateId.displayValue(), hasHighlight)
-  }
-
-  private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
-    val layoutInflater = LayoutInflater.from(requireContext())
-    val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
-
-    // Setting a negative margin, so that the highlighted alternative ids can be rendered
-    // little bit outside of the parent view as per design requirements.
-    alternateIdView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
-    }
-    alternateIdView.alternateIdentifier.text = identifier
-    alternateIdContainer.removeAllViews()
-
-    setHighlight(hasHighlight, alternateIdView)
-
-    alternateIdContainer.addView(alternateIdView.root)
-  }
-
-  private fun setHighlight(
-      hasHighlight: Boolean,
-      alternateIdView: PatientEditAlternateIdViewBinding
-  ) {
-    if (hasHighlight) {
-      alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
-
-      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
-
-      alternateIdView.alternateIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
-    }
-  }
-
   override fun onBackPressed(): Boolean {
     hardwareBackPressEvents.onNext(BackClicked)
     return true
@@ -917,5 +917,8 @@ class EditPatientScreen : BaseScreen<
   object ScanBpPassport : Parcelable
 
   @Parcelize
-  object ScanIndiaNationalHealthID : Parcelable
+  object ScanShrId : Parcelable
+
+  @Parcelize
+  object ConfirmRemoveShrId : Parcelable
 }

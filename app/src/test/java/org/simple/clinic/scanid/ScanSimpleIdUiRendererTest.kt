@@ -80,7 +80,7 @@ class ScanSimpleIdUiRendererTest {
   @Test
   fun `when scan simple id screen is opened from edit patient screen, then hide entered code container view`() {
     // given
-    val openedFrom = OpenedFrom.EditPatientScreen.ToAddNHID
+    val openedFrom = OpenedFrom.EditPatientScreen.ToAddBpPassport
     val defaultModel = ScanSimpleIdModel.create(openedFrom = openedFrom)
 
     // when

@@ -12,8 +12,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
@@ -78,7 +78,7 @@ class ScanSimpleIdEffectHandlerTest {
   }
 
   @Test
-  fun `when open patient search effect is received without NHID, then open patient search without patient prefill info`() {
+  fun `when open patient search effect is received, then open patient search`() {
     // given
     val identifier = TestData.identifier(
         value = "a765a30e-6bd9-4f12-99da-acba91b6a479",
@@ -87,30 +87,12 @@ class ScanSimpleIdEffectHandlerTest {
     val initialSearchQuery: String? = null
 
     // when
-    testCase.dispatch(OpenPatientSearch(identifier, initialSearchQuery, null))
+    testCase.dispatch(OpenPatientSearch(identifier, initialSearchQuery))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openPatientSearch(identifier, null, null)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when open patient search effect is received with NHID, then open patient search with patient prefill info`() {
-    // given
-    val indiaNationalHealthID = "12341234123412"
-    val patientPrefillInfo = TestData.patientPrefillInfo()
-
-    val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
-
-    // when
-    testCase.dispatch(OpenPatientSearch(identifier, null, patientPrefillInfo))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-
-    verify(uiActions).openPatientSearch(identifier, null, patientPrefillInfo)
+    verify(uiActions).openPatientSearch(identifier, null)
     verifyNoMoreInteractions(uiActions)
   }
 
@@ -136,8 +118,8 @@ class ScanSimpleIdEffectHandlerTest {
   fun `when online patient lookup with identifier effect is received, then lookup patients online with the other error`() {
     // given
     val identifier = TestData.identifier(
-        value = "91704c43-c35f-41d2-9887-d5cb6e580dd9",
-        type = IndiaNationalHealthId
+        value = "98146050888",
+        type = BangladeshSharedHealthRecordId
     )
     val results = LookupPatientOnline.Result.OtherError
     whenever(lookupPatientOnline.lookupWithIdentifier(identifier.value)) doReturn results
@@ -177,8 +159,8 @@ class ScanSimpleIdEffectHandlerTest {
   fun `when go back to edit patient screen effect is received, then go back to edit patient screen`() {
     // given
     val identifier = TestData.identifier(
-        value = "12341234123412",
-        type = IndiaNationalHealthId
+        value = "98146050888",
+        type = BangladeshSharedHealthRecordId
     )
 
     // when

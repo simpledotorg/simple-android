@@ -350,7 +350,6 @@
   <string name="scansimpleid_identfier_already_exists">መለለዩ ታሴራ ንካልእ ሕሙም ተዋሂቡ። ሓዱሽ ናይ ጥዕና መለለዩ ታሴራ ኣረምስሱ።</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
   <string name="scansimpleid_bp_passport_title">BP Passport</string>
-  <string name="scansimpleid_national_id_title">ሃገራዊ መለለዪ </string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
@@ -705,8 +704,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">ዕለት ድሕሪ ሓደ ዓመት ክኸውን ኣይኽእልን</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ሃገራዊ ናይ ጥዕና መለለዪ መንነት ኣብዚ ሕጂ እዋን ሃገራዊ ናይ ጥዕና መለለዪ መንነት ዘለዎ ተሓካማይ ክምደበሉ ኣይክእልን</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">እሺ</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?</string>

@@ -535,6 +535,7 @@ class PatientSummaryScreen :
               phoneNumber = patientSummaryProfile.phoneNumber,
               bpPassport = patientSummaryProfile.bpPassport,
               alternativeId = patientSummaryProfile.alternativeId,
+              shrId = if (features.isEnabled(Feature.SharedHealthRecord)) patientSummaryProfile.shrId else null,
               onBack = {
                 hotEvents.onNext(PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp))
               },

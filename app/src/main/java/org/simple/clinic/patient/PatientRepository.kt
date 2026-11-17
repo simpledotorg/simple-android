@@ -187,6 +187,7 @@ class PatientRepository @Inject constructor(
       addressUuid: UUID,
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForShrId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID,
       dateOfBirthFormatter: DateTimeFormatter
   ): PatientProfile {
@@ -198,6 +199,7 @@ class PatientRepository @Inject constructor(
         addressUuid = addressUuid,
         supplyUuidForBpPassport = supplyUuidForBpPassport,
         supplyUuidForAlternativeId = supplyUuidForAlternativeId,
+        supplyUuidForShrId = supplyUuidForShrId,
         supplyUuidForPhoneNumber = supplyUuidForPhoneNumber,
         dateOfBirthFormatter = dateOfBirthFormatter
     )
@@ -215,6 +217,7 @@ class PatientRepository @Inject constructor(
       addressUuid: UUID,
       supplyUuidForBpPassport: () -> UUID,
       supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForShrId: () -> UUID,
       supplyUuidForPhoneNumber: () -> UUID,
       dateOfBirthFormatter: DateTimeFormatter
   ): PatientProfile {
@@ -275,7 +278,8 @@ class PatientRepository @Inject constructor(
           patientUuid = patientUuid,
           user = loggedInUser,
           supplyUuidForBpPassport = supplyUuidForBpPassport,
-          supplyUuidForAlternativeId = supplyUuidForAlternativeId
+          supplyUuidForAlternativeId = supplyUuidForAlternativeId,
+          supplyUuidForShrId = supplyUuidForShrId
       )
 
       PatientProfile(
@@ -319,7 +323,8 @@ class PatientRepository @Inject constructor(
       patientUuid: UUID,
       user: User,
       supplyUuidForBpPassport: () -> UUID,
-      supplyUuidForAlternativeId: () -> UUID
+      supplyUuidForAlternativeId: () -> UUID,
+      supplyUuidForShrId: () -> UUID
   ): List<BusinessId> {
 
     return with(ongoingEntry) {
@@ -344,6 +349,17 @@ class PatientRepository @Inject constructor(
         )
 
         businessIds.add(alternativeBusinessId)
+      }
+
+      if (shrId != null && shrId.value.isNotBlank()) {
+        val shrBusinessId = createBusinessIdFromIdentifier(
+            id = supplyUuidForShrId(),
+            patientUuid = patientUuid,
+            identifier = shrId,
+            user = user
+        )
+
+        businessIds.add(shrBusinessId)
       }
 
       businessIds.toList()
@@ -596,6 +612,7 @@ class PatientRepository @Inject constructor(
           deletedAt = now
       )
       database.businessIdDao().save(listOf(deletedBusinessId))
+      setSyncStatus(listOf(businessId.patientUuid), PENDING)
     }
   }
 

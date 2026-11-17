@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
 import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
@@ -14,9 +15,10 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
-import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddNHID
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddShrId
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
@@ -55,13 +57,28 @@ class EditPatientUpdate(
       is PatientSaved -> next(model.buttonStateChanged(EditPatientState.NOT_SAVING_PATIENT), GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
-      is BpPassportsFetched -> next(model.bpPassportsLoaded(event.bpPasssports))
+      is PatientIdentifiersFetched -> next(model.patientIdentifiersLoaded(event.bpPassports, event.shrId))
       is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
-      is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
       is AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
       is BpPassportAdded -> addBpPassports(model, event)
+      is AddShrIdButtonClicked -> addShrIdButtonClicked(model)
+      is ShrIdAdded -> addShrId(model, event)
+      RemoveShrIdClicked -> dispatch(ShowConfirmRemoveShrIdSheet)
+      RemoveShrIdConfirmed -> next(model.removeShrId())
     }
+  }
+
+  private fun addShrIdButtonClicked(model: EditPatientModel): Next<EditPatientModel, EditPatientEffect> {
+    return if (model.canAddShrId) dispatch(OpenSimpleScanIdScreen(ToAddShrId, model.savedPatient.uuid)) else noChange()
+  }
+
+  private fun addShrId(model: EditPatientModel, event: ShrIdAdded): Next<EditPatientModel, EditPatientEffect> {
+    val identifier = event.identifier
+    val isValidShrId = identifier.type == BangladeshSharedHealthRecordId &&
+        BangladeshSharedHealthRecordId.isValid(identifier.value)
+
+    return if (isValidShrId && model.canAddShrId) next(model.addShrId(identifier)) else noChange()
   }
 
   private fun addBpPassports(model: EditPatientModel, event: BpPassportAdded): Next<EditPatientModel, EditPatientEffect> {
@@ -121,7 +138,10 @@ class EditPatientUpdate(
     val validationErrors = model.ongoingEntry.validate(model.savedPhoneNumber, numberValidator, dobValidator, ageValidator)
     return if (validationErrors.isEmpty()) {
       val (_, ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId) = model
-      next(model.buttonStateChanged(EditPatientState.SAVING_PATIENT), SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId))
+      next(
+          model.buttonStateChanged(EditPatientState.SAVING_PATIENT),
+          SavePatientEffect(ongoingEntry, savedPatient, savedAddress, savedPhoneNumber, savedBangladeshId, model.savedEntry.shrId)
+      )
     } else {
       dispatch(ShowValidationErrorsEffect(validationErrors))
     }

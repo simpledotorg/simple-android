@@ -54,7 +54,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val zone: String,
     val streetAddress: String,
     val alternativeId: String,
-    val bpPassports: List<Identifier>?
+    val bpPassports: List<Identifier>?,
+    val shrId: Identifier?
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
@@ -93,7 +94,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           zone = address.zone.valueOrEmpty(),
           streetAddress = address.streetAddress.valueOrEmpty(),
           alternativeId = alternativeId?.identifier?.value.valueOrEmpty(),
-          bpPassports = null
+          bpPassports = null,
+          shrId = null
       )
     }
 
@@ -143,6 +145,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
   fun addBpPassports(bpPassports: List<Identifier>): EditablePatientEntry {
     return copy(bpPassports = bpPassports)
+  }
+
+  fun updateShrId(shrId: Identifier?): EditablePatientEntry {
+    return copy(shrId = shrId)
   }
 
   fun getCurrentListOfBpPassports(): List<Identifier> {

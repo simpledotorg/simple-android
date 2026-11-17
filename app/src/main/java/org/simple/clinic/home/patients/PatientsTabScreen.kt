@@ -265,8 +265,7 @@ class PatientsTabScreen : BaseScreen<
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(
         additionalIdentifier = additionalIdentifier,
-        initialSearchQuery = null,
-        patientPrefillInfo = null)
+        initialSearchQuery = null)
 
     router.push(screenKey)
   }

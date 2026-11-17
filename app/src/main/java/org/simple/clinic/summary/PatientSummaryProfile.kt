@@ -18,6 +18,7 @@ data class PatientSummaryProfile(
     val phoneNumber: PatientPhoneNumber?,
     val bpPassport: BusinessId?,
     val alternativeId: BusinessId?,
+    val shrId: BusinessId?,
     val facility: Facility?,
 ) : Parcelable {
 
@@ -25,7 +26,9 @@ data class PatientSummaryProfile(
     get() = phoneNumber != null
 
   fun hasIdentifier(identifier: Identifier): Boolean {
-    return bpPassport?.identifier == identifier || alternativeId?.identifier == identifier
+    return bpPassport?.identifier == identifier ||
+        alternativeId?.identifier == identifier ||
+        shrId?.identifier == identifier
   }
 
   override fun toString(): String {

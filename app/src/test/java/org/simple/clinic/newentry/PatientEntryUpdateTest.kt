@@ -423,13 +423,13 @@ class PatientEntryUpdateTest {
         ))
   }
 
-  private val bangladeshModel = PatientEntryModel.DEFAULT.copy(isUserCountryBangladesh = true)
+  private val shrEnabledModel = PatientEntryModel.DEFAULT.copy(isSharedHealthRecordEnabled = true)
   private val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
 
   @Test
-  fun `when add SHR ID button is clicked in Bangladesh and there is no SHR ID, then open the scanner`() {
+  fun `when add SHR ID button is clicked with SHR enabled and there is no SHR ID, then open the scanner`() {
     updateSpec
-        .given(bangladeshModel)
+        .given(shrEnabledModel)
         .whenEvent(AddShrIdButtonClicked())
         .then(assertThatNext(
             hasNoModel(),
@@ -440,13 +440,13 @@ class PatientEntryUpdateTest {
   @Test
   fun `when add SHR ID button is clicked and the patient entry already has an SHR ID, then do nothing`() {
     updateSpec
-        .given(bangladeshModel.shrIdAdded(shrId))
+        .given(shrEnabledModel.shrIdAdded(shrId))
         .whenEvent(AddShrIdButtonClicked())
         .then(assertThatNext(hasNothing()))
   }
 
   @Test
-  fun `when add SHR ID button is clicked outside Bangladesh, then do nothing`() {
+  fun `when add SHR ID button is clicked with SHR not enabled, then do nothing`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(AddShrIdButtonClicked())
@@ -456,10 +456,10 @@ class PatientEntryUpdateTest {
   @Test
   fun `when a valid SHR ID is added, then update the patient entry`() {
     updateSpec
-        .given(bangladeshModel)
+        .given(shrEnabledModel)
         .whenEvent(ShrIdAdded(shrId))
         .then(assertThatNext(
-            hasModel(bangladeshModel.shrIdAdded(shrId)),
+            hasModel(shrEnabledModel.shrIdAdded(shrId)),
             hasNoEffects()
         ))
   }
@@ -467,7 +467,7 @@ class PatientEntryUpdateTest {
   @Test
   fun `when an SHR ID is added alongside an existing bp passport, then keep both in the patient entry`() {
     val bpPassport = Identifier("9ba2d8c1-5c4e-4a6f-8e2d-1f0b7a3c5d91", BpPassport)
-    val modelWithBpPassport = bangladeshModel.patientEntryFetched(OngoingNewPatientEntry().withIdentifier(bpPassport))
+    val modelWithBpPassport = shrEnabledModel.patientEntryFetched(OngoingNewPatientEntry().withIdentifier(bpPassport))
 
     updateSpec
         .given(modelWithBpPassport)
@@ -483,7 +483,7 @@ class PatientEntryUpdateTest {
   @Test
   fun `when an invalid SHR ID is added, then do nothing`() {
     updateSpec
-        .given(bangladeshModel)
+        .given(shrEnabledModel)
         .whenEvent(ShrIdAdded(Identifier("81234567890", BangladeshSharedHealthRecordId)))
         .then(assertThatNext(hasNothing()))
   }
@@ -491,7 +491,7 @@ class PatientEntryUpdateTest {
   @Test
   fun `when an identifier that is not an SHR ID is added as the SHR ID, then do nothing`() {
     updateSpec
-        .given(bangladeshModel)
+        .given(shrEnabledModel)
         .whenEvent(ShrIdAdded(Identifier("91234567890", BpPassport)))
         .then(assertThatNext(hasNothing()))
   }
@@ -499,7 +499,7 @@ class PatientEntryUpdateTest {
   @Test
   fun `when an SHR ID is added but the patient entry already has one, then do nothing`() {
     updateSpec
-        .given(bangladeshModel.shrIdAdded(shrId))
+        .given(shrEnabledModel.shrIdAdded(shrId))
         .whenEvent(ShrIdAdded(Identifier("98146050888", BangladeshSharedHealthRecordId)))
         .then(assertThatNext(hasNothing()))
   }
@@ -507,7 +507,7 @@ class PatientEntryUpdateTest {
   @Test
   fun `when remove SHR ID is clicked, then ask for confirmation without removing the SHR ID`() {
     updateSpec
-        .given(bangladeshModel.shrIdAdded(shrId))
+        .given(shrEnabledModel.shrIdAdded(shrId))
         .whenEvent(RemoveShrIdClicked)
         .then(assertThatNext(
             hasNoModel(),
@@ -518,10 +518,10 @@ class PatientEntryUpdateTest {
   @Test
   fun `when removing the SHR ID is confirmed, then remove the SHR ID from the patient entry`() {
     updateSpec
-        .given(bangladeshModel.shrIdAdded(shrId))
+        .given(shrEnabledModel.shrIdAdded(shrId))
         .whenEvent(RemoveShrIdConfirmed)
         .then(assertThatNext(
-            hasModel(bangladeshModel),
+            hasModel(shrEnabledModel),
             hasNoEffects()
         ))
   }

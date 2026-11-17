@@ -63,7 +63,7 @@ class PatientEntryUiRendererTest {
     // given
     val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
     val model = PatientEntryModel.DEFAULT
-        .copy(isUserCountryBangladesh = true)
+        .copy(isSharedHealthRecordEnabled = true)
         .shrIdAdded(shrId)
 
     val ui = mock<PatientEntryUi>()
@@ -79,9 +79,9 @@ class PatientEntryUiRendererTest {
   }
 
   @Test
-  fun `when the user country is Bangladesh and the patient entry has no SHR ID, then show the add SHR ID button`() {
+  fun `when SHR is enabled and the patient entry has no SHR ID, then show the add SHR ID button`() {
     // given
-    val model = PatientEntryModel.DEFAULT.copy(isUserCountryBangladesh = true)
+    val model = PatientEntryModel.DEFAULT.copy(isSharedHealthRecordEnabled = true)
 
     val ui = mock<PatientEntryUi>()
     val uiRenderer = PatientEntryUiRenderer(ui)
@@ -101,7 +101,7 @@ class PatientEntryUiRendererTest {
     val bpPassport = Identifier("9ba2d8c1-5c4e-4a6f-8e2d-1f0b7a3c5d91", BpPassport)
     val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
     val model = PatientEntryModel.DEFAULT
-        .copy(isUserCountryBangladesh = true)
+        .copy(isSharedHealthRecordEnabled = true)
         .patientEntryFetched(OngoingNewPatientEntry().withIdentifier(bpPassport).withShrId(shrId))
 
     val ui = mock<PatientEntryUi>()

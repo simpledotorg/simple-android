@@ -39,6 +39,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.confirmremoveid.ConfirmRemoveIdSheet
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature.SharedHealthRecord
 import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.navigation.v2.Router
@@ -291,7 +292,7 @@ class PatientEntryScreen : BaseScreen<
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
   override fun defaultModel() = PatientEntryModel.DEFAULT.copy(
-      isUserCountryBangladesh = country.isoCountryCode == Country.BANGLADESH
+      isSharedHealthRecordEnabled = features.isEnabled(SharedHealthRecord)
   )
 
   override fun createInit() = PatientEntryInit()

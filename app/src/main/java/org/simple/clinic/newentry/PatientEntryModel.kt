@@ -17,7 +17,7 @@ data class PatientEntryModel(
     val nextButtonState: ButtonState? = null,
     val colonyOrVillagesList: List<String>? = null,
     val inputFields: InputFields? = null,
-    val isUserCountryBangladesh: Boolean = false,
+    val isSharedHealthRecordEnabled: Boolean = false,
     val isPatientEntryFetched: Boolean = false,
 ) : Parcelable {
   companion object {
@@ -31,7 +31,7 @@ data class PatientEntryModel(
     get() = inputFields != null
 
   val canAddShrId: Boolean
-    get() = isUserCountryBangladesh && patientEntry.shrId == null
+    get() = isSharedHealthRecordEnabled && patientEntry.shrId == null
 
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
       copy(patientEntry = patientEntry, isPatientEntryFetched = true)

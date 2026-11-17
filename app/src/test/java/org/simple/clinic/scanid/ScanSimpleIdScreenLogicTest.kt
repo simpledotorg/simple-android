@@ -140,7 +140,7 @@ class ScanSimpleIdScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         init = Init { first(it) },
-        update = ScanSimpleIdUpdate(),
+        update = ScanSimpleIdUpdate(isSharedHealthRecordEnabled = true),
         effectHandler = effectHandler.build(),
         defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen),
         modelUpdateListener = { /* no-op */ }

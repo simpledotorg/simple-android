@@ -32,7 +32,7 @@ class ScanSimpleIdUpdateTest {
      }
      """
 
-  private val spec = UpdateSpec(ScanSimpleIdUpdate())
+  private val spec = UpdateSpec(ScanSimpleIdUpdate(isSharedHealthRecordEnabled = true))
 
   private val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
 
@@ -378,6 +378,33 @@ class ScanSimpleIdUpdateTest {
                 .clearInvalidQrCodeError()
                 .searching()),
             hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
+
+  @Test
+  fun `when a valid SHR barcode is scanned and SHR is not enabled, then show invalid QR error`() {
+    val shrDisabledSpec = UpdateSpec(ScanSimpleIdUpdate(isSharedHealthRecordEnabled = false))
+
+    shrDisabledSpec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned("98146050888"))
+        .then(assertThatNext(
+            hasModel(defaultModel.notSearching().invalidQrCode()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when a bp passport is scanned and SHR is not enabled, then search for the patient`() {
+    val shrDisabledSpec = UpdateSpec(ScanSimpleIdUpdate(isSharedHealthRecordEnabled = false))
+    val bpPassport = "9f154761-ec3c-4f9b-a4d8-a2d8f2a3e2f1"
+
+    shrDisabledSpec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(bpPassport))
+        .then(assertThatNext(
+            hasModel(defaultModel.clearInvalidQrCodeError().searching()),
+            hasEffects(SearchPatientByIdentifier(Identifier(bpPassport, BpPassport)))
         ))
   }
 

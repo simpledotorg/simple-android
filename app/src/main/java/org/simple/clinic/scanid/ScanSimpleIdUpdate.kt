@@ -17,9 +17,8 @@ import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import java.util.UUID
-import javax.inject.Inject
-
-class ScanSimpleIdUpdate @Inject constructor(
+class ScanSimpleIdUpdate(
+    private val isSharedHealthRecordEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
   override fun update(
@@ -161,6 +160,8 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       clearInvalidQrCodeModel: ScanSimpleIdModel
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    if (!isSharedHealthRecordEnabled) return invalidQrCode(model)
+
     val sharedHealthRecordId = extractSharedHealthRecordId(event.text)
 
     if (sharedHealthRecordId == null || !isValid(sharedHealthRecordId)) {

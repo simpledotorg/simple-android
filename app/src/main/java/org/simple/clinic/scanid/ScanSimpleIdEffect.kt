@@ -1,7 +1,6 @@
 package org.simple.clinic.scanid
 
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import java.util.UUID
 
@@ -31,8 +30,7 @@ data class OpenPatientSummary(val patientId: UUID) : ScanSimpleIdViewEffect()
 
 data class OpenPatientSearch(
     val additionalIdentifier: Identifier?,
-    val initialSearchQuery: String?,
-    val patientPrefillInfo: PatientPrefillInfo?
+    val initialSearchQuery: String?
 ) : ScanSimpleIdViewEffect()
 
 data class GoBackToEditPatientScreen(

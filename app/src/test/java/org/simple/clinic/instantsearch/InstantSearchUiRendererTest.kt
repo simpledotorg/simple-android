@@ -14,7 +14,6 @@ class InstantSearchUiRendererTest {
 
   private val defaultModel = InstantSearchModel.create(
       additionalIdentifier = null,
-      patientPrefillInfo = null,
       searchQuery = null
   )
 

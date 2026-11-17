@@ -48,10 +48,6 @@ data class OpenQrCodeScannerClicked(
   override val analyticsName = "Instant Search Screen:Open QR code scanner"
 }
 
-data object PatientAlreadyHasAnExistingNHID : InstantSearchEvent()
-
-data class PatientDoesNotHaveAnExistingNHID(val patientId: UUID) : InstantSearchEvent()
-
 data class SearchResultsLoadStateChanged(val instantSearchProgressState: InstantSearchProgressState) : InstantSearchEvent()
 
 data object InstantSearchScreenShown : InstantSearchEvent()

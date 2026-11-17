@@ -4,6 +4,7 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -13,9 +14,13 @@ import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
@@ -414,6 +419,109 @@ class PatientEntryUpdateTest {
         .whenEvent(ColonyOrVillagesFetched(colonyOrVillages))
         .then(assertThatNext(
             hasModel(defaultModel.colonyOrVillageListUpdated(colonyOrVillages)),
+            hasNoEffects()
+        ))
+  }
+
+  private val shrEnabledModel = PatientEntryModel.DEFAULT.copy(isSharedHealthRecordEnabled = true)
+  private val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
+
+  @Test
+  fun `when add SHR ID button is clicked with SHR enabled and there is no SHR ID, then open the scanner`() {
+    updateSpec
+        .given(shrEnabledModel)
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenScanShrIdScreen)
+        ))
+  }
+
+  @Test
+  fun `when add SHR ID button is clicked and the patient entry already has an SHR ID, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModel.shrIdAdded(shrId))
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when add SHR ID button is clicked with SHR not enabled, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when a valid SHR ID is added, then update the patient entry`() {
+    updateSpec
+        .given(shrEnabledModel)
+        .whenEvent(ShrIdAdded(shrId))
+        .then(assertThatNext(
+            hasModel(shrEnabledModel.shrIdAdded(shrId)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when an SHR ID is added alongside an existing bp passport, then keep both in the patient entry`() {
+    val bpPassport = Identifier("9ba2d8c1-5c4e-4a6f-8e2d-1f0b7a3c5d91", BpPassport)
+    val modelWithBpPassport = shrEnabledModel.patientEntryFetched(OngoingNewPatientEntry().withIdentifier(bpPassport))
+
+    updateSpec
+        .given(modelWithBpPassport)
+        .whenEvent(ShrIdAdded(shrId))
+        .then(assertThatNext(
+            hasModel(modelWithBpPassport.patientEntryFetched(
+                OngoingNewPatientEntry().withIdentifier(bpPassport).withShrId(shrId)
+            )),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when an invalid SHR ID is added, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModel)
+        .whenEvent(ShrIdAdded(Identifier("81234567890", BangladeshSharedHealthRecordId)))
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when an identifier that is not an SHR ID is added as the SHR ID, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModel)
+        .whenEvent(ShrIdAdded(Identifier("91234567890", BpPassport)))
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when an SHR ID is added but the patient entry already has one, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModel.shrIdAdded(shrId))
+        .whenEvent(ShrIdAdded(Identifier("98146050888", BangladeshSharedHealthRecordId)))
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when remove SHR ID is clicked, then ask for confirmation without removing the SHR ID`() {
+    updateSpec
+        .given(shrEnabledModel.shrIdAdded(shrId))
+        .whenEvent(RemoveShrIdClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmRemoveShrIdSheet)
+        ))
+  }
+
+  @Test
+  fun `when removing the SHR ID is confirmed, then remove the SHR ID from the patient entry`() {
+    updateSpec
+        .given(shrEnabledModel.shrIdAdded(shrId))
+        .whenEvent(RemoveShrIdConfirmed)
+        .then(assertThatNext(
+            hasModel(shrEnabledModel),
             hasNoEffects()
         ))
   }

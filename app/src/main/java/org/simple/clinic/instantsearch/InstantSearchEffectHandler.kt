@@ -8,7 +8,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -35,7 +34,6 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
-      .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())
       .addConsumer(InstantSearchViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
@@ -61,23 +59,6 @@ class InstantSearchEffectHandler @AssistedInject constructor(
           .map(::SearchQueryValidated)
     }
   }
-
-  private fun checkIfPatientAlreadyHasAnExistingNHID(): ObservableTransformer<CheckIfPatientAlreadyHasAnExistingNHID, InstantSearchEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .map { patientId -> patientRepository.patientProfileImmediate(patientId.patientId) }
-          .map { patientProfile -> patientProfile.get().withoutDeletedBusinessIds() }
-          .map { patientProfile -> checkIfPatientProfileHasNationalHealthId(patientProfile) }
-    }
-  }
-
-  private fun checkIfPatientProfileHasNationalHealthId(patientProfile: PatientProfile) =
-      if (patientProfile.hasNationalHealthID) {
-        PatientAlreadyHasAnExistingNHID
-      } else {
-        PatientDoesNotHaveAnExistingNHID(patientProfile.patientUuid)
-      }
 
   private fun searchWithCriteria(): ObservableTransformer<SearchWithCriteria, InstantSearchEvent> {
     return ObservableTransformer { effects ->

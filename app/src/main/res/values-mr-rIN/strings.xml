@@ -350,7 +350,6 @@
   <string name="scansimpleid_identfier_already_exists">ओळखपत्र आधीच दुसऱ्या रुग्णाला दिले आहे.\nनवीन आरोग्य ओळखपत्र स्कॅन करा.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">बीपी पासपोर्ट किंवा राष्ट्रीय आरोग्य ID</string>
   <string name="scansimpleid_bp_passport_title">बीपी पासपोर्ट</string>
-  <string name="scansimpleid_national_id_title">राष्‍ट्रीय आयडी क्रमांक</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक प्रलंबित आहे</string>
@@ -704,8 +703,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">तारीख एका वर्षा नंतरची असू शकत नाही</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">आधीच राष्ट्रीय आरोग्य ID असलेल्या रुग्णाला राष्ट्रीय आरोग्य ID नियुक्त केला जाऊ शकत नाही</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ठीक आहे</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">रुग्णाने मागच्या महिन्यात कधीही बीपीची औषधे घेतली का?</string>

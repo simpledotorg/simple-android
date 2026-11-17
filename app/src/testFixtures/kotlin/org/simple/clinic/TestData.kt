@@ -53,7 +53,6 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
-import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
@@ -99,9 +98,6 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.returnscore.LikelyToReturnIfCalledScoreType
 import org.simple.clinic.returnscore.ReturnScore
 import org.simple.clinic.returnscore.ScoreType
-import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
-import org.simple.clinic.scanid.IndiaNHIDGender
-import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficerPayload
@@ -1345,26 +1341,6 @@ object TestData {
     )
   }
 
-  fun indiaNHIDInfoPayload(
-      healthIdNumber: String = "1234123456785678",
-      healthIdUserName: String = "Mohit",
-      fullName: String = "Mohit Ahuja",
-      indiaNHIDGender: IndiaNHIDGender = IndiaNHIDGender.MALE,
-      state: String = "Maharashtra",
-      district: String = "Thane",
-      dateOfBirth: LocalDate = LocalDate.parse("1997-12-12"),
-      address: String = "Obvious HQ"
-  ) = IndiaNHIDInfoPayload(
-      healthIdNumber = healthIdNumber,
-      healthIdUserName = healthIdUserName,
-      fullName = fullName,
-      indiaNHIDGender = indiaNHIDGender,
-      state = state,
-      district = district,
-      dateOfBirth = IndiaNHIDDateOfBirth(dateOfBirth),
-      address = address
-  )
-
   fun drug(
       id: UUID = UUID.randomUUID(),
       name: String = "Amolodipine",
@@ -1393,18 +1369,6 @@ object TestData {
           updatedAt = updatedAt,
           deletedAt = deletedAt
       )
-  )
-
-  fun patientPrefillInfo(
-      fullName: String = "Christi Joe",
-      gender: Gender = Gender.Female,
-      dateOfBirth: LocalDate = LocalDate.parse("2021-05-12"),
-      address: String = "Obvious HQ"
-  ) = PatientPrefillInfo(
-      fullName = fullName,
-      gender = gender,
-      dateOfBirth = dateOfBirth,
-      address = address
   )
 
   fun completeMedicalRecord(

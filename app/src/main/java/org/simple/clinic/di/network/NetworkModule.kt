@@ -33,9 +33,6 @@ import org.simple.clinic.questionnaire.component.properties.InputFieldViewType
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.returnscore.ScoreType
-import org.simple.clinic.scanid.IndiaNHIDDateOfBirth
-import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
-import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
@@ -83,8 +80,6 @@ class NetworkModule {
         .add(TeleconsultAnswer.MoshiTypeAdapter())
         .add(TeleconsultationType.MoshiTypeAdapter())
         .add(TeleconsultStatus.MoshiTypeAdapter())
-        .add(IndiaNHIDDateOfBirth::class.java, IndiaNHIDDateOfBirthMoshiAdapter())
-        .add(IndiaNHIDGender.MoshiTypeAdapter())
         .add(SecondsDuration::class.java, DurationFromSecondsMoshiAdapter())
         .add(RetentionType::class.java, EnumJsonAdapter.create(RetentionType::class.java).withUnknownFallback(RetentionType.Unknown))
         .add(DrugCategory.MoshiTypeConverter())

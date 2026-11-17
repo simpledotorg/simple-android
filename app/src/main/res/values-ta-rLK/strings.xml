@@ -353,7 +353,6 @@
   <string name="scansimpleid_identfier_already_exists">ஏற்கனவே மற்றொரு நோயாளிக்கு ஐடி கொடுக்கப்பட்டுள்ளது.\nபுதிய சுகாதார ஐடி-ஐ ஸ்கேன் செய்யவும்.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">பீபி பாஸ்போர்ட் அல்லது தேசிய சுகாதார ஐடி</string>
   <string name="scansimpleid_bp_passport_title">பீபி பாஸ்போர்ட்</string>
-  <string name="scansimpleid_national_id_title">தேசிய ஐடி</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ஒத்திசைவு நிலுவையில் உள்ளது</string>
@@ -708,8 +707,6 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">திகதி ஒரு ஆண்டிற்குப் பின்னரானதாக இருக்கக்கூடாது</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">ஏற்கனவே தேசிய சுகாதார ஐடியைக் கொண்டுள்ள நோயாளருக்கு தேசிய சுகாதார ஐடியை ஒதுக்க முடியாது</string>
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">சரி</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">கடந்த மாதத்தில் நோயாளர் எப்போதாவது பிபி குளிகைகளை எடுத்துக்கொண்டாரா?</string>

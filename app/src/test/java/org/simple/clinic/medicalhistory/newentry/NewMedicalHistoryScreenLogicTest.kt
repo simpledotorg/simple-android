@@ -88,6 +88,7 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
+        supplyUuidForShrId = any(),
         supplyUuidForPhoneNumber = any(),
         dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
@@ -115,6 +116,7 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
+          supplyUuidForShrId = any(),
           supplyUuidForPhoneNumber = any(),
           dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )
@@ -157,6 +159,7 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
+        supplyUuidForShrId = any(),
         supplyUuidForPhoneNumber = any(),
         dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
@@ -178,6 +181,7 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
+          supplyUuidForShrId = any(),
           supplyUuidForPhoneNumber = any(),
           dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )
@@ -222,6 +226,7 @@ class NewMedicalHistoryScreenLogicTest {
         addressUuid = eq(addressUuid),
         supplyUuidForBpPassport = any(),
         supplyUuidForAlternativeId = any(),
+        supplyUuidForShrId = any(),
         supplyUuidForPhoneNumber = any(),
         dateOfBirthFormatter = eq(dateOfBirthFormatter)
     )).thenReturn(savedPatient)
@@ -260,6 +265,7 @@ class NewMedicalHistoryScreenLogicTest {
           addressUuid = eq(addressUuid),
           supplyUuidForBpPassport = any(),
           supplyUuidForAlternativeId = any(),
+          supplyUuidForShrId = any(),
           supplyUuidForPhoneNumber = any(),
           dateOfBirthFormatter = eq(dateOfBirthFormatter)
       )

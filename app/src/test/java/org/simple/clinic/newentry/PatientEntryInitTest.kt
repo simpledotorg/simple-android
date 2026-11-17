@@ -5,6 +5,9 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
+import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 
 class PatientEntryInitTest {
   private val initSpec = InitSpec(PatientEntryInit())
@@ -31,6 +34,20 @@ class PatientEntryInitTest {
         hasEffects(
             FetchPatientEntry, LoadInputFields
         )
+    ))
+  }
+
+  @Test
+  fun `when screen is restored after the patient entry was fetched, then do not fetch it again`() {
+    val shrId = Identifier("91234567890", BangladeshSharedHealthRecordId)
+    val restoredModel = defaultModel
+        .patientEntryFetched(OngoingNewPatientEntry())
+        .shrIdAdded(shrId)
+        .colonyOrVillageListUpdated(listOf("Colony1"))
+
+    initSpec.whenInit(restoredModel).then(assertThatFirst(
+        hasModel(restoredModel),
+        hasEffects(LoadInputFields)
     ))
   }
 }

@@ -589,7 +589,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).showIdentifierSection()
+    verify(ui).showIdentifierSection(Identifier("id", BpPassport))
   }
 
   @Test

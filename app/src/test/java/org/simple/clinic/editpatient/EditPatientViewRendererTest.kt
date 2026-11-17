@@ -9,7 +9,7 @@ import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.TestData
 import org.simple.clinic.util.TestUserClock
@@ -45,7 +45,7 @@ class EditPatientViewRendererTest {
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.SAVING_PATIENT,
-      isUserCountryIndia = false,
+      isSharedHealthRecordEnabled = false,
   )
 
   @Test
@@ -177,7 +177,7 @@ class EditPatientViewRendererTest {
             identifier = identifier
         ),
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
+        isSharedHealthRecordEnabled = false,
     )
 
     // when
@@ -201,116 +201,6 @@ class EditPatientViewRendererTest {
   }
 
   @Test
-  fun `when indian national health id is present, then display alternate id container`() {
-    // given
-    val identifier = TestData.identifier(
-        value = "1234567",
-        type = IndiaNationalHealthId
-    )
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = TestData.businessId(
-            uuid = UUID.fromString("ed74922a-3909-4084-a667-1f2bf1c36322"),
-            identifier = identifier
-        ),
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false,
-    )
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier, false)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when NHID is added after qr code scan and feature flag is enabled, then display NHID with highligh in the ui and hide add NHID button`() {
-    // given
-    val indiaNHID = "23432123456434"
-    val identifier = Identifier(indiaNHID, IndiaNationalHealthId)
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = null,
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = true,
-    ).updateAlternativeId(indiaNHID)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier, true)
-    verify(ui).hideAddNHIDButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when there is no NHID in edit screen, the user country is India and feature flag is enabled, then show add NHID button`() {
-    // given
-    val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        dateOfBirthFormatter = dateOfBirthFormat,
-        bangladeshNationalId = null,
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = true,
-    )
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setPatientName(patientProfile.patient.fullName)
-    verify(ui).setGender(patientProfile.patient.gender)
-    verify(ui).setState(patientProfile.address.state)
-    verify(ui).setDistrict(patientProfile.address.district)
-    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
-    verify(ui).setZone(patientProfile.address.zone)
-    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
-    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
-    verify(ui).setPatientDateOfBirth("09/03/1990")
-    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
-    verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
-    verify(ui).showAddNHIDButton()
-    verify(ui).showIndiaNHIDLabel()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when adding health ids from edit patient is enabled, then show bp passport button and label`() {
     // given
     val model = EditPatientModel.from(
@@ -320,7 +210,7 @@ class EditPatientViewRendererTest {
         dateOfBirthFormatter = dateOfBirthFormat,
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
-        isUserCountryIndia = false)
+        isSharedHealthRecordEnabled = false)
 
     // when
     uiRenderer.render(model)
@@ -338,6 +228,164 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).setAlternateIdTextField("")
+    verify(ui).displayBpPassports(emptyList())
+    verifyNoMoreInteractions(ui)
+  }
+
+  private val shrEnabledModel = EditPatientModel.from(
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = null,
+      saveButtonState = EditPatientState.SAVING_PATIENT,
+      isSharedHealthRecordEnabled = true,
+  )
+
+  private val savedShrId = TestData.businessId(
+      uuid = UUID.fromString("0f7a9d2e-31a8-4c39-9d43-0a4f1e2e9b55"),
+      identifier = Identifier("91234567890", BangladeshSharedHealthRecordId)
+  )
+
+  private val newShrId = Identifier("98146050888", BangladeshSharedHealthRecordId)
+
+  private fun verifyFormFieldsRendered() {
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).setAlternateIdTextField("")
+  }
+
+  @Test
+  fun `when SHR is enabled and the patient has no SHR ID, then show the add SHR ID button`() {
+    // given
+    val model = shrEnabledModel.patientIdentifiersLoaded(emptyList(), null)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).showAddShrIdButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when SHR is enabled and the identifiers are not loaded yet, then hide the SHR ID`() {
+    // when
+    uiRenderer.render(shrEnabledModel)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).hideShrId()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the patient has a saved SHR ID, then display it without highlight`() {
+    // given
+    val model = shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayShrId(savedShrId.identifier, false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when an SHR ID is newly added, then display it with highlight`() {
+    // given
+    val model = shrEnabledModel
+        .patientIdentifiersLoaded(emptyList(), null)
+        .addShrId(newShrId)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayShrId(newShrId, true)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the saved SHR ID is removed, then show the add SHR ID button`() {
+    // given
+    val model = shrEnabledModel
+        .patientIdentifiersLoaded(emptyList(), savedShrId)
+        .removeShrId()
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).showAddShrIdButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the patient has both bp passports and an SHR ID, then display both`() {
+    // given
+    val bpPassport = TestData.businessId(
+        uuid = UUID.fromString("59b367d7-d8b9-4d8b-b1c5-f702a15bc78d"),
+        identifier = Identifier("09023191-33dd-4bc8-8e60-c13df9e4764b", Identifier.IdentifierType.BpPassport)
+    )
+    val newBpPassport = Identifier("374488dc-43a0-4a8a-9f3b-619096e95546", Identifier.IdentifierType.BpPassport)
+    val model = shrEnabledModel
+        .patientIdentifiersLoaded(listOf(bpPassport), savedShrId)
+        .addBpPassports(listOf(newBpPassport))
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(listOf(BPPassportListItem("090\u00a02319", false), BPPassportListItem("374\u00a04884", true)))
+    verify(ui).displayShrId(savedShrId.identifier, false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when SHR is not enabled and the patient has no SHR ID, then do not render the SHR ID`() {
+    // given
+    val model = this.model.patientIdentifiersLoaded(emptyList(), null)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
+    verify(ui).displayBpPassports(emptyList())
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when SHR is not enabled but the patient has an SHR ID, then do not render the SHR ID`() {
+    // given
+    val model = this.model.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyFormFieldsRendered()
     verify(ui).displayBpPassports(emptyList())
     verifyNoMoreInteractions(ui)
   }

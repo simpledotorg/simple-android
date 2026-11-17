@@ -122,6 +122,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -220,6 +221,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -261,6 +263,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -325,6 +328,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -364,6 +368,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -441,6 +446,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -500,6 +506,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -555,6 +562,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -625,6 +633,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -680,6 +689,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -741,6 +751,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 
@@ -822,6 +833,7 @@ class PatientSummaryViewRendererTest {
         phoneNumber = phoneNumber,
         bpPassport = bpPassport,
         alternativeId = bangladeshNationalId,
+        shrId = null,
         facility = facility
     )
 

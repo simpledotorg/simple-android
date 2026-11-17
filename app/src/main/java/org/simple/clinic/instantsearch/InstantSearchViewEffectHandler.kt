@@ -17,7 +17,6 @@ class InstantSearchViewEffectHandler(
       is OpenPatientEntryScreen -> uiActions.openPatientEntryScreen(viewEffect.facility)
       ShowKeyboard -> uiActions.showKeyboard()
       OpenQrCodeScanner -> uiActions.openQrCodeScanner()
-      ShowNHIDErrorDialog -> uiActions.showNHIDErrorDialog()
       is PrefillSearchQuery -> uiActions.prefillSearchQuery(viewEffect.searchQuery)
     }.exhaustive()
   }

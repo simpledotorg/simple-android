@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -17,6 +18,8 @@ import org.simple.clinic.newentry.Field.StreetAddress
 import org.simple.clinic.newentry.Field.Zone
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.isNotEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -50,7 +53,21 @@ class PatientEntryUpdate(
       is PatientEntrySaved -> next(model.buttonStateChanged(ButtonState.SAVED), OpenMedicalHistoryEntryScreen)
       is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.colonyOrVillageListUpdated(event.colonyOrVillages))
+      is AddShrIdButtonClicked -> if (model.canAddShrId) dispatch(OpenScanShrIdScreen) else noChange()
+      is ShrIdAdded -> onShrIdAdded(model, event.identifier)
+      RemoveShrIdClicked -> dispatch(ShowConfirmRemoveShrIdSheet)
+      RemoveShrIdConfirmed -> next(model.shrIdRemoved())
     }
+  }
+
+  private fun onShrIdAdded(
+      model: PatientEntryModel,
+      identifier: Identifier
+  ): PatientEntryNext {
+    val isValidShrId = identifier.type == BangladeshSharedHealthRecordId &&
+        BangladeshSharedHealthRecordId.isValid(identifier.value)
+
+    return if (isValidShrId && model.canAddShrId) next(model.shrIdAdded(identifier)) else noChange()
   }
 
   private fun onFieldChanged(

@@ -36,6 +36,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshSharedHealthRecordId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patientattribute.BMIReading
 import org.simple.clinic.patientattribute.PatientAttributeRepository
@@ -195,6 +196,78 @@ class PatientSummaryEffectHandlerTest {
                 phoneNumber = patientPhoneNumber,
                 bpPassport = bpPassport,
                 alternativeId = bangladeshNationId,
+                shrId = null,
+                facility = facility
+            )
+        )
+    )
+  }
+
+  @Test
+  fun `when the load patient summary profile is received, and the patient has an SHR ID, then the SHR ID must be part of the patient summary profile`() {
+    // given
+    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val effectHandler = PatientSummaryEffectHandler(
+        clock = clock,
+        userClock = userClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = mock(),
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        bloodSugarRepository = bloodSugarRepository,
+        dataSync = dataSync,
+        medicalHistoryRepository = medicalHistoryRepository,
+        cvdRiskRepository = cvdRiskRepository,
+        patientAttributeRepository = patientAttributeRepository,
+        country = bangladesh,
+        currentUser = { user },
+        currentFacility = { facility },
+        uuidGenerator = uuidGenerator,
+        facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = teleconsultFacilityRepository,
+        prescriptionRepository = prescriptionRepository,
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
+        nonLabBasedCVDRiskCalculator = nonLabBasedCVDRiskCalculator,
+        labBasedCVDRiskCalculator = labBasedCVDRiskCalculator,
+        viewEffectsConsumer = viewEffectHandler::handle,
+        feature = features
+    )
+    val testCase = EffectHandlerTestCase(effectHandler.build())
+    val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
+    val patient = TestData.patient(patientUuid, registeredFacilityId = registeredFacilityUuid)
+    val patientAddress = TestData.patientAddress(uuid = patient.addressUuid)
+    val patientPhoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
+    val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
+    val shrId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("98146050888", BangladeshSharedHealthRecordId))
+    val deletedShrId = TestData.businessId(
+        patientUuid = patientUuid,
+        identifier = Identifier("95555555555", BangladeshSharedHealthRecordId),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val facility = TestData.facility(
+        uuid = registeredFacilityUuid,
+        name = "CHC Obvious"
+    )
+
+    val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport, deletedShrId, shrId))
+    whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just(Optional.of(patientProfile))
+    whenever(facilityRepository.facility(registeredFacilityUuid)) doReturn Optional.of(facility)
+
+    // when
+    testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(
+        PatientSummaryProfileLoaded(
+            PatientSummaryProfile(
+                patient = patient,
+                address = patientAddress,
+                phoneNumber = patientPhoneNumber,
+                bpPassport = bpPassport,
+                alternativeId = bangladeshNationId,
+                shrId = shrId,
                 facility = facility
             )
         )
@@ -253,6 +326,7 @@ class PatientSummaryEffectHandlerTest {
                 phoneNumber = patientPhoneNumber,
                 bpPassport = bpPassport,
                 alternativeId = bangladeshNationId,
+                shrId = null,
                 facility = null
             )
         )
@@ -272,6 +346,7 @@ class PatientSummaryEffectHandlerTest {
         phoneNumber = null,
         bpPassport = null,
         alternativeId = null,
+        shrId = null,
         facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))

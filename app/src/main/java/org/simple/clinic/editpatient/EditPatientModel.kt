@@ -26,7 +26,7 @@ data class EditPatientModel(
     val colonyOrVillagesList: List<String>?,
     val inputFields: InputFields?,
     val bpPassports: List<BusinessId>?,
-    val isUserCountryIndia: Boolean,
+    val isSharedHealthRecordEnabled: Boolean,
 ) : Parcelable {
   companion object {
     fun from(
@@ -36,7 +36,7 @@ data class EditPatientModel(
         dateOfBirthFormatter: DateTimeFormatter,
         bangladeshNationalId: BusinessId?,
         saveButtonState: EditPatientState?,
-        isUserCountryIndia: Boolean,
+        isSharedHealthRecordEnabled: Boolean,
     ): EditPatientModel {
       val savedEntry = EditablePatientEntry.from(
           patient,
@@ -47,17 +47,17 @@ data class EditPatientModel(
       )
       val ongoingEntry = savedEntry.copy()
       return EditPatientModel(
-          savedEntry,
-          ongoingEntry,
-          patient,
-          address,
-          phoneNumber,
-          bangladeshNationalId,
-          saveButtonState,
-          null,
-          null,
-          null,
-          isUserCountryIndia,
+          savedEntry = savedEntry,
+          ongoingEntry = ongoingEntry,
+          savedPatient = patient,
+          savedAddress = address,
+          savedPhoneNumber = phoneNumber,
+          savedBangladeshNationalId = bangladeshNationalId,
+          saveButtonState = saveButtonState,
+          colonyOrVillagesList = null,
+          inputFields = null,
+          bpPassports = null,
+          isSharedHealthRecordEnabled = isSharedHealthRecordEnabled,
       )
     }
   }
@@ -68,11 +68,17 @@ data class EditPatientModel(
   val hasInputFields
     get() = inputFields != null
 
-  val canAddNHID
-    get() = isUserCountryIndia && savedBangladeshNationalId == null
-
   val currentListOfBpPassports
     get() = ongoingEntry.getCurrentListOfBpPassports()
+
+  val hasLoadedPatientIdentifiers: Boolean
+    get() = bpPassports != null
+
+  val canAddShrId: Boolean
+    get() = isSharedHealthRecordEnabled && hasLoadedPatientIdentifiers && ongoingEntry.shrId == null
+
+  val isShrIdNewlyAdded: Boolean
+    get() = ongoingEntry.shrId != null && ongoingEntry.shrId != savedEntry.shrId
 
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
@@ -120,6 +126,31 @@ data class EditPatientModel(
   fun bpPassportsLoaded(bpPassports: List<BusinessId>): EditPatientModel {
     return copy(bpPassports = bpPassports)
   }
+
+  fun patientIdentifiersLoaded(
+      bpPassports: List<BusinessId>,
+      shrId: BusinessId?
+  ): EditPatientModel {
+    val savedShrIdentifier = shrId?.identifier
+    val hasUserChangedShrId = hasLoadedPatientIdentifiers && ongoingEntry.shrId != savedEntry.shrId
+
+    // The patient's identifiers are loaded again whenever the patient changes in the database
+    // (for example, after a sync). Keep an SHR ID the user has added or removed on this screen,
+    // and otherwise follow the saved one.
+    val updatedOngoingEntry = if (hasUserChangedShrId) ongoingEntry else ongoingEntry.updateShrId(savedShrIdentifier)
+
+    return copy(
+        savedEntry = savedEntry.updateShrId(savedShrIdentifier),
+        ongoingEntry = updatedOngoingEntry,
+        bpPassports = bpPassports
+    )
+  }
+
+  fun addShrId(shrId: Identifier): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateShrId(shrId))
+
+  fun removeShrId(): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.updateShrId(null))
 
   fun addBpPassports(bpPassports: List<Identifier>): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.addBpPassports(bpPassports))

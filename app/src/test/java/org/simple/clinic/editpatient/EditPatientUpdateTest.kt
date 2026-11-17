@@ -4,6 +4,7 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -15,6 +16,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddShrId
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -58,7 +60,7 @@ class EditPatientUpdateTest {
     dateOfBirthFormatter = dateOfBirthFormat,
     bangladeshNationalId = null,
     saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-    isUserCountryIndia = false,
+    isSharedHealthRecordEnabled = false,
   )
 
   @Test
@@ -100,24 +102,11 @@ class EditPatientUpdateTest {
 
     updateSpec
         .given(model)
-        .whenEvent(BpPassportsFetched(bpPassports))
+        .whenEvent(PatientIdentifiersFetched(bpPassports, null))
         .then(assertThatNext(
-            hasModel(model.bpPassportsLoaded(bpPassports)),
+            hasModel(model.patientIdentifiersLoaded(bpPassports, null)),
             hasNoEffects()
         ))
-  }
-
-  @Test
-  fun `when add NHID button is clicked, then open scan simple id screen to add NHID`() {
-    updateSpec
-        .given(model)
-        .whenEvent(AddNHIDButtonClicked())
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(OpenSimpleScanIdScreen(OpenedFrom.EditPatientScreen.ToAddNHID))
-            )
-        )
   }
 
   @Test
@@ -147,5 +136,241 @@ class EditPatientUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+  private val shrEnabledModel = EditPatientModel.from(
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = null,
+      saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
+      isSharedHealthRecordEnabled = true,
+  )
+
+  private val shrEnabledModelWithIdentifiersLoaded = shrEnabledModel.patientIdentifiersLoaded(emptyList(), null)
+
+  private val savedShrId = TestData.businessId(
+      uuid = UUID.fromString("5a6c55d4-4c7b-4f86-8a7e-1d0e6bb5f0a3"),
+      identifier = Identifier("91234567890", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+  )
+
+  private val newShrId = Identifier("98146050888", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+
+  @Test
+  fun `when patient identifiers are loaded for the first time, then set the saved SHR ID on the entries`() {
+    val bpPassports = listOf(
+        TestData.businessId(
+            uuid = UUID.fromString("0c8b3b47-2a52-4c9e-9f0b-7d1a0f6b0d11"),
+            identifier = Identifier("8ccc4438-8158-41f9-9a3a-a96e4a221aa0", Identifier.IdentifierType.BpPassport)
+        )
+    )
+
+    val expectedModel = shrEnabledModel.copy(
+        savedEntry = shrEnabledModel.savedEntry.updateShrId(savedShrId.identifier),
+        ongoingEntry = shrEnabledModel.ongoingEntry.updateShrId(savedShrId.identifier),
+        bpPassports = bpPassports
+    )
+
+    updateSpec
+        .given(shrEnabledModel)
+        .whenEvent(PatientIdentifiersFetched(bpPassports, savedShrId))
+        .then(assertThatNext(
+            hasModel(expectedModel),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient identifiers are loaded again after an SHR ID was added, then keep the added SHR ID`() {
+    val modelWithAddedShrId = shrEnabledModelWithIdentifiersLoaded.addShrId(newShrId)
+
+    updateSpec
+        .given(modelWithAddedShrId)
+        .whenEvent(PatientIdentifiersFetched(emptyList(), null))
+        .then(assertThatNext(
+            hasModel(modelWithAddedShrId.copy(bpPassports = emptyList())),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient identifiers are loaded again with a changed SHR ID and the user has not changed it, then follow the saved SHR ID`() {
+    val loadedModel = shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+    val syncedShrId = TestData.businessId(
+        uuid = UUID.fromString("9a4e7d5f-1b6c-4e8d-8f0a-4b5c6d7e8f90"),
+        identifier = Identifier("95555555555", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+    )
+
+    updateSpec
+        .given(loadedModel)
+        .whenEvent(PatientIdentifiersFetched(emptyList(), syncedShrId))
+        .then(assertThatNext(
+            hasModel(loadedModel.copy(
+                savedEntry = loadedModel.savedEntry.updateShrId(syncedShrId.identifier),
+                ongoingEntry = loadedModel.ongoingEntry.updateShrId(syncedShrId.identifier)
+            )),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient identifiers are loaded again after the user removed the SHR ID, then keep it removed and update the saved SHR ID`() {
+    val modelWithRemovedShrId = shrEnabledModel
+        .patientIdentifiersLoaded(emptyList(), savedShrId)
+        .removeShrId()
+    val syncedShrId = TestData.businessId(
+        uuid = UUID.fromString("9a4e7d5f-1b6c-4e8d-8f0a-4b5c6d7e8f90"),
+        identifier = Identifier("95555555555", Identifier.IdentifierType.BangladeshSharedHealthRecordId)
+    )
+
+    updateSpec
+        .given(modelWithRemovedShrId)
+        .whenEvent(PatientIdentifiersFetched(emptyList(), syncedShrId))
+        .then(assertThatNext(
+            hasModel(modelWithRemovedShrId.copy(
+                savedEntry = modelWithRemovedShrId.savedEntry.updateShrId(syncedShrId.identifier)
+            )),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when add SHR ID button is clicked, then open scan simple id screen to add SHR ID`() {
+    updateSpec
+        .given(shrEnabledModelWithIdentifiersLoaded)
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSimpleScanIdScreen(ToAddShrId, patientProfile.patient.uuid))
+        ))
+  }
+
+  @Test
+  fun `when add SHR ID button is clicked and SHR is not enabled, then do nothing`() {
+    updateSpec
+        .given(model.patientIdentifiersLoaded(emptyList(), null))
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when add SHR ID button is clicked and the patient already has an SHR ID, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId))
+        .whenEvent(AddShrIdButtonClicked())
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when a valid SHR ID is added, then update the model with the SHR ID`() {
+    updateSpec
+        .given(shrEnabledModelWithIdentifiersLoaded)
+        .whenEvent(ShrIdAdded(newShrId))
+        .then(assertThatNext(
+            hasModel(shrEnabledModelWithIdentifiersLoaded.addShrId(newShrId)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when an SHR ID with an invalid value is added, then do nothing`() {
+    val invalidShrIds = listOf("88146050888", "9814605088", "981460508881", "9814605088a")
+
+    invalidShrIds.forEach { value ->
+      updateSpec
+          .given(shrEnabledModelWithIdentifiersLoaded)
+          .whenEvent(ShrIdAdded(Identifier(value, Identifier.IdentifierType.BangladeshSharedHealthRecordId)))
+          .then(assertThatNext(hasNothing()))
+    }
+  }
+
+  @Test
+  fun `when an identifier of another type is added as an SHR ID, then do nothing`() {
+    updateSpec
+        .given(shrEnabledModelWithIdentifiersLoaded)
+        .whenEvent(ShrIdAdded(Identifier("98146050888", Identifier.IdentifierType.BangladeshNationalId)))
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when an SHR ID is added and the patient already has an SHR ID, then do not add a duplicate`() {
+    val modelWithSavedShrId = shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    updateSpec
+        .given(modelWithSavedShrId)
+        .whenEvent(ShrIdAdded(savedShrId.identifier))
+        .then(assertThatNext(hasNothing()))
+
+    updateSpec
+        .given(modelWithSavedShrId)
+        .whenEvent(ShrIdAdded(newShrId))
+        .then(assertThatNext(hasNothing()))
+  }
+
+  @Test
+  fun `when remove SHR ID is clicked, then ask for confirmation without removing the SHR ID`() {
+    val modelWithSavedShrId = shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    updateSpec
+        .given(modelWithSavedShrId)
+        .whenEvent(RemoveShrIdClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmRemoveShrIdSheet)
+        ))
+  }
+
+  @Test
+  fun `when removing the SHR ID is confirmed, then remove the SHR ID from the ongoing entry`() {
+    val modelWithSavedShrId = shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId)
+
+    updateSpec
+        .given(modelWithSavedShrId)
+        .whenEvent(RemoveShrIdConfirmed)
+        .then(assertThatNext(
+            hasModel(modelWithSavedShrId.removeShrId()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when both a bp passport and an SHR ID are added, then keep both in the model`() {
+    val bpPassport = Identifier("a26d7480-ac79-4de6-a120-15e2bdbdc6e7", Identifier.IdentifierType.BpPassport)
+    val modelWithShrId = shrEnabledModelWithIdentifiersLoaded.addShrId(newShrId)
+
+    updateSpec
+        .given(modelWithShrId)
+        .whenEvent(BpPassportAdded(listOf(bpPassport)))
+        .then(assertThatNext(
+            hasModel(modelWithShrId.addBpPassports(listOf(bpPassport))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when back is clicked after removing the saved SHR ID, then show discard changes alert`() {
+    val modelWithRemovedShrId = shrEnabledModel
+        .patientIdentifiersLoaded(emptyList(), savedShrId)
+        .removeShrId()
+
+    updateSpec
+        .given(modelWithRemovedShrId)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiscardChangesAlertEffect)
+        ))
+  }
+
+  @Test
+  fun `when back is clicked after loading the saved SHR ID without changes, then go back`() {
+    updateSpec
+        .given(shrEnabledModel.patientIdentifiersLoaded(emptyList(), savedShrId))
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackEffect)
+        ))
   }
 }

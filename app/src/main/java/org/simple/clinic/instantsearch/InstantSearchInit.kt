@@ -4,13 +4,17 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 
-class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
+class InstantSearchInit(
+    private val isSharedHealthRecordEnabled: Boolean
+) : Init<InstantSearchModel, InstantSearchEffect> {
 
   override fun init(model: InstantSearchModel): First<InstantSearchModel, InstantSearchEffect> {
     var modelToEmit = model
     val effects = mutableSetOf<InstantSearchEffect>()
 
-    if (modelToEmit.hasAdditionalIdentifier && !modelToEmit.scannedQrCodeSheetAlreadyOpened) {
+    if (modelToEmit.hasAdditionalIdentifier &&
+        !modelToEmit.scannedQrCodeSheetAlreadyOpened &&
+        !isSharedHealthRecordEnabled) {
       effects.add(OpenScannedQrCodeSheet(modelToEmit.additionalIdentifier!!))
       modelToEmit = modelToEmit.scannedQrCodeSheetOpened()
     }

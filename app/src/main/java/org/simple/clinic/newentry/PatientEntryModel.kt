@@ -17,6 +17,8 @@ data class PatientEntryModel(
     val nextButtonState: ButtonState? = null,
     val colonyOrVillagesList: List<String>? = null,
     val inputFields: InputFields? = null,
+    val isSharedHealthRecordEnabled: Boolean = false,
+    val isPatientEntryFetched: Boolean = false,
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
@@ -28,8 +30,11 @@ data class PatientEntryModel(
   val hasInputFields: Boolean
     get() = inputFields != null
 
+  val canAddShrId: Boolean
+    get() = isSharedHealthRecordEnabled && patientEntry.shrId == null
+
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
-      copy(patientEntry = patientEntry)
+      copy(patientEntry = patientEntry, isPatientEntryFetched = true)
 
   fun genderChanged(gender: Optional<Gender>): PatientEntryModel {
     val patientEntryWithUpdatedGender = patientEntry.withGender(gender)
@@ -81,4 +86,10 @@ data class PatientEntryModel(
 
   fun inputFieldsLoaded(inputFields: InputFields?): PatientEntryModel =
       copy(inputFields = inputFields)
+
+  fun shrIdAdded(shrId: Identifier): PatientEntryModel =
+      copy(patientEntry = patientEntry.withShrId(shrId))
+
+  fun shrIdRemoved(): PatientEntryModel =
+      copy(patientEntry = patientEntry.withShrId(null))
 }

@@ -22,7 +22,7 @@ import java.util.UUID
 
 class InstantSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(InstantSearchUpdate())
+  private val updateSpec = UpdateSpec(InstantSearchUpdate(isSharedHealthRecordEnabled = false))
   private val identifier = TestData.identifier(
       value = "3e5500fe-e10e-4009-a0bb-3db9009fdef6",
       type = BpPassport
@@ -361,6 +361,30 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowKeyboard, PrefillSearchQuery("Ram"), ValidateSearchQuery("Ram"))
+        ))
+  }
+
+  @Test
+  fun `when instant search screen is shown with an additional identifier, then do not show keyboard`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(InstantSearchScreenShown)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when instant search screen is shown with an additional identifier in an shr facility, then show keyboard to add to existing patient`() {
+    val shrUpdateSpec = UpdateSpec(InstantSearchUpdate(isSharedHealthRecordEnabled = true))
+
+    shrUpdateSpec
+        .given(defaultModel)
+        .whenEvent(InstantSearchScreenShown)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowKeyboard)
         ))
   }
 }

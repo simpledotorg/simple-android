@@ -36,6 +36,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.feature.Feature.PatientReassignment
+import org.simple.clinic.feature.Feature.SharedHealthRecord
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
@@ -169,9 +170,13 @@ class InstantSearchScreen :
       .compose(ReportAnalyticsEvents())
       .cast<InstantSearchEvent>()
 
-  override fun createUpdate() = InstantSearchUpdate()
+  override fun createUpdate() = InstantSearchUpdate(
+      isSharedHealthRecordEnabled = features.isEnabled(SharedHealthRecord)
+  )
 
-  override fun createInit() = InstantSearchInit()
+  override fun createInit() = InstantSearchInit(
+      isSharedHealthRecordEnabled = features.isEnabled(SharedHealthRecord)
+  )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<InstantSearchViewEffect>) = effectHandlerFactory.create(
       viewEffectsConsumer = viewEffectsConsumer

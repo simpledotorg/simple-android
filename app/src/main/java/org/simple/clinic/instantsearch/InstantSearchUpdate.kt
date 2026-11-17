@@ -16,9 +16,10 @@ import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.scanid.scannedqrcode.AddToExistingPatient
 import org.simple.clinic.scanid.scannedqrcode.RegisterNewPatient
-import javax.inject.Inject
 
-class InstantSearchUpdate @Inject constructor() : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
+class InstantSearchUpdate(
+    private val isSharedHealthRecordEnabled: Boolean
+) : Update<InstantSearchModel, InstantSearchEvent, InstantSearchEffect> {
 
   /**
    * Regular expression that matches digits with interleaved white spaces
@@ -69,7 +70,7 @@ class InstantSearchUpdate @Inject constructor() : Update<InstantSearchModel, Ins
     // cases, the UI is janky since the keyboard pops up and immediately another bottom sheet pops up.
     // This improves the experience by showing the keyboard only if we have arrived here by searching
     // for a patient by the name
-    if (!model.hasAdditionalIdentifier) effects.add(ShowKeyboard)
+    if (!model.hasAdditionalIdentifier || isSharedHealthRecordEnabled) effects.add(ShowKeyboard)
 
     return dispatch(effects)
   }

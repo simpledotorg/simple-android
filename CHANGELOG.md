@@ -18,7 +18,8 @@
 
 ### Changes
 - Add Bangladesh SHR identifier support to patient scanning
-- Pilot SHR features in selected facilities behind the `SharedHealthRecord` feature flag, and skip the new registration / add to existing patient sheet for unmatched scans in those facilities
+- Pilot SHR features in selected facilities behind the `SharedHealthRecord` feature flag, and 
+- Skip the new registration / add to existing patient sheet for unmatched scans in SHR enabled facilities
 - Add Bangladesh SHR identifier support to the edit patient and patient summary screens
 - Remove India National Health ID (NHID) support
 - Add the Health ID alongside the BP Passport on the patient entry screen in Bangladesh

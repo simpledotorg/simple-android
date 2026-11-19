@@ -33,7 +33,7 @@
   <string name="identifiertype_india_national_health_id">健康档案号</string>
   <string name="identifiertype_sri_lanka_national_id">身份证号</string>
   <string name="identifiertype_sri_lanka_personal_health_number">个人健康档案号</string>
-  <string name="identifiertype_health_id">健康ID</string>
+  <string name="identifiertype_health_id">健康档案号ID</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">姓名、电话或身份证</string>
@@ -437,7 +437,7 @@
   <string name="changelanguage_done">完成</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">请稍候…</string>
+  <string name="placeholder_loading_title">请稍候...</string>
   <string name="placeholder_loading_message">数据库维护中。只需一分钟。</string>
 
   <!-- Select Country Screen -->
@@ -532,8 +532,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">将患者标记为 \"同意就诊\"</string>
-  <string name="contactpatient_remind_call_later">提醒稍后致电…</string>
-  <string name="contactpatient_remove_from_list">从逾期列表中删除…</string>
+  <string name="contactpatient_remind_call_later">提醒稍后致电...</string>
+  <string name="contactpatient_remove_from_list">从逾期列表中删除...</string>
   <string name="contactpatient_result_of_call">呼叫结果</string>
   <string name="contactpatient_call">致电</string>
   <string name="contactpatient_call_normal">适度</string>

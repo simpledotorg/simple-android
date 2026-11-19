@@ -96,7 +96,7 @@
   <string name="patientedit_confirm_discard_cancel">取消</string>
   <string name="patientedit_delete_patient">删除</string>
   <string name="patientedit_add_button">添加</string>
-  <string name="patientedit_remove_id_button">删除ID</string>
+  <string name="patientedit_remove_id_button">删除HID</string>
 
   <!-- Confirm remove ID -->
   <string name="confirmremoveid_title">删除 ID</string>

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -162,26 +162,7 @@ private fun PatientInfoContent(
     ) {
       val inlineIds = listOfNotNull(bpPassport, shrId)
       if (inlineIds.isNotEmpty()) {
-        // The BP passport and SHR ID are shown on the same line, separated by a dot,
-        // and wrap onto the next line as a whole when there is not enough space.
-        FlowRow {
-          inlineIds.forEachIndexed { index, businessId ->
-            if (index > 0) {
-              Text(
-                  text = "•",
-                  style = MaterialTheme.typography.body2,
-                  color = SimpleTheme.colors.onToolbarPrimary72,
-                  modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.spacing_12))
-              )
-            }
-
-            Text(
-                text = buildBusinessIdString(businessId = businessId),
-                style = MaterialTheme.typography.body2,
-                color = SimpleTheme.colors.onToolbarPrimary72,
-            )
-          }
-        }
+        InlineBusinessIds(businessIds = inlineIds)
       }
 
       if (alternativeId != null) {
@@ -191,6 +172,63 @@ private fun PatientInfoContent(
             color = SimpleTheme.colors.onToolbarPrimary72,
             modifier = Modifier.padding(top = if (inlineIds.isNotEmpty()) dimensionResource(id = R.dimen.spacing_4) else 0.dp)
         )
+      }
+    }
+  }
+}
+
+/**
+ * Shows the business IDs on one line, separated by dots, when they all fit. Otherwise, each ID is
+ * shown on its own line without the dots, so that a dot never ends a line.
+ */
+@Composable
+private fun InlineBusinessIds(businessIds: List<BusinessId>) {
+  val lineSpacing = dimensionResource(id = R.dimen.spacing_4)
+
+  Layout(
+      content = {
+        businessIds.forEachIndexed { index, businessId ->
+          if (index > 0) {
+            Text(
+                text = "•",
+                style = MaterialTheme.typography.body2,
+                color = SimpleTheme.colors.onToolbarPrimary72,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.spacing_12))
+            )
+          }
+
+          Text(
+              text = buildBusinessIdString(businessId = businessId),
+              style = MaterialTheme.typography.body2,
+              color = SimpleTheme.colors.onToolbarPrimary72,
+          )
+        }
+      }
+  ) { measurables, constraints ->
+    val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
+    val placeables = measurables.map { it.measure(looseConstraints) }
+    val singleLineWidth = placeables.sumOf { it.width }
+
+    if (singleLineWidth <= constraints.maxWidth) {
+      layout(width = singleLineWidth, height = placeables.maxOf { it.height }) {
+        var x = 0
+        placeables.forEach { placeable ->
+          placeable.placeRelative(x = x, y = 0)
+          x += placeable.width
+        }
+      }
+    } else {
+      // The IDs are at the even indices, with the dot separators between them.
+      val idPlaceables = placeables.filterIndexed { index, _ -> index % 2 == 0 }
+      val lineSpacingPx = lineSpacing.roundToPx()
+      val height = idPlaceables.sumOf { it.height } + lineSpacingPx * (idPlaceables.size - 1)
+
+      layout(width = idPlaceables.maxOf { it.width }, height = height) {
+        var y = 0
+        idPlaceables.forEach { placeable ->
+          placeable.placeRelative(x = 0, y = y)
+          y += placeable.height + lineSpacingPx
+        }
       }
     }
   }
@@ -325,6 +363,12 @@ private fun PatientSummaryToolbarPreviewContent(
 @Preview(name = "BP passport and SHR ID")
 @Composable
 private fun PatientSummaryToolbarWithBpPassportAndShrIdPreview() {
+  PatientSummaryToolbarPreviewContent(bpPassport = previewBpPassport, shrId = previewShrId)
+}
+
+@Preview(name = "BP passport and SHR ID on a small screen", widthDp = 320)
+@Composable
+private fun PatientSummaryToolbarWithBpPassportAndShrIdOnSmallScreenPreview() {
   PatientSummaryToolbarPreviewContent(bpPassport = previewBpPassport, shrId = previewShrId)
 }
 

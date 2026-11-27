@@ -13,6 +13,7 @@
 - Bump Compose BOM to v2026.09.00
 - Bump sqlCipher to v4.19.0
 - Bump necojackarc auto request review to v0.14.0
+- Bump Gradle to v9.9.2
 - Enabled R8 obfuscation for production builds to improve application code protection.
 - Preserved generated Room DAO class names to maintain SQL performance monitoring functionality.
 
@@ -23,6 +24,7 @@
 - Add Bangladesh SHR identifier support to the edit patient and patient summary screens
 - Remove India National Health ID (NHID) support
 - Add the Health ID alongside the BP Passport on the patient entry screen in Bangladesh
+- Show the BP Passport and Health ID on separate lines in the patient summary when they don't fit on one line
 
 ## 2026.09.18
 
